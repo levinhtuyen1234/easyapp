@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Local App</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script>
+        var saveModule = module;
+        delete module;
+    </script>
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+    <script>module = saveModule;</script>
+    <script src="assets/js/riot+compiler.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <nav></nav>
+    <landing></landing>
+</div>
+<script src="tag/nav.tag" type="riot/tag"></script>
+<script src="tag/new-site.tag" type="riot/tag"></script>
+<script src="tag/landing.tag" type="riot/tag"></script>
+<script src="tag/review.tag" type="riot/tag"></script>
+<script src="tag/setting.tag" type="riot/tag"></script>
+<script>
+    const Path = require('path');
+    const Fs = require('fs');
+
+    const SimpleGit = require('simple-git');
+    const BlueBird = require('bluebird');
+
+    const mkdir = BlueBird.promisify(Fs.mkdir);
+
+    const GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
+    const SiteDir = Path.join(__dirname, 'sites');
+
+    let config = JSON.parse(Fs.readFileSync('config.json'));
+
+    function InitRepository(name) {
+        return new BlueBird(function (resolve, reject) {
+            var errHandler = function (err) {
+                if (err) reject(err);
+            };
+            SimpleGit(Path.join(SiteDir, name))
+                    .customBinary(GitBin)
+                    .init(false, errHandler)
+                    .add()
+                    .commit('init', function (err, ret) {
+                        if (err) reject(err);
+                        else resolve(ret);
+                    });
+        });
+    }
+
+    function CloneRepository(repositoryUrl, localPath) {
+        return new BlueBird(function (resolve, reject) {
+//            var repoName = repositoryUrl.split('/').pop();
+//            if (repoName.endsWith('.git')) repoName = repoName.slice(0, -4);
+//            var localRepoDir = Path.join(SiteDir, repoName);
+
+
+//            setTimeout(function () {
+//                reject(new Error('aaaaaaaa'));
+//            }, 2000);
+
+            SimpleGit(Path.join(SiteDir, name))
+                    .customBinary(GitBin)
+                    .clone(repositoryUrl, localPath, function (err, ret) {
+                        if (err) reject(err);
+                        else resolve(ret)
+                    });
+        });
+    }
+
+    var api = {
+        cloneRepository: CloneRepository,
+        saveConfig:      function () {
+            Fs.writeFileSync(JSON.stringify(config));
+        },
+        config:          config,
+        openSite:        function (sitePath) {
+            console.log('openSite', sitePath);
+        },
+
+        createSite: function (name) {
+            // TODO detect exists name in sitePath
+            var localPath = Path.join(__dirname, 'sites', name);
+            return mkdir(localPath).then(function () {
+                return CloneRepository('https://github.com/easywebhub/easyweb-metalsmith', localPath);
+            });
+        }
+    };
+    riot.mixin('api', api);
+    riot.mount('landing');
+</script>
+</body>
+</html>
