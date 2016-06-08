@@ -8,7 +8,7 @@
     "electron": "1.2.1"
   },
   "scripts": {
-	"start": "NODE_ENV=development ./node_modules/.bin/electron .",
+    "start": "NODE_ENV=development ./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -30,6 +30,7 @@
     "electron-shortcut-normalizer": "^1.0.0",
     "glob": "^7.0.3",
     "highlight.js": "^9.4.0",
+    "moment": "^2.13.0",
     "simple-git": "^1.37.0"
   }
 }

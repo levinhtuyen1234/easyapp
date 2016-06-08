@@ -4,7 +4,7 @@
   font-family: 'Source Code Pro';
   font-style: normal;
   font-weight: 400;
-  src: local('Source Code Pro'), local('SourceCodePro'), url(/fonts/SourceCodePro-Regular.ttf) format('truetype');
+  src: url(../fonts/SourceCodePro-Regular.ttf) format('truetype');
 }
 
 
@@ -18,16 +18,15 @@ html {
   height: 100%;
   font-family: system, -apple-system, '.SFNSText-Regular', 'SF UI Text', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
   font-size: 14px;
-  line-height: 1.5;
-  overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
-  color: var(--color);
-  background-color: #fff; /* To cover OSes with no default background color */
+  /*line-height: 1.5;*/
+  /*overflow: hidden; !* Prevents rubber-band scrolling of the whole "page" *!*/
+  /*color: var(--color);*/
+  /*background-color: #fff; !* To cover OSes with no default background color *!*/
 }
 
 body {
   margin: 0;
   height: 100%;
-  display: flex;
 }
 
 .siteThumbnail {

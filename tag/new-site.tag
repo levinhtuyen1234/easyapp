@@ -10,8 +10,8 @@
             <div class="modal-body">
                 <form>
                     <div class="form-group">
-                        <label>Site Name</label>
-                        <input type="text" class="form-control" name="siteName" placeholder="Name" value={siteName} oninput="{siteNameChange}" disabled="{cloning}">
+                        <label>Tên Thư mục</label>
+                        <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{siteNameChange}" disabled="{cloning}">
                     </div>
                     <!--<div class="input-group">-->
                     <!--<span class="input-group-btn">-->

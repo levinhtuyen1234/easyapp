@@ -53,6 +53,14 @@ app.on('ready', () => {
     if (debug) {
         mainWindow.webContents.openDevTools();
         mainWindow.maximize();
+        // auto reload
+        ['tag', 'assets/css'].forEach(dir => {
+            fs.watch(dir, {persistent: true, recursive: true}, (event, filename) => {
+                if (filename) {
+                    mainWindow.reload();
+                }
+            });
+        });
     }
 
     // ipcMain.on('toggleDevTools', ()=> {
@@ -64,17 +72,7 @@ app.on('ready', () => {
             app.quit()
         }
     });
-    //
-    // if (process.env.NODE_ENV === 'development') {
-    //     mainWindow.toggleDevTools();
-    //     fs.watch('build', (event, filename) => {
-    //         console.log(`event is: ${event}`);
-    //         if (filename) {
-    //             console.log(`filename provided: ${filename}`);
-    //             mainWindow.reload();
-    //         }
-    //     });
-    // }
+
 
     webContents = mainWindow.webContents;
 });

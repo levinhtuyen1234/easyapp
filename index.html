@@ -16,28 +16,33 @@
     <script src="assets/js/riot+compiler.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <nav></nav>
+<div class="container-fluid">
+    <home></home>
     <landing></landing>
 </div>
+<!-- preload toàn bộ tag -->
 <script src="tag/nav.tag" type="riot/tag"></script>
 <script src="tag/new-site.tag" type="riot/tag"></script>
 <script src="tag/landing.tag" type="riot/tag"></script>
 <script src="tag/review.tag" type="riot/tag"></script>
 <script src="tag/setting.tag" type="riot/tag"></script>
+<script src="tag/content.tag" type="riot/tag"></script>
+<script src="tag/browse.tag" type="riot/tag"></script>
+<script src="tag/home.tag" type="riot/tag"></script>
 <script>
-    const Path = require('path');
-    const Fs = require('fs');
+    var Path = require('path');
+    var Fs = require('fs');
 
-    const SimpleGit = require('simple-git');
-    const BlueBird = require('bluebird');
+    var SimpleGit = require('simple-git');
+    var BlueBird = require('bluebird');
 
-    const mkdir = BlueBird.promisify(Fs.mkdir);
+    var mkdir = BlueBird.promisify(Fs.mkdir);
 
-    const GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
-    const SiteDir = Path.join(__dirname, 'sites');
+    var GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
+    var SiteDir = Path.join(__dirname, 'sites');
 
-    let config = JSON.parse(Fs.readFileSync('config.json'));
+    var config = JSON.parse(Fs.readFileSync('config.json'));
+    var landing;
 
     function InitRepository(name) {
         return new BlueBird(function (resolve, reject) {
@@ -83,6 +88,8 @@
         config:          config,
         openSite:        function (sitePath) {
             console.log('openSite', sitePath);
+            landing.unmount();
+            riot.mount('home', {sitePath: sitePath});
         },
 
         createSite: function (name) {
@@ -94,7 +101,8 @@
         }
     };
     riot.mixin('api', api);
-    riot.mount('landing');
+//    landing = riot.mount('landing');
+    var home = riot.mount('home', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
 </script>
 </body>
 </html>
