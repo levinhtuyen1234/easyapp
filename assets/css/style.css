@@ -29,7 +29,7 @@ body {
   height: 100%;
 }
 
-.siteThumbnail {
+.siteThumbnail, .pathName {
     cursor: pointer;
 }
 
