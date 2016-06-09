@@ -5,6 +5,7 @@
     <title>Local App</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <script>
         var saveModule = module;
@@ -13,14 +14,16 @@
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/bootbox.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
-    <script>module = saveModule;</script>
+    <script src="assets/js/highlight.min.js"></script>
     <script src="assets/js/riot+compiler.min.js"></script>
+    <script>module = saveModule;</script>
 </head>
 <body>
     <home></home>
     <landing></landing>
 <!-- preload toàn bộ tag -->
 <script src="tag/nav.tag" type="riot/tag"></script>
+<script src="tag/code-view.tag" type="riot/tag"></script>
 <script src="tag/new-site.tag" type="riot/tag"></script>
 <script src="tag/landing.tag" type="riot/tag"></script>
 <script src="tag/review.tag" type="riot/tag"></script>

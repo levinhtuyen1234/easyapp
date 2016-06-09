@@ -1,0 +1,6 @@
+<console>
+
+    <script>
+
+    </script>
+</console>
