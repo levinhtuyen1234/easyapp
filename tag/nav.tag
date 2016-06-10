@@ -10,9 +10,19 @@
         <ul class="nav navbar-nav navbar-right">
             <li class="">
                 <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default navbar-btn" title="Review in external browser"><i class="fa fa-globe"></i></button>
+                    <button type="button" class="btn btn-default navbar-btn" title="Review in external browser" onclick="{openExternalReview}"><i class="fa fa-globe"></i></button>
                 </div>
             </li>
         </ul>
     </div>
+
+    <script>
+        var me = this;
+        var shell = require('electron').shell;
+
+        me.openExternalReview = function() {
+            shell.openExternal('http://electron.atom.io');
+        }
+
+    </script>
 </nav>
