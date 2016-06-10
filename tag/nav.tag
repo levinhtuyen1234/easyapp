@@ -5,6 +5,7 @@
             <li><a href="#setting" data-toggle="tab"><i class="fa fa-cog"></i> Setting</a></li>
             <li class="active"><a href="#browse" data-toggle="tab"><i class="fa fa-folder-o"></i> Browse</a></li>
             <li><a href="#review" title="open review tab" data-toggle="tab"><i class="fa fa-eye"></i> Review</a></li>
+            <li><a href="#build" title="open build tab" data-toggle="tab"><i class="fa fa-terminal"></i> Log</a></li>
         </ul>
         <ul class="nav navbar-nav navbar-right">
             <li class="">

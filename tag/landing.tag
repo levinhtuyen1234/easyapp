@@ -23,10 +23,14 @@
         </div>
 
         <script>
-            //        this.sites = opts.sites
             var me = this;
-            var Path = require('path');
             var root = me.root;
+
+            var Path = require('path');
+            var Fs = require('fs');
+
+            var config = Fs.readFileSync('config.json');
+
             var dialog = require('electron').remote.dialog;
 
             var newSite;
