@@ -7,7 +7,15 @@
                 <!--<label class="btn btn-default btn-xs btn-file">-->
                 <!--Browse <input type="file" style="display: none;">-->
                 <!--</label>-->
-                <button class="btn btn-primary btn-xs" onclick="alert('TODO');">New <i class="fa fa-plus"></i></button>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        New <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" onclick="{newFolder}"><i class="fa fa-folder fa-fw"></i> Folder</a></li>
+                        <li><a href="#" onclick="{newFile}"><i class="fa fa-file fa-fw"></i> File</a></li>
+                    </ul>
+                </div>
             </div>
         </ol>
         <!--</div>-->
@@ -101,6 +109,45 @@
 
                     Fs.renameSync(Path.join(curPath, filePath), Path.join(curPath, newName));
                     me.scanDir('');
+                }
+            });
+        };
+
+        me.newFile = function () {
+            bootbox.prompt({
+                title:    `Write down the new file name`,
+                value:    '',
+                callback: function (fileName) {
+                    try {
+                        if (fileName === null) return;
+                        fileName = fileName.trim();
+                        if (fileName === '') return;
+//                        if (!fileName.endsWith('.md'))
+//                            fileName = fileName + '.md';
+                        var fd = Fs.openSync(Path.join(curPath, fileName), 'wx');
+                        me.scanDir('');
+                        Fs.close(fd);
+                    } catch (ex) {
+                        bootbox.alert(ex.message);
+                    }
+                }
+            });
+        };
+
+        me.newFolder = function () {
+            bootbox.prompt({
+                title:    `Write down the new folder name`,
+                value:    '',
+                callback: function (folderName) {
+                    try {
+                        if (folderName === null) return;
+                        folderName = folderName.trim();
+                        if (folderName === '') return;
+                        Fs.mkdirSync(Path.join(curPath, folderName));
+                        me.scanDir('');
+                    } catch (ex) {
+                        bootbox.alert(ex.message);
+                    }
                 }
             });
         };
