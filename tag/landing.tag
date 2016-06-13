@@ -72,7 +72,7 @@
             };
 
             me.createSite = function (name, sitePath) {
-                return me.mixin('api').createSite(name, sitePath);
+                return riot.api.createSite(name, sitePath);
             };
 
             me.showCreateSite = function () {
@@ -89,7 +89,7 @@
                     properties:  ['openDirectory']
                 });
                 if (existSitePath === undefined) return;
-                me.mixin('api').openSite(existSitePath);
+                riot.api.openSite(existSitePath);
                 me.unmount();
             };
         </script>

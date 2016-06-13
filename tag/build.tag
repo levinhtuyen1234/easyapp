@@ -10,7 +10,7 @@
             <input type="radio" name="options"/>Build (prod)
         </label>
     </div>
-    <pre>
+    <pre style="height: calc(100vh - 110px)">
         <code class="accesslog hljs"></code>
     </pre>
     <script>

@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
-    <link rel="stylesheet" href="assets/css/codemirror.css">
+    <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <script>
         var saveModule = module;
         delete module;
     </script>
     <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootbox.min.js"></script>
     <script src="assets/js/bootbox.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
     <script src="assets/js/highlight.min.js"></script>
@@ -25,6 +26,8 @@
     <landing></landing>
 <!-- preload toàn bộ tag -->
 <script src="tag/nav.tag" type="riot/tag"></script>
+<script src="tag/code-editor.tag" type="riot/tag"></script>
+<script src="tag/form-editor.tag" type="riot/tag"></script>
 <script src="tag/code-view.tag" type="riot/tag"></script>
 <script src="tag/new-site.tag" type="riot/tag"></script>
 <script src="tag/build.tag" type="riot/tag"></script>
@@ -72,15 +75,6 @@
 
     function CloneRepository(repositoryUrl, localPath) {
         return new BlueBird(function (resolve, reject) {
-//            var repoName = repositoryUrl.split('/').pop();
-//            if (repoName.endsWith('.git')) repoName = repoName.slice(0, -4);
-//            var localRepoDir = Path.join(SiteDir, repoName);
-
-
-//            setTimeout(function () {
-//                reject(new Error('aaaaaaaa'));
-//            }, 2000);
-
             SimpleGit(Path.join(SiteDir, name))
                     .customBinary(GitBin)
                     .clone(repositoryUrl, localPath, function (err, ret) {
@@ -90,7 +84,8 @@
         });
     }
 
-    var api = {
+    riot.api = riot.observable();
+    Object.assign(riot.api, {
         cloneRepository: CloneRepository,
         saveConfig:      function () {
             Fs.writeFileSync(JSON.stringify(config));
@@ -109,8 +104,8 @@
                 return CloneRepository('https://github.com/easywebhub/easyweb-metalsmith', localPath);
             });
         }
-    };
-    riot.mixin('api', api);
+    });
+
 //    landing = riot.mount('landing');
     var home = riot.mount('home', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
 </script>

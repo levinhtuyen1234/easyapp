@@ -1,35 +1,45 @@
-<content role="tabpanel" class="tab-pane" id="content">
+<content role="tabpanel" class="tab-pane active" id="content">
     <div class="row">
-        <div class="col-sm-4 col-md-2">
-            <table class="table table-responsive">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr each="{dirEntries}">
-                    <td>
-                        <i class="fa { isDir ? 'fa-folder' : 'fa-file'}"></i>
-                        <a class="pathName" onclick="{isDir ? scanDir.bind(this,path) : openFile.bind(this,path)}">
-                            <i class="fa fa-level-up" show="{path == '..'}"></i> {name}
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <div class="col-sm-5 col-lg-4">
+            <browse dir="{contentPath}"></browse>
         </div>
-        <div class="col-sm-5 col-md-7">
-            <h1>EDITOR</h1>
+        <div class="col-sm-7 col-lg-8">
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#content-form-editor" aria-controls="form-editor" role="tab" data-toggle="tab" data-name="form">Form</a></li>
+                <li role="presentation"><a href="#content-raw-editor" aria-controls="raw-editor" role="tab" data-toggle="tab" data-name="raw">Raw</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <form-editor id="{'content-form-editor'}" active="{'true'}"></form-editor>
+                <code-editor id="{'content-raw-editor'}"></code-editor>
+            </div>
         </div>
     </div>
 
     <script>
-        //
-//        var myCodeMirror = CodeMirror(document.body, {
-//            value: "function myScript(){return 100;}\n",
-//            mode:  "javascript"
-//        });
+        var Path = require('path');
+        var me = this;
+        window.me = me;
 
+        me.contentPath = Path.join(opts.dir, 'content');
+
+        me.on('mount', function() {
+            // refresh codemirror editor khi tab duoc active
+            $(me.root).find('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                if (e.target.dataset.name === 'raw') {
+                    me.tags['code-editor'].refresh();
+                }
+            })
+        });
+
+        me.openFile = function (filePath) {
+            try {
+                var fileContent = Fs.readFileSync(filePath).toString();
+                me.tags['code-editor'].setValue(fileContent);
+            } catch(ex) {
+                console.log('content tab open file failed', ex);
+            }
+        };
     </script>
 </content>

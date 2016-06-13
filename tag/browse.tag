@@ -1,17 +1,16 @@
-<browse role="tabpanel" class="tab-pane active" id="browse">
+<browse role="tabpanel" class="tab-pane" id="{opts.id}">
     <div class="row">
-        <div class="col-md-12">
-            <ol class="breadcrumb">
-                <li each="{name, index in breadcrumb}"><a class="pathName" onclick="{goBack.bind(this,index)}">{name}</a></li>
-                <div class="pull-right">
-                    <!--<label class="btn btn-default btn-xs btn-file">-->
-                    <!--Browse <input type="file" style="display: none;">-->
-                    <!--</label>-->
-                    <button class="btn btn-primary btn-xs" onclick="alert('TODO');">New <i class="fa fa-plus"></i></button>
-                </div>
-            </ol>
-
-        </div>
+        <!--<div class="col-md-12">-->
+        <ol class="breadcrumb">
+            <li each="{name, index in breadcrumb}"><a class="pathName" onclick="{goBack.bind(this,index)}">{name}</a></li>
+            <div class="pull-right">
+                <!--<label class="btn btn-default btn-xs btn-file">-->
+                <!--Browse <input type="file" style="display: none;">-->
+                <!--</label>-->
+                <button class="btn btn-primary btn-xs" onclick="alert('TODO');">New <i class="fa fa-plus"></i></button>
+            </div>
+        </ol>
+        <!--</div>-->
     </div>
 
     <div class="row">
@@ -19,8 +18,8 @@
             <thead>
             <tr>
                 <th>Name</th>
-                <th class="hidden-xs">Size</th>
-                <th class="hidden-xs text-right">Modified</th>
+                <!--<th class="hidden-xs">Size</th>-->
+                <!--<th class="hidden-xs text-right">Modified</th>-->
                 <th></th>
             </tr>
             </thead>
@@ -32,9 +31,9 @@
                         <i class="fa fa-level-up" show="{path == '..'}"></i> {name}
                     </a>
                 </td>
-                <td class="hidden-xs">{size}</td>
-                <td class="hidden-xs text-right">{modifiedAt}</td>
-                <td class="text-right">
+                <!--<td class="hidden-xs col-size">{size}</td>-->
+                <!--<td class="hidden-xs text-right col-modified">{modifiedAt}</td>-->
+                <td class="text-right col-button">
                     <button title="rename" class="btn btn-primary btn-xs" show="{path !== '..'}" onclick="{confirmRename.bind(this,path)}">✎</button>
                     <button title="delete" class="btn btn-danger btn-xs" show="{path !== '..'}" onclick="{confirmDelete.bind(this,path)}">✖</button>
                 </td>
@@ -47,16 +46,22 @@
         var me = this;
         var Fs = require('fs');
         var Path = require('path');
+        var root = $(me.root);
 
         var Moment = require('moment');
         var RimRaf = require('rimraf');
 
-        var siteFolder = opts.dir.split(Path.sep).pop();
-        var root = Path.join(__dirname, 'sites', siteFolder);
-        var curPath = root;
+        var baseFolder = opts.dir.split(Path.sep).pop();
+        var baseName = Path.dirname(opts.dir);
+        var rootPath = Path.join(baseName, baseFolder);
+        var curPath = rootPath;
+
         var ignoreDir = ['.git', '__PUBLIC', '.gitignore'];
         me.dirEntries = [];
-        me.breadcrumb = [siteFolder];
+        me.breadcrumb = [baseFolder];
+
+        me.on('mount', function () {
+        });
 
         function humanizeFileSize(size) {
             var i = Math.floor(Math.log(size) / Math.log(1024));
@@ -75,11 +80,11 @@
 
         me.openFile = function (filePath) {
             console.log('openFile', filePath);
-            alert('TODO');
+            me.parent.openFile(Path.join(curPath, filePath));
         };
 
         me.confirmDelete = function (filePath) {
-            bootbox.confirm(`Are you sure you want to delete "${filePath}" ?`, function(ok) {
+            bootbox.confirm(`Are you sure you want to delete "${filePath}" ?`, function (ok) {
                 if (!ok) return;
                 RimRaf.sync(Path.join(curPath, filePath), {glob: false});
                 me.scanDir('');
@@ -101,16 +106,18 @@
         };
 
         me.scanDir = function (dir) {
+//            console.log('scan dir', dir);
             if (ignoreDir.indexOf(dir) != -1) return;
             curPath = Path.join(curPath, dir);
+//            console.log('scan dir curPath', curPath);
 
             if (dir === '..') me.breadcrumb.pop();
             else if (dir !== '') me.breadcrumb.push(dir);
 
             var files = [];
             me.dirEntries = [];
-            // them .. neu khong phai la root
-            if (curPath !== root) {
+            // them .. neu khong phai la rootPath
+            if (curPath !== rootPath) {
                 me.dirEntries.push({
                     name:       'up',
                     isDir:      true,
@@ -148,6 +155,5 @@
         };
 
         me.scanDir('');
-
     </script>
 </browse>
