@@ -1,24 +1,28 @@
 <code-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
-    <div class="code-editor"></div>
+    <div class="code-editor" style="border: 1px; padding: 5px;"></div>
     <script>
         var me = this;
-        var editor;
+        me.editor = null;
 
         me.setValue = function (content) {
-            editor.setValue(content);
+            me.editor.setValue(content);
         };
 
         me.refresh = function () {
-            editor.refresh();
+            me.editor.refresh();
         };
 
         window.onresize = function (e) {
-            editor.setSize('100%', window.innerHeight - 120);
+            me.editor.setSize('100%', window.innerHeight - 120);
+        };
+
+        me.setOption = function(name, value) {
+            me.editor.setOption(name, value);
         };
 
         me.on('mount', function () {
             var editorElm = me.root.querySelector('.code-editor');
-            editor = CodeMirror(editorElm, {
+            me.editor = CodeMirror(editorElm, {
                 value:                   '',
                 rtlMoveVisually:         false,
                 showCursorWhenSelecting: false,
@@ -30,9 +34,10 @@
                 styleActiveLine:         true,
                 gutter:                  true,
                 readOnly:                false,
+                lint:                    true,
                 theme:                   'material',
-                gutters:                 ['CodeMirror-linenumbers'],
-                mode:                    'javascript',
+                gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
+//                mode:                    {name: "javascript", json: true},
                 firstLineNumber:         1,
                 indentUnit:              4,
                 extraKeys:               {
@@ -44,7 +49,7 @@
                     }
                 }
             });
-            editor.setSize('100%', window.innerHeight - 120);
+            me.editor.setSize('100%', window.innerHeight - 180);
         });
     </script>
 </code-editor>

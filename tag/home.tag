@@ -4,7 +4,7 @@
         <div class="tab-content">
             <content dir={opts.sitePath}></content>
             <setting dir={opts.sitePath}></setting>
-            <browse dir={layoutPath} id="{'browse'}"></browse>
+            <layout dir={opts.sitePath}></layout>
             <review dir={opts.sitePath}></review>
             <build dir={opts.sitePath}></build>
         </div>
@@ -13,10 +13,8 @@
     <script>
         var Path = require('path');
         var me = this;
-        me.layoutPath = Path.join(opts.sitePath, 'layout');
-        var sitePath = opts.sitePath;
-
-
+//        me.layoutPath = Path.join(opts.sitePath, 'layout');
+//        var sitePath = opts.sitePath;
 //        riot.mount($('#browseTab'), opts);
     </script>
 </home>

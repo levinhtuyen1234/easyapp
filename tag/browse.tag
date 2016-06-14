@@ -1,12 +1,8 @@
 <browse role="tabpanel" class="tab-pane" id="{opts.id}">
     <div class="row">
-        <!--<div class="col-md-12">-->
         <ol class="breadcrumb">
             <li each="{name, index in breadcrumb}"><a class="pathName" onclick="{goBack.bind(this,index)}">{name}</a></li>
             <div class="pull-right">
-                <!--<label class="btn btn-default btn-xs btn-file">-->
-                <!--Browse <input type="file" style="display: none;">-->
-                <!--</label>-->
                 <div class="btn-group">
                     <button type="button" class="btn btn-primary dropdown-toggle btn-xs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         New <span class="caret"></span>
@@ -18,7 +14,6 @@
                 </div>
             </div>
         </ol>
-        <!--</div>-->
     </div>
 
     <div class="row">

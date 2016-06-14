@@ -12,7 +12,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="#setting" data-toggle="tab"><i class="fa fa-cog"></i> Setting</a></li>
                 <li class="active"><a href="#content" data-toggle="tab"><i class="fa fa-newspaper-o"></i> Content</a></li>
-                <li><a href="#browse" data-toggle="tab"><i class="fa fa-folder-o"></i> Layout</a></li>
+                <li><a href="#layout" data-toggle="tab"><i class="fa fa-file-code-o"></i> Layout</a></li>
                 <li><a href="#review" title="open review tab" data-toggle="tab"><i class="fa fa-eye"></i> Review</a></li>
                 <li><a href="#build" title="open build tab" data-toggle="tab"><i class="fa fa-terminal"></i> Log</a></li>
             </ul>
