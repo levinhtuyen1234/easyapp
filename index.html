@@ -4,27 +4,21 @@
     <meta charset="utf-8">
     <title>Local App</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/datatables.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
+    <link rel="stylesheet" href="assets/css/simplemde.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <script>
         var saveModule = module;
         delete module;
     </script>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/jquery.serializejson.min.js"></script>
-    <script src="assets/js/bootbox.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
-    <script src="assets/js/highlight.min.js"></script>
-    <script src="assets/js/jsonlint.min.js"></script>
-    <script src="assets/js/codemirror.min.js"></script>
-    <script src="assets/js/riot+compiler.min.js"></script>
-    <script>module = saveModule;</script>
 </head>
-<body>
-    <home></home>
-    <landing></landing>
+<body class="container-fluid">
+<home2></home2>
+<home></home>
+<landing></landing>
 <!-- preload toàn bộ tag -->
 <script src="tag/nav.tag" type="riot/tag"></script>
 <script src="tag/code-editor.tag" type="riot/tag"></script>
@@ -39,7 +33,25 @@
 <script src="tag/layout.tag" type="riot/tag"></script>
 <script src="tag/browse.tag" type="riot/tag"></script>
 <script src="tag/home.tag" type="riot/tag"></script>
+<script src="tag/side-bar.tag" type="riot/tag"></script>
+<script src="tag/markdown-editor.tag" type="riot/tag"></script>
+<script src="tag/home2.tag" type="riot/tag"></script>
+
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/bootbox.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/datatables.min.js"></script>
+<script src="assets/js/highlight.min.js"></script>
+<script src="assets/js/jsonlint.min.js"></script>
+<script src="assets/js/codemirror.min.js"></script>
+<script src="assets/js/simplemde.min.js"></script>
+<script src="assets/js/riot+compiler.min.js"></script>
+<script>module = saveModule;</script>
+
 <script>
+    var BackEnd = require('./assets/js/backend.js');
+    window.BackEnd = BackEnd;
+
     var Path = require('path');
     var Fs = require('fs');
     var ChildProcess = require('child_process');
@@ -96,7 +108,7 @@
         openSite:        function (sitePath) {
             console.log('openSite', sitePath);
             landing.unmount();
-            riot.mount('home', {sitePath: sitePath});
+            home = riot.mount('home', {sitePath: sitePath});
         },
 
         createSite: function (name) {
@@ -108,8 +120,10 @@
         }
     });
 
-//    landing = riot.mount('landing');
-    var home = riot.mount('home', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
+    riot.compile(function () {
+        //    landing = riot.mount('landing');
+        var home = riot.mount('home2', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
+    });
 </script>
 </body>
 </html>

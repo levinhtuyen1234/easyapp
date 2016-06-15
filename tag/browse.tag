@@ -167,6 +167,7 @@
                     modifiedAt: ''
                 });
             }
+
             for (var name of Fs.readdirSync(curPath)) {
                 if (ignoreDir.indexOf(name) != -1) continue;
                 var fullPath = Path.join(curPath, name);

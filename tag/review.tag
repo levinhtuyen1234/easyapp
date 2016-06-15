@@ -3,7 +3,7 @@
 
     <script>
         var me = this;
-        me.extUrl = 'http://localhost:8088';
+        me.extUrl = opts.url;
 
         me.setUrl = function(url) {
             me.extUrl = url;
