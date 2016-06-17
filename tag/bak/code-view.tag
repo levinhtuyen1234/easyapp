@@ -13,10 +13,13 @@
             hljs.highlightBlock(codeElm);
         });
 
-        me.setText = function(text) {
-//            console.log('setText', text.length);
-            me.code = text;
-            me.update();
+        me.value = function(text) {
+            if (text == undefined) {
+                return me.code;
+            } else {
+                me.code = text;
+                me.update();
+            }
         }
     </script>
 </code-view>

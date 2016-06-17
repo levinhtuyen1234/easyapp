@@ -1,11 +1,11 @@
 <form-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
+    <h1>FORM Editor</h1>
     <form class="form-horizontal" style="padding: 5px;">
 
     </form>
     <script>
         var me = this;
         me.form = null;
-
 
         me.on('mount', function () {
             me.form = me.root.querySelector('form');

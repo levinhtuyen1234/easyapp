@@ -16,26 +16,40 @@
     </script>
 </head>
 <body class="container-fluid">
-<home2></home2>
 <home></home>
+<!--<home></home>-->
 <landing></landing>
 <!-- preload toàn bộ tag -->
-<script src="tag/nav.tag" type="riot/tag"></script>
-<script src="tag/code-editor.tag" type="riot/tag"></script>
+<!--<script src="tag/toolbar.tag" type="riot/tag"></script>-->
+<!--<script src="tag/nav.tag" type="riot/tag"></script>-->
+<!--<script src="tag/code-editor.tag" type="riot/tag"></script>-->
+<!--<script src="tag/form-editor.tag" type="riot/tag"></script>-->
+<!--<script src="tag/code-view.tag" type="riot/tag"></script>-->
+<!--<script src="tag/new-site.tag" type="riot/tag"></script>-->
+<!--<script src="tag/build.tag" type="riot/tag"></script>-->
+<!--<script src="tag/landing.tag" type="riot/tag"></script>-->
+<!--<script src="tag/review.tag" type="riot/tag"></script>-->
+<!--<script src="tag/setting.tag" type="riot/tag"></script>-->
+<!--<script src="tag/content.tag" type="riot/tag"></script>-->
+<!--<script src="tag/layout.tag" type="riot/tag"></script>-->
+<!--<script src="tag/browse.tag" type="riot/tag"></script>-->
+<!--<script src="tag/home.tag" type="riot/tag"></script>-->
+<!--<script src="tag/home.tag" type="riot/tag"></script>-->
+<!--<script src="tag/meta-view.tag" type="riot/tag"></script>-->
+<!--<script src="tag/config-view.tag" type="riot/tag"></script>-->
+<!--<script src="tag/layout-view.tag" type="riot/tag"></script>-->
+<!--<script src="tag/content-view.tag" type="riot/tag"></script>-->
+<!--<script src="tag/markdown-editor.tag" type="riot/tag"></script>-->
+
 <script src="tag/form-editor.tag" type="riot/tag"></script>
-<script src="tag/code-view.tag" type="riot/tag"></script>
-<script src="tag/new-site.tag" type="riot/tag"></script>
-<script src="tag/build.tag" type="riot/tag"></script>
-<script src="tag/landing.tag" type="riot/tag"></script>
-<script src="tag/review.tag" type="riot/tag"></script>
-<script src="tag/setting.tag" type="riot/tag"></script>
-<script src="tag/content.tag" type="riot/tag"></script>
-<script src="tag/layout.tag" type="riot/tag"></script>
-<script src="tag/browse.tag" type="riot/tag"></script>
-<script src="tag/home.tag" type="riot/tag"></script>
-<script src="tag/side-bar.tag" type="riot/tag"></script>
 <script src="tag/markdown-editor.tag" type="riot/tag"></script>
-<script src="tag/home2.tag" type="riot/tag"></script>
+
+<script src="tag/content-view.tag" type="riot/tag"></script>
+<script src="tag/config-view.tag" type="riot/tag"></script>
+<script src="tag/layout-view.tag" type="riot/tag"></script>
+<script src="tag/breadcrumb.tag" type="riot/tag"></script>
+<script src="tag/side-bar.tag" type="riot/tag"></script>
+<script src="tag/home.tag" type="riot/tag"></script>
 
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/bootbox.min.js"></script>
@@ -122,7 +136,7 @@
 
     riot.compile(function () {
         //    landing = riot.mount('landing');
-        var home = riot.mount('home2', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
+        var home = riot.mount('home', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
     });
 </script>
 </body>

@@ -1,24 +1,22 @@
 <markdown-editor>
-    <div></div>
+    <textarea></textarea>
     <script>
         var me = this;
-        var simplemde = new SimpleMDE({element: $("#MyID")[0]});
-        var editor;
+        me.editor = null;
 
         me.on('mount', function () {
-            editor = new SimpleMDE({element: me.root.querySelector('div')});
+            console.log('markdown editor mount');
+            me.editor = new SimpleMDE({
+                element:                 me.root.querySelector('textarea'),
+                autoDownloadFontAwesome: false,
+                codeSyntaxHighlighting:  true
+            });
         });
 
         me.value = function (val) {
             if (val === undefined)
-                return editor.value();
-            editor.value(val);
+                return me.editor.value();
+            me.editor.value(val);
         };
-
-        window.onresize(function (e) {
-            window.e = e;
-            console.log(e.target);
-            // editor.toggleSideBySide();
-        });
     </script>
 </markdown-editor>

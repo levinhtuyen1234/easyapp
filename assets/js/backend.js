@@ -29,6 +29,11 @@ function getSiteFiles(siteDir) {
     return files;
 }
 
+function getFileContent(filePath) {
+    return Fs.readFileSync(filePath).toString();
+}
+
 module.exports = {
-    getSiteFiles: getSiteFiles
+    getSiteFiles:   getSiteFiles,
+    getFileContent: getFileContent
 };
