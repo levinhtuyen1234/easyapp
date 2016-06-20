@@ -2,7 +2,7 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading panel-heading-sm">
-                <h3 class="panel-title pull-left">Ten file</h3>
+                <h3 class="panel-title pull-left"></h3>
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-plus"></i> New <span class="caret"></span>
@@ -21,7 +21,7 @@
                     <input type="text" class="form-control" placeholder="Filter" onkeyup="{onFilterInput}">
                 </div>
                 <ul class="list-group" style="height: calc(100vh - 200px); overflow: auto;">
-                    <li each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
+                    <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
                 </ul>
             </div>
         </div>
@@ -65,9 +65,9 @@
             };
         })();
 
-        me.loadFiles = function (siteDir) {
+        me.loadFiles = function (siteName) {
             me.clear();
-            var files = BackEnd.getSiteFiles(siteDir);
+            var files = BackEnd.getSiteFiles(siteName);
             me.files = files;
             me.filteredFiles = files;
             me.update();
@@ -108,7 +108,7 @@
         };
 
         me.on('mount', function () {
-            me.loadFiles(opts.dir);
+            me.loadFiles(opts.site_name);
         });
 
     </script>

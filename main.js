@@ -54,7 +54,7 @@ app.on('ready', () => {
         mainWindow.webContents.openDevTools();
         mainWindow.maximize();
         // auto reload
-        ['tag', 'assets/css', 'assets/js'].forEach(dir => {
+        ['tag', 'assets/css', 'assets/js', 'index.html'].forEach(dir => {
             fs.watch(dir, {persistent: true, recursive: true}, (event, filename) => {
                 if (filename) {
                     mainWindow.reload();

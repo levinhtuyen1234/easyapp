@@ -10,6 +10,7 @@
 
         me.setPath = function(filePath) {
             me.parts = filePath.split(/[\\\/]/);
+            me.parts.unshift(me.opts.site_name);
             me.update();
         };
 
@@ -19,7 +20,6 @@
 
         me.open = function(index) {
             var fullPath = me.parts.slice(0, index + 1).join('/');
-            console.log('breadcrumb clicked', fullPath);
             if (me.parent.open)
                 me.parent.open(fullPath);
         };

@@ -29,7 +29,7 @@ body {
   height: 100%;
 }
 
-.siteThumbnail, .pathName, .list-group-item {
+.siteThumbnail, .pathName, .file-list-group-item {
     cursor: pointer;
 }
 

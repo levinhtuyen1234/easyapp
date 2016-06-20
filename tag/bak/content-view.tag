@@ -44,7 +44,7 @@
         }
 
         me.on('mount', function () {
-            var fileContent = BackEnd.getFileContent(opts.filePath);
+            var fileContent = BackEnd.readFile(opts.filePath);
             fileContent = fileContent.trim();
             if (fileContent === null) return;
             var content = SplitContentFile(fileContent);

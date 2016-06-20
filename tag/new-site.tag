@@ -56,15 +56,16 @@
         };
 
         me.createSite = function (siteName) {
-            // show loading animation
+            // TODO show loading animation
             me.cloning = 1;
             me.errMsg = '';
             me.update();
             me.parent.createSite(siteName).then(function (ret) {
-                // stop loading animation
+                // TODO stop loading animation
                 me.cloning = 0;
                 me.update();
                 $(root).modal('hide'); // close modal
+                parent.openSite(siteName);
             }).catch(function (err) {
                 // stop loading animation
                 me.cloning = 0;

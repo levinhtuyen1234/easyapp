@@ -1,5 +1,4 @@
 <form-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
-    <h1>FORM Editor</h1>
     <form class="form-horizontal" style="padding: 5px;">
 
     </form>
@@ -16,8 +15,9 @@
             if (type === 'boolean') {
                 return `
                 <div class="form-group">
-                    <label for="" class="col-sm-2 control-label" style="text-align: left;">${label}</label>
-                    <div class="col-sm-10">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${label}
+                    </label>
+                    <div class="col-sm-9">
                         <div class="checkbox">
                         <label>
                             <input type="checkbox" name="${label}" checked="${value}">
@@ -28,15 +28,49 @@
             }
             return `
                 <div class="form-group">
-                    <label for="" class="col-sm-2 control-label" style="text-align: left;">${label}</label>
-                    <div class="col-sm-10">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${label}
+
+                    </label>
+                    <div class="col-sm-9">
                         <input type="${type}" name="${label}" class="form-control" id="" placeholder="${label}" value="${value}">
                     </div>
                 </div>`;
         }
 
-        function genFormWithModel(form, model) {
+        function genTextInput(config, metaValue) {
+            return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
 
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="text" name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                    </div>
+                </div>`;
+        }
+
+        function genBooleanInput(config, metaValue) {
+            return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
+                    </label>
+                    <div class="col-sm-9">
+                        <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="${config.name}" checked="${metaValue}">
+                        </label>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        function genIntegerInput(config, metaValue) {
+            return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
+
+                    </label>
+                    <div class="col-sm-9">
+                        <input type="number" name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                    </div>
+                </div>`;
         }
 
         function genFormWithoutModel(form) {
@@ -68,17 +102,31 @@
             me.form.innerHTML = '';
         };
 
-        me.parseForm = function (formData) {
-            try {
-                var formData = JSON.parse(formData);
-                var innerFormInputs = genFormWithoutModel(formData);
-                // TODO form with Model
-                me.form.innerHTML = innerFormInputs;
-                window.form = me.form;
-            } catch(ex) {
-                console.log('parseForm error', ex);
-                me.clear();
+
+        me.genForm = function(metaData, contentConfig) {
+            var innerForm = '';
+            for(var i = 0; i < contentConfig.length; i++) {
+                var fieldConfig = contentConfig[i];
+                var metaValue = metaData[fieldConfig.name];
+                switch(fieldConfig.type) {
+                    case 'text':
+                        innerForm += genTextInput(fieldConfig, metaValue);
+                        break;
+                    case 'integer':
+                        innerForm += genIntegerInput(fieldConfig, metaValue);
+                        break;
+                    case 'boolean':
+                        innerForm += genBooleanInput(fieldConfig, metaValue);
+                        break;
+                    case 'datetime':
+                        innerForm += genDateTimeInput(fieldConfig, metaValue);
+                        break;
+                    case 'dropdown':
+                        innerForm += genDropDownInput(fieldConfig, metaValue);
+                        break;
+                }
             }
-        };
+            me.form.innerHTML = innerForm;
+        }
     </script>
 </form-editor>

@@ -16,9 +16,9 @@
     </script>
 </head>
 <body class="container-fluid">
-<home></home>
-<!--<home></home>-->
+<login></login>
 <landing></landing>
+<home></home>
 <!-- preload toàn bộ tag -->
 <!--<script src="tag/toolbar.tag" type="riot/tag"></script>-->
 <!--<script src="tag/nav.tag" type="riot/tag"></script>-->
@@ -49,6 +49,10 @@
 <script src="tag/layout-view.tag" type="riot/tag"></script>
 <script src="tag/breadcrumb.tag" type="riot/tag"></script>
 <script src="tag/side-bar.tag" type="riot/tag"></script>
+<script src="tag/new-site.tag" type="riot/tag"></script>
+
+<script src="tag/login.tag" type="riot/tag"></script>
+<script src="tag/landing.tag" type="riot/tag"></script>
 <script src="tag/home.tag" type="riot/tag"></script>
 
 <script src="assets/js/jquery.min.js"></script>
@@ -78,8 +82,7 @@
     var GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
     var SiteDir = Path.join(__dirname, 'sites');
 
-    var config = JSON.parse(Fs.readFileSync('config.json'));
-    var landing;
+    var login, landing, home;
 
     function InitRepository(name) {
         return new BlueBird(function (resolve, reject) {
@@ -115,10 +118,6 @@
     riot.api = riot.observable();
     Object.assign(riot.api, {
         cloneRepository: CloneRepository,
-        saveConfig:      function () {
-            Fs.writeFileSync(JSON.stringify(config));
-        },
-        config:          config,
         openSite:        function (sitePath) {
             console.log('openSite', sitePath);
             landing.unmount();
@@ -135,8 +134,9 @@
     });
 
     riot.compile(function () {
-        //    landing = riot.mount('landing');
-        var home = riot.mount('home', {sitePath: 'C:\\Project\\easyapp\\sites\\aaa'});
+        login = riot.mount('login');
+//        landing = riot.mount('landing');
+//        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
 </body>

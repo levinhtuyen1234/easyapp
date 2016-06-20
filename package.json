@@ -8,7 +8,7 @@
     "electron": "1.2.1"
   },
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/.bin/electron .",
+    "start": "./node_modules/.bin/electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

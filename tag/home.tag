@@ -1,12 +1,12 @@
 <home>
     <div class="row">
-        <side-bar dir={opts.sitePath} class="col-md-4"></side-bar>
+        <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
         <div class="col-md-8">
-            <breadcrumb></breadcrumb>
+            <breadcrumb site_name="{opts.siteName}"></breadcrumb>
             <!-- EDITOR PANEL -->
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-sm">
-                    <h3 class="panel-title pull-left">Ten file</h3>
+                    <h3 class="panel-title pull-left">{currentFile}</h3>
 
                     <div role="separator" class="divider"></div>
                     <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;">
@@ -19,17 +19,17 @@
                         </button>
                         <ul class="dropdown-menu" role="tablist">
                             <li role="presentation">
-                                <a href="#content-view" data-toggle="tab" role="tab" onclick="{openContent}">
+                                <a href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
                                     <i class="fa fa-fw fa-newspaper-o"></i> Edit content
                                 </a>
                             </li>
                             <li role="presentation">
-                                <a href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayout}">
+                                <a href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
                                     <i class="fa fa-fw fa-code"></i> Edit layout
                                 </a>
                             </li>
                             <li role="presentation">
-                                <a href="#config-view" data-toggle="tab" role="tab" onclick="{openConfig}">
+                                <a href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
                                     <i class="fa fa-fw fa-cog"></i> Edit config
                                 </a>
                             </li>
@@ -45,9 +45,9 @@
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div id="content-view" role="tabpanel" class="tab-pane"></div>
-                        <div id="layout-view" role="tabpanel" class="tab-pane"></div>
-                        <div id="config-view" role="tabpanel" class="tab-pane"></div>
+                        <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                        <layout-view id="layout-view" role="tabpanel" class="tab-pane"></layout-view>
+                        <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
                     </div>
                 </div>
             </div>
@@ -59,9 +59,12 @@
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
+        me.currentFilePath = '';
+        me.currentFile = '';
 
         me.on('mount', function () {
-
+//            riot.mount('side-bar', {siteName: opts.siteName});
+//            riot.mount('breadcrumb', {path: opts.siteName});
         });
 
         function HideAllTab() {
@@ -78,59 +81,105 @@
             if (me.layoutView) me.layoutView.unmount(true);
         }
 
-        me.openLayout = function (filePath) {
+        function createDefaultConfigFile(metaData) {
+            var config = [];
+            for (var key in metaData) {
+                if (!metaData.hasOwnProperty(key)) continue;
+                var value = form[key];
+                switch (typeof value) {
+                    case 'string':
+                        config.push({
+                            name:        key,
+                            type:        'text',
+                            required:    true,
+                            validations: []
+                        });
+                        break;
+                    case 'number':
+                        config.push({
+                            name:        key,
+                            type:        'integer',
+                            required:    true,
+                            validations: []
+                        });
+                        break;
+                    case 'boolean':
+                        config.push({
+                            name:        key,
+                            type:        'boolean',
+                            required:    true,
+                            validations: []
+                        });
+                        break;
+                }
+            }
+            return config;
+        }
+
+        function getFileContent(filePath) {
+            var fileContent = BackEnd.readFile(me.opts.siteName, filePath).trim();
+            if (fileContent === null) return;
+            // split content thanh meta va markdown
+            return SplitContentFile(fileContent);
+        }
+
+        function getConfigFile(contentFilePath) {
+
+        }
+
+        me.openLayoutTab = function () {
             HideAllTab();
-            UnmountAll();
-            me.layoutView = riot.mount('#layout-view', 'layout-view', {
-                filePath: filePath
-            })[0];
+//            me.tags['layout-view'];
             ShowTab('layout-view');
         };
 
-        me.openContent = function (filePath) {
+        me.openContentTab = function () {
             HideAllTab();
-            UnmountAll();
-            me.contentView = riot.mount('#content-view', 'content-view', {
-                filePath: filePath
-            })[0];
+            me.currentFile = me.currentFilePath.split(/[/\\/]/).pop();
+            me.update();
+
+//            var content = getFileContent(me.currentFilePath);
+            var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
+            if (!content.metaData.layout) {
+                alert('content missing layout attribute');
+                return;
+            }
+
+            var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+            console.log('content', content);
+
+            me.tags['content-view'].setContent(content, contentConfig);
             ShowTab('content-view');
         };
 
-        me.openConfig = function (filePath) {
+        me.openConfigTab = function () {
+            console.log('openConfig', me.currentFilePath);
             HideAllTab();
-            UnmountAll();
-            me.configView = riot.mount('#config-view', 'config-view', {
-                filePath: filePath
-            })[0];
+
+            var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
+            if (!content.metaData.layout) {
+                alert('content missing layout attribute');
+                return;
+            }
+
+            var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+
+            me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-        };
-
-        me.newContent = function () {
-            alert('todo newContent');
-        };
-
-        me.newLayout = function () {
-            alert('todo newLayout');
-        };
-
-        me.newConfig = function () {
-            alert('todo newConfig');
         };
 
         me.openFile = function (filePath) {
 //            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
-
+            me.currentFilePath = filePath;
             HideAllTab();
 
-            // read file content
-
             if (filePath.endsWith('.md')) {
-                me.openContent(filePath);
+                me.openContentTab();
             } else if (filePath.endsWith('.config.json')) {
-                me.openConfig(filePath);
+                me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
-                me.openLayout(filePath);
+                me.openLayoutTab();
             }
 //            mainView = riot.mount('#main-view', 'main-view', {
 //                filePath: filePath
