@@ -16,9 +16,10 @@
     </script>
 </head>
 <body class="container-fluid">
-<login></login>
+<window-login></window-login>
 <landing></landing>
 <home></home>
+<window-public></window-public>
 <!-- preload toàn bộ tag -->
 <!--<script src="tag/toolbar.tag" type="riot/tag"></script>-->
 <!--<script src="tag/nav.tag" type="riot/tag"></script>-->
@@ -51,7 +52,8 @@
 <script src="tag/side-bar.tag" type="riot/tag"></script>
 <script src="tag/new-site.tag" type="riot/tag"></script>
 
-<script src="tag/login.tag" type="riot/tag"></script>
+<script src="tag/window-login.tag" type="riot/tag"></script>
+<script src="tag/window-public.tag" type="riot/tag"></script>
 <script src="tag/landing.tag" type="riot/tag"></script>
 <script src="tag/home.tag" type="riot/tag"></script>
 
@@ -134,7 +136,7 @@
     });
 
     riot.compile(function () {
-        login = riot.mount('login');
+        login = riot.mount('window-login');
 //        landing = riot.mount('landing');
 //        home = riot.mount('home', {siteName: 'aaa'});
     });

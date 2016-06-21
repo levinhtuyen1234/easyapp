@@ -1,4 +1,4 @@
-<login>
+<window-login>
     <!-- HTML TAG START -->
 
 
@@ -396,4 +396,4 @@
             riot.mount('landing');
         }
     </script>
-</login>
+</window-login>
