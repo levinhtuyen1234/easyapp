@@ -101,3 +101,7 @@ body {
     height: 38px;
     padding: 4px 10px;
 }
+
+.bootstrap-select {
+    width: 145px !important;
+}

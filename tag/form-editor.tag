@@ -1,6 +1,5 @@
 <form-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
     <form class="form-horizontal" style="padding: 5px;">
-
     </form>
     <script>
         var me = this;
@@ -104,25 +103,23 @@
 
 
         me.genForm = function(metaData, contentConfig) {
+            console.log('genForm', metaData, contentConfig);
             var innerForm = '';
             for(var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
                 switch(fieldConfig.type) {
-                    case 'text':
+                    case 'Text':
                         innerForm += genTextInput(fieldConfig, metaValue);
                         break;
-                    case 'integer':
+                    case 'Number':
                         innerForm += genIntegerInput(fieldConfig, metaValue);
                         break;
-                    case 'boolean':
+                    case 'Boolean':
                         innerForm += genBooleanInput(fieldConfig, metaValue);
                         break;
-                    case 'datetime':
+                    case 'DateTime':
                         innerForm += genDateTimeInput(fieldConfig, metaValue);
-                        break;
-                    case 'dropdown':
-                        innerForm += genDropDownInput(fieldConfig, metaValue);
                         break;
                 }
             }

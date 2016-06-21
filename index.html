@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <script>
         var saveModule = module;
@@ -63,6 +64,7 @@
 <script src="assets/js/jsonlint.min.js"></script>
 <script src="assets/js/codemirror.min.js"></script>
 <script src="assets/js/simplemde.min.js"></script>
+<script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
 <script>module = saveModule;</script>
 
@@ -134,9 +136,9 @@
     });
 
     riot.compile(function () {
-        login = riot.mount('login');
+//        login = riot.mount('login');
 //        landing = riot.mount('landing');
-//        home = riot.mount('home', {siteName: 'aaa'});
+        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
 </body>

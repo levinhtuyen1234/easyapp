@@ -4,12 +4,14 @@ let Fs = require('fs');
 let Path = require('path');
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
+const ignoreExt = ['.config.json'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
 let ScanDir = function (siteRoot, dir, ret) {
     for (var name of Fs.readdirSync(dir)) {
         if (ignoreName.indexOf(name) != -1) continue;
+        if (ignoreExt.indexOf(Path.extname(name)) != -1) continue;
         var fullPath = Path.join(dir, name);
         var stat = Fs.statSync(fullPath);
 
@@ -49,7 +51,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'string':
                 contentConfig.push({
                     name:        key,
-                    type:        'text',
+                    type:        'Text',
                     validations: [],
                     required:    false
                 });
@@ -57,7 +59,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'number':
                 contentConfig.push({
                     name:        key,
-                    type:        'integer',
+                    type:        'Number',
                     validations: [],
                     required:    false
                 });
@@ -65,7 +67,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'boolean':
                 contentConfig.push({
                     name:        key,
-                    type:        'boolean',
+                    type:        'Boolean',
                     validations: [],
                     required:    false
                 });
