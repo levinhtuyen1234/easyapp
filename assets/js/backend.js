@@ -113,6 +113,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
         // gen default config file and return
         var contentConfig = genSimpleContentConfigFile(content.metaData);
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
+        return contentConfig;
     }
 }
 

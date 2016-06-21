@@ -1,13 +1,14 @@
-<login>
+<window-public>
     <!-- HTML TAG START -->
-    <button onclick="{login}">Login</button>
+    <h1>PUBLIC WINDOW</h1>
+
     <!-- HTML TAG END -->
 
     <script>
         var me = this;
-        me.login = function() {
+        me.backtoHome = function() {
             me.unmount();
-            riot.mount('landing');
+            riot.mount('login');
         }
     </script>
-</login>
+</window-public>

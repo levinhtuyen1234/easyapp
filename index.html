@@ -2,24 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Local App</title>
+    <title>EasyWeb Builder</title>
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/datatables.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" />
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-7fae2d802a203f722465a757a5c1ecdb285d355fdcda038c10a2d20722dcf959.css" media="all" rel="stylesheet" />
+
+
+    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css" media="all" rel="stylesheet" />
     <script>
         var saveModule = module;
         delete module;
     </script>
 </head>
 <body class="container-fluid">
-<login></login>
+<window-login></window-login>
 <landing></landing>
 <home></home>
+<window-public></window-public>
 <!-- preload toàn bộ tag -->
 <!--<script src="tag/toolbar.tag" type="riot/tag"></script>-->
 <!--<script src="tag/nav.tag" type="riot/tag"></script>-->
@@ -52,7 +57,8 @@
 <script src="tag/side-bar.tag" type="riot/tag"></script>
 <script src="tag/new-site.tag" type="riot/tag"></script>
 
-<script src="tag/login.tag" type="riot/tag"></script>
+<script src="tag/window-login.tag" type="riot/tag"></script>
+<script src="tag/window-public.tag" type="riot/tag"></script>
 <script src="tag/landing.tag" type="riot/tag"></script>
 <script src="tag/home.tag" type="riot/tag"></script>
 
@@ -64,7 +70,6 @@
 <script src="assets/js/jsonlint.min.js"></script>
 <script src="assets/js/codemirror.min.js"></script>
 <script src="assets/js/simplemde.min.js"></script>
-<script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
 <script>module = saveModule;</script>
 
@@ -136,10 +141,34 @@
     });
 
     riot.compile(function () {
-//        login = riot.mount('login');
+        login = riot.mount('window-login');
 //        landing = riot.mount('landing');
-        home = riot.mount('home', {siteName: 'aaa'});
+//        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
+<div class="container site-footer-container">
+  <div class="site-footer" role="contentinfo">
+    <ul class="site-footer-links right">
+        <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+      <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+        <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+        <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
+
+    </ul>
+
+
+    <ul class="site-footer-links">
+      <li>&copy; 2016 <span title="0.01148s from github-fe126-cp1-prd.iad.github.net">EasyWebHub</span>, Inc.</li>
+        <li><a href="https://github.com/site/terms" data-ga-click="Footer, go to terms, text:terms">Terms</a></li>
+        <li><a href="https://github.com/site/privacy" data-ga-click="Footer, go to privacy, text:privacy">Privacy</a></li>
+        <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        <li><a href="https://github.com/contact" data-ga-click="Footer, go to contact, text:contact">Contact</a></li>
+        <li><a href="https://help.github.com" data-ga-click="Footer, go to help, text:help">Help</a></li>
+    </ul>
+  </div>
+</div>
+
 </body>
 </html>

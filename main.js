@@ -36,7 +36,7 @@ app.on('ready', () => {
         width:    1080,
         minWidth: 680,
         height:   840,
-        // icon:     'favicon.ico'
+        icon:     'favicon.ico'
     });
 
     // if (process.platform === 'linux') {
@@ -48,7 +48,7 @@ app.on('ready', () => {
     });
 
     mainWindow.loadURL('file:/' + __dirname + '/index.html');
-    mainWindow.setMenu(null);
+  //  mainWindow.setMenu(null);
 
     if (debug) {
         mainWindow.webContents.openDevTools();
