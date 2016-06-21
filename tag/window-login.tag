@@ -170,7 +170,7 @@
 
         </div>
 
-    
+
 
     <!-- HTML TAG END -->
 
@@ -183,7 +183,7 @@
         const BrowserWindow = require('electron').remote.BrowserWindow
         const newWindowBtn = document.getElementById('frameless-window')
 
-        me.clickwindow = function (event) {
+        me.openTutorial = function (event) {
           let win = new BrowserWindow({ frame: true,   width:1280, minWidth: 1080, height:   840, icon:     'favicon.ico' })
           win.on('closed', function () { win = null })
           win.loadURL('http://book.easywebhub.com/')
