@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" />
     <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-7fae2d802a203f722465a757a5c1ecdb285d355fdcda038c10a2d20722dcf959.css" media="all" rel="stylesheet" />
@@ -71,6 +72,7 @@
 <script src="assets/js/jsonlint.min.js"></script>
 <script src="assets/js/codemirror.min.js"></script>
 <script src="assets/js/simplemde.min.js"></script>
+<script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
 <script>module = saveModule;</script>
 
@@ -142,9 +144,9 @@
     });
 
     riot.compile(function () {
-        login = riot.mount('window-login');
+//        login = riot.mount('window-login');
 //        landing = riot.mount('landing');
-//        home = riot.mount('home', {siteName: 'aaa'});
+        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
 
