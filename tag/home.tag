@@ -2,6 +2,12 @@
     <div class="row">
         <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
         <div class="col-md-8">
+            <button type="button" class="btn btn-danger btn-sm pull-right" style="margin-left: 10px;">
+                <i class="fa fa-save"></i> Public
+            </button>
+            <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;">
+                <i class="fa fa-save"></i> View Demo
+            </button>
             <breadcrumb site_name="{opts.siteName}"></breadcrumb>
             <!-- EDITOR PANEL -->
             <div class="panel panel-default">
@@ -9,9 +15,11 @@
                     <h3 class="panel-title pull-left">{currentFile}</h3>
 
                     <div role="separator" class="divider"></div>
+
                     <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;">
                         <i class="fa fa-save"></i> Save
                     </button>
+
 
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
