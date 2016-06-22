@@ -1,7 +1,7 @@
-<home>
+<home style="padding:5px;">
     <div class="row">
-        <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
-        <div class="col-md-8">
+        <side-bar site_name={opts.siteName} class="col-md-3 col-sm-4"></side-bar>
+        <div class="col-md-9 col-sm-8">
             <button type="button" class="btn btn-danger btn-sm pull-right" style="margin-left: 10px;">
                 <i class="fa fa-save"></i> Public
             </button>
