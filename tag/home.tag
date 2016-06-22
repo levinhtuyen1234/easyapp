@@ -6,10 +6,10 @@
             <!-- EDITOR PANEL -->
             <div class="panel panel-default">
                 <div class="panel-heading panel-heading-sm">
-                    <h3 class="panel-title pull-left">{currentFile}</h3>
+                    <h3 class="panel-title pull-left">{currentFileTitle}</h3>
 
                     <div role="separator" class="divider"></div>
-                    <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;">
+                    <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
                         <i class="fa fa-save"></i> Save
                     </button>
 
@@ -60,7 +60,8 @@
         me.configView = null;
         me.layoutView = null;
         me.currentFilePath = '';
-        me.currentFile = '';
+        me.currentLayout = '';
+        me.currentFileTitle = '';
 
         me.on('mount', function () {
 //            riot.mount('side-bar', {siteName: opts.siteName});
@@ -129,13 +130,17 @@
 
         me.openLayoutTab = function () {
             HideAllTab();
-//            me.tags['layout-view'];
+            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+            me.update();
+
+            var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentFilePath);
+            me.tags['layout-view'].value(fileContent);
             ShowTab('layout-view');
         };
 
         me.openContentTab = function () {
             HideAllTab();
-            me.currentFile = me.currentFilePath.split(/[/\\/]/).pop();
+            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
             me.update();
 
 //            var content = getFileContent(me.currentFilePath);
@@ -145,6 +150,7 @@
                 return;
             }
 
+            me.currentLayout = content.metaData.layout;
             var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
             console.log('content', content);
 
@@ -181,10 +187,27 @@
             } else if (filePath.endsWith('.html')) {
                 me.openLayoutTab();
             }
-//            mainView = riot.mount('#main-view', 'main-view', {
-//                filePath: filePath
-//            })[0];
-        }
-    </script>
+        };
 
+        me.save = function () {
+            // check current active tab
+            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+
+            console.log('save', curTabHref);
+            switch (curTabHref) {
+                case '#content-view':
+                    var content = me.tags['content-view'].getContent();
+                    BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
+                    break;
+                case '#layout-view':
+                    var layoutContent = me.tags['layout-view'].value();
+                    BackEnd.saveLayoutFile(me.opts.siteName, me.currentFilePath, layoutContent);
+                    break;
+                case '#config-view':
+                    var contentConfig = me.tags['config-view'].getContentConfig();
+                    BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
+                    break;
+            }
+        };
+    </script>
 </home>

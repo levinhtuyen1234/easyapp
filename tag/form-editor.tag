@@ -7,54 +7,53 @@
 
         me.on('mount', function () {
             me.form = me.root.querySelector('form');
-            window.form = me.form;
         });
 
-        function genSimpleInput(label, type, value) {
+        function genSimpleInput(display, name, type, value) {
             if (type === 'boolean') {
-                return `
-                <div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${label}
+                return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${displayName}
                     </label>
                     <div class="col-sm-9">
                         <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="${label}" checked="${value}">
+                            <input type="checkbox" name="input-${name}" checked="${value}">
                         </label>
                         </div>
                     </div>
                 </div>`;
             }
-            return `
-                <div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${label}
+            return `<div class="form-group">
+                <label for="" class="col-sm-3 control-label" style="text-align: left;">${displayName}
 
-                    </label>
-                    <div class="col-sm-9">
-                        <input type="${type}" name="${label}" class="form-control" id="" placeholder="${label}" value="${value}">
-                    </div>
-                </div>`;
+                </label>
+                <div class="col-sm-9">
+                    <input type="${type}" name="input-${name}" class="form-control" id="" placeholder="${value}" value="${value}">
+                </div>
+            </div>`;
         }
 
         function genTextInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : '';
             return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
 
                     </label>
                     <div class="col-sm-9">
-                        <input type="text" name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" value="${metaValue}">
                     </div>
                 </div>`;
         }
 
         function genBooleanInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : '';
             return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
                     </label>
                     <div class="col-sm-9">
                         <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="${config.name}" checked="${metaValue}">
+                            <input type="checkbox" name="input-${config.name}" data-name="${config.name}" checked="${metaValue}">
                         </label>
                         </div>
                     </div>
@@ -62,12 +61,13 @@
         }
 
         function genIntegerInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : '';
             return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.name}
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
 
                     </label>
                     <div class="col-sm-9">
-                        <input type="number" name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                        <input type="number" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
                     </div>
                 </div>`;
         }
@@ -93,22 +93,38 @@
             return innerForm;
         }
 
-        me.getFormJson = function() {
-            var inputs = me.form.find('input');
+        function getInputValue(input) {
+            switch (input.type) {
+                case 'checkbox':
+                    return input.value === 'on';
+                    break;
+                case 'number':
+                    return parseFloat(input.value);
+                default:
+                    return input.value;
+            }
+        }
+
+        me.getForm = function () {
+            var inputs = me.form.querySelectorAll('input[name^="input-"]');
+            var ret = {};
+            inputs.forEach(function (input) {
+                ret[input.dataset.name] = getInputValue(input);
+            });
+            return ret;
         };
 
         me.clear = function () {
             me.form.innerHTML = '';
         };
 
-
-        me.genForm = function(metaData, contentConfig) {
-            console.log('genForm', metaData, contentConfig);
+        me.genForm = function (metaData, contentConfig) {
+//            console.log('genForm', metaData, contentConfig);
             var innerForm = '';
-            for(var i = 0; i < contentConfig.length; i++) {
+            for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
-                switch(fieldConfig.type) {
+                switch (fieldConfig.type) {
                     case 'Text':
                         innerForm += genTextInput(fieldConfig, metaValue);
                         break;

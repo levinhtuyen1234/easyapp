@@ -8,10 +8,18 @@ const ignoreExt = ['.config.json'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
+function IsIgnoreFile (name) {
+    if (ignoreName.indexOf(name) != -1) return true;
+    for (var i = 0; i < ignoreExt.length; i++) {
+        if (name.endsWith(ignoreExt[i]))
+            return true;
+    }
+    return false;
+}
+
 let ScanDir = function (siteRoot, dir, ret) {
     for (var name of Fs.readdirSync(dir)) {
-        if (ignoreName.indexOf(name) != -1) continue;
-        if (ignoreExt.indexOf(Path.extname(name)) != -1) continue;
+        if (IsIgnoreFile(name)) continue;
         var fullPath = Path.join(dir, name);
         var stat = Fs.statSync(fullPath);
 
@@ -51,6 +59,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'string':
                 contentConfig.push({
                     name:        key,
+                    displayName: key,
                     type:        'Text',
                     validations: [],
                     required:    false
@@ -59,6 +68,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'number':
                 contentConfig.push({
                     name:        key,
+                    displayName: key,
                     type:        'Number',
                     validations: [],
                     required:    false
@@ -67,6 +77,7 @@ function genSimpleContentConfigFile(metaData) {
             case 'boolean':
                 contentConfig.push({
                     name:        key,
+                    displayName: key,
                     type:        'Boolean',
                     validations: [],
                     required:    false
@@ -97,6 +108,12 @@ function getContentFile(siteName, contentFilePath) {
     var content = readFile(siteName, contentFilePath).trim();
     // split content thanh metaData va markdownData
     return SplitContentFile(content);
+}
+
+function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
+    var fullPath = Path.join(sitesRoot, siteName, contentFilePath);
+    var content = `---json\r\n${JSON.stringify(metaData, null, 4)}\r\n---\r\n${markdownData}`;
+    Fs.writeFileSync(fullPath, content);
 }
 
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
@@ -134,10 +151,28 @@ function getSiteList() {
     return sites;
 }
 
+function saveConfigFile(siteName, layoutPath, contentConfig) {
+    var name = Path.basename(layoutPath, Path.extname(layoutPath));
+    var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
+    Fs.writeFileSync(contentConfigFullPath, contentConfig);
+}
+
+function getLayoutFile(siteName, filePath) {
+    return Fs.readFileSync(Path.join(sitesRoot, siteName, filePath)).toString();
+}
+
+function saveLayoutFile(siteName, filePath, content) {
+    Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
+}
+
 module.exports = {
-    getSiteList:    getSiteList,
-    getSiteFiles:   getSiteFiles,
-    getConfigFile:  getConfigFile,
-    getContentFile: getContentFile,
-    readFile:       readFile
+    getSiteList:     getSiteList,
+    getSiteFiles:    getSiteFiles,
+    getConfigFile:   getConfigFile,
+    saveConfigFile:  saveConfigFile,
+    getContentFile:  getContentFile,
+    saveContentFile: saveContentFile,
+    getLayoutFile:   getLayoutFile,
+    saveLayoutFile:  saveLayoutFile,
+    readFile:        readFile
 };
