@@ -4,7 +4,7 @@ let Fs = require('fs');
 let Path = require('path');
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
-const ignoreExt = ['.config.json'];
+const ignoreExt = ['.config.json', '.html'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
