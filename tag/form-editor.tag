@@ -5,6 +5,8 @@
         var me = this;
         me.form = null;
 
+        me.codeEditorMap = {};
+
         me.on('mount', function () {
             me.form = me.root.querySelector('form');
         });
@@ -33,21 +35,25 @@
             </div>`;
         }
 
+        function htmlToNode(html, className) {
+            var div = document.createElement('div');
+            div.innerHTML = html;
+            if (className) div.className = className;
+            return div;
+        }
+
         function genTextInput(config, metaValue) {
             metaValue = metaValue ? metaValue : '';
-            return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
-
-                    </label>
-                    <div class="col-sm-9">
-                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" value="${metaValue}">
-                    </div>
-                </div>`;
+            return htmlToNode(`
+                <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+                <div class="col-sm-9">
+                    <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" value="${metaValue}">
+                </div>`, 'form-group');
         }
 
         function genBooleanInput(config, metaValue) {
             metaValue = metaValue ? metaValue : '';
-            return `<div class="form-group">
+            return htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
                     </label>
                     <div class="col-sm-9">
@@ -56,20 +62,18 @@
                             <input type="checkbox" name="input-${config.name}" data-name="${config.name}" checked="${metaValue}">
                         </label>
                         </div>
-                    </div>
-                </div>`;
+                    </div>`, 'form-group');
         }
 
         function genIntegerInput(config, metaValue) {
             metaValue = metaValue ? metaValue : '';
-            return `<div class="form-group">
+            return htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
 
                     </label>
                     <div class="col-sm-9">
                         <input type="number" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
-                    </div>
-                </div>`;
+                    </div>`, 'form-group');
         }
 
         function genArrayInput(config, metaValue) {
@@ -99,35 +103,51 @@
                 </div>`;
         }
 
-        function genObjectInput(config, metaValue) {
-            metaValue = metaValue ? metaValue : [];
-            return `<div class="form-group">
+        function genTextEditorInput(config, metaValue) {
+            console.log('metaValue', metaValue);
+            if (typeof(metaValue) != 'string')
+                metaValue = JSON.stringify(metaValue, null, 4);
+            var node = htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
                     <div class="col-sm-9">
-                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
-                    </div>
-                </div>`;
+                        <div class="code-editor CodeMirror" id="${config.name}" style="border: 1px; padding: 0 0 15px 0;"></div>
+                    </div>`, 'form-group');
+            var editorElm = node.querySelector('.code-editor');
+            var editor = CodeMirror(editorElm, {
+                value:                   metaValue ? metaValue : '',
+                rtlMoveVisually:         false,
+                showCursorWhenSelecting: false,
+                lineWrapping:            true,
+                lineNumbers:             true,
+                fixedGutter:             true,
+                foldGutter:              false,
+                matchBrackets:           true,
+                styleActiveLine:         true,
+                gutter:                  true,
+                readOnly:                false,
+                lint:                    true,
+                gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
+                mode:                    'application/json',
+                firstLineNumber:         1,
+                indentUnit:              4
+            });
+
+            me.codeEditorMap[config.name] = editor;
+
+            setTimeout(function () {
+                editor.refresh();
+            }, 10);
+            return node;
         }
 
-        function genFormWithoutModel(form) {
-            var innerForm = '';
-
-            for (var key in form) {
-                if (!form.hasOwnProperty(key)) continue;
-                var value = form[key];
-                switch (typeof value) {
-                    case 'string':
-                        innerForm += genSimpleInput(key, 'text', value);
-                        break;
-                    case 'number':
-                        innerForm += genSimpleInput(key, 'number', value);
-                        break;
-                    case 'boolean':
-                        innerForm += genSimpleInput(key, 'boolean', value);
-                        break;
-                }
-            }
-            return innerForm;
+        function genObjectInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : [];
+            var node = htmlToNode(`
+                <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+                <div class="col-sm-9">
+                    <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                </div>`, 'form-group');
+            return node;
         }
 
         function getInputValue(input) {
@@ -143,11 +163,19 @@
         }
 
         me.getForm = function () {
-            var inputs = me.form.querySelectorAll('input[name^="input-"]');
+            var inputs = me.form.querySelectorAll('input');
             var ret = {};
+            // get value of input
             inputs.forEach(function (input) {
+//                console.log('input', input);
                 ret[input.dataset.name] = getInputValue(input);
             });
+            // get editor field
+            for(var fieldName in me.codeEditorMap) {
+                if (!me.codeEditorMap.hasOwnProperty(fieldName)) continue;
+                ret[fieldName] = JSON.parse(me.codeEditorMap[fieldName].getValue());
+            }
+            console.log('ret', ret);
             return ret;
         };
 
@@ -155,38 +183,40 @@
             me.form.innerHTML = '';
         };
 
-        me.addArrayItem = function(name) {
+        me.addArrayItem = function (name) {
             console.log('addArrayItem', name);
         };
 
         me.genForm = function (metaData, contentConfig) {
 //            console.log('genForm', metaData, contentConfig);
+            me.form.innerHTML = '';
+            me.codeEditorMap = {};
             var innerForm = '';
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
                 switch (fieldConfig.type) {
                     case 'Text':
-                        innerForm += genTextInput(fieldConfig, metaValue);
+                        me.form.appendChild(genTextInput(fieldConfig, metaValue));
                         break;
                     case 'Number':
-                        innerForm += genIntegerInput(fieldConfig, metaValue);
+                        me.form.appendChild(genIntegerInput(fieldConfig, metaValue));
                         break;
                     case 'Boolean':
-                        innerForm += genBooleanInput(fieldConfig, metaValue);
+                        me.form.appendChild(genBooleanInput(fieldConfig, metaValue));
                         break;
                     case 'DateTime':
-                        innerForm += genDateTimeInput(fieldConfig, metaValue);
+                        me.form.appendChild(genDateTimeInput(fieldConfig, metaValue));
                         break;
                     case 'Array':
-                        innerForm += genArrayInput(fieldConfig, metaValue);
+                        me.form.appendChild(genTextEditorInput(fieldConfig, metaValue));
                         break;
                     case 'Object':
-                        innerForm += genObjectInput(fieldConfig, metaValue);
+                        me.form.appendChild(genTextEditorInput(fieldConfig, metaValue));
                         break;
                 }
             }
-            me.form.innerHTML = innerForm;
+//            me.form.innerHTML = innerForm;
         }
     </script>
 </form-editor>

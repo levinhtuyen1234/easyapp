@@ -8,11 +8,6 @@
             me.editor.refresh();
         };
 
-        //        window.onresize = function (e) {
-        //            if (editor)
-        //                editor.setSize('100%', window.innerHeight - 220);
-        //        };
-
         me.setOption = function (name, value) {
             me.editor.setOption(name, value);
         };
@@ -32,7 +27,7 @@
         me.on('mount', function () {
             var editorElm = me.root.querySelector('.code-editor');
             me.editor = CodeMirror(editorElm, {
-                value:                   '',
+                value:                   me.opts.content ? me.opts.content : '',
                 rtlMoveVisually:         false,
                 showCursorWhenSelecting: false,
                 lineWrapping:            true,
