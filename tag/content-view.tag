@@ -8,7 +8,7 @@
         me.markdownEditor = null;
 
         me.setContent = function (content, contentConfig) {
-            console.log('me.tags', me.tags);
+//            console.log('me.tags', me.tags);
 //            console.log('contentConfig', contentConfig);
             // gen form
             me.tags['form-editor'].genForm(content.metaData, contentConfig);

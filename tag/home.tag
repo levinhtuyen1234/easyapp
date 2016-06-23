@@ -222,7 +222,7 @@
                         parts.shift();
                         contentFilePath = parts.join('/');
                     }
-                    console.log('contentFilePath', contentFilePath);
+//                    console.log('contentFilePath', contentFilePath);
                     bootbox.confirm({
                         title:    'Delete',
                         message:  `Are you sure you want to delete content "${contentFilePath}" ?`,

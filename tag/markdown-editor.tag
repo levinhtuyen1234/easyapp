@@ -5,7 +5,7 @@
         me.editor = null;
 
         me.on('mount', function () {
-            console.log('markdown editor mount');
+//            console.log('markdown editor mount');
             me.editor = new SimpleMDE({
                 element:                 me.root.querySelector('textarea'),
                 autoDownloadFontAwesome: false,

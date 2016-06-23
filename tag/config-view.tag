@@ -115,7 +115,6 @@
     </div>
 
     <script>
-        console.trace('me');
         var me = this;
         var $root = $(me.root);
         me.contentConfig = [];
@@ -181,11 +180,11 @@
                 textPredefined:     me.textPredefined,
                 textPredefinedList: me.textPredefinedList
             };
-            console.log('settings', settings);
+//            console.log('settings', settings);
         };
 
         me.showFieldOptions = function (e) {
-            console.log('showFieldOptions', e.target.value);
+//            console.log('showFieldOptions', e.target.value);
             me.curFieldType = e.target.value;
         };
 
@@ -200,13 +199,13 @@
         };
 
         me.loadContentConfig = function (contentConfig) {
-            console.log('[config-view] loadContentConfig', contentConfig);
+//            console.log('[config-view] loadContentConfig', contentConfig);
             me.contentConfig = contentConfig;
             me.update();
         };
 
         me.removeField = function(fieldName) {
-            console.log('remove field', fieldName);
+//            console.log('remove field', fieldName);
             for (var i = 0; i < me.contentConfig.length; i++) {
                 if (me.contentConfig[i].name === fieldName) {
                     me.contentConfig.splice(i, 1);

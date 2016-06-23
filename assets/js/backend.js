@@ -119,7 +119,6 @@ function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
-    console.log('fullPath', contentConfigFullPath);
 
     if (fileExists(contentConfigFullPath)) {
         // read and return config file

@@ -60,7 +60,7 @@
                 }
             });
 //            me.editor.click();
-            console.log('me.editor', me.editor);
+//            console.log('me.editor', me.editor);
 //            me.editor.setSize('100%', window.innerHeight - 220);
         });
     </script>
