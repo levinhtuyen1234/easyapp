@@ -6,36 +6,26 @@
             <!-- EDITOR PANEL -->
             <div class="panel panel-default" hide="{curTab === ''}">
                 <div class="panel-heading panel-heading-sm">
-                    <h3 class="panel-title pull-left">{currentFileTitle}</h3>
-
-                    <div role="separator" class="divider"></div>
-                    <button type="button" class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
-                        <i class="fa fa-save"></i> Save
-                    </button>
-
-                    <div class="btn-group pull-right">
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Action <span class="caret"></span>
-                        </button>
+                    <h3 class="panel-title pull-left" style="width: 250px;">{currentFileTitle}</h3>
+                    <div class="btn-group pull-right" data-toggle="buttons">
+                        <a class="btn btn-default btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                        </a>
+                        <a class="btn btn-default btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                        </a>
+                        <a class="btn btn-default btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                        </a>
+                        <a class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
+                            <i class="fa fa-save"></i> Save
+                        </a>
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                        </a>
                         <ul class="dropdown-menu" role="tablist">
                             <li role="presentation">
-                                <a href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                                    <i class="fa fa-fw fa-newspaper-o"></i> Edit content
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                                    <i class="fa fa-fw fa-code"></i> Edit layout
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                                    <i class="fa fa-fw fa-cog"></i> Edit config
-                                </a>
-                            </li>
-                            <li role="separator" class="divider" hide="{curTab === 'config-view' || curTab === 'layout-view'}"></li>
-                            <li hide="{curTab === 'config-view' || curTab === 'layout-view'}">
-                                <a href="#" class="alert-danger" onclick="{deleteFile}">
+                                <a class="bg-danger" href="#" onclick="{deleteFile}">
                                     <i class="fa fa-fw fa-remove"></i> Delete
                                 </a>
                             </li>
@@ -70,13 +60,14 @@
         });
 
         function HideAllTab() {
-            $(me.root).find('li[role="presentation"]').removeClass('active');
+            $(me.root).find('a[role="tab"]').removeClass('active');
         }
 
         function ShowTab(name) {
             me.curTab = name;
-            $(me.root).find('ul[role="tablist"] li a[href="#' + name + '"]').tab('show');
-
+            var elm = $(me.root).find('a[href="#' + name + '"]');
+            elm.tab('show');
+            elm.addClass('active');
         }
 
         function UnmountAll() {

@@ -72,6 +72,43 @@
                 </div>`;
         }
 
+        function genArrayInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : {};
+            return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+                    <div class="col-sm-9">
+                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '${config.name}')"><i class="fa fa-plus"></i> Add</button>
+                        <ul class="list-group">
+                            <li class="list-group-item clearfix">
+                                Aasdfasfasdfsaf
+                                <span class="pull-right">
+                                    <a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a>
+                                </span>
+                            </li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+                        </ul>
+                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                    </div>
+                </div>`;
+        }
+
+        function genObjectInput(config, metaValue) {
+            metaValue = metaValue ? metaValue : [];
+            return `<div class="form-group">
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+                    <div class="col-sm-9">
+                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+                    </div>
+                </div>`;
+        }
+
         function genFormWithoutModel(form) {
             var innerForm = '';
 
@@ -118,6 +155,10 @@
             me.form.innerHTML = '';
         };
 
+        me.addArrayItem = function(name) {
+            console.log('addArrayItem', name);
+        };
+
         me.genForm = function (metaData, contentConfig) {
 //            console.log('genForm', metaData, contentConfig);
             var innerForm = '';
@@ -136,6 +177,12 @@
                         break;
                     case 'DateTime':
                         innerForm += genDateTimeInput(fieldConfig, metaValue);
+                        break;
+                    case 'Array':
+                        innerForm += genArrayInput(fieldConfig, metaValue);
+                        break;
+                    case 'Object':
+                        innerForm += genObjectInput(fieldConfig, metaValue);
                         break;
                 }
             }

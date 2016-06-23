@@ -83,6 +83,24 @@ function genSimpleContentConfigFile(metaData) {
                     required:    false
                 });
                 break;
+            case 'object':
+                if (Array.isArray(value)) {
+                    contentConfig.push({
+                        name:        key,
+                        displayName: key,
+                        type:        'Array',
+                        validations: [],
+                        required:    false
+                    });
+                } else {
+                    contentConfig.push({
+                        name:        key,
+                        displayName: key,
+                        type:        'Object',
+                        validations: [],
+                        required:    false
+                    });
+                }
         }
     }
     return contentConfig;
