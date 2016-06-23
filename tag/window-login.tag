@@ -1,6 +1,6 @@
 <window-login>
     <!-- HTML TAG START -->
-    <div class="jumbotron jumbotron-home jumbotron-inverse" style="margin-bottom:1px;">
+    <div class="jumbotron jumbotron-inverse" style="margin-bottom:1px;background-image:url('assets/img/bg1.jpg');">
       <div class="container-responsive">
         <div class="columns">
           <div class="homepage-hero-intro column">
