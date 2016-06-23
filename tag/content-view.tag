@@ -16,6 +16,11 @@
             me.tags['markdown-editor'].value(content.markDownData);
         };
 
+        me.reset = function() {
+            me.tags['form-editor'].clear();
+            me.tags['markdown-editor'].value('');
+        };
+
         me.getContent = function () {
             return {
                 metaData:     me.tags['form-editor'].getForm(),

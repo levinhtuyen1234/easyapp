@@ -8,7 +8,7 @@ const ignoreExt = ['.config.json', '.html'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
-function IsIgnoreFile (name) {
+function IsIgnoreFile(name) {
     if (ignoreName.indexOf(name) != -1) return true;
     for (var i = 0; i < ignoreExt.length; i++) {
         if (name.endsWith(ignoreExt[i]))
@@ -165,14 +165,30 @@ function saveLayoutFile(siteName, filePath, content) {
     Fs.writeFileSync(Path.join(sitesRoot, siteName, 'layout', filePath), content);
 }
 
+function deleteFile(siteName, subFolder, filePath) {
+    var filePath = Path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+    var fullPath = Path.join(sitesRoot, siteName, subFolder, filePath);
+    return Fs.unlinkSync(fullPath);
+}
+
+function deleteLayoutFile(siteName, filePath) {
+    return deleteFile(siteName, 'layout', filePath);
+}
+
+function deleteContentFile(siteName, filePath) {
+    return deleteFile(siteName, 'content', filePath);
+}
+
 module.exports = {
-    getSiteList:     getSiteList,
-    getSiteFiles:    getSiteFiles,
-    getConfigFile:   getConfigFile,
-    saveConfigFile:  saveConfigFile,
-    getContentFile:  getContentFile,
-    saveContentFile: saveContentFile,
-    getLayoutFile:   getLayoutFile,
-    saveLayoutFile:  saveLayoutFile,
-    readFile:        readFile
+    getSiteList:       getSiteList,
+    getSiteFiles:      getSiteFiles,
+    getConfigFile:     getConfigFile,
+    saveConfigFile:    saveConfigFile,
+    getContentFile:    getContentFile,
+    saveContentFile:   saveContentFile,
+    getLayoutFile:     getLayoutFile,
+    saveLayoutFile:    saveLayoutFile,
+    deleteLayoutFile:  deleteLayoutFile,
+    deleteContentFile: deleteContentFile,
+    readFile:          readFile
 };

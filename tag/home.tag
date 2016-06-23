@@ -4,7 +4,7 @@
         <div class="col-md-8">
             <breadcrumb site_name="{opts.siteName}"></breadcrumb>
             <!-- EDITOR PANEL -->
-            <div class="panel panel-default">
+            <div class="panel panel-default" hide="{curTab === ''}">
                 <div class="panel-heading panel-heading-sm">
                     <h3 class="panel-title pull-left">{currentFileTitle}</h3>
 
@@ -33,9 +33,9 @@
                                     <i class="fa fa-fw fa-cog"></i> Edit config
                                 </a>
                             </li>
-                            <li role="separator" class="divider"></li>
-                            <li>
-                                <a href="#" class="alert-danger">
+                            <li role="separator" class="divider" hide="{curTab === 'config-view' || curTab === 'layout-view'}"></li>
+                            <li hide="{curTab === 'config-view' || curTab === 'layout-view'}">
+                                <a href="#" class="alert-danger" onclick="{deleteFile}">
                                     <i class="fa fa-fw fa-remove"></i> Delete
                                 </a>
                             </li>
@@ -59,6 +59,7 @@
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
+        me.curTab = '';
         me.currentFilePath = '';
         me.currentLayout = '';
         me.currentFileTitle = '';
@@ -73,7 +74,9 @@
         }
 
         function ShowTab(name) {
+            me.curTab = name;
             $(me.root).find('ul[role="tablist"] li a[href="#' + name + '"]').tab('show');
+
         }
 
         function UnmountAll() {
@@ -145,16 +148,17 @@
 
 //            var content = getFileContent(me.currentFilePath);
             var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
-            if (!content.metaData.layout) {
-                alert('content missing layout attribute');
-                return;
+            if (!content || !content.metaData || !content.metaData.layout) {
+                console.log('content missing meta or layout attribute');
+                me.tags['content-view'].reset();
+//                return;
+            } else {
+                me.currentLayout = content.metaData.layout;
+                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+                console.log('content', content);
+                me.tags['content-view'].setContent(content, contentConfig);
             }
 
-            me.currentLayout = content.metaData.layout;
-            var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-            console.log('content', content);
-
-            me.tags['content-view'].setContent(content, contentConfig);
             ShowTab('content-view');
         };
 
@@ -187,27 +191,71 @@
             } else if (filePath.endsWith('.html')) {
                 me.openLayoutTab();
             }
+            me.update();
         };
 
         me.save = function () {
-            // check current active tab
-            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
-
-            console.log('save', curTabHref);
-            switch (curTabHref) {
-                case '#content-view':
+//            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+            switch (me.curTab) {
+                case 'content-view':
                     var content = me.tags['content-view'].getContent();
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
                     break;
-                case '#layout-view':
+                case 'layout-view':
                     var layoutContent = me.tags['layout-view'].value();
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentFilePath, layoutContent);
                     break;
-                case '#config-view':
+                case 'config-view':
                     var contentConfig = me.tags['config-view'].getContentConfig();
                     BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
                     break;
             }
         };
+
+        me.deleteFile = function () {
+//            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+            switch (me.curTab) {
+                case 'content-view':
+                    var contentFilePath = me.currentFilePath;
+                    if (contentFilePath.startsWith('content')) {
+                        var parts = contentFilePath.split(/[\\\/]/);
+                        parts.shift();
+                        contentFilePath = parts.join('/');
+                    }
+                    console.log('contentFilePath', contentFilePath);
+                    bootbox.confirm({
+                        title:    'Delete',
+                        message:  `Are you sure you want to delete content "${contentFilePath}" ?`,
+                        buttons:  {
+                            'cancel':  {
+                                label:     'Cancel',
+                                className: 'btn-default'
+                            },
+                            'confirm': {
+                                label:     'Delete',
+                                className: 'btn-danger'
+                            }
+                        },
+                        callback: function (result) {
+                            if (result) {
+                                BackEnd.deleteContentFile(me.opts.siteName, contentFilePath);
+                                me.tags['side-bar'].loadFiles(me.opts.siteName); // reload sidebar file list
+                                // hide rightCol
+                                me.curTab = '';
+                                me.tags['breadcrumb'].setPath('');
+                                me.update();
+                            }
+                        }
+                    });
+                    break;
+                case 'layout-view':
+                    console.log('TODO delete layout', me.currentLayout);
+
+                    break;
+                case 'config-view':
+                    console.log('TODO delete config', me.currentFilePath);
+                    break;
+            }
+        }
     </script>
 </home>
