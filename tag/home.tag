@@ -133,7 +133,7 @@
             me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
             me.update();
 
-            var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentFilePath);
+            var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
             me.tags['layout-view'].value(fileContent);
             ShowTab('layout-view');
         };

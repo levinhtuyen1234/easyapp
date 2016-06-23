@@ -158,11 +158,11 @@ function saveConfigFile(siteName, layoutPath, contentConfig) {
 }
 
 function getLayoutFile(siteName, filePath) {
-    return Fs.readFileSync(Path.join(sitesRoot, siteName, filePath)).toString();
+    return Fs.readFileSync(Path.join(sitesRoot, siteName, 'layout', filePath)).toString();
 }
 
 function saveLayoutFile(siteName, filePath, content) {
-    Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
+    Fs.writeFileSync(Path.join(sitesRoot, siteName, 'layout', filePath), content);
 }
 
 module.exports = {
