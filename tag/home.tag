@@ -133,24 +133,28 @@
         };
 
         me.openContentTab = function () {
-            HideAllTab();
-            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-            me.update();
+            try {
+                HideAllTab();
+                me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+                me.update();
 
 //            var content = getFileContent(me.currentFilePath);
-            var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
-            if (!content || !content.metaData || !content.metaData.layout) {
-                console.log('content missing meta or layout attribute');
-                me.tags['content-view'].reset();
+                var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
+                if (!content || !content.metaData || !content.metaData.layout) {
+                    console.log('content missing meta or layout attribute');
+                    me.tags['content-view'].reset();
 //                return;
-            } else {
-                me.currentLayout = content.metaData.layout;
-                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-                console.log('content', content);
-                me.tags['content-view'].setContent(content, contentConfig);
-            }
+                } else {
+                    me.currentLayout = content.metaData.layout;
+                    var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+                    console.log('content', content);
+                    me.tags['content-view'].setContent(content, contentConfig);
+                }
 
-            ShowTab('content-view');
+                ShowTab('content-view');
+            } catch(ex) {
+                bootbox.alert('Open content failed, error ' + ex.message, function() {});
+            }
         };
 
         me.openConfigTab = function () {

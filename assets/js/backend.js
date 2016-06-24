@@ -123,9 +123,9 @@ function SplitContentFile(fileContent) {
 }
 
 function getContentFile(siteName, contentFilePath) {
-    var content = readFile(siteName, contentFilePath).trim();
+    var contentStr = readFile(siteName, contentFilePath).trim();
     // split content thanh metaData va markdownData
-    return SplitContentFile(content);
+    return SplitContentFile(contentStr);
 }
 
 function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
