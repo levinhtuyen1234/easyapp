@@ -104,9 +104,18 @@
         }
 
         function genTextEditorInput(config, metaValue) {
-            console.log('metaValue', metaValue);
-            if (typeof(metaValue) != 'string')
-                metaValue = JSON.stringify(metaValue, null, 4);
+            switch (typeof(metaValue)) {
+                case 'undefined':
+                    if (config.type === 'Array')
+                        metaValue = '[]';
+                    else if (config.type === 'Object')
+                        metaValue = '{}';
+                    break;
+                case 'object':
+                    metaValue = JSON.stringify(metaValue, null, 4);
+                    break;
+            }
+
             var node = htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
                     <div class="col-sm-9">
@@ -171,7 +180,7 @@
                 ret[input.dataset.name] = getInputValue(input);
             });
             // get editor field
-            for(var fieldName in me.codeEditorMap) {
+            for (var fieldName in me.codeEditorMap) {
                 if (!me.codeEditorMap.hasOwnProperty(fieldName)) continue;
                 ret[fieldName] = JSON.parse(me.codeEditorMap[fieldName].getValue());
             }

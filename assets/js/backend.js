@@ -138,14 +138,28 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
 
+    // doc file content lay metaData
+    var content = getContentFile(siteName, contentFilePath);
+    // gen default config file and return
+    var contentConfig = genSimpleContentConfigFile(content.metaData);
+
     if (fileExists(contentConfigFullPath)) {
         // read and return config file
-        return JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
+        var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
+        // merge property from contentConfig -> existsConfig
+        var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
+            return existsConfig.filter(function(curB){
+                return cur.name === curB.name;
+            }).length === 0;
+        });
+
+        // update config file neu co field mới
+        if (fieldsOnlyInCurContentFile.length > 0) {
+            existsConfig = existsConfig.concat(fieldsOnlyInCurContentFile);
+            Fs.writeFileSync(contentConfigFullPath, JSON.stringify(existsConfig, null, 4));
+        }
+        return existsConfig;
     } else {
-        // doc file content lay metaData
-        var content = getContentFile(siteName, contentFilePath);
-        // gen default config file and return
-        var contentConfig = genSimpleContentConfigFile(content.metaData);
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
         return contentConfig;
     }
