@@ -128,6 +128,10 @@ function getContentFile(siteName, contentFilePath) {
     return SplitContentFile(contentStr);
 }
 
+function getRawContentFile(siteName, contentFilePath) {
+    return readFile(siteName, contentFilePath).trim();
+}
+
 function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
     var fullPath = Path.join(sitesRoot, siteName, contentFilePath);
     var content = `---json\r\n${JSON.stringify(metaData, null, 4)}\r\n---\r\n${markdownData}`;
@@ -148,9 +152,9 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
         // merge property from contentConfig -> existsConfig
         var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
-            return existsConfig.filter(function(curB){
-                return cur.name === curB.name;
-            }).length === 0;
+            return existsConfig.filter(function (curB) {
+                    return cur.name === curB.name;
+                }).length === 0;
         });
 
         // update config file neu co field mới
@@ -215,6 +219,7 @@ module.exports = {
     getSiteFiles:      getSiteFiles,
     getConfigFile:     getConfigFile,
     saveConfigFile:    saveConfigFile,
+    getRawContentFile: getRawContentFile,
     getContentFile:    getContentFile,
     saveContentFile:   saveContentFile,
     getLayoutFile:     getLayoutFile,

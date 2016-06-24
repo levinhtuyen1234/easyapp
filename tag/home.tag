@@ -11,6 +11,9 @@
                         <a class="btn btn-default btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
                         </a>
+                        <a class="btn btn-default btn-sm" href="#raw-content-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                            <input type="radio" name="options">Raw
+                        </a>
                         <a class="btn btn-default btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
                         </a>
@@ -20,7 +23,7 @@
                         <a class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
                             <i class="fa fa-save"></i> Save
                         </a>
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab == 'content-view'}">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="tablist">
@@ -36,6 +39,7 @@
                 <div class="panel-body">
                     <div class="tab-content">
                         <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                        <code-view id="raw-content-view" role="tabpanel" class="tab-pane"></code-view>
                         <layout-view id="layout-view" role="tabpanel" class="tab-pane"></layout-view>
                         <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
                     </div>
@@ -49,6 +53,7 @@
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
+        me.codeView = null;
         me.curTab = '';
         me.currentFilePath = '';
         me.currentLayout = '';
@@ -74,6 +79,7 @@
             if (me.contentView) me.contentView.unmount(true);
             if (me.configView) me.configView.unmount(true);
             if (me.layoutView) me.layoutView.unmount(true);
+            if (me.codeView) me.codeView.unmount(true);
         }
 
         function createDefaultConfigFile(metaData) {
@@ -116,10 +122,6 @@
             if (fileContent === null) return;
             // split content thanh meta va markdown
             return SplitContentFile(fileContent);
-        }
-
-        function getConfigFile(contentFilePath) {
-
         }
 
         me.openLayoutTab = function () {
@@ -171,6 +173,15 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
+        };
+
+        me.openRawContentTab = function() {
+            console.log('openRawContentTab', me.currentFilePath);
+            HideAllTab();
+
+            var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
+            console.log('rawStr', me.tags['code-view']);
+            me.tags['code-view'].value(rawStr);
         };
 
         me.openFile = function (filePath) {

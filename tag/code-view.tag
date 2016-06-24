@@ -5,11 +5,10 @@
 
     <script>
         var me = this;
-        me.code = opts.code;
+        me.code = opts.code ? opts.code : '';
 
         me.on('mount', function(){
             var codeElm = me.root.querySelector('code');
-//            console.log(codeElm);
             hljs.highlightBlock(codeElm);
         });
 
@@ -18,7 +17,9 @@
                 return me.code;
             } else {
                 me.code = text;
-                me.update();
+                var codeElm = me.root.querySelector('code');
+                codeElm.innerHTML = text;
+                hljs.highlightBlock(codeElm);
             }
         }
     </script>
