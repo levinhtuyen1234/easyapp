@@ -198,7 +198,7 @@
                     break;
                 case 'layout-view':
                     var layoutContent = me.tags['layout-view'].value();
-                    BackEnd.saveLayoutFile(me.opts.siteName, me.currentFilePath, layoutContent);
+                    BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;
                 case 'config-view':
                     var contentConfig = me.tags['config-view'].getContentConfig();
