@@ -257,11 +257,11 @@ function newLayoutFile(siteName, layoutFileName) {
     }
 }
 
-function newContentFile(siteName, layoutFileName, contentFileName) {
+function newContentFile(siteName, layoutFileName, contentTitle, contentFileName) {
     console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var defaultLayoutContent = `---json
 {
-    "title": "",
+    "title": "${contentTitle}",
     "url": "/",
     "description": "",
     "layout": "${layoutFileName}",

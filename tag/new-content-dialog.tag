@@ -56,7 +56,7 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addContent', me.contentLayout, me.contentFileName + '.md');
+            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md');
         };
 
         riot.api.on('closeNewContentDialog', function () {

@@ -324,8 +324,8 @@
             }
         });
 
-        riot.api.on('addContent', function (layoutFileName, contentFileName) {
-            var err = BackEnd.newContentFile(me.siteName, layoutFileName, contentFileName);
+        riot.api.on('addContent', function (layoutFileName, contentTitle, contentFileName) {
+            var err = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName);
             console.log('addContent', err);
             if (err)
                 bootbox.alert('create content failed, error ' + err);
