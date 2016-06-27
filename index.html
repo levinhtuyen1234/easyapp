@@ -11,11 +11,13 @@
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" />
-    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-7fae2d802a203f722465a757a5c1ecdb285d355fdcda038c10a2d20722dcf959.css" media="all" rel="stylesheet" />
 
+    <link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">
+    <link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">
 
-    <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css" media="all" rel="stylesheet" />
+    <!-- <link crossorigin="anonymous" href="/assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" /> -->
+    <!-- <link crossorigin="anonymous" href="https://assets-cdn.github.com/assets/github-7fae2d802a203f722465a757a5c1ecdb285d355fdcda038c10a2d20722dcf959.css" media="all" rel="stylesheet" /> -->
+    <!-- <link crossorigin="anonymous" href="/assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css" media="all" rel="stylesheet" /> -->
     <script>
         var saveModule = module;
         delete module;
@@ -28,27 +30,6 @@
 <home></home>
 <window-public></window-public>
 <!-- preload toàn bộ tag -->
-<!--<script src="tag/toolbar.tag" type="riot/tag"></script>-->
-<!--<script src="tag/nav.tag" type="riot/tag"></script>-->
-<!--<script src="tag/code-editor.tag" type="riot/tag"></script>-->
-<!--<script src="tag/form-editor.tag" type="riot/tag"></script>-->
-<!--<script src="tag/code-view.tag" type="riot/tag"></script>-->
-<!--<script src="tag/new-site.tag" type="riot/tag"></script>-->
-<!--<script src="tag/build.tag" type="riot/tag"></script>-->
-<!--<script src="tag/landing.tag" type="riot/tag"></script>-->
-<!--<script src="tag/review.tag" type="riot/tag"></script>-->
-<!--<script src="tag/setting.tag" type="riot/tag"></script>-->
-<!--<script src="tag/content.tag" type="riot/tag"></script>-->
-<!--<script src="tag/layout.tag" type="riot/tag"></script>-->
-<!--<script src="tag/browse.tag" type="riot/tag"></script>-->
-<!--<script src="tag/home.tag" type="riot/tag"></script>-->
-<!--<script src="tag/home.tag" type="riot/tag"></script>-->
-<!--<script src="tag/meta-view.tag" type="riot/tag"></script>-->
-<!--<script src="tag/config-view.tag" type="riot/tag"></script>-->
-<!--<script src="tag/layout-view.tag" type="riot/tag"></script>-->
-<!--<script src="tag/content-view.tag" type="riot/tag"></script>-->
-<!--<script src="tag/markdown-editor.tag" type="riot/tag"></script>-->
-
 <script src="tag/form-editor.tag" type="riot/tag"></script>
 <script src="tag/markdown-editor.tag" type="riot/tag"></script>
 
@@ -146,32 +127,32 @@
     });
 
     riot.compile(function () {
-       login = riot.mount('window-login');
+        login = riot.mount('window-login');
 //        landing = riot.mount('landing');
 //        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
 
 <div class="container site-footer-container">
-  <div class="site-footer" role="contentinfo">
-    <!-- <ul class="site-footer-links right">
-        <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
-      <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
-      <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
-      <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
-        <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
-        <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
+    <div class="site-footer" role="contentinfo">
+        <!-- <ul class="site-footer-links right">
+            <li><a href="https://status.github.com/" data-ga-click="Footer, go to status, text:status">Status</a></li>
+          <li><a href="https://developer.github.com" data-ga-click="Footer, go to api, text:api">API</a></li>
+          <li><a href="https://training.github.com" data-ga-click="Footer, go to training, text:training">Training</a></li>
+          <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
+            <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
+            <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
 
-    </ul> -->
+        </ul> -->
 
 
-    <ul class="site-footer-links">
-      <li>&copy; 2016 <span title="0.01148s from github-fe126-cp1-prd.iad.github.net">EasyWebHub</span>, Inc.</li>
-        <li><a href="http://easywebhub.com/" data-ga-click="Footer, go to terms, text:terms">Home</a></li>
-        <li><a href="http://book.easywebhub.com/" data-ga-click="Footer, go to privacy, text:privacy">Document</a></li>
-        <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
-    </ul>
-  </div>
+        <ul class="site-footer-links">
+            <li>&copy; 2016 <span title="0.01148s from github-fe126-cp1-prd.iad.github.net">EasyWebHub</span>, Inc.</li>
+            <li><a href="http://easywebhub.com/" data-ga-click="Footer, go to terms, text:terms">Home</a></li>
+            <li><a href="http://book.easywebhub.com/" data-ga-click="Footer, go to privacy, text:privacy">Document</a></li>
+            <li><a href="https://github.com/security" data-ga-click="Footer, go to security, text:security">Security</a></li>
+        </ul>
+    </div>
 </div>
 
 </body>
