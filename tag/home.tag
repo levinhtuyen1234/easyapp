@@ -1,4 +1,6 @@
 <home>
+    <new-content-dialog></new-content-dialog>
+    <new-layout-dialog></new-layout-dialog>
     <div class="row">
         <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
         <div class="col-md-8">
@@ -167,8 +169,9 @@
                 }
 
                 ShowTab('content-view');
-            } catch(ex) {
-                bootbox.alert('Open content failed, error ' + ex.message, function() {});
+            } catch (ex) {
+                bootbox.alert('Open content failed, error ' + ex.message, function () {
+                });
                 me.openRawContentTab({
                     readOnly: false
                 });
@@ -191,7 +194,7 @@
             ShowTab('config-view');
         };
 
-        me.openRawContentTab = function(options) {
+        me.openRawContentTab = function (options) {
             options = options || {};
             console.log('openRawContentTab', me.currentFilePath);
             HideAllTab();
@@ -293,8 +296,44 @@
             }
         };
 
-        me.openWatchView = function() {
+        me.newLayout = function () {
+            console.log('newLayout');
+            me.tags['new-layout-dialog'].show();
+        };
+
+        me.newContent = function () {
+            console.log('newContent');
+            var layoutList = BackEnd.getLayoutList(me.siteName);
+            console.log('layoutList', layoutList);
+            me.tags['new-content-dialog'].updateLayoutList(layoutList);
+            me.tags['new-content-dialog'].show();
+        };
+
+        me.openWatchView = function () {
             console.log('openWatchView');
-        }
+        };
+
+        riot.api.on('addLayout', function (layoutFileName) {
+            var err = BackEnd.newLayoutFile(me.siteName, layoutFileName);
+            console.log('addLayout', err);
+            if (err)
+                bootbox.alert('create layout failed, error ' + err);
+            else {
+                console.log('trigger closeNewContentDialog');
+                riot.api.trigger('closeNewLayoutDialog');
+            }
+        });
+
+        riot.api.on('addContent', function (layoutFileName, contentFileName) {
+            var err = BackEnd.newContentFile(me.siteName, layoutFileName, contentFileName);
+            console.log('addContent', err);
+            if (err)
+                bootbox.alert('create content failed, error ' + err);
+            else {
+                // reload sidebar file list
+                me.tags['side-bar'].loadFiles(me.opts.siteName);
+                riot.api.trigger('closeNewContentDialog');
+            }
+        });
     </script>
 </home>

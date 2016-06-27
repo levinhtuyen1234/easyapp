@@ -10,7 +10,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#" onclick="{parent.newContent}"><i class="fa fa-newspaper-o fa-fw"></i> Content</a></li>
                         <li><a href="#" onclick="{parent.newLayout}"><i class="fa fa-file-code-o fa-fw"></i> Layout</a></li>
-                        <li><a href="#" onclick="{parent.newConfig}"><i class="fa fa-gear fa-fw"></i> Config</a></li>
+                        <!--<li><a href="#" onclick="{parent.newConfig}"><i class="fa fa-gear fa-fw"></i> Config</a></li>-->
                     </ul>
                 </div>
                 <div class="clearfix"></div>

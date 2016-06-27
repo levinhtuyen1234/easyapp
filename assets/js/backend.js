@@ -4,11 +4,21 @@ let Fs = require('fs');
 let Path = require('path');
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
-const ignoreExt = ['.config.json', '.html'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
-function IsIgnoreFile(name) {
+function filterSideBarFile(name) {
+    var ignoreExt = ['.config.json', '.html'];
+    if (ignoreName.indexOf(name) != -1) return true;
+    for (var i = 0; i < ignoreExt.length; i++) {
+        if (name.endsWith(ignoreExt[i]))
+            return true;
+    }
+    return false;
+}
+
+function filterOnlyLayoutFile(name) {
+    var ignoreExt = ['.config.json'];
     if (ignoreName.indexOf(name) != -1) return true;
     for (var i = 0; i < ignoreExt.length; i++) {
         if (name.endsWith(ignoreExt[i]))
@@ -19,7 +29,7 @@ function IsIgnoreFile(name) {
 
 let ScanDir = function (siteRoot, dir, ret) {
     for (var name of Fs.readdirSync(dir)) {
-        if (IsIgnoreFile(name)) continue;
+        if (filterSideBarFile(name)) continue;
         var fullPath = Path.join(dir, name);
         var stat = Fs.statSync(fullPath);
 
@@ -178,6 +188,22 @@ function readFile(site, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, site, filePath)).toString();
 }
 
+function getLayoutList(site) {
+    var sitePath = Path.join(sitesRoot, site, 'layout');
+    var ret = [];
+    for (var name of Fs.readdirSync(sitePath)) {
+        console.log(name);
+        if (filterOnlyLayoutFile(name)) continue;
+        var fullPath = Path.join(sitePath, name);
+        var stat = Fs.statSync(fullPath);
+
+        if (stat.isDirectory())
+            continue;
+        ret.push(name);
+    }
+    return ret;
+}
+
 function getSiteList() {
     var ret = Fs.readdirSync(sitesRoot);
     var sites = [];
@@ -206,7 +232,7 @@ function saveLayoutFile(siteName, filePath, content) {
 }
 
 function deleteFile(siteName, subFolder, filePath) {
-    var filePath = Path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
+    filePath = Path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
     var fullPath = Path.join(sitesRoot, siteName, subFolder, filePath);
     return Fs.unlinkSync(fullPath);
 }
@@ -217,6 +243,39 @@ function deleteLayoutFile(siteName, filePath) {
 
 function deleteContentFile(siteName, filePath) {
     return deleteFile(siteName, 'content', filePath);
+}
+
+function newLayoutFile(siteName, layoutFileName) {
+    var defaultLayoutContent = ``;
+    try {
+        var fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
+        Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
+        return null;
+    } catch (ex) {
+        console.log('ex', ex);
+        return ex.message;
+    }
+}
+
+function newContentFile(siteName, layoutFileName, contentFileName) {
+    console.log('newContentFile', siteName, layoutFileName, contentFileName);
+    var defaultLayoutContent = `---json
+{
+    "title": "",
+    "url": "/",
+    "description": "",
+    "layout": "${layoutFileName}",
+    "permalink": true
+}
+---
+`;
+    try {
+        var fullPath = Path.join(sitesRoot, siteName, 'content', contentFileName);
+        Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
+        return null;
+    } catch (ex) {
+        return ex.message;
+    }
 }
 
 module.exports = {
@@ -232,5 +291,8 @@ module.exports = {
     saveLayoutFile:     saveLayoutFile,
     deleteLayoutFile:   deleteLayoutFile,
     deleteContentFile:  deleteContentFile,
+    getLayoutList:      getLayoutList,
+    newLayoutFile:      newLayoutFile,
+    newContentFile:     newContentFile,
     readFile:           readFile
 };
