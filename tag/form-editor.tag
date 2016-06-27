@@ -52,14 +52,14 @@
         }
 
         function genBooleanInput(config, metaValue) {
-            metaValue = metaValue ? metaValue : '';
+            metaValue = metaValue ? metaValue : false;
             return htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}
                     </label>
                     <div class="col-sm-9">
                         <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="input-${config.name}" data-name="${config.name}" checked="${metaValue}">
+                            <input type="checkbox" name="input-${config.name}" data-name="${config.name}" ` + (metaValue ? 'checked' : '') + `>
                         </label>
                         </div>
                     </div>`, 'form-group');
@@ -162,7 +162,7 @@
         function getInputValue(input) {
             switch (input.type) {
                 case 'checkbox':
-                    return input.value === 'on';
+                    return input.checked;
                     break;
                 case 'number':
                     return parseFloat(input.value);
@@ -176,7 +176,7 @@
             var ret = {};
             // get value of input
             inputs.forEach(function (input) {
-//                console.log('input', input);
+                console.log('input', input.dataset.name, getInputValue(input));
                 ret[input.dataset.name] = getInputValue(input);
             });
             // get editor field
