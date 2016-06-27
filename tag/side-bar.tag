@@ -2,7 +2,7 @@
     <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading panel-heading-sm">
-                <h3 class="panel-title pull-left"></h3>
+                <h3 class="panel-title pull-left" style="width: 100px;"></h3>
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-plus"></i> New <span class="caret"></span>

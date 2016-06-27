@@ -138,6 +138,11 @@ function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
     Fs.writeFileSync(fullPath, content);
 }
 
+function saveRawContentFile(siteName, filePath, content) {
+    console.log('saveRawContentFile', Path.join(sitesRoot, siteName, filePath));
+    Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
+}
+
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
@@ -215,16 +220,17 @@ function deleteContentFile(siteName, filePath) {
 }
 
 module.exports = {
-    getSiteList:       getSiteList,
-    getSiteFiles:      getSiteFiles,
-    getConfigFile:     getConfigFile,
-    saveConfigFile:    saveConfigFile,
-    getRawContentFile: getRawContentFile,
-    getContentFile:    getContentFile,
-    saveContentFile:   saveContentFile,
-    getLayoutFile:     getLayoutFile,
-    saveLayoutFile:    saveLayoutFile,
-    deleteLayoutFile:  deleteLayoutFile,
-    deleteContentFile: deleteContentFile,
-    readFile:          readFile
+    getSiteList:        getSiteList,
+    getSiteFiles:       getSiteFiles,
+    getConfigFile:      getConfigFile,
+    saveConfigFile:     saveConfigFile,
+    getRawContentFile:  getRawContentFile,
+    getContentFile:     getContentFile,
+    saveContentFile:    saveContentFile,
+    saveRawContentFile: saveRawContentFile,
+    getLayoutFile:      getLayoutFile,
+    saveLayoutFile:     saveLayoutFile,
+    deleteLayoutFile:   deleteLayoutFile,
+    deleteContentFile:  deleteContentFile,
+    readFile:           readFile
 };

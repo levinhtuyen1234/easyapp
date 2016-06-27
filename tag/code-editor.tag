@@ -1,8 +1,8 @@
-<layout-view>
+<code-editor>
     <div class="code-editor CodeMirror" style="border: 1px; padding: 0 0 15px 0;"></div>
     <script>
         var me = this;
-        me.editor;
+        me.editor = null;
 
         me.refresh = function () {
             me.editor.refresh();
@@ -37,12 +37,12 @@
                 matchBrackets:           true,
                 styleActiveLine:         true,
                 gutter:                  true,
-                readOnly:                false,
+                readOnly:                true,
                 lint:                    true,
 //                theme:                   'material',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
-//                mode:                    {name: 'handlebars', base: 'text/html'},
-                mode:                    'html',
+                mode:                    'handlebars',
+//                mode:                    'mixedMode',
                 firstLineNumber:         1,
                 indentUnit:              4,
                 extraKeys:               {
@@ -50,7 +50,7 @@
                     'Ctrl-R':     'replace',
                     'Ctrl-S':     function () {
 //                        parent.saveFile(editor.getValue());
-                        alert('Nop, not implemented')
+                        alert('Nop, not implemented yet')
                     }
                 }
             });
@@ -59,4 +59,4 @@
 //            me.editor.setSize('100%', window.innerHeight - 220);
         });
     </script>
-</layout-view>
+</code-editor>

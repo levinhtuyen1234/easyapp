@@ -7,11 +7,19 @@
             <div class="panel panel-default" hide="{curTab === ''}">
                 <div class="panel-heading panel-heading-sm">
                     <h3 class="panel-title pull-left" style="width: 250px;">{currentFileTitle}</h3>
+
+                    <!-- BUILD button group -->
+                    <div class="clearfix btn-group pull-right" style="margin-left: 10px;" data-toggle="buttons">
+                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
+                        </a>
+                    </div>
+
                     <div class="btn-group pull-right" data-toggle="buttons">
                         <a class="btn btn-default btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
                         </a>
-                        <a class="btn btn-default btn-sm" href="#raw-content-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                        <a class="btn btn-default btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
                             <input type="radio" name="options">Raw
                         </a>
                         <a class="btn btn-default btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
@@ -34,14 +42,16 @@
                             </li>
                         </ul>
                     </div>
+                    <!--<div class="clearfix"></div>-->
                     <div class="clearfix"></div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" style="height: 100vh;">
                     <div class="tab-content">
                         <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                        <code-view id="raw-content-view" role="tabpanel" class="tab-pane"></code-view>
-                        <layout-view id="layout-view" role="tabpanel" class="tab-pane"></layout-view>
+                        <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
+                        <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
                         <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
+                        <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
                     </div>
                 </div>
             </div>
@@ -54,10 +64,12 @@
         me.configView = null;
         me.layoutView = null;
         me.codeView = null;
+        me.watchView = null;
         me.curTab = '';
         me.currentFilePath = '';
         me.currentLayout = '';
         me.currentFileTitle = '';
+        me.siteName = me.opts.siteName;
 
         me.on('mount', function () {
 //            riot.mount('side-bar', {siteName: opts.siteName});
@@ -130,7 +142,8 @@
             me.update();
 
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
-            me.tags['layout-view'].value(fileContent);
+            me.tags['code-editor'][1].value(fileContent);
+            me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
         };
 
@@ -156,6 +169,9 @@
                 ShowTab('content-view');
             } catch(ex) {
                 bootbox.alert('Open content failed, error ' + ex.message, function() {});
+                me.openRawContentTab({
+                    readOnly: false
+                });
             }
         };
 
@@ -175,13 +191,22 @@
             ShowTab('config-view');
         };
 
-        me.openRawContentTab = function() {
+        me.openRawContentTab = function(options) {
+            options = options || {};
             console.log('openRawContentTab', me.currentFilePath);
             HideAllTab();
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
-            console.log('rawStr', me.tags['code-view']);
-            me.tags['code-view'].value(rawStr);
+            var contentCodeEditor = me.tags['code-editor'][0];
+            contentCodeEditor.value(rawStr);
+
+            contentCodeEditor.setOption('mode', 'markdown');
+            for (var key in options) {
+                if (!options.hasOwnProperty(key)) continue;
+                console.log('set editor option', key, options[key]);
+                contentCodeEditor.setOption(key, options[key]);
+            }
+            ShowTab('code-view');
         };
 
         me.openFile = function (filePath) {
@@ -207,8 +232,12 @@
                     var content = me.tags['content-view'].getContent();
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
                     break;
+                case 'code-view':
+                    var rawContent = me.tags['code-editor'][0].value();
+                    BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);
+                    break;
                 case 'layout-view':
-                    var layoutContent = me.tags['layout-view'].value();
+                    var layoutContent = me.tags['code-editor'][1].value();
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;
                 case 'config-view':
@@ -262,6 +291,10 @@
                     console.log('TODO delete config', me.currentFilePath);
                     break;
             }
+        };
+
+        me.openWatchView = function() {
+            console.log('openWatchView');
         }
     </script>
 </home>
