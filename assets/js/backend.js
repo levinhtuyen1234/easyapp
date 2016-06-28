@@ -1,7 +1,9 @@
 'use strict';
 
-let Fs = require('fs');
-let Path = require('path');
+const Fs = require('fs');
+const Path = require('path');
+
+const BlueBird = require('bluebird');
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
 const appRoot = Path.resolve(__dirname, '../../');
@@ -258,7 +260,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName)
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
-    "url": "/",
+    "url": "${contentFileName}",
     "description": "",
     "layout": "${layoutFileName}",
     "permalink": true
@@ -322,7 +324,55 @@ function MkdirpSync(p, opts, made) {
     }
 
     return made;
-};
+}
+
+// const nodePath = Path.resolve(Path.join('sites', opts.site_name, 'node_modules'));
+//
+// const GIT_ENV_PATH = [
+//     Path.resolve(Path.join('sites', opts.site_name, 'node_modules', '.bin', Path.sep)),
+//     Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', Path.sep)),
+//     Path.resolve(Path.join(opts.site_name, '..', 'tools', 'git', 'bin', Path.sep))
+// ].join(';');
+// console.log('PATH', PATH);
+//
+// function spawnProcess(command, args) {
+//     args = args || [];
+//     var newProcess = ChildProcess.spawn(command, args, {
+//         env:   {
+//             'NODE_PATH': nodePath,
+//             'PATH':      PATH
+//         },
+//         cwd:   Path.resolve(Path.join('sites', opts.site_name)),
+//         shell: true
+//     });
+//
+//     newProcess.stdout.on('data', function (data) {
+//         console.log(data);
+//         // find browserSync port in stdout
+//         var str = String.fromCharCode.apply(null, data);
+//         (/Local: (http:\/\/.+)/gm).exec(str);
+//         var reviewUrl = str.match(/Local: (http:\/\/.+)/gm);
+//         if (reviewUrl != null) {
+//             console.log('found review url', reviewUrl[1]);
+//             me.iframeUrl = reviewUrl[1];
+//             me.update();
+//         }
+//         me.append(str);
+//     });
+//
+//     newProcess.stderr.on('data', function (data) {
+//         console.log(data);
+//         me.appendError(data);
+//     });
+//
+//     return newProcess;
+// }
+//
+// function DeployToGitHub(siteName, repositoryUrl, username, password) {
+//
+// }
+//
+// function GitClone() {}
 
 module.exports = {
     getSiteList:        getSiteList,
