@@ -119,7 +119,7 @@
             var node = htmlToNode(`
                     <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
                     <div class="col-sm-9">
-                        <div class="code-editor CodeMirror" id="${config.name}" style="border: 1px; padding: 0 0 15px 0;"></div>
+                        <texarea class="code-editor CodeMirror" id="${config.name}" style="border: 1px; padding: 0 0 15px 0;"></texarea>
                     </div>`, 'form-group');
             var editorElm = node.querySelector('.CodeMirror');
             var editor = CodeMirror(editorElm, {
@@ -134,13 +134,14 @@
                 styleActiveLine:         true,
                 gutter:                  true,
                 readOnly:                false,
-                height:                  'auto',
+                scrollbarStyle:          'simple',
                 lint:                    true,
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
                 mode:                    'application/json',
                 firstLineNumber:         1,
                 indentUnit:              4
             });
+            editor.setSize('100%', 150);
 
             me.codeEditorMap[config.name] = editor;
 

@@ -136,16 +136,18 @@ body {
 /* End Sticky footer styles */
 
 /* START codemirror height auto up to */
-.code-editor.CodeMirror {
-    height: auto;
-    max-height:200px;
-    min-height:200px;
-}
+/*.code-editor.CodeMirror {*/
+    /*height: 200px;*/
+    /*!*overflow: auto;*!*/
+    /*!*max-height: 200px;*!*/
+    /*!*min-height:200px;*!*/
+/*}*/
 
-.code-editor.CodeMirror > .CodeMirror-scroll {
-    height: auto;
-    max-height: 200px;
-    min-height:200px;
-}
+/*.code-editor.CodeMirror > .CodeMirror-scroll {*/
+    /*!*height: auto;*!*/
+    /*!*max-height: 200px;*!*/
+    /*!*min-height:200px;*!*/
+    /*!*overflow: scroll;*!*/
+/*}*/
 
 /* END codemirror height auto up to */
