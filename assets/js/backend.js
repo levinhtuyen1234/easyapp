@@ -257,10 +257,12 @@ function newLayoutFile(siteName, layoutFileName) {
 
 function newContentFile(siteName, layoutFileName, contentTitle, contentFileName) {
     console.log('newContentFile', siteName, layoutFileName, contentFileName);
+    var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
-    "url": "${contentFileName}",
+    "url": "${layoutBaseName + '/' + contentBaseName}",
     "description": "",
     "layout": "${layoutFileName}",
     "permalink": true
