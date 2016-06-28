@@ -82,6 +82,12 @@
             me.parent.openFile(filePath);
         };
 
+        me.activeFile = function (filePath) {
+            var elm = $root.find('li[data-path="' + filePath + '"]');
+            $root.find('.list-group-item').removeClass('active');
+            $(elm).addClass('active');
+        };
+
         me.filter = function (e) {
             var needle = e.target.value;
             var filtered = [];

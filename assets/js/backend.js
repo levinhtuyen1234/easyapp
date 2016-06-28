@@ -36,7 +36,7 @@ let ScanDir = function (siteRoot, dir, ret) {
         if (stat.isDirectory()) {
             ScanDir(siteRoot, fullPath, ret);
         } else {
-            ret.push({name: name, path: Path.relative(siteRoot, fullPath)});
+            ret.push({name: name, path: Path.relative(siteRoot, fullPath).replace(/\\/g, '/')});
         }
     }
     return ret;
@@ -247,14 +247,10 @@ function deleteContentFile(siteName, filePath) {
 
 function newLayoutFile(siteName, layoutFileName) {
     var defaultLayoutContent = ``;
-    try {
-        var fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
-        Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
-        return null;
-    } catch (ex) {
-        console.log('ex', ex);
-        return ex.message;
-    }
+    var fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
+    Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
+    var layoutFilePath = Path.join('layout', layoutFileName);
+    return {name: layoutFileName, path: layoutFilePath.replace(/\\/g, '/')};
 }
 
 function newContentFile(siteName, layoutFileName, contentTitle, contentFileName) {
@@ -269,14 +265,64 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName)
 }
 ---
 `;
+    var layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    var newContentFilePath = Path.join('content', layoutFolder, contentFileName);
+    var fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
+
+    // create folder for new content if not exists
     try {
-        var fullPath = Path.join(sitesRoot, siteName, 'content', contentFileName);
-        Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
-        return null;
-    } catch (ex) {
-        return ex.message;
-    }
+        MkdirpSync(Path.join(sitesRoot, siteName, 'content', layoutFolder));
+    } catch(_){}
+
+    Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
+    return {name: contentFileName, path: newContentFilePath.replace(/\\/g, '/')};
 }
+
+function MkdirpSync(p, opts, made) {
+    var _0777 = parseInt('0777', 8);
+    if (!opts || typeof opts !== 'object') {
+        opts = { mode: opts };
+    }
+
+    var mode = opts.mode;
+    var xfs = opts.fs || Fs;
+
+    if (mode === undefined) {
+        mode = _0777 & (~process.umask());
+    }
+    if (!made) made = null;
+
+    p = Path.resolve(p);
+
+    try {
+        xfs.mkdirSync(p, mode);
+        made = made || p;
+    }
+    catch (err0) {
+        switch (err0.code) {
+            case 'ENOENT' :
+                made = MkdirpSync(Path.dirname(p), opts, made);
+                sync(p, opts, made);
+                break;
+
+            // In the case of any other error, just see if there's a dir
+            // there already.  If so, then hooray!  If not, then something
+            // is borked.
+            default:
+                var stat;
+                try {
+                    stat = xfs.statSync(p);
+                }
+                catch (err1) {
+                    throw err0;
+                }
+                if (!stat.isDirectory()) throw err0;
+                break;
+        }
+    }
+
+    return made;
+};
 
 module.exports = {
     getSiteList:        getSiteList,

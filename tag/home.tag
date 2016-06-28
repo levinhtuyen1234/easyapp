@@ -33,7 +33,7 @@
                         <a class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
                             <i class="fa fa-save"></i> Save
                         </a>
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab == 'content-view'}">
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab === 'content-view' || curTab === 'code-view'}">
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu" role="tablist">
@@ -173,7 +173,8 @@
                 bootbox.alert('Open content failed, error ' + ex.message, function () {
                 });
                 me.openRawContentTab({
-                    readOnly: false
+                    readOnly: false,
+                    mode:     'json-frontmatter'
                 });
             }
         };
@@ -203,7 +204,7 @@
             var contentCodeEditor = me.tags['code-editor'][0];
             contentCodeEditor.value(rawStr);
 
-            contentCodeEditor.setOption('mode', 'markdown');
+            contentCodeEditor.setOption('mode', 'json-frontmatter');
             for (var key in options) {
                 if (!options.hasOwnProperty(key)) continue;
                 console.log('set editor option', key, options[key]);
@@ -213,7 +214,7 @@
         };
 
         me.openFile = function (filePath) {
-//            console.log('home openFile', filePath);
+            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
             HideAllTab();
@@ -314,25 +315,29 @@
         };
 
         riot.api.on('addLayout', function (layoutFileName) {
-            var err = BackEnd.newLayoutFile(me.siteName, layoutFileName);
-            console.log('addLayout', err);
-            if (err)
-                bootbox.alert('create layout failed, error ' + err);
-            else {
+            try {
+                var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
                 console.log('trigger closeNewContentDialog');
                 riot.api.trigger('closeNewLayoutDialog');
+            } catch (ex) {
+                console.log('addLayout', ex);
+                bootbox.alert('create layout failed, error ' + ex.message);
             }
         });
 
         riot.api.on('addContent', function (layoutFileName, contentTitle, contentFileName) {
-            var err = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName);
-            console.log('addContent', err);
-            if (err)
-                bootbox.alert('create content failed, error ' + err);
-            else {
+            try {
+                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName);
+                var newContentFilePath = newFile.path;
                 // reload sidebar file list
                 me.tags['side-bar'].loadFiles(me.opts.siteName);
                 riot.api.trigger('closeNewContentDialog');
+                console.log('open file', newContentFilePath);
+                me.openFile(newContentFilePath);
+                me.tags['side-bar'].activeFile(newContentFilePath);
+            } catch (ex) {
+                console.log('addContent', ex);
+                bootbox.alert('create content failed, error ' + ex.message);
             }
         });
     </script>

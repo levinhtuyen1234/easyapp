@@ -37,7 +37,7 @@
                 matchBrackets:           true,
                 styleActiveLine:         true,
                 gutter:                  true,
-                readOnly:                true,
+                readOnly:                false,
                 lint:                    true,
 //                theme:                   'material',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],

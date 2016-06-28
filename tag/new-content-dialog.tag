@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <label for="content-title" class="col-sm-2 control-label">Title</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="content-title" placeholder="Title" oninput="{updateFileName}" style="width: 498px;">
+                            <input type="text" class="form-control" id="content-title" placeholder="Title" oninput="{updateFileName}" style="width: 498px;" value="{contentTitle}">
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,6 +82,7 @@
 
         me.show = function () {
             // reset content
+            me.contentTitle = '';
             me.contentFileName = '';
             me.update();
 
