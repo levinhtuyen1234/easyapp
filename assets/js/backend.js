@@ -262,10 +262,8 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName)
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
-    "url": "${layoutBaseName + '/' + contentBaseName}",
-    "description": "",
-    "layout": "${layoutFileName}",
-    "permalink": true
+    "url": "${contentBaseName}",
+    "layout": "${layoutFileName}"
 }
 ---
 `;
