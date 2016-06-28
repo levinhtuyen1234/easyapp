@@ -1,5 +1,5 @@
 <code-editor>
-    <div class="code-editor CodeMirror" style="border: 1px; padding: 0 0 15px 0;"></div>
+    <div class="CodeMirror" style="border: 1px; padding: 0 0 15px 0;"></div>
     <script>
         var me = this;
         me.editor = null;
@@ -25,7 +25,7 @@
         };
 
         me.on('mount', function () {
-            var editorElm = me.root.querySelector('.code-editor');
+            var editorElm = me.root.querySelector('.CodeMirror');
             me.editor = CodeMirror(editorElm, {
                 value:                   me.opts.content ? me.opts.content : '',
                 rtlMoveVisually:         false,

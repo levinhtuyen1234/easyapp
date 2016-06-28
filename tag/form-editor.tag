@@ -121,7 +121,7 @@
                     <div class="col-sm-9">
                         <div class="code-editor CodeMirror" id="${config.name}" style="border: 1px; padding: 0 0 15px 0;"></div>
                     </div>`, 'form-group');
-            var editorElm = node.querySelector('.code-editor');
+            var editorElm = node.querySelector('.CodeMirror');
             var editor = CodeMirror(editorElm, {
                 value:                   metaValue ? metaValue : '',
                 rtlMoveVisually:         false,
@@ -134,6 +134,7 @@
                 styleActiveLine:         true,
                 gutter:                  true,
                 readOnly:                false,
+                height:                  'auto',
                 lint:                    true,
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
                 mode:                    'application/json',

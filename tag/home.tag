@@ -47,7 +47,7 @@
                     <!--<div class="clearfix"></div>-->
                     <div class="clearfix"></div>
                 </div>
-                <div class="panel-body" style="height: 100vh;">
+                <div class="panel-body">
                     <div class="tab-content">
                         <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
                         <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
