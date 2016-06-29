@@ -136,18 +136,18 @@ body {
 /* End Sticky footer styles */
 
 /* START codemirror height auto up to */
-/*.code-editor.CodeMirror {*/
+.code-editor.CodeMirror {
     /*height: 200px;*/
-    /*!*overflow: auto;*!*/
-    /*!*max-height: 200px;*!*/
-    /*!*min-height:200px;*!*/
-/*}*/
+    /*overflow: auto;*/
+    /*max-height: 200px;*/
+    /*min-height:150px !important;*/
+}
 
-/*.code-editor.CodeMirror > .CodeMirror-scroll {*/
-    /*!*height: auto;*!*/
-    /*!*max-height: 200px;*!*/
-    /*!*min-height:200px;*!*/
-    /*!*overflow: scroll;*!*/
-/*}*/
+.CodeMirror-scroll {
+    /*height: auto;*/
+    /*max-height: 200px;*/
+    /*min-height:150px !important;*/
+    /*overflow: scroll;*/
+}
 
 /* END codemirror height auto up to */

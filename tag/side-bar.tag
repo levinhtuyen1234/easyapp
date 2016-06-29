@@ -20,7 +20,7 @@
                     <span class="input-group-addon"><i class="fa fa-fw fa-filter"></i></span>
                     <input type="text" class="form-control" placeholder="Filter" onkeyup="{onFilterInput}">
                 </div>
-                <ul class="list-group" style="height: calc(100vh - 200px); overflow: auto;">
+                <ul class="list-group" style="overflow: auto;">
                     <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
                 </ul>
             </div>

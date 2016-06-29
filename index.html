@@ -33,6 +33,7 @@
 <script src="tag/form-editor.tag" type="riot/tag"></script>
 <script src="tag/markdown-editor.tag" type="riot/tag"></script>
 
+<script src="tag/progress-dialog.tag" type="riot/tag"></script>
 <script src="tag/new-content-dialog.tag" type="riot/tag"></script>
 <script src="tag/new-layout-dialog.tag" type="riot/tag"></script>
 <script src="tag/code-view.tag" type="riot/tag"></script>
@@ -129,9 +130,9 @@
     });
 
     riot.compile(function () {
-        login = riot.mount('window-login');
+//        login = riot.mount('window-login');
 //        landing = riot.mount('landing');
-//        home = riot.mount('home', {siteName: 'aaa'});
+        home = riot.mount('home', {siteName: 'aaa'});
     });
 </script>
 
@@ -144,7 +145,6 @@
           <li><a href="https://shop.github.com" data-ga-click="Footer, go to shop, text:shop">Shop</a></li>
             <li><a href="https://github.com/blog" data-ga-click="Footer, go to blog, text:blog">Blog</a></li>
             <li><a href="https://github.com/about" data-ga-click="Footer, go to about, text:about">About</a></li>
-
         </ul> -->
 
 

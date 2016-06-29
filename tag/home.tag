@@ -15,6 +15,9 @@
                         <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
                         </a>
+                        <a class="btn btn-default btn-sm" href="#" onclick="{deployToGitHub}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-github"></i>
+                        </a>
                     </div>
 
                     <div class="btn-group pull-right" data-toggle="buttons">
@@ -325,9 +328,9 @@
             }
         });
 
-        riot.api.on('addContent', function (layoutFileName, contentTitle, contentFileName) {
+        riot.api.on('addContent', function (layoutFileName, contentTitle, contentFileName, isFrontPage) {
             try {
-                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName);
+                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
                 me.tags['side-bar'].loadFiles(me.opts.siteName);
@@ -340,5 +343,9 @@
                 bootbox.alert('create content failed, error ' + ex.message);
             }
         });
+
+        me.deployToGitHub = function() {
+//            BackEnd.deployToGitHub(me.siteName, );
+        }
     </script>
 </home>

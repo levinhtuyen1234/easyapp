@@ -255,23 +255,26 @@ function newLayoutFile(siteName, layoutFileName) {
     return {name: layoutFileName, path: layoutFilePath.replace(/\\/g, '/')};
 }
 
-function newContentFile(siteName, layoutFileName, contentTitle, contentFileName) {
-    console.log('newContentFile', siteName, layoutFileName, contentFileName);
+function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, isFrontPage) {
+    // console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
+    var url = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
-    "url": "${layoutBaseName + '/' + contentBaseName}",
+    "url": "${url}",
     "description": "",
     "layout": "${layoutFileName}",
+    "date": "${getLocalDate()}",
     "permalink": true
 }
 ---
 `;
     var layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
-    var newContentFilePath = Path.join('content', layoutFolder, contentFileName);
-    var fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
+    var newContentFilePath = isFrontPage ? Path.join('content', contentBaseName) + '.md' :
+        Path.join('content', layoutFolder, contentBaseName) + '.md';
+    var fullPath =  Path.join(sitesRoot, siteName, newContentFilePath);
 
     // create folder for new content if not exists
     try {
@@ -375,6 +378,24 @@ function MkdirpSync(p, opts, made) {
 // }
 //
 // function GitClone() {}
+
+function getLocalDate() {
+    var now = new Date(),
+        tzo = -now.getTimezoneOffset(),
+        dif = tzo >= 0 ? '+' : '-',
+        pad = function(num) {
+            var norm = Math.abs(Math.floor(num));
+            return (norm < 10 ? '0' : '') + norm;
+        };
+    return now.getFullYear()
+        + '-' + pad(now.getMonth()+1)
+        + '-' + pad(now.getDate())
+        + ' ' + pad(now.getHours())
+        + ':' + pad(now.getMinutes())
+        + ':' + pad(now.getSeconds())
+        + ' ' + dif + pad(tzo / 60)
+        + ':' + pad(tzo % 60);
+}
 
 module.exports = {
     getSiteList:        getSiteList,

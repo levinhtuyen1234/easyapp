@@ -8,24 +8,31 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label for="content-layout" class="col-sm-2 control-label">Layout</label>
+                        <label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>
                         <div class="col-sm-10">
-                            <select id="content-layout" class="selectpicker" onchange="{edit.bind(this,'contentLayout')}">
+                            <select id="contentLayoutElm" class="selectpicker" onchange="{edit.bind(this,'contentLayout')}">
                                 <option each="{value in layoutList}" value="{value}">{value}</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="content-title" class="col-sm-2 control-label">Title</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="content-title" placeholder="Title" oninput="{updateFileName}" style="width: 498px;" value="{contentTitle}">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <label for="isFrontPageElm">
+                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}" checked> FrontPage
+                            </label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="content-title" class="col-sm-2 control-label">FileName</label>
+                        <label for="contentTitleElm" class="col-sm-2 control-label">Title</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;" value="{contentTitle}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="contentFilenameElm" class="col-sm-2 control-label">FileName</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="content-filename" placeholder="FileName" disabled value="{contentFileName}">
+                                <input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">
                                 <span class="input-group-addon">.md</span>
                             </div>
                         </div>
@@ -53,10 +60,12 @@
                 default:
                     me[name] = e.target.value;
             }
+            me.updateFileName();
         };
 
         me.add = function () {
-            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md');
+            console.log(me.isFrontPageElm.checked);
+            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.isFrontPageElm.checked);
         };
 
         riot.api.on('closeNewContentDialog', function () {
@@ -72,11 +81,18 @@
         };
 
         me.updateFileName = function (e) {
-            var title = e.target.value;
+            var title = me.contentTitleElm.value;
             me.contentTitle = title;
             var combining = /[\u0300-\u036F]/g;
             title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').trim();
-            me.contentFileName = title;
+            if (me.isFrontPageElm.checked) {
+                me.contentFileName = title;
+            } else {
+                var contentLayoutBase = me.contentLayout.split('.');
+                contentLayoutBase.pop();
+                me.contentFileName = contentLayoutBase.join('') + '/' + title;
+            }
+
             me.update();
         };
 

@@ -134,15 +134,15 @@
                 styleActiveLine:         true,
                 gutter:                  true,
                 readOnly:                false,
-                scrollbarStyle:          'simple',
                 lint:                    true,
+                height:                  'auto',
+                scrollbarStyle:          'simple',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
                 mode:                    'application/json',
                 firstLineNumber:         1,
                 indentUnit:              4
             });
-            editor.setSize('100%', 150);
-
+//            editor.setSize('100%', 150);
             me.codeEditorMap[config.name] = editor;
 
             setTimeout(function () {
