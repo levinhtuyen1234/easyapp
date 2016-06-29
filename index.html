@@ -70,7 +70,6 @@
     var Fs = require('fs');
     var ChildProcess = require('child_process');
 
-    var SimpleGit = require('simple-git');
     var BlueBird = require('bluebird');
 
     var mkdir = BlueBird.promisify(Fs.mkdir);
@@ -80,40 +79,39 @@
 
     var login, landing, home;
 
-    function InitRepository(name) {
-        return new BlueBird(function (resolve, reject) {
-            var errHandler = function (err) {
-                if (err) reject(err);
-            };
-            SimpleGit(Path.join(SiteDir, name))
-                    .customBinary(GitBin)
-                    .init(false, errHandler)
-                    .add()
-                    .commit('init', function (err, ret) {
-                        if (err) reject(err);
-                        else resolve(ret);
-                    });
-        });
-    }
+//    function InitRepository(name) {
+//        return new BlueBird(function (resolve, reject) {
+//            var errHandler = function (err) {
+//                if (err) reject(err);
+//            };
+//            SimpleGit(Path.join(SiteDir, name))
+//                    .customBinary(GitBin)
+//                    .init(false, errHandler)
+//                    .add()
+//                    .commit('init', function (err, ret) {
+//                        if (err) reject(err);
+//                        else resolve(ret);
+//                    });
+//        });
+//    }
 
     function NpmInstall(path) {
 
     }
 
-    function CloneRepository(repositoryUrl, localPath) {
-        return new BlueBird(function (resolve, reject) {
-            SimpleGit(Path.join(SiteDir, name))
-                    .customBinary(GitBin)
-                    .clone(repositoryUrl, localPath, function (err, ret) {
-                        if (err) reject(err);
-                        else resolve(ret)
-                    });
-        });
-    }
+//    function CloneRepository(repositoryUrl, localPath) {
+//        return new BlueBird(function (resolve, reject) {
+//            SimpleGit(Path.join(SiteDir, name))
+//                    .customBinary(GitBin)
+//                    .clone(repositoryUrl, localPath, function (err, ret) {
+//                        if (err) reject(err);
+//                        else resolve(ret)
+//                    });
+//        });
+//    }
 
     riot.api = riot.observable();
     Object.assign(riot.api, {
-        cloneRepository: CloneRepository,
         openSite:        function (sitePath) {
             console.log('openSite', sitePath);
             landing.unmount();
@@ -124,7 +122,11 @@
             // TODO detect exists name in sitePath
             var localPath = Path.join(__dirname, 'sites', name);
             return mkdir(localPath).then(function () {
-                return CloneRepository('https://github.com/easywebhub/easyweb-metalsmith', localPath);
+                return BackEnd.GitCheckout('https://github.com/easywebhub/easyweb-metalsmith', localPath).then(function () {
+                    console.log('git checkout done');
+                }).catch(function (ex) {
+                    console.log(ex.message);
+                });
             });
         }
     });
