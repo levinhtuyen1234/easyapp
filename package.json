@@ -28,7 +28,6 @@
     "bluebird": "^3.4.0",
     "electron-shortcut-normalizer": "^1.0.0",    
     "moment": "^2.13.0",
-    "rimraf": "^2.5.2",
-    "simple-git": "^1.37.0"
+    "rimraf": "^2.5.2"
   }
 }
