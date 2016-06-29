@@ -2,8 +2,10 @@
 
 const Fs = require('fs');
 const Path = require('path');
+const ChildProcess = require('child_process');
 
 const BlueBird = require('bluebird');
+const RimRaf = BlueBird.promisify(require('rimraf'));
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
 const appRoot = Path.resolve(__dirname, '../../');
@@ -273,13 +275,14 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
 `;
     var layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
     var newContentFilePath = isFrontPage ? Path.join('content', contentBaseName) + '.md' :
-        Path.join('content', layoutFolder, contentBaseName) + '.md';
-    var fullPath =  Path.join(sitesRoot, siteName, newContentFilePath);
+    Path.join('content', layoutFolder, contentBaseName) + '.md';
+    var fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
 
     // create folder for new content if not exists
     try {
         MkdirpSync(Path.join(sitesRoot, siteName, 'content', layoutFolder));
-    } catch(_){}
+    } catch (_) {
+    }
 
     Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
     return {name: contentFileName, path: newContentFilePath.replace(/\\/g, '/')};
@@ -288,7 +291,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
 function MkdirpSync(p, opts, made) {
     var _0777 = parseInt('0777', 8);
     if (!opts || typeof opts !== 'object') {
-        opts = { mode: opts };
+        opts = {mode: opts};
     }
 
     var mode = opts.mode;
@@ -309,7 +312,7 @@ function MkdirpSync(p, opts, made) {
         switch (err0.code) {
             case 'ENOENT' :
                 made = MkdirpSync(Path.dirname(p), opts, made);
-                sync(p, opts, made);
+                MkdirpSync(p, opts, made);
                 break;
 
             // In the case of any other error, just see if there's a dir
@@ -331,64 +334,96 @@ function MkdirpSync(p, opts, made) {
     return made;
 }
 
-// const nodePath = Path.resolve(Path.join('sites', opts.site_name, 'node_modules'));
+function SpawnShell(command, args, opts) {
+    opts = opts || {};
+    return new BlueBird((resolve, reject) => {
+        var newProcess = ChildProcess.spawn(command, args, {
+            env:   opts.env ? opts.env : {},
+            cwd:   opts.cwd ? opts.cwd : {},
+            shell: true
+        });
+
+        newProcess.stdout.on('data', function (data) {
+            if (opts.onProgress) {
+                opts.onProgress(String.fromCharCode.apply(null, data));
+            }
+        });
+
+        newProcess.stderr.on('data', function (data) {
+            if (opts.onProgress) {
+                opts.onProgress(String.fromCharCode.apply(null, data));
+            }
+        });
+
+        newProcess.on('exit', (code) => {
+            console.log(`Child exited with code ${code}`);
+            if (code === 0)
+                resolve();
+            else
+                reject(code);
+        });
+    });
+}
+
+// function spawnNpmCmd(siteName, command, args, onProgress) {
+//     const siteNodePath = Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules'));
+//     const ENV_PATH = [
+//         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules', '.bin', Path.sep)),
+//         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', Path.sep)),
+//         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep))
+//     ].join(';');
 //
-// const GIT_ENV_PATH = [
-//     Path.resolve(Path.join('sites', opts.site_name, 'node_modules', '.bin', Path.sep)),
-//     Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', Path.sep)),
-//     Path.resolve(Path.join(opts.site_name, '..', 'tools', 'git', 'bin', Path.sep))
-// ].join(';');
-// console.log('PATH', PATH);
-//
-// function spawnProcess(command, args) {
-//     args = args || [];
-//     var newProcess = ChildProcess.spawn(command, args, {
-//         env:   {
-//             'NODE_PATH': nodePath,
-//             'PATH':      PATH
+//     return SpawnShell(command, args, {
+//         cwd:        Path.resolve(Path.join(sitesRoot, siteName)),
+//         env:        {
+//             'NODE_PATH': siteNodePath,
+//             'PATH':      ENV_PATH
 //         },
-//         cwd:   Path.resolve(Path.join('sites', opts.site_name)),
-//         shell: true
+//         onProgress: onProgress
 //     });
-//
-//     newProcess.stdout.on('data', function (data) {
-//         console.log(data);
-//         // find browserSync port in stdout
-//         var str = String.fromCharCode.apply(null, data);
-//         (/Local: (http:\/\/.+)/gm).exec(str);
-//         var reviewUrl = str.match(/Local: (http:\/\/.+)/gm);
-//         if (reviewUrl != null) {
-//             console.log('found review url', reviewUrl[1]);
-//             me.iframeUrl = reviewUrl[1];
-//             me.update();
-//         }
-//         me.append(str);
-//     });
-//
-//     newProcess.stderr.on('data', function (data) {
-//         console.log(data);
-//         me.appendError(data);
-//     });
-//
-//     return newProcess;
 // }
-//
-// function DeployToGitHub(siteName, repositoryUrl, username, password) {
-//
-// }
-//
-// function GitClone() {}
+
+function spawnGitCmd(command, args, cwd, onProgress) {
+    const ENV_PATH = [
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep))
+    ].join(';');
+    return SpawnShell(command, args, {
+        cwd:        cwd,
+        onProgress: onProgress,
+        env:        {
+            'PATH': ENV_PATH
+        }
+    });
+}
+
+function DeployToGitHub(siteName, repositoryUrl, username, password) {
+
+}
+
+function GitClone(repositoryUrl, targetDir) {
+
+}
+
+function GitCheckout(repositoryUrl, targetDir, onProgress) {
+    return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function(){
+        return RimRaf(Path.join(targetDir, '.git'));
+    })
+}
+
+function consoleLogProgress(str) {
+    console.log(str);
+}
 
 function getLocalDate() {
     var now = new Date(),
         tzo = -now.getTimezoneOffset(),
         dif = tzo >= 0 ? '+' : '-',
-        pad = function(num) {
+        pad = function (num) {
             var norm = Math.abs(Math.floor(num));
             return (norm < 10 ? '0' : '') + norm;
         };
     return now.getFullYear()
-        + '-' + pad(now.getMonth()+1)
+        + '-' + pad(now.getMonth() + 1)
         + '-' + pad(now.getDate())
         + ' ' + pad(now.getHours())
         + ':' + pad(now.getMinutes())
@@ -413,5 +448,6 @@ module.exports = {
     getLayoutList:      getLayoutList,
     newLayoutFile:      newLayoutFile,
     newContentFile:     newContentFile,
+    GitCheckout:        GitCheckout,
     readFile:           readFile
 };

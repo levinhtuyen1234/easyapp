@@ -10,13 +10,33 @@
                 <div class="panel-heading panel-heading-sm">
                     <h3 class="panel-title pull-left" style="width: 250px;">{currentFileTitle}</h3>
 
-                    <!-- BUILD button group -->
-                    <div class="clearfix btn-group pull-right" style="margin-left: 10px;" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
+                    <div class="btn-group pull-right" data-toggle="buttons" style="margin-left: 10px;">
+                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-fw fa-github"></i>
+                            <span class="caret"></span>
                         </a>
-                        <a class="btn btn-default btn-sm" href="#" onclick="{deployToGitHub}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-github"></i>
+                        <ul class="dropdown-menu" role="tablist">
+                            <li role="presentation">
+                                <a href="#" onclick="{syncToGitHub}" title="Sync project to GitHub">
+                                    <i class="fa fa-fw fa-cloud-upload"></i> Sync
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" onclick="{deployToGitHub}" title="Deploy to gh-pages">
+                                    <i class="fa fa-fw fa-globe"></i> Deploy
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a href="#" onclick="{deployToGitHub}" title="Deploy to gh-pages">
+                                    <i class="fa fa-fw fa-gear"></i> Option
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="btn-group pull-right" data-toggle="buttons" style="margin-left: 10px;">
+                        <a class="btn btn-primary btn-sm" style="margin-left: 10px;" onclick="{save}">
+                            <i class="fa fa-save"></i> Save
                         </a>
                     </div>
 
@@ -33,9 +53,6 @@
                         <a class="btn btn-default btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
                         </a>
-                        <a class="btn btn-primary btn-sm pull-right" style="margin-left: 10px;" onclick="{save}">
-                            <i class="fa fa-save"></i> Save
-                        </a>
                         <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab === 'content-view' || curTab === 'code-view'}">
                             <span class="caret"></span>
                         </a>
@@ -46,6 +63,9 @@
                                 </a>
                             </li>
                         </ul>
+                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
+                        </a>
                     </div>
                     <!--<div class="clearfix"></div>-->
                     <div class="clearfix"></div>
@@ -344,8 +364,14 @@
             }
         });
 
-        me.deployToGitHub = function() {
+        me.deployToGitHub = function () {
 //            BackEnd.deployToGitHub(me.siteName, );
-        }
+
+        };
+
+        me.syncToGitHub = function () {
+
+        };
+
     </script>
 </home>
