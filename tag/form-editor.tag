@@ -44,10 +44,11 @@
 
         function genTextInput(config, metaValue) {
             metaValue = metaValue ? metaValue : '';
+            var disabled = config.name === 'layout' ? 'disabled' : '';
             return htmlToNode(`
                 <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
                 <div class="col-sm-9">
-                    <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" value="${metaValue}">
+                    <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control ${disabled}" value="${metaValue}" ${disabled}>
                 </div>`, 'form-group');
         }
 
