@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">New Content</h4>
+                <h2 class="modal-title">Create New Content Using Defined Layout</h2>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -18,7 +18,7 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <label for="isFrontPageElm">
-                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}" checked> FrontPage
+                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}" checked> At root (/) folder, used for a Single Page
                             </label>
                         </div>
                     </div>
