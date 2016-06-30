@@ -16,6 +16,6 @@
         </div>
     </div>
     <script>
-
+        var me = this;
     </script>
 </progress-dialog>

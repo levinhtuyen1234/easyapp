@@ -12,6 +12,10 @@
         <label class="btn btn-default" onclick="{npmInstall}">
             <input type="radio" name="options"/>Npm install
         </label>
+
+        <label class="btn btn-default" onclick="{openExternalBrowser}">
+            <a>Open In Browser</a>
+        </label>
     </div>
 
     <pre style="height: 250px; overflow: auto;">
@@ -28,7 +32,7 @@
         var output = '';
         var watchProcess;
 
-        me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'https://react.rocks/example/react-serial-forms';
+        me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'about:blank';
 
         var nodePath = Path.resolve(Path.join('sites', opts.site_name, 'node_modules'));
         console.log('nodePath', nodePath);
@@ -51,11 +55,10 @@
             });
 
             newProcess.stdout.on('data', function (data) {
-                console.log(data);
+//                console.log(data);
                 // find browserSync port in stdout
                 var str = String.fromCharCode.apply(null, data);
-                (/Local: (http:\/\/.+)/gm).exec(str);
-                var reviewUrl = str.match(/Local: (http:\/\/.+)/gm);
+                var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
                     me.iframeUrl = reviewUrl[1];
@@ -74,7 +77,6 @@
 
         me.npmInstall = function () {
             console.log('npmInstall');
-//            '\\node_modules\\npm\\bin\\npm-cli.js'
             console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
             spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
         };
@@ -85,13 +87,14 @@
             if (process.platform === 'linux') {
                 process.kill('SIGKILL');
             } else if (process.platform === 'win32') {
-                ChildProcess.spawn('taskkill', ['/pid', proc.pid, '/f', '/t']);
+                ChildProcess.execSync('taskkill /pid ' + proc.pid + ' /F /T');
             }
             me.append('close exists process\r\n');
         }
 
         function closeWatchProcess() {
-            if (!watchProcess) return;
+            if (!watchProcess)
+                return;
             closeProcess(watchProcess);
             watchProcess = null;
         }
@@ -137,6 +140,13 @@
             span.innerHTML = text;
             me.output.appendChild(span);
             scrollToBottom();
+        };
+
+        me.openExternalBrowser = function () {
+            if (me.iframeUrl != 'about:blank') {
+                const {shell} = require('electron');
+                shell.openExternal(me.iframeUrl);
+            }
         };
 
         me.appendError = function (text) {

@@ -12,7 +12,7 @@ const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
 function getSitePath(siteName) {
-    return Path.join(sitesRoot, 'site', siteName);
+    return Path.join(sitesRoot, siteName);
 }
 
 function filterSideBarFile(name) {
@@ -388,8 +388,10 @@ function SpawnShell(command, args, opts) {
 // }
 
 function spawnGitCmd(command, args, cwd, onProgress) {
+    console.log('command', command);
     const ENV_PATH = [
-        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep))
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))
     ].join(';');
     return SpawnShell(command, args, {
         cwd:        cwd,
@@ -400,21 +402,28 @@ function spawnGitCmd(command, args, cwd, onProgress) {
     });
 }
 
-function DeployToGitHub(siteName, repositoryUrl, username, password) {
-
+function gitPushGhPages(siteName) {
+    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-push-gh-pages.bat');
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    return spawnGitCmd(initScriptPath, [], workingDirectory, onProgress);
 }
 
-function GitInitSite(siteName, repositoryUrl, onProgress) {
-    const initScriptPath = Path.join(sitesRoot, '..', 'script', 'EWH-init-github.bat');
-    const workingDirectory = getSitePath(siteName);
+function gitPushGitHub(siteName, onProgress) {
+    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-init-github.bat');
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    return spawnGitCmd(initScriptPath, [], workingDirectory, onProgress);
+}
 
+function gitInitSite(siteName, repositoryUrl, onProgress) {
+    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-init-github.bat');
+    const workingDirectory = Path.resolve(getSitePath(siteName));
     return spawnGitCmd(initScriptPath, [repositoryUrl], workingDirectory, onProgress);
 }
 
-function GitCheckout(repositoryUrl, targetDir, onProgress) {
-    return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function(){
+function gitCheckout(repositoryUrl, targetDir, onProgress) {
+    return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
         return RimRaf(Path.join(targetDir, '.git'));
-    })
+    });
 }
 
 function getLocalDate() {
@@ -451,6 +460,9 @@ module.exports = {
     getLayoutList:      getLayoutList,
     newLayoutFile:      newLayoutFile,
     newContentFile:     newContentFile,
-    GitCheckout:        GitCheckout,
+    gitCheckout:        gitCheckout,
+    gitInitSite:        gitInitSite,
+    gitPushGhPages:     gitPushGhPages,
+    gitPushGitHub:      gitPushGitHub,
     readFile:           readFile
 };
