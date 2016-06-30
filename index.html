@@ -77,42 +77,38 @@
     var GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
     var SiteDir = Path.join(__dirname, 'sites');
 
-    var login, landing, home;
+    var curPage;
 
-//    function InitRepository(name) {
-//        return new BlueBird(function (resolve, reject) {
-//            var errHandler = function (err) {
-//                if (err) reject(err);
-//            };
-//            SimpleGit(Path.join(SiteDir, name))
-//                    .customBinary(GitBin)
-//                    .init(false, errHandler)
-//                    .add()
-//                    .commit('init', function (err, ret) {
-//                        if (err) reject(err);
-//                        else resolve(ret);
-//                    });
-//        });
-//    }
+    //    function InitRepository(name) {
+    //        return new BlueBird(function (resolve, reject) {
+    //            var errHandler = function (err) {
+    //                if (err) reject(err);
+    //            };
+    //            SimpleGit(Path.join(SiteDir, name))
+    //                    .customBinary(GitBin)
+    //                    .init(false, errHandler)
+    //                    .add()
+    //                    .commit('init', function (err, ret) {
+    //                        if (err) reject(err);
+    //                        else resolve(ret);
+    //                    });
+    //        });
+    //    }
 
-    function NpmInstall(path) {
-
-    }
-
-//    function CloneRepository(repositoryUrl, localPath) {
-//        return new BlueBird(function (resolve, reject) {
-//            SimpleGit(Path.join(SiteDir, name))
-//                    .customBinary(GitBin)
-//                    .clone(repositoryUrl, localPath, function (err, ret) {
-//                        if (err) reject(err);
-//                        else resolve(ret)
-//                    });
-//        });
-//    }
+    //    function CloneRepository(repositoryUrl, localPath) {
+    //        return new BlueBird(function (resolve, reject) {
+    //            SimpleGit(Path.join(SiteDir, name))
+    //                    .customBinary(GitBin)
+    //                    .clone(repositoryUrl, localPath, function (err, ret) {
+    //                        if (err) reject(err);
+    //                        else resolve(ret)
+    //                    });
+    //        });
+    //    }
 
     riot.api = riot.observable();
     Object.assign(riot.api, {
-        openSite:        function (sitePath) {
+        openSite: function (sitePath) {
             console.log('openSite', sitePath);
             landing.unmount();
             home = riot.mount('home', {sitePath: sitePath});
@@ -122,8 +118,10 @@
             // TODO detect exists name in sitePath
             var localPath = Path.join(__dirname, 'sites', name);
             return mkdir(localPath).then(function () {
-                return BackEnd.GitCheckout('https://github.com/easywebhub/easyweb-metalsmith', localPath).then(function () {
-                    console.log('git checkout done');
+                return BackEnd.gitCheckout('https://github.com/easywebhub/easyweb-metalsmith', localPath).then(function () {
+                    console.log('git checkout done', name);
+                    if (curPage) curPage.unmount();
+                    curPage = riot.mount('home', {siteName: name})[0];
                 }).catch(function (ex) {
                     console.log(ex.message);
                 });
@@ -132,10 +130,11 @@
     });
 
     riot.compile(function () {
-        login = riot.mount('window-login');
-//        landing = riot.mount('landing');
-//        home = riot.mount('home', {siteName: 'aaa'});
+        curPage = riot.mount('window-login')[0];
+//        curPage = riot.mount('landing')[0];
+//        curPage = riot.mount('home', {siteName: 'test'})[0];
     });
+
 </script>
 
 <div class="container site-footer-container">
