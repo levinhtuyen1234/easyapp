@@ -11,6 +11,10 @@ const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
 const appRoot = Path.resolve(__dirname, '../../');
 const sitesRoot = Path.resolve(__dirname, '../../sites');
 
+function getSitePath(siteName) {
+    return Path.join(sitesRoot, 'site', siteName);
+}
+
 function filterSideBarFile(name) {
     var ignoreExt = ['.config.json', '.html'];
     if (ignoreName.indexOf(name) != -1) return true;
@@ -400,18 +404,17 @@ function DeployToGitHub(siteName, repositoryUrl, username, password) {
 
 }
 
-function GitClone(repositoryUrl, targetDir) {
+function GitInitSite(siteName, repositoryUrl, onProgress) {
+    const initScriptPath = Path.join(sitesRoot, '..', 'script', 'EWH-init-github.bat');
+    const workingDirectory = getSitePath(siteName);
 
+    return spawnGitCmd(initScriptPath, [repositoryUrl], workingDirectory, onProgress);
 }
 
 function GitCheckout(repositoryUrl, targetDir, onProgress) {
     return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function(){
         return RimRaf(Path.join(targetDir, '.git'));
     })
-}
-
-function consoleLogProgress(str) {
-    console.log(str);
 }
 
 function getLocalDate() {
