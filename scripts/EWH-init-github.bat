@@ -13,6 +13,7 @@ git remote add origin %REPO%
 
 rem add build dir vo .gitignore file
 echo %BUILD_DIR%/>>.gitignore
+echo node_modules/>>.gitignore
 rem commit and push to master
 git add .
 git commit -m "init"
