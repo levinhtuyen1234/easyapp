@@ -28,5 +28,7 @@ Nên chạy với chế độ debug ```DEBUB.cmd``` để dễ dàng refresh (Ct
  - Chạy Sync để lưu code trên github
  - Chạy Deploy để public code lên github.io
 
-#### 5. do github.io/repo-name nên cần điều chỉnh trong global.json cho phù hợp
+#### 5. Điều chỉnh để hoạt động tốt trên github.io/xxx  url
+do github.io/repo-name nên cần điều chỉnh trong global.json cho phù hợp và build lại
+
  ![](https://raw.githubusercontent.com/easywebhub/easyapp/master/documents/ewa-github-url.png)
