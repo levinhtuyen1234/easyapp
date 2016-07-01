@@ -1,6 +1,8 @@
 <home>
     <new-content-dialog></new-content-dialog>
     <new-layout-dialog></new-layout-dialog>
+    <progress-dialog></progress-dialog>
+    <github-init-dialog></github-init-dialog>
     <div class="row">
         <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
         <div class="col-md-8">
@@ -23,12 +25,12 @@
                             </li>
                             <li role="presentation">
                                 <a href="#" onclick="{deployToGitHub}" title="Deploy to gh-pages">
-                                    <i class="fa fa-fw fa-globe"></i> Deploy
+                                    <i class="fa fa-fw fa-globe"></i> Deploy gh-pages
                                 </a>
                             </li>
                             <li role="presentation">
-                                <a href="#" onclick="{deployToGitHub}" title="Deploy to gh-pages">
-                                    <i class="fa fa-fw fa-gear"></i> Option
+                                <a href="#" onclick="{showGitHubSetting}" title="Init github setting">
+                                    <i class="fa fa-fw fa-gear"></i> Init
                                 </a>
                             </li>
                         </ul>
@@ -365,12 +367,39 @@
         });
 
         me.deployToGitHub = function () {
-//            BackEnd.deployToGitHub(me.siteName, );
-
+            me.tags['progress-dialog'].show('Deploy to GitHub');
+            BackEnd.gitPushGhPages(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
+                me.tags['progress-dialog'].enableClose();
+            }).catch(function (err) {
+                console.log(err);
+                me.tags['progress-dialog'].enableClose();
+            });
         };
 
         me.syncToGitHub = function () {
+            me.tags['progress-dialog'].show('Sync to GitHub');
+            BackEnd.gitPushGitHub(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
+                me.tags['progress-dialog'].enableClose();
+            }).catch(function (err) {
+                console.log(err);
+                me.tags['progress-dialog'].enableClose();
+            });
+        };
 
+        me.showGitHubSetting = function () {
+            me.tags['github-init-dialog'].show();
+            me.tags['github-init-dialog'].event.one('save', function (info) {
+                me.tags['github-init-dialog'].hide();
+                var repoUrl = 'https://' + info.username + ':' + info.password + '@' + (info.url.split('https://')[1]);
+                console.log('repoUrl', repoUrl);
+                me.tags['progress-dialog'].show('Init GitHub Setting');
+                BackEnd.gitInitSite(me.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
+                    me.tags['progress-dialog'].enableClose();
+                }).catch(function (err) {
+                    console.log(err);
+                    me.tags['progress-dialog'].enableClose();
+                });
+            })
         };
 
     </script>

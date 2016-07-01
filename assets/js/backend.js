@@ -348,12 +348,14 @@ function SpawnShell(command, args, opts) {
         });
 
         newProcess.stdout.on('data', function (data) {
+            console.log('data', String.fromCharCode.apply(null, data));
             if (opts.onProgress) {
                 opts.onProgress(String.fromCharCode.apply(null, data));
             }
         });
 
         newProcess.stderr.on('data', function (data) {
+            console.log('data', String.fromCharCode.apply(null, data));
             if (opts.onProgress) {
                 opts.onProgress(String.fromCharCode.apply(null, data));
             }
@@ -402,15 +404,16 @@ function spawnGitCmd(command, args, cwd, onProgress) {
     });
 }
 
-function gitPushGhPages(siteName) {
+function gitPushGhPages(siteName, onProgress) {
     const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-push-gh-pages.bat');
     const workingDirectory = Path.resolve(getSitePath(siteName));
     return spawnGitCmd(initScriptPath, [], workingDirectory, onProgress);
 }
 
 function gitPushGitHub(siteName, onProgress) {
-    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-init-github.bat');
+    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-push-github.bat');
     const workingDirectory = Path.resolve(getSitePath(siteName));
+    console.log('gitPushGitHub', workingDirectory);
     return spawnGitCmd(initScriptPath, [], workingDirectory, onProgress);
 }
 

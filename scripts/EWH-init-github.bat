@@ -6,8 +6,6 @@ rem ------------------------------------------------
 set "REPO=%1"
 set "BUILD_DIR=build"
 
-call :GETTEMPNAME
-
 git init
 git remote add origin %REPO%
 
@@ -52,12 +50,3 @@ rem back to site repo dir
 cd ..
 rem install all deps
 npm install
-
-
-goto :EOF
-
-:GETTEMPNAME
-set TMPFOLDER=%TMP%\EWH-%RANDOM%
-if exist "%TMPFOLDER%" GOTO :GETTEMPNAME 
-
-:EOF
