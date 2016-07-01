@@ -46,7 +46,3 @@ git add .
 git commit -m "init"
 git push
 
-rem back to site repo dir
-cd ..
-rem install all deps
-npm install
