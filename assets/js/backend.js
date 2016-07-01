@@ -265,11 +265,11 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
-    var url = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
+    var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
-    "url": "${url}",
+    "slug": "${slug}",
     "description": "",
     "layout": "${layoutFileName}",
     "date": "${getLocalDate()}",
