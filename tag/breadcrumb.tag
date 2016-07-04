@@ -1,6 +1,6 @@
 <breadcrumb>
-    <ol class="breadcrumb">
-        <li each="{name, index in parts}"><a class="pathName" onclick="{open.bind(this,index)}">{name}</a></li>
+    <ol class="breadcrumb" style="margin: 2px 0 2px 0; padding: 0;">
+        <li each="{name, index in parts}"><a class="pathName">{name}</a></li>
     </ol>
 
     <script>

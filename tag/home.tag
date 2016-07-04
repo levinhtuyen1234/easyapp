@@ -3,74 +3,82 @@
     <new-layout-dialog></new-layout-dialog>
     <progress-dialog></progress-dialog>
     <github-init-dialog></github-init-dialog>
+
+    <nav class="navbar navbar-default navbar-xs">
+        <div class="navbar-header">
+            <a class="navbar-brand">EWH</a>
+        </div>
+
+        <div class="pull-left">
+            <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-fw fa-plus"></i> Add
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu" role="tablist">
+                <li role="presentation"><a href="#" onclick="{parent.newContent}"><i class="fa fa-newspaper-o fa-fw"></i> Content</a></li>
+                <li role="presentation"><a href="#" onclick="{parent.newLayout}"><i class="fa fa-file-code-o fa-fw"></i> Layout</a></li>
+            </ul>
+
+            <div class="btn-group" data-toggle="buttons">
+                <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                    <i class="fa fa-fw fa-remove"></i>
+                </a>
+            </div>
+
+            <div class="btn-group" data-toggle="buttons">
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                    <input type="radio" name="options">Raw
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                </a>
+            </div>
+        </div>
+
+        <div class="pull-right">
+            <div class="btn-group" data-toggle="buttons">
+                <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
+                </a>
+            </div>
+
+            <div class="btn-group" data-toggle="buttons">
+                <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
+                    <i class="fa fa-fw fa-github"></i> Sync
+                </a>
+                <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
+                    Deploy
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab === 'content-view' || curTab === 'code-view'}">
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="tablist">
+                    <li role="presentation">
+                        <a href="#" onclick="{showGitHubSetting}" title="Init github setting">
+                            <i class="fa fa-fw fa-gear"></i> Init
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </nav>
+
     <div class="row">
         <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
         <div class="col-md-8">
-            <breadcrumb site_name="{opts.siteName}"></breadcrumb>
             <!-- EDITOR PANEL -->
             <div class="panel panel-default" hide="{curTab === ''}">
                 <div class="panel-heading panel-heading-sm">
-                    <h3 class="panel-title pull-left" style="width: 250px;">{currentFileTitle}</h3>
-
-                    <div class="btn-group pull-right" data-toggle="buttons" style="margin-left: 10px;">
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="fa fa-fw fa-github"></i>
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="tablist">
-                            <li role="presentation">
-                                <a href="#" onclick="{syncToGitHub}" title="Sync project to GitHub">
-                                    <i class="fa fa-fw fa-cloud-upload"></i> Sync
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#" onclick="{deployToGitHub}" title="Deploy to gh-pages">
-                                    <i class="fa fa-fw fa-globe"></i> Deploy gh-pages
-                                </a>
-                            </li>
-                            <li role="presentation">
-                                <a href="#" onclick="{showGitHubSetting}" title="Init github setting">
-                                    <i class="fa fa-fw fa-gear"></i> Init
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <div class="btn-group pull-right" data-toggle="buttons" style="margin-left: 10px;">
-                        <a class="btn btn-primary btn-sm" style="margin-left: 10px;" onclick="{save}">
-                            <i class="fa fa-save"></i> Save
-                        </a>
-                    </div>
-
-                    <div class="btn-group pull-right" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                        </a>
-                        <a class="btn btn-default btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                            <input type="radio" name="options">Raw
-                        </a>
-                        <a class="btn btn-default btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                        </a>
-                        <a class="btn btn-default btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                        </a>
-                        <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab === 'content-view' || curTab === 'code-view'}">
-                            <span class="caret"></span>
-                        </a>
-                        <ul class="dropdown-menu" role="tablist">
-                            <li role="presentation">
-                                <a class="bg-danger" href="#" onclick="{deleteFile}">
-                                    <i class="fa fa-fw fa-remove"></i> Delete
-                                </a>
-                            </li>
-                        </ul>
-                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
-                        </a>
-                    </div>
-                    <!--<div class="clearfix"></div>-->
-                    <div class="clearfix"></div>
+                    <breadcrumb site_name="{opts.siteName}"></breadcrumb>
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
@@ -101,6 +109,10 @@
         me.on('mount', function () {
 //            riot.mount('side-bar', {siteName: opts.siteName});
 //            riot.mount('breadcrumb', {path: opts.siteName});
+            // open index.md file
+            setTimeout(function () {
+                me.openFile('content/index.md');
+            }, 1000);
         });
 
         function HideAllTab() {
@@ -166,6 +178,7 @@
         me.openLayoutTab = function () {
             HideAllTab();
             me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+            console.log('me.currentFileTitle', me.currentFileTitle);
             me.update();
 
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
@@ -178,6 +191,7 @@
             try {
                 HideAllTab();
                 me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+                console.log('me.currentFileTitle', me.currentFileTitle);
                 me.update();
 
 //            var content = getFileContent(me.currentFilePath);
@@ -205,7 +219,8 @@
         };
 
         me.openConfigTab = function () {
-            console.log('openConfig', me.currentFilePath);
+            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+//            console.log('me.currentFileTitle', me.currentFileTitle);
             HideAllTab();
 
             var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
@@ -221,6 +236,9 @@
         };
 
         me.openRawContentTab = function (options) {
+            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+//            console.log('me.currentFileTitle', me.currentFileTitle);
+            me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
             console.log('openRawContentTab', me.currentFilePath);
             HideAllTab();
@@ -250,6 +268,8 @@
                 me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
                 me.openLayoutTab();
+            } else if (filePath.endsWith('.json')) {
+                me.openRawContentTab();
             }
             me.update();
         };

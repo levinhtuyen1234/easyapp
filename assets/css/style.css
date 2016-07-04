@@ -29,7 +29,7 @@ body {
 }
 
 .siteThumbnail, .pathName, .file-list-group-item {
-    cursor: pointer;
+    cursor: default;
 }
 
 .siteThumbnailImg {
@@ -151,3 +151,52 @@ body {
 }
 
 /* END codemirror height auto up to */
+
+/* start xs navbar */
+.navbar-xs, .navbar-header {
+    min-height: 28px;
+    border-radius: 0
+}
+
+.navbar-btn {
+    margin: 1px 0 1px 0 !important;
+}
+
+.navbar-xs > .navbar-header > .navbar-brand {
+    padding: 2px 8px;
+    font-size: 14px;
+    line-height: 24px;
+    height: 28px;
+}
+
+.navbar-xs .navbar-nav > li > a {
+    border-right: 1px solid #ddd;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 24px
+}
+
+/* end xs navbar */
+
+/* start btn-seperator */
+.btn-separator:after {
+    content: ' ';
+    display: block;
+    float: left;
+    background: #ADADAD;
+    margin: 2px 4px;
+    height: 24px;
+    width: 1px;
+}
+
+/* end btn-seperator */
+
+.dropdown-menu::before,
+.dropdown-menu::after {
+    border: none !important;
+}
+
+.filter-control {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
