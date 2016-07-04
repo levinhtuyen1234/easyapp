@@ -3,52 +3,17 @@
     <new-layout-dialog></new-layout-dialog>
     <progress-dialog></progress-dialog>
     <github-init-dialog></github-init-dialog>
-
     <nav class="navbar navbar-default navbar-xs">
         <div class="navbar-header">
-            <a class="navbar-brand">EWH</a>
-        </div>
-
-        <div class="pull-left">
-            <a class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fa fa-fw fa-plus"></i> Add
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu" role="tablist">
-                <li role="presentation"><a href="#" onclick="{newContent}"><i class="fa fa-newspaper-o fa-fw"></i> Content</a></li>
-                <li role="presentation"><a href="#" onclick="{newLayout}"><i class="fa fa-file-code-o fa-fw"></i> Layout</a></li>
-            </ul>
-
-            <div class="btn-group" data-toggle="buttons">
-                <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
-                <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
-                    <i class="fa fa-fw fa-remove"></i>
-                </a>
-            </div>
-
-            <div class="btn-group" data-toggle="buttons">
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                </a>
-                <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                    <input type="radio" name="options">Raw
-                </a>
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                </a>
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                </a>
-            </div>
+            <a class="navbar-brand">EasyApp for easywebhub.com</a>
         </div>
 
         <div class="pull-right">
             <div class="btn-group" data-toggle="buttons">
                 <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>
+                    <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Preview
                 </a>
             </div>
-
             <div class="btn-group" data-toggle="buttons">
                 <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
                     <i class="fa fa-fw fa-github"></i> Sync
@@ -56,20 +21,48 @@
                 <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
                     Deploy
                 </a>
-                <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" show="{curTab === 'content-view' || curTab === 'code-view'}">
-                    <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu" role="tablist">
-                    <li role="presentation">
-                        <a href="#" onclick="{showGitHubSetting}" title="Init github setting">
-                            <i class="fa fa-fw fa-gear"></i> Init
-                        </a>
-                    </li>
-                </ul>
-            </div>
 
-            <div class="clearfix"></div>
+                <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting">
+                    <i class="fa fa-fw fa-gear"></i> Init
+                </a>
+            </div>
         </div>
+        <div class="clearfix"></div>
+        <dir class="row">
+          <div class="col-md-4">
+              <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-fw fa-plus"></i> Add Content
+              </a>
+              <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa fa-fw fa-plus"></i> Add Layout
+              </a>
+          </div>
+          <div class="">
+              <div class="btn-group" data-toggle="buttons">
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                      <input type="radio" name="options">Raw
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                  </a>
+              </div>
+
+              <div class="btn-group" data-toggle="buttons">
+                  <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                      <i class="fa fa-fw fa-remove"></i>Delete
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+              </div>
+              <div class="clearfix"></div>
+          </div>
+        </div>
+
     </nav>
 
     <div class="row">
