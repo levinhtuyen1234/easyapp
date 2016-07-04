@@ -48,7 +48,7 @@ app.on('ready', () => {
     });
 
     mainWindow.loadURL('file:/' + __dirname + '/index.html');
-  //  mainWindow.setMenu(null);
+    mainWindow.setMenu(null);
 
     if (debug) {
         mainWindow.webContents.openDevTools();
