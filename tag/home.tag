@@ -112,6 +112,7 @@
             // open index.md file
             setTimeout(function () {
                 me.openFile('content/index.md');
+                me.tags['side-bar'].activeFile('content/index.md');
             }, 1000);
         });
 
@@ -298,8 +299,11 @@
 
         me.deleteFile = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+            console.log('delete file', me.curTab);
             switch (me.curTab) {
                 case 'content-view':
+                case 'code-view':
+                    console.log('delete file content-view');
                     var contentFilePath = me.currentFilePath;
                     if (contentFilePath.startsWith('content')) {
                         var parts = contentFilePath.split(/[\\\/]/);
