@@ -23,44 +23,44 @@
                 </a>
 
                 <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting">
-                    <i class="fa fa-fw fa-gear"></i> Init
+                    Init
                 </a>
             </div>
         </div>
         <div class="clearfix"></div>
-        <dir class="row">
-          <div class="col-md-4">
-              <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-fw fa-plus"></i> Add Content
-              </a>
-              <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="fa fa-fw fa-plus"></i> Add Layout
-              </a>
-          </div>
-          <div class="">
-              <div class="btn-group" data-toggle="buttons">
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                      <input type="radio" name="options">Raw
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                  </a>
-              </div>
+        <div class="row">
+            <div class="col-md-4" style="text-align: center;">
+                <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-fw fa-plus"></i> Add Content
+                </a>
+                <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fa fa-fw fa-plus"></i> Add Layout
+                </a>
+            </div>
+            <div class="col-md-8">
+                <div class="btn-group" data-toggle="buttons">
+                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                        <input type="radio" name="options">Raw
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                    </a>
+                </div>
 
-              <div class="btn-group" data-toggle="buttons">
-                  <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
-                      <i class="fa fa-fw fa-remove"></i>Delete
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
-              </div>
-              <div class="clearfix"></div>
-          </div>
+                <div class="btn-group" data-toggle="buttons">
+                    <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                        <i class="fa fa-fw fa-remove"></i>Delete
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
         </div>
 
     </nav>

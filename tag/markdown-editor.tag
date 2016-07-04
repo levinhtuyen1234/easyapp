@@ -9,6 +9,7 @@
             me.editor = new SimpleMDE({
                 element:                 me.root.querySelector('textarea'),
                 autoDownloadFontAwesome: false,
+                spellChecker:            false,
                 codeSyntaxHighlighting:  true
             });
         });
