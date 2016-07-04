@@ -15,8 +15,8 @@
                 <span class="caret"></span>
             </a>
             <ul class="dropdown-menu" role="tablist">
-                <li role="presentation"><a href="#" onclick="{parent.newContent}"><i class="fa fa-newspaper-o fa-fw"></i> Content</a></li>
-                <li role="presentation"><a href="#" onclick="{parent.newLayout}"><i class="fa fa-file-code-o fa-fw"></i> Layout</a></li>
+                <li role="presentation"><a href="#" onclick="{newContent}"><i class="fa fa-newspaper-o fa-fw"></i> Content</a></li>
+                <li role="presentation"><a href="#" onclick="{newLayout}"><i class="fa fa-file-code-o fa-fw"></i> Layout</a></li>
             </ul>
 
             <div class="btn-group" data-toggle="buttons">
