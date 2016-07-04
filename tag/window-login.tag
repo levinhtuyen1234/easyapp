@@ -77,7 +77,7 @@
           <h2 class="featurette-heading display-heading-2 mt-3">How to build website?</h2>
           <div class="pricing-card pricing-card-horizontal"> <div class="pricing-card-cta">
           <a class="btn btn-block btn-theme-green btn-jumbotron" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a> </div>
-          <div class="pricing-card-text display-heading-3 mb-0 text-thin">EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.</div> </div>
+          <div class="pricing-card-text display-heading-3 mb-0 text-thin" style="font-family: Roboto !important;">EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.</div> </div>
       </div>
     </div>
 
