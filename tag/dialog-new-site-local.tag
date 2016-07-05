@@ -1,4 +1,4 @@
-<new-site class="modal fade" tabindex="-1" role="dialog">
+<dialog-new-site-local class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -43,7 +43,6 @@
         me.cloning = false;
 
         me.show = function () {
-            console.log('new-site show');
             me.errMsg = '';
             $(root).modal({
                 backdrop: false,
@@ -81,4 +80,4 @@
             });
         }
     </script>
-</new-site>
+</dialog-new-site-local>

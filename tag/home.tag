@@ -10,7 +10,7 @@
 
         <div class="pull-right">
             <div class="btn-group" data-toggle="buttons">
-                <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab">
                     <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Preview
                 </a>
             </div>
@@ -172,7 +172,7 @@
         me.openLayoutTab = function () {
             HideAllTab();
             me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-            console.log('me.currentFileTitle', me.currentFileTitle);
+//            console.log('me.currentFileTitle', me.currentFileTitle);
             me.update();
 
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
@@ -185,19 +185,19 @@
             try {
                 HideAllTab();
                 me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-                console.log('me.currentFileTitle', me.currentFileTitle);
+//                console.log('me.currentFileTitle', me.currentFileTitle);
                 me.update();
 
 //            var content = getFileContent(me.currentFilePath);
                 var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
                 if (!content || !content.metaData || !content.metaData.layout) {
-                    console.log('content missing meta or layout attribute');
+//                    console.log('content missing meta or layout attribute');
                     me.tags['content-view'].reset();
 //                return;
                 } else {
                     me.currentLayout = content.metaData.layout;
                     var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-                    console.log('content', content);
+//                    console.log('content', content);
                     me.tags['content-view'].setContent(content, contentConfig);
                 }
 
@@ -234,7 +234,7 @@
 //            console.log('me.currentFileTitle', me.currentFileTitle);
             me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
-            console.log('openRawContentTab', me.currentFilePath);
+//            console.log('openRawContentTab', me.currentFilePath);
             HideAllTab();
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
@@ -244,14 +244,14 @@
             contentCodeEditor.setOption('mode', 'json-frontmatter');
             for (var key in options) {
                 if (!options.hasOwnProperty(key)) continue;
-                console.log('set editor option', key, options[key]);
+//                console.log('set editor option', key, options[key]);
                 contentCodeEditor.setOption(key, options[key]);
             }
             ShowTab('code-view');
         };
 
         me.openFile = function (filePath) {
-            console.log('home openFile', filePath);
+//            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
             HideAllTab();
@@ -292,11 +292,11 @@
 
         me.deleteFile = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
-            console.log('delete file', me.curTab);
+//            console.log('delete file', me.curTab);
             switch (me.curTab) {
                 case 'content-view':
                 case 'code-view':
-                    console.log('delete file content-view');
+//                    console.log('delete file content-view');
                     var contentFilePath = me.currentFilePath;
                     if (contentFilePath.startsWith('content')) {
                         var parts = contentFilePath.split(/[\\\/]/);
@@ -340,20 +340,16 @@
         };
 
         me.newLayout = function () {
-            console.log('newLayout');
+//            console.log('newLayout');
             me.tags['new-layout-dialog'].show();
         };
 
         me.newContent = function () {
-            console.log('newContent');
+//            console.log('newContent');
             var layoutList = BackEnd.getLayoutList(me.siteName);
             console.log('layoutList', layoutList);
             me.tags['new-content-dialog'].updateLayoutList(layoutList);
             me.tags['new-content-dialog'].show();
-        };
-
-        me.openWatchView = function () {
-            console.log('openWatchView');
         };
 
         riot.api.on('addLayout', function (layoutFileName) {
@@ -416,7 +412,7 @@
                     console.log(err);
                     me.tags['progress-dialog'].enableClose();
                 });
-            })
+            });
         };
 
     </script>

@@ -9,9 +9,22 @@ set "BUILD_DIR=build"
 git init
 git remote add origin %REPO%
 
-rem add build dir vo .gitignore file
+rem only ignore if BUILD_DIR not exists in .gitignore 
+FOR /F "delims=" %%a in (.gitignore) DO (
+	IF "%%a" == "%BUILD_DIR%/" ( GOTO SKIP_APPEND_BUILD_DIR )
+)
+rem TODO only add if build dir not exists
 echo %BUILD_DIR%/>>.gitignore
+:SKIP_APPEND_BUILD_DIR
+
+
+FOR /F "delims=" %%a in (.gitignore) DO (
+	IF "%%a" == "node_modules/" ( GOTO SKIP_APPEND_NODE_MODULES )
+)
 echo node_modules/>>.gitignore
+:SKIP_APPEND_NODE_MODULES
+
+
 rem commit and push to master
 git add .
 git commit -m "init"
@@ -24,7 +37,7 @@ cd %BUILD_DIR%
 git clone %REPO% .
 
 rem create and switch to gh-pages branch
-git checkout -b gh-pages
+git checkout -B gh-pages
 
 rem delete all folder not .git in working dir
 for /D %%F in (*) do (

@@ -423,6 +423,13 @@ function gitInitSite(siteName, repositoryUrl, onProgress) {
     return spawnGitCmd(initScriptPath, [repositoryUrl], workingDirectory, onProgress);
 }
 
+function gitImportGitHub(siteName, repositoryUrl, onProgress) {
+    const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-import-github.bat');
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    MkdirpSync(workingDirectory);
+    return spawnGitCmd(initScriptPath, [repositoryUrl, '.'], workingDirectory, onProgress);
+}
+
 function gitCheckout(repositoryUrl, targetDir, onProgress) {
     return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
         return RimRaf(Path.join(targetDir, '.git'));
@@ -465,6 +472,7 @@ module.exports = {
     newContentFile:     newContentFile,
     gitCheckout:        gitCheckout,
     gitInitSite:        gitInitSite,
+    gitImportGitHub:    gitImportGitHub,
     gitPushGhPages:     gitPushGhPages,
     gitPushGitHub:      gitPushGitHub,
     readFile:           readFile

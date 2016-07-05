@@ -64,14 +64,14 @@
 
 html, body {
     height: 100%;
-    font-family: Roboto, Arial, sans-serif !important;
+    font-family: Roboto, Arial, sans-serif;
     font-size: 14px;
     margin: 0;
-    /*line-height: 1.5;*/
-    /*overflow: hidden; !* Prevents rubber-band scrolling of the whole "page" *!*/
-    /*color: var(--color);*/
-    /*background-color: #fff; !* To cover OSes with no default background color *!*/
 }
+
+/*.CodeMirror-line {*/
+    /*font-family: Consolas, monospace !important;*/
+/*}*/
 
 .siteThumbnail, .pathName, .file-list-group-item {
     cursor: default;
