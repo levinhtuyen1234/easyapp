@@ -1,22 +1,17 @@
 <side-bar>
-    <div class="row">
-        <div class="panel panel-default" style="border: none;">
-            <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
-            <!--</div>-->
-            <div class="panel-body" style="margin-left: 10px; padding: 0;">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-fw fa-filter"></i></span>
-                    <input type="text" class="form-control" placeholder="Filter" onkeyup="{onFilterInput}">
-                </div>
-
-                <br>
-
-                <ul class="list-group" style="overflow: auto;">
-                    <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
-                </ul>
-            </div>
-        </div>
-    </div>
+      <div class="panel panel-default" >
+          <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
+          <!--</div>-->
+          <div >
+              <div class="input-group">
+                  <span class="input-group-addon"><i class="fa fa-fw fa-filter"></i></span>
+                  <input type="text" class="form-control" placeholder="Filter" onkeyup="{onFilterInput}">
+              </div>
+              <ul class="list-group" style="overflow: auto;">
+                  <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
+              </ul>
+          </div>
+      </div>
 
     <script>
         var me = this;

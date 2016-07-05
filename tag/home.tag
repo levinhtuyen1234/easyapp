@@ -1,89 +1,99 @@
-<home>
+<home >
     <new-content-dialog></new-content-dialog>
     <new-layout-dialog></new-layout-dialog>
     <progress-dialog></progress-dialog>
     <github-init-dialog></github-init-dialog>
-    <nav class="navbar navbar-default navbar-xs">
-        <div class="navbar-header">
-            <a class="navbar-brand">EasyApp for easywebhub.com</a>
-        </div>
-
-        <div class="pull-right">
-            <div class="btn-group" data-toggle="buttons">
-                <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Preview
-                </a>
-            </div>
-            <div class="btn-group" data-toggle="buttons">
-                <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
-                    <i class="fa fa-fw fa-github"></i> Sync
-                </a>
-                <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
-                    Deploy
-                </a>
-
-                <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting">
-                    Init
-                </a>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div class="row">
-            <div class="col-md-4" style="text-align: center;">
-                <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-fw fa-plus"></i> Add Content
-                </a>
-                <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-fw fa-plus"></i> Add Layout
-                </a>
-            </div>
-            <div class="col-md-8">
-                <div class="btn-group" data-toggle="buttons">
-                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+    <nav class="navbar navbar-default">
+          <br />
+          <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-4 pull-left">
+                    <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-plus"></i> Add Content
                     </a>
-                    <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                        <input type="radio" name="options">Raw
-                    </a>
-                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                    </a>
-                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-plus"></i> Add Layout
                     </a>
                 </div>
+                <div class="pull-right">
+                    <div class="btn-group" data-toggle="buttons">
+                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Preview
+                        </a>
+                    </div>
+                    <div class="btn-group" data-toggle="buttons">
+                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
+                            <i class="fa fa-fw fa-github"></i> Sync
+                        </a>
+                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
+                            Deploy
+                        </a>
+                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting">
+                            Init
+                        </a>
+                    </div>
+                </div>
+            </div>
+          </div>
+    </nav>
 
+    <div class="container-fluid">
+      <div class="row">
+          <div class="col-md-4">
+            <div class="btn-group" data-toggle="buttons">
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                </a>
+                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                    <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Style
+                </a>
+            </div>
+            <side-bar site_name={opts.siteName}></side-bar>
+          </div>
+
+          <div class="col-md-8">
+              <div class="btn-group" data-toggle="buttons">
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                      <input type="radio" name="options">Raw
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                  </a>
+                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                      <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                  </a>
+              </div>
+              <div class="pull-right">
                 <div class="btn-group" data-toggle="buttons">
                     <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
                         <i class="fa fa-fw fa-remove"></i>Delete
                     </a>
-                    <a class="btn btn-default navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                    <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
                 </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-
-    </nav>
-
-    <div class="row">
-        <side-bar site_name={opts.siteName} class="col-md-4"></side-bar>
-        <div class="col-md-8">
-            <!-- EDITOR PANEL -->
-            <div class="panel panel-default" hide="{curTab === ''}">
-                <div class="panel-heading panel-heading-sm">
-                    <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-                </div>
-                <div class="panel-body">
-                    <div class="tab-content">
-                        <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                        <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                        <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                        <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
-                        <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
-                    </div>
-                </div>
-            </div>
-        </div>
+              </div>
+              <!-- EDITOR PANEL -->
+              <div class="panel panel-default" hide="{curTab === ''}">
+                  <div class="panel-heading panel-heading-sm">
+                      <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+                  </div>
+                  <div class="panel-body">
+                      <div class="tab-content">
+                          <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                          <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
+                          <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
+                          <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
+                          <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
 
     <script>
