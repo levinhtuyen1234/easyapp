@@ -26,7 +26,7 @@ function filterSideBarFile(name) {
 }
 
 function filterOnlyLayoutFile(name) {
-    var ignoreExt = ['.config.json'];
+    var ignoreExt = ['.config.json', '.gitkeep'];
     if (ignoreName.indexOf(name) != -1) return true;
     for (var i = 0; i < ignoreExt.length; i++) {
         if (name.endsWith(ignoreExt[i]))
@@ -35,14 +35,25 @@ function filterOnlyLayoutFile(name) {
     return false;
 }
 
-let ScanDir = function (siteRoot, dir, ret) {
+function filterAssetFile(name) {
+    var ignoreExt = ['.gitkeep'];
+    if (ignoreName.indexOf(name) != -1) return true;
+    for (var i = 0; i < ignoreExt.length; i++) {
+        if (name.endsWith(ignoreExt[i]))
+            return true;
+    }
+    return false;
+}
+
+let ScanDir = function (siteRoot, dir, ret, filter) {
     for (var name of Fs.readdirSync(dir)) {
-        if (filterSideBarFile(name)) continue;
+        if (filter && typeof(filter) === 'function')
+            if (filter(name)) continue;
         var fullPath = Path.join(dir, name);
         var stat = Fs.statSync(fullPath);
 
         if (stat.isDirectory()) {
-            ScanDir(siteRoot, fullPath, ret);
+            ScanDir(siteRoot, fullPath, ret, filter);
         } else {
             ret.push({name: name, path: Path.relative(siteRoot, fullPath).replace(/\\/g, '/')});
         }
@@ -50,14 +61,50 @@ let ScanDir = function (siteRoot, dir, ret) {
     return ret;
 };
 
-function getSiteFiles(siteName) {
+function getSiteContentFiles(siteName) {
     var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['content', 'layout'];
+    var folders = ['content'];
     var files = [];
     for (var folder of folders) {
-        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files);
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterSideBarFile);
     }
     return files;
+}
+
+function getSiteLayoutFiles(siteName) {
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var folders = ['layout'];
+    var files = [];
+    for (var folder of folders) {
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
+    }
+    return files;
+}
+
+function getSiteAssetFiles(siteName) {
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var folders = ['asset'];
+    var files = [];
+    for (var folder of folders) {
+        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterAssetFile);
+    }
+    return files;
+}
+
+function getLayoutList(site) {
+    var sitePath = Path.join(sitesRoot, site, 'layout');
+    var ret = [];
+    for (var name of Fs.readdirSync(sitePath)) {
+        if (filterOnlyLayoutFile(name)) continue;
+        var fullPath = Path.join(sitePath, name);
+        var stat = Fs.statSync(fullPath);
+
+        if (stat.isDirectory())
+            continue;
+        ret.push(name);
+    }
+    return ret;
 }
 
 function fileExists(filePath) {
@@ -196,21 +243,6 @@ function readFile(site, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, site, filePath)).toString();
 }
 
-function getLayoutList(site) {
-    var sitePath = Path.join(sitesRoot, site, 'layout');
-    var ret = [];
-    for (var name of Fs.readdirSync(sitePath)) {
-        console.log(name);
-        if (filterOnlyLayoutFile(name)) continue;
-        var fullPath = Path.join(sitePath, name);
-        var stat = Fs.statSync(fullPath);
-
-        if (stat.isDirectory())
-            continue;
-        ret.push(name);
-    }
-    return ret;
-}
 
 function getSiteList() {
     var ret = Fs.readdirSync(sitesRoot);
@@ -455,25 +487,27 @@ function getLocalDate() {
 }
 
 module.exports = {
-    getSiteList:        getSiteList,
-    getSiteFiles:       getSiteFiles,
-    getConfigFile:      getConfigFile,
-    saveConfigFile:     saveConfigFile,
-    getRawContentFile:  getRawContentFile,
-    getContentFile:     getContentFile,
-    saveContentFile:    saveContentFile,
-    saveRawContentFile: saveRawContentFile,
-    getLayoutFile:      getLayoutFile,
-    saveLayoutFile:     saveLayoutFile,
-    deleteLayoutFile:   deleteLayoutFile,
-    deleteContentFile:  deleteContentFile,
-    getLayoutList:      getLayoutList,
-    newLayoutFile:      newLayoutFile,
-    newContentFile:     newContentFile,
-    gitCheckout:        gitCheckout,
-    gitInitSite:        gitInitSite,
-    gitImportGitHub:    gitImportGitHub,
-    gitPushGhPages:     gitPushGhPages,
-    gitPushGitHub:      gitPushGitHub,
-    readFile:           readFile
+    getSiteList:         getSiteList,
+    getConfigFile:       getConfigFile,
+    saveConfigFile:      saveConfigFile,
+    getRawContentFile:   getRawContentFile,
+    getContentFile:      getContentFile,
+    saveContentFile:     saveContentFile,
+    saveRawContentFile:  saveRawContentFile,
+    getLayoutFile:       getLayoutFile,
+    saveLayoutFile:      saveLayoutFile,
+    deleteLayoutFile:    deleteLayoutFile,
+    deleteContentFile:   deleteContentFile,
+    getLayoutList:       getLayoutList,
+    newLayoutFile:       newLayoutFile,
+    newContentFile:      newContentFile,
+    gitCheckout:         gitCheckout,
+    gitInitSite:         gitInitSite,
+    gitImportGitHub:     gitImportGitHub,
+    gitPushGhPages:      gitPushGhPages,
+    gitPushGitHub:       gitPushGitHub,
+    getSiteLayoutFiles:  getSiteLayoutFiles,
+    getSiteAssetFiles:   getSiteAssetFiles,
+    getSiteContentFiles: getSiteContentFiles,
+    readFile:            readFile
 };

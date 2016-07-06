@@ -40,17 +40,6 @@
     <div class="container-fluid">
       <div class="row">
           <div class="col-md-4">
-            <div class="btn-group" data-toggle="buttons">
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                </a>
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                </a>
-                <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                    <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Style
-                </a>
-            </div>
             <side-bar site_name={opts.siteName}></side-bar>
           </div>
 
@@ -114,8 +103,8 @@
 //            riot.mount('breadcrumb', {path: opts.siteName});
             // open index.md file
             setTimeout(function () {
-                me.openFile('content/index.md');
-                me.tags['side-bar'].activeFile('content/index.md');
+//                me.openFile('content/index.md');
+//                me.tags['side-bar'].activeFile('content/index.md');
             }, 1000);
         });
 
@@ -181,10 +170,11 @@
 
         me.openLayoutTab = function () {
             HideAllTab();
-            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-//            console.log('me.currentFileTitle', me.currentFileTitle);
+            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
+//            me.currentLayout = me.currentFileTitle;
+            console.log('openLayoutTab, me.currentFileTitle', me.currentFileTitle);
             me.update();
-
+            console.log('get layout file', me.opts.siteName, me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
@@ -271,6 +261,10 @@
             } else if (filePath.endsWith('.config.json')) {
                 me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
+                console.log(me.currentFilePath.split(/[/\\]/));
+                me.currentLayout = me.currentFilePath.split(/[/\\]/);
+                me.currentLayout.shift();
+                me.currentLayout = me.currentLayout.join('/');
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
                 me.openRawContentTab();

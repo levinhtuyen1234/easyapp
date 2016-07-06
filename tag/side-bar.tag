@@ -1,106 +1,81 @@
 <side-bar>
-      <div class="panel panel-default" >
-          <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
-          <!--</div>-->
-          <div >
-              <div class="input-group">
-                  <span class="input-group-addon"><i class="fa fa-fw fa-filter"></i></span>
-                  <input type="text" class="form-control" placeholder="Filter" onkeyup="{onFilterInput}">
-              </div>
-              <ul class="list-group" style="overflow: auto;">
-                  <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
-              </ul>
-          </div>
-      </div>
+    <div class="panel panel-default" style="border: 0">
+        <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
+        <div class="btn-group" data-toggle="buttons">
+            <a class="btn btn-default navbar-btn btn-sm active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
+                <input type="radio" name="file-list-options">Content
+            </a>
+            <a class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
+                <input type="radio" name="file-list-options">Layout
+            </a>
+            <a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
+                <input type="radio" name="file-list-options">Asset
+            </a>
+        </div>
+        <!--</div>-->
+        <div class="panel-body" style="padding: 0;">
+            <div class="tab-content">
+                <file-list-flat id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
+                <file-list-flat id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+                <file-list-flat id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+            </div>
+        </div>
+    </div>
 
     <script>
         var me = this;
-        var table, dataTable;
         var $root = $(me.root);
         var curFilePath = '';
 
-        me.files = [];
-        me.filteredFiles = [];
+        var contentFileTag, layoutFileTag, assetFileTag;
 
-        function fuzzySearch(needle, haystack) {
-            var hlen = haystack.length;
-            var nlen = needle.length;
-            if (nlen > hlen) {
-                return false;
-            }
-            if (nlen === hlen) {
-                return needle === haystack;
-            }
-            outer: for (var i = 0, j = 0; i < nlen; i++) {
-                var nch = needle.charCodeAt(i);
-                while (j < hlen) {
-                    if (haystack.charCodeAt(j++) === nch) {
-                        continue outer;
-                    }
-                }
-                return false;
-            }
-            return true;
-        }
-
-        var delay = (function () {
-            var timer = 0;
-            return function (callback, ms) {
-                clearTimeout(timer);
-                timer = setTimeout(callback, ms);
-            };
-        })();
-
-        me.loadFiles = function (siteName) {
-            me.clear();
-            var files = BackEnd.getSiteFiles(siteName);
-            me.files = files;
-            me.filteredFiles = files;
-            me.update();
-        };
-
-        me.openFile = function (e) {
-            var filePath = e.target.dataset.path;
-            if (filePath === me.curFilePath) return;
-            me.curFilePath = filePath;
-            $root.find('.list-group-item').removeClass('active');
+        me.activeTab = function (e) {
+            $(me.root).find('.navbar-btn').removeClass('active');
             $(e.target).addClass('active');
-            me.parent.openFile(filePath);
         };
 
-        me.activeFile = function (filePath) {
-            var elm = $root.find('li[data-path="' + filePath + '"]');
-            $root.find('.list-group-item').removeClass('active');
-            $(elm).addClass('active');
+        me.reloadContentFileTab = function () {
+            var files = BackEnd.getSiteContentFiles(opts.site_name);
+//            console.log('reloadContentFileTab files', files);
+            contentFileTag.loadFiles(files);
         };
 
-        me.filter = function (e) {
-            var needle = e.target.value;
-            var filtered = [];
-            for (var file of me.files) {
-                if (fuzzySearch(needle, file.name)) {
-                    filtered.push(file);
-                }
-            }
-
-            me.filteredFiles = filtered;
-            me.update();
+        me.reloadLayoutFileTab = function () {
+            var files = BackEnd.getSiteLayoutFiles(opts.site_name);
+            layoutFileTag.loadFiles(files);
         };
 
-        me.onFilterInput = function (e) {
-            delay(function () {
-                me.filter(e)
-            }, 100);
-        };
-
-        me.clear = function () {
-            me.filteredFiles = [];
-            me.files = [];
-            me.update();
+        me.reloadAssetFileTab = function () {
+            var files = BackEnd.getSiteAssetFiles(opts.site_name);
+            assetFileTag.loadFiles(files);
         };
 
         me.on('mount', function () {
-            me.loadFiles(opts.site_name);
+            contentFileTag = me.tags['file-list-flat'][0];
+            layoutFileTag = me.tags['file-list-flat'][1];
+            assetFileTag = me.tags['file-list-flat'][2];
+
+
+            me.reloadContentFileTab();
+            me.reloadLayoutFileTab();
+            me.reloadAssetFileTab();
+
+            contentFileTag.event.on('openFile', function (filePath) {
+                me.parent.openFile(filePath);
+            });
+
+            layoutFileTag.event.on('openFile', function (filePath) {
+                console.log('filePath', filePath);
+                me.parent.openFile(filePath);
+            });
+
+            assetFileTag.event.on('openFile', function (filePath) {
+                if (!me.parent.openAssetFile) {
+                    console.log('home tag need fn openAssetFile');
+                } else
+                    me.parent.openAssetFile(filePath);
+            });
+
         });
 
     </script>
