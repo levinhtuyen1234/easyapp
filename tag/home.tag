@@ -294,7 +294,7 @@
                         callback: function (result) {
                             if (result) {
                                 BackEnd.deleteContentFile(me.opts.siteName, contentFilePath);
-                                me.tags['side-bar'].loadFiles(me.opts.siteName); // reload sidebar file list
+                                me.tags['side-bar'].reloadContentFileTab(me.opts.siteName); // reload sidebar file list
                                 // hide rightCol
                                 me.curTab = '';
                                 me.tags['breadcrumb'].setPath('');
@@ -342,11 +342,11 @@
                 var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
-                me.tags['side-bar'].loadFiles(me.opts.siteName);
+                me.tags['side-bar'].reloadContentFileTab(me.opts.siteName);
                 riot.api.trigger('closeNewContentDialog');
                 console.log('open file', newContentFilePath);
                 me.openFile(newContentFilePath);
-                me.tags['side-bar'].activeFile(newContentFilePath);
+                //me.tags['side-bar'].activeFile(newContentFilePath);
             } catch (ex) {
                 console.log('addContent', ex);
                 bootbox.alert('create content failed, error ' + ex.message);
