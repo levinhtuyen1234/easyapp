@@ -10,7 +10,7 @@
                 </pre>
                 <br>
                 <center>
-                    <button type="button" class="btn btn-default {closable ? '' : 'disabled'}" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" disabled="{closable}" data-dismiss="modal">Close</button>
                 </center>
             </div>
         </div>

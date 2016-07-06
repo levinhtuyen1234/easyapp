@@ -41,7 +41,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary {(contentLayout=='' || contentTitle=='' || contentTitle=='.md') ? 'disabled' : ''}" onclick="{add}">Add</button>
+                <button type="button" class="btn btn-primary" disabled="{contentLayout=='' || contentTitle=='' || contentTitle=='.md'}" onclick="{add}">Add</button>
             </div>
         </div>
     </div>

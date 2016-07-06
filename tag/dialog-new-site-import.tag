@@ -38,7 +38,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary {(siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid) ? 'disabled' : ''}" onclick="{create}">Create</button>
+                <button type="button" class="btn btn-primary disabled={siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{create}">Create</button>
             </div>
         </div>
     </div>
