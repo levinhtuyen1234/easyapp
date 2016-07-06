@@ -422,7 +422,7 @@ function SpawnShell(command, args, opts) {
 // }
 
 function spawnGitCmd(command, args, cwd, onProgress) {
-    console.log('command', command);
+    console.log('command', command, 'cwd', cwd);
     const ENV_PATH = [
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))

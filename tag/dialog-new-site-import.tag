@@ -10,7 +10,7 @@
                     <div class="form-group is-empty">
                         <label for="form-repo-url" class="control-label col-sm-4">Folder name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{siteNameChange}">
+                            <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{edit.bind(this,'siteName')}">
                             <span class="material-input"></span>
                         </div>
                     </div>
