@@ -1,11 +1,11 @@
-<home >
+<home>
     <new-content-dialog></new-content-dialog>
     <new-layout-dialog></new-layout-dialog>
     <progress-dialog></progress-dialog>
     <github-init-dialog></github-init-dialog>
     <nav class="navbar navbar-default">
-          <br />
-          <div class="container-fluid">
+        <br/>
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 pull-left">
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -34,55 +34,55 @@
                     </div>
                 </div>
             </div>
-          </div>
+        </div>
     </nav>
 
     <div class="container-fluid">
-      <div class="row">
-          <div class="col-md-4">
-            <side-bar site_name={opts.siteName}></side-bar>
-          </div>
+        <div class="row">
+            <div class="col-md-4">
+                <side-bar site_name={opts.siteName}></side-bar>
+            </div>
 
-          <div class="col-md-8">
-              <div class="btn-group" data-toggle="buttons">
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                      <input type="radio" name="options">Raw
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                  </a>
-                  <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                      <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                  </a>
-              </div>
-              <div class="pull-right">
+            <div class="col-md-8">
                 <div class="btn-group" data-toggle="buttons">
-                    <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
-                        <i class="fa fa-fw fa-remove"></i>Delete
+                    <a class=" btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
                     </a>
-                    <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                    <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                        <input type="radio" name="options">Raw
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                    </a>
+                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                        <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                    </a>
                 </div>
-              </div>
-              <!-- EDITOR PANEL -->
-              <div class="panel panel-default" hide="{curTab === ''}">
-                  <div class="panel-heading panel-heading-sm">
-                      <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-                  </div>
-                  <div class="panel-body">
-                      <div class="tab-content">
-                          <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                          <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                          <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                          <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
-                          <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+                <div class="pull-right">
+                    <div class="btn-group" data-toggle="buttons">
+                        <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                            <i class="fa fa-fw fa-remove"></i>Delete
+                        </a>
+                        <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                    </div>
+                </div>
+                <!-- EDITOR PANEL -->
+                <div class="panel panel-default" hide="{curTab === ''}">
+                    <div class="panel-heading panel-heading-sm">
+                        <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+                    </div>
+                    <div class="panel-body">
+                        <div class="tab-content">
+                            <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                            <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
+                            <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
+                            <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
+                            <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -126,41 +126,6 @@
             if (me.codeView) me.codeView.unmount(true);
         }
 
-        function createDefaultConfigFile(metaData) {
-            var config = [];
-            for (var key in metaData) {
-                if (!metaData.hasOwnProperty(key)) continue;
-                var value = form[key];
-                switch (typeof value) {
-                    case 'string':
-                        config.push({
-                            name:        key,
-                            type:        'text',
-                            required:    true,
-                            validations: []
-                        });
-                        break;
-                    case 'number':
-                        config.push({
-                            name:        key,
-                            type:        'integer',
-                            required:    true,
-                            validations: []
-                        });
-                        break;
-                    case 'boolean':
-                        config.push({
-                            name:        key,
-                            type:        'boolean',
-                            required:    true,
-                            validations: []
-                        });
-                        break;
-                }
-            }
-            return config;
-        }
-
         function getFileContent(filePath) {
             var fileContent = BackEnd.readFile(me.opts.siteName, filePath).trim();
             if (fileContent === null) return;
@@ -181,10 +146,17 @@
             ShowTab('layout-view');
         };
 
+        me.openAssetFile = function (filePath) {
+            console.log('openAssetFile', filePath);
+            me.currentFilePath = filePath;
+            me.openRawContentTab({mode: 'auto'});
+            me.update();
+        };
+
         me.openContentTab = function () {
             try {
                 HideAllTab();
-                me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+                me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
 //                console.log('me.currentFileTitle', me.currentFileTitle);
                 me.update();
 
@@ -230,11 +202,10 @@
         };
 
         me.openRawContentTab = function (options) {
-            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-//            console.log('me.currentFileTitle', me.currentFileTitle);
+            console.log('openRawContentTab', options);
+            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
-//            console.log('openRawContentTab', me.currentFilePath);
             HideAllTab();
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
@@ -244,7 +215,6 @@
             contentCodeEditor.setOption('mode', 'json-frontmatter');
             for (var key in options) {
                 if (!options.hasOwnProperty(key)) continue;
-//                console.log('set editor option', key, options[key]);
                 contentCodeEditor.setOption(key, options[key]);
             }
             ShowTab('code-view');
