@@ -45,7 +45,6 @@
         })();
 
         me.loadFiles = function (files) {
-//            console.log('loadFiles', files);
             me.clear();
             me.files = files;
             me.filteredFiles = files;
@@ -59,7 +58,6 @@
             $root.find('.list-group-item').removeClass('active');
             $(e.target).addClass('active');
             me.event.trigger('openFile', filePath);
-//            me.parent.openFile(filePath);
         };
 
         me.activeFile = function (filePath) {

@@ -31,12 +31,32 @@
 
         me.activeTab = function (e) {
             $(me.root).find('.navbar-btn').removeClass('active');
-            $(e.target).addClass('active');
+            if (typeof(e) === 'object') {
+                $(e.target).addClass('active');
+            } else {
+                $(me.root.querySelector('a[href="#' + e + '"]')).addClass('active').tab('show');
+            }
+        };
+
+        me.activeFile = function (tabName, filePath) {
+            // active tab
+            me.activeTab(tabName);
+            // highlight file
+            switch (tabName) {
+                case 'content-file-list':
+                    me.tags['file-list-flat'][0].activeFile(filePath);
+                    break;
+                case 'layout-file-list':
+                    me.tags['file-list-flat'][1].activeFile(filePath);
+                    break;
+                case 'asset-file-list':
+                    me.tags['file-list-flat'][2].activeFile(filePath);
+                    break;
+            }
         };
 
         me.reloadContentFileTab = function () {
             var files = BackEnd.getSiteContentFiles(opts.site_name);
-//            console.log('reloadContentFileTab files', files);
             contentFileTag.loadFiles(files);
         };
 
@@ -50,11 +70,39 @@
             assetFileTag.loadFiles(files);
         };
 
+        window.rr = me.root;
+        me.reloadCurrentTab = function () {
+            // get cur tab
+            var activeTabHref = $(me.root.querySelector('a.navbar-btn.active')).attr('href');
+            switch (activeTabHref) {
+                case '#content-file-list':
+                    me.reloadContentFileTab();
+                    break;
+                case '#layout-file-list':
+                    me.reloadLayoutFileTab();
+                    break;
+                case '#asset-file-list':
+                    me.reloadAssetFileTab();
+                    break;
+            }
+        };
+
+        riot.api.on('addContentFile', function (filePath) {
+            me.reloadContentFileTab();
+        });
+
+        riot.api.on('removeFile', function (filePath) {
+            me.reloadCurrentTab();
+        });
+
+        riot.api.on('addLayout', function () {
+            me.reloadLayoutFileTab();
+        });
+
         me.on('mount', function () {
             contentFileTag = me.tags['file-list-flat'][0];
             layoutFileTag = me.tags['file-list-flat'][1];
             assetFileTag = me.tags['file-list-flat'][2];
-
 
             me.reloadContentFileTab();
             me.reloadLayoutFileTab();
@@ -65,7 +113,6 @@
             });
 
             layoutFileTag.event.on('openFile', function (filePath) {
-                console.log('filePath', filePath);
                 me.parent.openFile(filePath);
             });
 
@@ -77,6 +124,5 @@
             });
 
         });
-
     </script>
 </side-bar>

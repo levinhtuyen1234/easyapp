@@ -134,13 +134,12 @@
         }
 
         me.openLayoutTab = function () {
-            HideAllTab();
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
-//            me.currentLayout = me.currentFileTitle;
-            console.log('openLayoutTab, me.currentFileTitle', me.currentFileTitle);
             me.update();
-            console.log('get layout file', me.opts.siteName, me.currentLayout);
+
+            me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
+            me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + me.currentLayout);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
@@ -156,6 +155,7 @@
         me.openContentTab = function () {
             try {
                 HideAllTab();
+                me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
 //                console.log('me.currentFileTitle', me.currentFileTitle);
                 me.update();
@@ -202,16 +202,17 @@
         };
 
         me.openRawContentTab = function (options) {
-            console.log('openRawContentTab', options);
+//            me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
-            HideAllTab();
+//            HideAllTab();
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
             var contentCodeEditor = me.tags['code-editor'][0];
             contentCodeEditor.value(rawStr);
 
+            // todo detect file type set mode
             contentCodeEditor.setOption('mode', 'json-frontmatter');
             for (var key in options) {
                 if (!options.hasOwnProperty(key)) continue;
@@ -224,14 +225,12 @@
 //            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
-            HideAllTab();
 
             if (filePath.endsWith('.md')) {
                 me.openContentTab();
             } else if (filePath.endsWith('.config.json')) {
                 me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
-                console.log(me.currentFilePath.split(/[/\\]/));
                 me.currentLayout = me.currentFilePath.split(/[/\\]/);
                 me.currentLayout.shift();
                 me.currentLayout = me.currentLayout.join('/');
@@ -251,6 +250,7 @@
                     break;
                 case 'code-view':
                     var rawContent = me.tags['code-editor'][0].value();
+                    // TODO this code view open not just only raw content file but also asset
                     BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);
                     break;
                 case 'layout-view':
@@ -294,7 +294,7 @@
                         callback: function (result) {
                             if (result) {
                                 BackEnd.deleteContentFile(me.opts.siteName, contentFilePath);
-                                me.tags['side-bar'].loadFiles(me.opts.siteName); // reload sidebar file list
+                                riot.api.trigger('removeFile');
                                 // hide rightCol
                                 me.curTab = '';
                                 me.tags['breadcrumb'].setPath('');
@@ -342,11 +342,11 @@
                 var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
-                me.tags['side-bar'].loadFiles(me.opts.siteName);
+                riot.api.trigger('addContentFile', newContentFilePath);
                 riot.api.trigger('closeNewContentDialog');
                 console.log('open file', newContentFilePath);
                 me.openFile(newContentFilePath);
-                me.tags['side-bar'].activeFile(newContentFilePath);
+                me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
             } catch (ex) {
                 console.log('addContent', ex);
                 bootbox.alert('create content failed, error ' + ex.message);
