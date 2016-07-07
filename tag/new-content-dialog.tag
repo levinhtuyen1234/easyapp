@@ -64,12 +64,10 @@
         };
 
         me.add = function () {
-            console.log(me.isFrontPageElm.checked);
             riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.isFrontPageElm.checked);
         };
 
         riot.api.on('closeNewContentDialog', function () {
-            console.log('closeNewContentDialog');
             $(me.root).modal('hide');
         });
 
@@ -103,7 +101,7 @@
             me.update();
 
             $(me.root).modal('show');
-            $(me.root).find('.selectpicker').selectpicker();
+            $(me.contentLayoutElm).selectpicker('refresh');
         }
     </script>
 </new-content-dialog>
