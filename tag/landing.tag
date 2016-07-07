@@ -91,7 +91,9 @@
         };
 
         me.createSite = function (name, sitePath) {
-            return riot.api.createSite(name, sitePath);
+            return riot.api.createSite(name, sitePath).then(function(){
+                me.unmount();
+            });
         };
 
         me.showCreateSite = function () {

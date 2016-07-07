@@ -55,9 +55,9 @@
             });
 
             newProcess.stdout.on('data', function (data) {
-//                console.log(data);
                 // find browserSync port in stdout
                 var str = String.fromCharCode.apply(null, data);
+                console.log(str);
                 var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
