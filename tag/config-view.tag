@@ -123,7 +123,9 @@
             me.curConfig = config;
             me.originalFieldType = fieldType;
             $root.find('.modal').modal('show');
-            $($root.find('.selectpicker')[0]).selectpicker('val', fieldType);
+            var selectorElm = $(me.root.querySelector('.selectpicker'));
+            selectorElm.selectpicker();
+            selectorElm.selectpicker('val', fieldType);
             formTags[fieldType].clear(); // clear form setting
             formTags[fieldType].loadConfig(config);
             me.update();
