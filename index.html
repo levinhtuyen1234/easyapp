@@ -30,6 +30,8 @@
 <home></home>
 <window-public></window-public>
 <!-- preload toàn bộ tag -->
+<script src="tag/config-view-array.tag" type="riot/tag"></script>
+<script src="tag/config-view-object.tag" type="riot/tag"></script>
 <script src="tag/config-view-text.tag" type="riot/tag"></script>
 <script src="tag/config-view-media.tag" type="riot/tag"></script>
 <script src="tag/config-view-number.tag" type="riot/tag"></script>
@@ -72,6 +74,14 @@
 
 <script>
     var BackEnd = require('./assets/js/backend.js');
+//    window.dialog = require('electron').remote.dialog;
+//    console.log('dialog.showOpenDialog', dialog.showOpenDialog);
+//    dialog.showOpenDialog({
+//        properties: ['openFile'],
+//        filters:    [
+//            {name: 'All Media Files', extensions: ['*']}
+//        ]
+//    });
     window.BackEnd = BackEnd;
 
     var Path = require('path');

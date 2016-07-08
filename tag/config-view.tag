@@ -21,16 +21,20 @@
                             <label class="col-sm-2 control-label">Type</label>
                             <div class="col-sm-10">
                                 <select class="selectpicker" onchange="{ShowFieldConfig}">
+                                    <option value="Array">Array</option>
                                     <option value="Boolean">Boolean</option>
                                     <option value="DateTime">DateTime</option>
                                     <option value="Media">Media</option>
                                     <option value="Number">Number</option>
+                                    <option value="Object">Object</option>
                                     <option value="Text">Text</option>
                                 </select>
                             </div>
                         </div>
 
                         <config-view-text show="{curFieldType === 'Text'}"></config-view-text>
+                        <config-view-array show="{curFieldType === 'Array'}"></config-view-array>
+                        <config-view-object show="{curFieldType === 'Object'}"></config-view-object>
                         <config-view-number show="{curFieldType === 'Number'}"></config-view-number>
                         <config-view-boolean show="{curFieldType === 'Boolean'}"></config-view-boolean>
                         <config-view-datetime show="{curFieldType === 'DateTime'}"></config-view-datetime>
@@ -82,6 +86,8 @@
             'DateTime': me.tags['config-view-datetime'],
             'Media':    me.tags['config-view-media'],
             'Number':   me.tags['config-view-number'],
+            'Object':   me.tags['config-view-object'],
+            'Array':    me.tags['config-view-array'],
             'Text':     me.tags['config-view-text']
         };
 

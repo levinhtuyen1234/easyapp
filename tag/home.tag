@@ -260,6 +260,7 @@
             switch (me.curTab) {
                 case 'content-view':
                     var content = me.tags['content-view'].getContent();
+                    console.log('save content-view', content);
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
                     break;
                 case 'code-view':
@@ -411,5 +412,10 @@
             });
         };
 
+        riot.api.on('copyAssetFile', function (localPath, targetPath) {
+            // TODO detect target path đã ở trong asset thì không cần copy
+            BackEnd.copyAssetFile(me.siteName, localPath, targetPath, function(err) {
+            });
+        });
     </script>
 </home>

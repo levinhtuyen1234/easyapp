@@ -486,6 +486,30 @@ function getLocalDate() {
         + ':' + pad(tzo % 60);
 }
 
+function copyAssetFile(siteName, source, target, cb) {
+    MkdirpSync(Path.join(sitesRoot, siteName, 'asset', 'img')); // TODO generalize this
+    target = Path.join(sitesRoot, siteName, target);
+
+    var cbCalled = false;
+
+    var rd = Fs.createReadStream(source);
+    rd.on('error', done);
+
+    var wr = Fs.createWriteStream(target);
+    wr.on('error', done);
+    wr.on('close', function (ex) {
+        done();
+    });
+    rd.pipe(wr);
+
+    function done(err) {
+        if (!cbCalled) {
+            cb(err);
+            cbCalled = true;
+        }
+    }
+}
+
 module.exports = {
     getSiteList:         getSiteList,
     getConfigFile:       getConfigFile,
@@ -509,5 +533,6 @@ module.exports = {
     getSiteLayoutFiles:  getSiteLayoutFiles,
     getSiteAssetFiles:   getSiteAssetFiles,
     getSiteContentFiles: getSiteContentFiles,
-    readFile:            readFile
+    readFile:            readFile,
+    copyAssetFile:       copyAssetFile
 };
