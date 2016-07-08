@@ -161,7 +161,7 @@
         });
 
         me.getValue = function () {
-            return editor.getValue();
+            return JSON.parse(editor.getValue());
         };
 
         me.setValue = function (value) {
