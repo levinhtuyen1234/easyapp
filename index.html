@@ -30,6 +30,11 @@
 <home></home>
 <window-public></window-public>
 <!-- preload toàn bộ tag -->
+<script src="tag/config-view-text.tag" type="riot/tag"></script>
+<script src="tag/config-view-media.tag" type="riot/tag"></script>
+<script src="tag/config-view-number.tag" type="riot/tag"></script>
+<script src="tag/config-view-datetime.tag" type="riot/tag"></script>
+<script src="tag/config-view-boolean.tag" type="riot/tag"></script>
 <script src="tag/form-editor.tag" type="riot/tag"></script>
 <script src="tag/markdown-editor.tag" type="riot/tag"></script>
 <script src="tag/file-list-flat.tag" type="riot/tag"></script>
@@ -108,6 +113,31 @@
     //                    });
     //        });
     //    }
+
+    var formMixin = {
+        edit: function (keyPath, e) {
+            var value;
+            switch (e.target.type) {
+                case 'checkbox':
+                    value = e.target.checked;
+                    break;
+                default:
+                    value = e.target.value;
+            }
+
+            var schema = this;
+            var pList = keyPath.split('.');
+            var len = pList.length;
+            for (var i = 0; i < len - 1; i++) {
+                var elem = pList[i];
+                if (!schema[elem]) schema[elem] = {};
+                schema = schema[elem];
+            }
+            schema[pList[len - 1]] = value;
+        }
+    };
+
+    riot.mixin('form', formMixin);
 
     riot.api = riot.observable();
     Object.assign(riot.api, {

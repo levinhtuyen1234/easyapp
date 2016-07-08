@@ -86,6 +86,8 @@
     </div>
 
     <script>
+        const Fs = require('fs');
+
         var me = this;
         me.contentView = null;
         me.configView = null;
@@ -199,6 +201,18 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
+            me.tags['config-view'].event.one('saveLayoutConfig', function (configFieldName, newConfig) {
+                console.log('home saveLayoutConfig configFieldName', configFieldName, newConfig);
+                newConfig.name = configFieldName;
+                // ghi de` new setting vo contentConfig
+                for (var i = 0; i < contentConfig.length; i++) {
+                    if (contentConfig[i].name === configFieldName) {
+                        contentConfig[i] = newConfig;
+                        break;
+                    }
+                }
+                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
+            });
         };
 
         me.openRawContentTab = function (options) {
@@ -364,6 +378,14 @@
         };
 
         me.syncToGitHub = function () {
+            // TODO detect .git folder exists if not show init dialog
+            console.log('syncToGitHub', __dirname);
+//            try {
+//                var siteGitPath =;
+//                var stat = Fs.statSync(fullPath);
+//                if (stat.isDirectory())
+//            } catch(ex) {}
+
             me.tags['progress-dialog'].show('Sync to GitHub');
             BackEnd.gitPushGitHub(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
