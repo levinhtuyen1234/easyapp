@@ -5,12 +5,42 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" show="{!cloning}">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">Create new site</h4>
+                <h4 class="modal-title">Create new website from EasyWebHub source</h4>
             </div>
             <div class="modal-body">
+
+                <div class="container-fluid">
+                    <h3>List of EasyWebHub website template:</h3>
+                    <div class="row">
+                      <div class="col-sm-4 col-md-3">
+                        <div class="pricing-card pricing-card-horizontal">
+                            <div class="pricing-card-cta">
+                                <div class="caption" style="text-align: center">
+                                    <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
+                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
+                                    <h4>Standard</h4>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 col-md-3">
+                        <div class="pricing-card pricing-card-horizontal">
+                            <div class="pricing-card-cta">
+                                <div class="caption" style="text-align: center">
+                                    <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
+                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
+                                    <h4>Advanced</h4>
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+
                 <form>
                     <div class="form-group">
-                        <label>Tên Thư mục</label>
+                        <label>Website Name (Tên Thư mục chứa website)</label>
                         <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{siteNameChange}" disabled="{cloning}">
                     </div>
                     <!--<div class="input-group">-->
