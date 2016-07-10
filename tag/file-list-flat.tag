@@ -1,7 +1,7 @@
 <file-list-flat>
     <div class="input-group">
         <span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>
-        <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Filter" onkeyup="{onFilterInput}">
+        <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
     </div>
     <ul class="list-group" style="overflow: auto;">
         <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>

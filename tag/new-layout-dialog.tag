@@ -6,6 +6,7 @@
                 <h4 class="modal-title">Create New Layout</h4>
             </div>
             <div class="modal-body">
+                <label class="text-info">Tạo layout bằng HTML, CSS và HandleBarJS để sử dụng chung cho một hoặc nhiều trang</label>
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label for="layout-filename" class="col-sm-2 control-label">FileName</label>

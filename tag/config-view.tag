@@ -1,5 +1,6 @@
 <config-view>
     <h2>List of fields</h2>
+    <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
     <ul class="list-group" each="{config in contentConfig}">
         <li class="list-group-item">
             {config.displayName} - {config.name} - <strong>{config.type}</strong>

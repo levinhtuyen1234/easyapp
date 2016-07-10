@@ -18,8 +18,9 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <label for="isFrontPageElm">
-                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}" checked> At root (/) folder, used for a Single Page
+                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> At root (/) folder, used for a Single Page
                             </label>
+                            <label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>
                         </div>
                     </div>
                     <div class="form-group">
