@@ -1,4 +1,5 @@
 <config-view>
+    <h2>List of fields</h2>
     <ul class="list-group" each="{config in contentConfig}">
         <li class="list-group-item">
             {config.displayName} - {config.name} - <strong>{config.type}</strong>
@@ -28,6 +29,7 @@
                                     <option value="Number">Number</option>
                                     <option value="Object">Object</option>
                                     <option value="Text">Text</option>
+                                    <option value="Selection">Selection</option>
                                 </select>
                             </div>
                         </div>
@@ -117,7 +119,7 @@
 
         me.showFieldSettingDialog = function (fieldName, fieldType, config) {
             console.log('show modal field', fieldName);
-            me.modalTitle = 'Field - ' + fieldName;
+            me.modalTitle = 'Configuration for ' + fieldName + ', displayName: ' + config.displayName;
             me.curFieldType = fieldType;
             me.curConfigFieldName = fieldName;
             me.curConfig = config;

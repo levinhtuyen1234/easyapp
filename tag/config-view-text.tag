@@ -6,9 +6,18 @@
         </div>
     </div>
     <!-- This field is required -->
-    <label>
-        <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}"> This field is required
-    </label>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Is required</label>
+        <div class="col-sm-10">
+            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Only View</label>
+        <div class="col-sm-10">
+            <input type="checkbox">
+        </div>
+    </div>
     <br>
     <!--&lt;!&ndash; Specify number of characters &ndash;&gt;-->
     <!--<label>-->
