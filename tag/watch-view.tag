@@ -34,10 +34,10 @@
 
         me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'about:blank';
 
-        var nodePath = Path.resolve(Path.join('sites', opts.site_name, 'node_modules'));
+        var nodePath = Path.resolve(Path.join('tools', 'node_modules'));
         console.log('nodePath', nodePath);
         var PATH = [
-            Path.resolve(Path.join('sites', opts.site_name, 'node_modules', '.bin', Path.sep)),
+            Path.resolve(Path.join('tools', 'node_modules', '.bin', Path.sep)),
             Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', Path.sep)),
             Path.resolve(Path.join(opts.site_name, '..', 'tools', 'git', 'bin', Path.sep))
         ].join(';');
@@ -101,7 +101,7 @@
 
         me.watch = function () {
             closeWatchProcess();
-            watchProcess = spawnProcess('gulp.cmd');
+            watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
         me.buildDev = function () {
