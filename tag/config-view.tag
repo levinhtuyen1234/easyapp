@@ -62,6 +62,10 @@
         me.curConfig = {};
         me.originalFieldType = '';
 
+        me.on('mount', function(){
+            me.selectorElm = $(me.root.querySelector('.selectpicker'));
+            me.selectorElm.selectpicker();
+        });
 
         me.addPredefinedText = function (e) {
             var EnterKey = 13;
@@ -96,7 +100,7 @@
 
         me.saveConfig = function () {
             var contentType = $root.find('select').val();
-            console.log('saveConfig', contentType);
+            console.log('click saveConfig', contentType);
             var formTag = formTags[contentType];
             if (!formTag) return;
 
@@ -126,9 +130,9 @@
             me.curConfig = config;
             me.originalFieldType = fieldType;
             $root.find('.modal').modal('show');
-            var selectorElm = $(me.root.querySelector('.selectpicker'));
-            selectorElm.selectpicker();
-            selectorElm.selectpicker('val', fieldType);
+
+            me.selectorElm.selectpicker();
+            me.selectorElm.selectpicker('val', fieldType);
             formTags[fieldType].clear(); // clear form setting
             formTags[fieldType].loadConfig(config);
             me.update();
@@ -157,4 +161,10 @@
             return me.contentConfig;
         }
     </script>
+
+    <style>
+        .dropdown-backdrop {
+            display:none;
+        }
+    </style>
 </config-view>

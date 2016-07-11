@@ -1,7 +1,7 @@
 <code-editor>
     <h3 class="text-success">(?) Sửa nhanh dành cho Front-end Developers</h3>
     <p><span class="text-danger">Raw:</span> sử dụng cú pháp Json để định nghĩa cấu trúc dữ liệu</p>
-    <p><span class="text-danger">Layout:</span> sử dụng HTML, CSS, JS và thư viện <a href="http://handlebarsjs.com/">HandlebarJS</a> để định nghĩa layout</p>
+    <p><span class="text-danger">Layout:</span> sử dụng HTML, CSS, JS và thư viện <a target="_blank" href="http://handlebarsjs.com/">HandlebarJS</a> để định nghĩa layout</p>
     <div class="CodeMirror" style="border: 1px; padding: 0 0 15px 0;"></div>
     <script>
         var me = this;

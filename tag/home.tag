@@ -201,7 +201,7 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-            me.tags['config-view'].event.one('saveLayoutConfig', function (configFieldName, newConfig) {
+            me.tags['config-view'].event.on('saveLayoutConfig', function (configFieldName, newConfig) {
                 console.log('home saveLayoutConfig configFieldName', configFieldName, newConfig);
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig

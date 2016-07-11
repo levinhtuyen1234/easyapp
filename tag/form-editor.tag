@@ -81,8 +81,11 @@
 
 <form-field-datetime class="form-group">
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group">
-        <input type="text" id="form-{config.name}" data-name="{config.name}" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}">
+    <div class='col-sm-9 input-group date'>
+        <input type='text' class="form-control" onkeyup="{edit.bind(this,'value')}" value="{value}"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
     </div>
     <script>
         var me = this;
@@ -91,6 +94,22 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            var elm = me.root.querySelector('.input-group.date');
+            var config = {};
+            me.config.dateTimeType = me.config.dateTimeType || 'DateTime';
+            console.log('elm',  me.config.dateTimeType);
+            if (me.config.dateTimeType === 'Date')
+                config.format = 'DD-MM-YYYY';
+            else if (me.config.dateTimeType === 'Time')
+                config.format = 'hh:mm A';
+            else
+                config.format = 'DD-MM-YYYY hh:mm A';
+            $(elm).datetimepicker(config)
+                    .on('dp.change', function (e) {
+                        console.log(e.date.format(config.format));
+                        me.value = e.date.format(config.format);
+                    });
+
         });
 
         me.getValue = function () {
@@ -130,7 +149,7 @@
                     me.value = JSON.stringify(me.value, null, 4);
                     break;
             }
-            console.log('form-field-object mount',  'value', me.value);
+            console.log('form-field-object mount', 'value', me.value);
             console.log('form-field-object mount', me.config);
 
             var editorElm = me.root.querySelector('.CodeMirror');
@@ -262,32 +281,32 @@
             </div>`;
         }
 
-//        function genArrayInput(config, metaValue) {
-//            metaValue = metaValue ? metaValue : {};
-//            return `<div class="form-group">
-//                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
-//                    <div class="col-sm-9">
-//                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '${config.name}')"><i class="fa fa-plus"></i> Add</button>
-//                        <ul class="list-group">
-//                            <li class="list-group-item clearfix">
-//                                Aasdfasfasdfsaf
-//                                <span class="pull-right">
-//                                    <a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a>
-//                                </span>
-//                            </li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-//                        </ul>
-//                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
-//                    </div>
-//                </div>`;
-//        }
+        //        function genArrayInput(config, metaValue) {
+        //            metaValue = metaValue ? metaValue : {};
+        //            return `<div class="form-group">
+        //                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+        //                    <div class="col-sm-9">
+        //                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '${config.name}')"><i class="fa fa-plus"></i> Add</button>
+        //                        <ul class="list-group">
+        //                            <li class="list-group-item clearfix">
+        //                                Aasdfasfasdfsaf
+        //                                <span class="pull-right">
+        //                                    <a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a>
+        //                                </span>
+        //                            </li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
+        //                        </ul>
+        //                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+        //                    </div>
+        //                </div>`;
+        //        }
 
 
         me.getForm = function () {
