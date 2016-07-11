@@ -127,6 +127,7 @@ function genSimpleContentConfigFile(metaData) {
                     displayName: key,
                     type:        'Text',
                     validations: [],
+                    viewOnly:    key === 'layout',
                     required:    false
                 });
                 break;
