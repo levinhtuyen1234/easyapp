@@ -1,7 +1,7 @@
 <form-field-text class="form-group">
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class="col-sm-9 input-group">
-        <input type="text" id="form-{config.name}" data-name="{config.name}" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}">
+        <input type="text" id="form-{config.name}" data-name="{config.name}" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
     </div>
     <script>
         var me = this;
@@ -27,7 +27,7 @@
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
     <div class="col-sm-9">
-        <input type="number" id="form-{config.name}" class="form-control" value="${value}">
+        <input type="number" id="form-{config.name}" class="form-control" value="${value}" readonly="{config.viewOnly}">
     </div>
     <script>
         var me = this;
@@ -55,7 +55,7 @@
     <div class="col-sm-9">
         <div class="checkbox">
             <label>
-                <input type="checkbox" id="form-{config.name}" checked="{value}" onchange="{edit.bind(this,'value')}">
+                <input type="checkbox" id="form-{config.name}" checked="{value}" onchange="{edit.bind(this,'value')}" disabled="{config.viewOnly}">
             </label>
         </div>
     </div>
@@ -82,9 +82,9 @@
 <form-field-datetime class="form-group">
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class='col-sm-9 input-group date'>
-        <input type='text' class="form-control" onkeyup="{edit.bind(this,'value')}" value="{value}"/>
+        <input type='text' class="form-control" onkeyup="{edit.bind(this,'value')}" value="{value}" readonly="{config.viewOnly}"/>
             <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar"></span>
+                <span class="glyphicon glyphicon-calendar" disabled="{config.viewOnly}"></span>
             </span>
     </div>
     <script>
@@ -164,7 +164,7 @@
                 matchBrackets:           true,
                 styleActiveLine:         true,
                 gutter:                  true,
-                readOnly:                false,
+                readOnly:                !!(me.config.viewOnly),
                 lint:                    true,
                 height:                  'auto',
                 scrollbarStyle:          'simple',
@@ -194,9 +194,9 @@
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
     <div class="col-sm-9 input-group">
-        <input type="text" class="form-control" value="{value}">
+        <input type="text" class="form-control" value="{value}" readonly="{config.viewOnly}">
         <label class="input-group-btn">
-            <span class="btn btn-default" onclick="{showChooseFile}">Browse local</span>
+            <span class="btn btn-default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
         </label>
     </div>
     <script>
@@ -211,6 +211,7 @@
         });
 
         me.showChooseFile = function () {
+            if (me.config.viewOnly) return;
             dialog.showOpenDialog({
                 properties: ['openFile'],
                 filters:    [

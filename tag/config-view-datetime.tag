@@ -6,9 +6,19 @@
         </div>
     </div>
     <!-- This field is required -->
-    <label class="col-sm-offset-2 col-sm-10">
-        <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}"> This field is required
-    </label>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Is required</label>
+        <div class="col-sm-10">
+            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
+        </div>
+    </div>
+    <!-- View Only Field -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Only View</label>
+        <div class="col-sm-10">
+            <input type="checkbox" onchange="{edit.bind(this, 'config.viewOnly')}" checked="{config.viewOnly}">
+        </div>
+    </div>
 
     <!-- DateTime type -->
     <div class="form-group">

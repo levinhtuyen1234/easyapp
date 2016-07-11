@@ -1,3 +1,6 @@
+<config-view-readonly-option>
+
+</config-view-readonly-option>
 <config-view>
     <h2>List of fields</h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
