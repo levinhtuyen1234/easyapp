@@ -1,23 +1,39 @@
 <form-field-text class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
+    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class="col-sm-9 input-group">
-        <input type="text" id="form-{config.name}" data-name="{config.name}" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
+        <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
+        <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
+
+        <markdown-editor show="{config.displayType === 'MarkDown'}" viewOnly="{config.viewOnly}"></markdown-editor>
     </div>
     <script>
         var me = this;
         me.mixin('form');
         me.config = opts.config || {};
+        me.config.displayType = me.config.displayType || 'ShortText';
+        //console.log('me.config.displayType', me.config.displayType);
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            setTimeout(function () {
+                me.setValue(me.value);
+                window.editor = me.tags['markdown-editor'];
+            }, 1);
         });
 
         me.getValue = function () {
-            return me.value;
+            if (me.config.displayType === 'MarkDown') {
+                return me.tags['markdown-editor'].value();
+            } else
+                return me.value;
         };
 
         me.setValue = function (value) {
-            me.value = value;
+            if (me.config.displayType === 'MarkDown') {
+                return me.tags['markdown-editor'].value(value);
+            } else {
+                me.value = value;
+            }
             me.update();
         };
     </script>
@@ -96,11 +112,10 @@
         me.on('mount', function () {
             var elm = me.root.querySelector('.input-group.date');
             var config = {};
-            me.config.dateTimeType = me.config.dateTimeType || 'DateTime';
-            console.log('elm',  me.config.dateTimeType);
-            if (me.config.dateTimeType === 'Date')
+            me.config.displayType = me.config.displayType || 'DateTime';
+            if (me.config.displayType === 'Date')
                 config.format = 'DD-MM-YYYY';
-            else if (me.config.dateTimeType === 'Time')
+            else if (me.config.displayType === 'Time')
                 config.format = 'hh:mm A';
             else
                 config.format = 'DD-MM-YYYY hh:mm A';

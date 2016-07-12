@@ -22,9 +22,9 @@
 
     <!-- DateTime type -->
     <div class="form-group">
-        <label class="col-sm-2 control-label">DateTime type:</label>
+        <label class="col-sm-2 control-label">Display type:</label>
         <div class="col-sm-10">
-            <select class="selectpicker" onchange="{edit.bind(this,'config.dateTimeType')}">
+            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType')}">
                 <option value="Time">Time</option>
                 <option value="Date">Date</option>
                 <option value="DateTime">DateTime</option>
@@ -57,8 +57,7 @@
         me.loadConfig = function (config) {
             me.config = Object.assign({}, config);
             if (me.config.dateTimeType) {
-                console.log('select picker date time type', me.config.dateTimeType);
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.dateTimeType);
+                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
             }
 
 
