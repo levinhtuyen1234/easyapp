@@ -177,6 +177,7 @@
 
                 ShowTab('content-view');
             } catch (ex) {
+                console.log(ex);
                 bootbox.alert('Open content failed, error ' + ex.message, function () {
                 });
                 me.openRawContentTab({

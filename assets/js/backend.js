@@ -424,15 +424,18 @@ function SpawnShell(command, args, opts) {
 
 function spawnGitCmd(command, args, cwd, onProgress) {
     console.log('command', command, 'cwd', cwd);
+    const privateNodePath = Path.resolve(Path.join(sitesRoot, '..', 'tools', 'node_modules'));
     const ENV_PATH = [
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'node_modules', '.bin')),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))
     ].join(';');
     return SpawnShell(command, args, {
         cwd:        cwd,
         onProgress: onProgress,
         env:        {
-            'PATH': ENV_PATH
+            'NODE_PATH': privateNodePath,
+            'PATH':      ENV_PATH
         }
     });
 }
