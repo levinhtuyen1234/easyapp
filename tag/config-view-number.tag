@@ -20,6 +20,18 @@
         </div>
     </div>
 
+    <!-- Display Type -->
+    <div class="form-group">
+        <label class="col-sm-2 control-label">Display type:</label>
+        <div class="col-sm-10">
+            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+                <option value="Number">Number</option>
+                <option value="DropDown">DropDown</option>
+            </select>
+        </div>
+    </div>
+    <config-view-prop-predefined-value type="number"></config-view-prop-predefined-value>
+
     <script>
         var me = this;
         me.mixin('form');

@@ -5,6 +5,17 @@
         <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
 
         <markdown-editor show="{config.displayType === 'MarkDown'}" viewOnly="{config.viewOnly}"></markdown-editor>
+
+        <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li each="{config.predefinedData}">
+                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         var me = this;
@@ -13,11 +24,29 @@
         me.config.displayType = me.config.displayType || 'ShortText';
         //console.log('me.config.displayType', me.config.displayType);
         me.value = opts.value || '';
+        me.selectedName = '';
+
+
+        me.select = function (name, value) {
+            me.value = value;
+            me.selectedName = name;
+            me.update();
+        };
 
         me.on('mount', function () {
             setTimeout(function () {
                 me.setValue(me.value);
-                window.editor = me.tags['markdown-editor'];
+                // neu displayType dropdown tu` value -> name selected
+                // TODO tach rieng ra tag rieng neu co hon 3 tag su dung dropdown
+                if (me.config.displayType === 'DropDown') {
+                    me.config.predefinedData.forEach(function (data) {
+                        console.log(data.value, me.value);
+                        if (data.value == me.value) {
+                            me.selectedName = data.name;
+                            me.update();
+                        }
+                    });
+                }
             }, 1);
         });
 
@@ -40,19 +69,46 @@
 </form-field-text>
 
 <form-field-number class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
+    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
-    <div class="col-sm-9">
-        <input type="number" id="form-{config.name}" class="form-control" value="${value}" readonly="{config.viewOnly}">
+    <div class="col-sm-9 input-group">
+        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" value="{value}" readonly="{config.viewOnly}">
+
+        <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li each="{config.predefinedData}">
+                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         var me = this;
         me.mixin('form');
         me.config = opts.config || {};
         me.value = opts.value || '';
+        me.selectedName = '';
 
         me.on('mount', function () {
+            // neu displayType dropdown tu` value -> name selected
+            if (me.config.displayType === 'DropDown') {
+                me.config.predefinedData.forEach(function (data) {
+                    if (data.value == me.value) {
+                        me.selectedName = data.name;
+                        me.update();
+                    }
+                });
+            }
         });
+
+        me.select = function (name, value) {
+            me.value = value;
+            me.selectedName = name;
+            me.update();
+        };
 
         me.getValue = function () {
             return me.value;
@@ -99,7 +155,7 @@
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class='col-sm-9 input-group date'>
         <input type='text' class="form-control" onkeyup="{edit.bind(this,'value')}" value="{value}" readonly="{config.viewOnly}"/>
-            <span class="input-group-addon">
+        <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar" disabled="{config.viewOnly}"></span>
             </span>
     </div>
@@ -276,23 +332,23 @@
         function genSimpleInput(display, name, type, value) {
             if (type === 'boolean') {
                 return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${displayName}
+                    <label for="" class="col-sm-3 control-label" style="text-align: left;">{displayName}
                     </label>
                     <div class="col-sm-9">
                         <div class="checkbox">
                         <label>
-                            <input type="checkbox" name="input-${name}" checked="${value}">
+                            <input type="checkbox" name="input-{name}" checked="{value}">
                         </label>
                         </div>
                     </div>
                 </div>`;
             }
             return `<div class="form-group">
-                <label for="" class="col-sm-3 control-label" style="text-align: left;">${displayName}
+                <label for="" class="col-sm-3 control-label" style="text-align: left;">{displayName}
 
                 </label>
                 <div class="col-sm-9">
-                    <input type="${type}" name="input-${name}" class="form-control" id="" placeholder="${value}" value="${value}">
+                    <input type="{type}" name="input-{name}" class="form-control" id="" placeholder="{value}" value="{value}">
                 </div>
             </div>`;
         }
@@ -300,9 +356,9 @@
         //        function genArrayInput(config, metaValue) {
         //            metaValue = metaValue ? metaValue : {};
         //            return `<div class="form-group">
-        //                    <label for="" class="col-sm-3 control-label" style="text-align: left;">${config.displayName}</label>
+        //                    <label for="" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
         //                    <div class="col-sm-9">
-        //                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '${config.name}')"><i class="fa fa-plus"></i> Add</button>
+        //                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '{config.name}')"><i class="fa fa-plus"></i> Add</button>
         //                        <ul class="list-group">
         //                            <li class="list-group-item clearfix">
         //                                Aasdfasfasdfsaf
@@ -319,7 +375,7 @@
         //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
         //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
         //                        </ul>
-        //                        <input type="text" name="input-${config.name}" data-name="${config.name}" class="form-control" id="" placeholder="${config.name}" value="${metaValue}">
+        //                        <input type="text" name="input-{config.name}" data-name="{config.name}" class="form-control" id="" placeholder="{config.name}" value="{metaValue}">
         //                    </div>
         //                </div>`;
         //        }

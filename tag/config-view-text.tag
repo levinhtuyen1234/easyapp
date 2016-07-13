@@ -25,13 +25,16 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">Display type:</label>
         <div class="col-sm-10">
-            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType')}">
+            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType'); tags['config-view-prop-predefined-value'].update()}">
                 <option value="ShortText">Short Text</option>
                 <option value="LongText">Long Text</option>
                 <option value="MarkDown">Markdown</option>
+                <option value="DropDown">DropDown</option>
             </select>
         </div>
     </div>
+
+    <config-view-prop-predefined-value type="text"></config-view-prop-predefined-value>
     <!--&lt;!&ndash; Specify number of characters &ndash;&gt;-->
     <!--<label>-->
     <!--<input type="checkbox" data-toggle="collapse" data-target="#textNumOfCharSection" onchange="{edit.bind(this, 'textNumOfChar')}"> Specify number of characters-->
@@ -98,7 +101,6 @@
         me.config = {type: 'Text'};
         me.textNumOfCharType = 'Between';
         me.textMatchPatternType = '';
-        me.textPredefinedList = [];
 
         me.on('mount', function () {
             $(me.root.querySelector('.selectpicker')).selectpicker();
