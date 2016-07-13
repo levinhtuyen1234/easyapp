@@ -5,7 +5,7 @@
                 <dialog-new-site-local></dialog-new-site-local>
                 <dialog-new-site-import></dialog-new-site-import>
                 <progress-dialog></progress-dialog>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-xs-5 col-sm-4 col-md-3">
                     <div class="pricing-card pricing-card-horizontal">
                         <div class="pricing-card-cta">
                             <div class="caption">
@@ -17,10 +17,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-1 col-md-1" style="text-align: center;">
+                <div class="col-xs-1 col-sm-1 col-md-1" style="text-align: center;">
                     <h1 class="text-thin" style="padding-top: 100%">OR</h1>
                 </div>
-                <div class="col-sm-6 col-md-3">
+                <div class="col-xs-5 col-sm-4 col-md-3">
                     <div class="pricing-card pricing-card-horizontal">
                         <div class="pricing-card-cta">
                             <div class="caption">
@@ -39,7 +39,7 @@
         <div class="container-responsive">
             <h2 class="featurette-heading display-heading-2 mt-3">List of your websites</h2>
             <div class="row">
-                <div class="col-sm-6 col-md-3" each={sites}>
+                <div class="col-sm-3 col-md-3" each={sites}>
                     <div onclick={openSite.bind(this,name)}>
                         <div class="pricing-card pricing-card-horizontal">
                             <div class="pricing-card-cta">
