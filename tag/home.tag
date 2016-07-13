@@ -39,11 +39,11 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4">
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
                 <side-bar site_name={opts.siteName}></side-bar>
             </div>
 
-            <div class="col-md-8">
+            <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10">
                 <div class="btn-group" data-toggle="buttons">
                     <a class=" btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
                         <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
