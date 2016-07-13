@@ -38,6 +38,10 @@
 
         me.config = { type: 'Number' };
 
+        me.on('mount', function(){
+            $(me.root.querySelector('.selectpicker')).selectpicker();
+        });
+
         me.clear = function () {
             me.config = {
                 type: 'Number'
