@@ -160,11 +160,11 @@
             home = riot.mount('home', {sitePath: sitePath});
         },
 
-        createSite: function (name) {
+        createSite: function (name, repoUrl, branch) {
             // TODO detect exists name in sitePath
             var localPath = Path.join(__dirname, 'sites', name);
             return mkdir(localPath).then(function () {
-                return BackEnd.gitCheckout('https://github.com/easywebhub/easyweb-metalsmith', localPath).then(function () {
+                return BackEnd.gitCheckout(repoUrl, branch, localPath).then(function () {
                     console.log('git checkout done', name);
                     if (curPage) curPage.unmount();
                     curPage = riot.mount('home', {siteName: name})[0];
@@ -177,8 +177,8 @@
 
     riot.compile(function () {
 //        curPage = riot.mount('window-login')[0];
-//        curPage = riot.mount('landing')[0];
-        curPage = riot.mount('home', {siteName: 'bb'})[0];
+        curPage = riot.mount('landing')[0];
+//        curPage = riot.mount('home', {siteName: 'bb'})[0];
     });
 
 </script>

@@ -24,7 +24,6 @@
                     me.editor.togglePreview();
                     me.root.querySelector('.editor-toolbar').style.display = 'none';
                 }, 1);
-
             }
         });
 

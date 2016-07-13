@@ -12,31 +12,19 @@
                 <div class="container-fluid">
                     <h3>List of EasyWebHub website template:</h3>
                     <div class="row">
-                      <div class="col-sm-4 col-md-3">
-                        <div class="pricing-card pricing-card-horizontal">
-                            <div class="pricing-card-cta">
-                                <div class="caption" style="text-align: center">
-                                    <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
-                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                    <h4>Standard</h4>
+                        <div each="{key, info in skeletonMap}" class="col-sm-4 col-md-3">
+                            <div class="pricing-card pricing-card-horizontal" onclick="{selectSkeleton.bind(this,info)}">
+                                <div class="pricing-card-cta">
+                                    <div class="caption" style="text-align: center">
+                                        <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
+                                        <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
+                                        <h4>{info.name}</h4>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                      </div>
-                      <div class="col-sm-4 col-md-3">
-                        <div class="pricing-card pricing-card-horizontal">
-                            <div class="pricing-card-cta">
-                                <div class="caption" style="text-align: center">
-                                    <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
-                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                    <h4>Advanced</h4>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
                     </div>
                 </div>
-
 
                 <form>
                     <div class="form-group">
@@ -58,26 +46,50 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" disabled="{cloning}">Close</button>
-                <button type="button" class="btn btn-primary" disabled="{siteName==='' || cloning}" onclick="{createSite.bind(this, siteName)}">Create</button>
+                <button type="button" class="btn btn-primary" disabled="{siteName==='' || skeletonInfo==null || cloning}" onclick="{createSite.bind(this, siteName)}">Create</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 
     <script>
         var me = this;
+        me.mixin('form');
         var root = me.root;
         var dialog = require('electron').remote.dialog;
 
         me.siteName = '';
         me.errMsg = '';
+        me.skeletonMap = {
+            standard: {
+                name:   'standard',
+                url:    'https://github.com/easywebhub/easy-websites.git',
+                branch: 'master'
+            },
+            advanced: {
+                name:   'advanced',
+                url:    'https://github.com/easywebhub/easy-websites.git',
+                branch: 'master-advanced'
+            }
+        };
+        me.skeletonInfo = null;
         me.cloning = false;
 
         me.show = function () {
             me.errMsg = '';
+            me.siteName = '';
+            me.skeletonInfo = null;
+            me.cloning = false;
+            me.update();
             $(root).modal({
                 backdrop: false,
                 keyboard: false
             });
+        };
+
+        me.selectSkeleton = function(skeleton, e) {
+            me.skeletonInfo = skeleton;
+            $(me.root.querySelectorAll('.pricing-card')).removeClass('active');
+            $(e.currentTarget).addClass('active');
         };
 
         me.siteNameChange = function (e) {
@@ -85,11 +97,10 @@
         };
 
         me.createSite = function (siteName) {
-            // TODO show loading animation
             me.cloning = 1;
             me.errMsg = '';
             me.update();
-            me.parent.createSite(siteName).then(function (ret) {
+            me.parent.createSite(siteName, me.skeletonInfo.url, me.skeletonInfo.branch).then(function (ret) {
                 // TODO stop loading animation
                 me.cloning = 0;
                 me.update();

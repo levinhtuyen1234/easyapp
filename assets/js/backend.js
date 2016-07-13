@@ -466,8 +466,8 @@ function gitImportGitHub(siteName, repositoryUrl, onProgress) {
     return spawnGitCmd(initScriptPath, [repositoryUrl, '.'], workingDirectory, onProgress);
 }
 
-function gitCheckout(repositoryUrl, targetDir, onProgress) {
-    return spawnGitCmd('git', ['clone', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
+function gitCheckout(repositoryUrl, branch, targetDir, onProgress) {
+    return spawnGitCmd('git', ['clone', '-b', branch, '--single-branch', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
         return RimRaf(Path.join(targetDir, '.git'));
     });
 }

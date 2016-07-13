@@ -90,8 +90,8 @@
             riot.mount('home', {siteName: siteName});
         };
 
-        me.createSite = function (name, sitePath) {
-            return riot.api.createSite(name, sitePath).then(function(){
+        me.createSite = function (name, repoUrl, branch) {
+            return riot.api.createSite(name, repoUrl, branch).then(function(){
                 me.unmount();
             });
         };
