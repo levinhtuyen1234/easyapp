@@ -9,9 +9,9 @@
         <label class="btn btn-default" onclick="{buildProd}">
             <input type="radio" name="options"/>Build (prod)
         </label>
-        <label class="btn btn-default" onclick="{npmInstall}">
-            <input type="radio" name="options"/>Npm install
-        </label>
+        <!--<label class="btn btn-default" onclick="{npmInstall}">-->
+            <!--<input type="radio" name="options"/>Npm install-->
+        <!--</label>-->
 
         <label class="btn btn-default" onclick="{openExternalBrowser}">
             <a>Open In Browser</a>
