@@ -39,6 +39,11 @@ git branch -d master
 git pull origin gh-pages
 git push --set-upstream origin gh-pages
 
+rem push changes to remote
+git add .
+git commit -m "init"
+git push
+
 rem delete all folder not .git in working dir
 for /D %%F in (*) do (
    if NOT %%F == ".git" rd %%F /Q /S
@@ -47,13 +52,5 @@ rem delete all file in working dir
 for %%F in (*) do (
    del %%F /Q /S
 )
-		
-rem set gh-pages as default remote branch cua repo trong folder build
-git push --set-upstream origin gh-pages
-
-rem push changes to remote
-git add .
-git commit -m "init"
-git push
 
 :EOF

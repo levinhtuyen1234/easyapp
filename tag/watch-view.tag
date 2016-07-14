@@ -58,7 +58,7 @@
                 var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
-//                    me.iframeUrl = reviewUrl[1];
+                    me.iframeUrl = reviewUrl[1];
                     me.update();
                 }
                 me.append(str);

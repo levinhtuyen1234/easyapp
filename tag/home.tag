@@ -150,8 +150,9 @@
         };
 
         me.openWatchView = function(){
-            ShowTab('watch-view');
             $(me.root.querySelector('#editor-view')).hide();
+            $(me.root.querySelector('#watch-view')).show();
+            ShowTab('watch-view');
         };
 
         me.openAssetFile = function (filePath) {
@@ -245,6 +246,7 @@
 
         me.openFile = function (filePath) {
             $(me.root.querySelector('#editor-view')).show();
+            $(me.root.querySelector('#watch-view')).hide();
 
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
