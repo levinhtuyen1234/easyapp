@@ -149,7 +149,7 @@
             ShowTab('layout-view');
         };
 
-        me.openWatchView = function(){
+        me.openWatchView = function () {
             $(me.root.querySelector('#editor-view')).hide();
             $(me.root.querySelector('#watch-view')).show();
             ShowTab('watch-view');
@@ -374,6 +374,14 @@
             me.tags['progress-dialog'].show('Deploy to GitHub');
             BackEnd.gitPushGhPages(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
+                var text = me.tags['progress-dialog'].getText();
+                var matches = text.split(/https:\/\/github\.com\/([^\/]+)\/(.+)/);
+                if (matches.length > 1) {
+                    var ghPageUrl = 'https://' + matches[1] + '.github.io/' + matches[2] + '/';
+                    var msg = 'GitHub page url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
+                    me.tags['progress-dialog'].showMessage(msg);
+                }
+
             }).catch(function (err) {
                 console.log(err);
                 me.tags['progress-dialog'].enableClose();
