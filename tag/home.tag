@@ -155,7 +155,13 @@
         };
 
         me.openAssetFile = function (filePath) {
-            me.currentFilePath = filePath;
+            $(me.root.querySelector('#editor-view')).show();
+            ShowTab('code-view');
+            if (filePath.endsWith('.ico') || filePath.endsWith('.jpg') || filePath.endsWith('.png') || filePath.endsWith('.min.js')) {
+                alert('not supported open image or .min.js yet');
+            } else {
+                me.currentFilePath = filePath;
+            }
             me.openRawContentTab({mode: 'auto'});
             me.update();
         };
