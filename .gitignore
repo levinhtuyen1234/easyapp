@@ -1,4 +1,4 @@
 .idea/
-data/
-sites/
+/data
+/sites
 /node_modules
