@@ -1,29 +1,26 @@
 <watch-view>
     <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-default" onclick="{watch}">
+        <label class="btn btn-default btn-sm" onclick="{watch}">
             <input type="radio" name="options"/>Watch
         </label>
-        <label class="btn btn-default" onclick="{buildDev}">
+        <label class="btn btn-default btn-sm" onclick="{buildDev}">
             <input type="radio" name="options"/>Build (dev)
         </label>
-        <label class="btn btn-default" onclick="{buildProd}">
+        <label class="btn btn-default btn-sm" onclick="{buildProd}">
             <input type="radio" name="options"/>Build (prod)
         </label>
         <!--<label class="btn btn-default" onclick="{npmInstall}">-->
             <!--<input type="radio" name="options"/>Npm install-->
         <!--</label>-->
 
-        <label class="btn btn-default" onclick="{openExternalBrowser}">
+        <label class="btn btn-default btn-sm" onclick="{openExternalBrowser}">
             <a>Open In Browser</a>
         </label>
     </div>
 
-    <pre style="height: 250px; overflow: auto;">
-        <code class="accesslog hljs">TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST TEST </code>
+    <pre style="height: 70vh; overflow: auto;">
+        <code class="accesslog hljs"></code>
     </pre>
-
-    <iframe width="100%" height="800px" frameborder="0" src="{iframeUrl}"></iframe>
-
     <script>
         var ChildProcess = require('child_process');
         var Path = require('path');
@@ -61,7 +58,7 @@
                 var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
-                    me.iframeUrl = reviewUrl[1];
+//                    me.iframeUrl = reviewUrl[1];
                     me.update();
                 }
                 me.append(str);
@@ -100,16 +97,19 @@
         }
 
         me.watch = function () {
+            me.clearLog();
             closeWatchProcess();
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
         me.buildDev = function () {
+            me.clearLog();
             closeWatchProcess();
             spawnProcess('gulp.cmd', ['build']);
         };
 
         me.buildProd = function () {
+            me.clearLog();
             closeWatchProcess();
             spawnProcess('gulp.cmd', ['build', '--production']);
         };
@@ -128,10 +128,7 @@
             me.output.innerHTML = '';
         };
 
-        var body = document.querySelector('body');
         function scrollToBottom() {
-//            body.scrollTop = body.scrollHeight;
-//            me.output.scrollTop = me.output.scrollHeight;
             me.output.parentNode.scrollTop = me.output.parentNode.scrollHeight
         }
 
@@ -156,9 +153,5 @@
             me.output.appendChild(span);
             scrollToBottom();
         };
-
-        /*
-         * reconfig browserSync ui: false
-         * */
     </script>
 </watch-view>

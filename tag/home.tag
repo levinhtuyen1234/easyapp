@@ -43,44 +43,46 @@
                 <side-bar site_name={opts.siteName}></side-bar>
             </div>
 
-            <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10">
-                <div class="btn-group" data-toggle="buttons">
-                    <a class=" btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                    </a>
-                    <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
-                        <input type="radio" name="options">Raw
-                    </a>
-                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                    </a>
-                    <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
-                        <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                    </a>
-                </div>
-                <div class="pull-right">
+            <div class="tab-content">
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
-                            <i class="fa fa-fw fa-remove"></i>Delete
+                        <a class=" btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
                         </a>
-                        <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                        <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                            <input type="radio" name="options">Raw
+                        </a>
+                        <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
+                        </a>
+                        <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
+                        </a>
                     </div>
-                </div>
-                <!-- EDITOR PANEL -->
-                <div class="panel panel-default" hide="{curTab === ''}">
-                    <div class="panel-heading panel-heading-sm">
-                        <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+                    <div class="pull-right">
+                        <div class="btn-group" data-toggle="buttons">
+                            <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                                <i class="fa fa-fw fa-remove"></i>Delete
+                            </a>
+                            <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        <div class="tab-content">
-                            <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                            <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                            <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                            <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
-                            <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
+                    <!-- EDITOR PANEL -->
+                    <div class="panel panel-default">
+                        <div class="panel-heading panel-heading-sm">
+                            <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+                        </div>
+                        <div class="panel-body">
+                            <div class="tab-content">
+                                <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                                <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
+                                <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
+                                <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
             </div>
         </div>
     </div>
@@ -145,6 +147,11 @@
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
+        };
+
+        me.openWatchView = function(){
+            ShowTab('watch-view');
+            $(me.root.querySelector('#editor-view')).hide();
         };
 
         me.openAssetFile = function (filePath) {
@@ -237,6 +244,9 @@
         };
 
         me.openFile = function (filePath) {
+            console.log($(me.root.querySelector('#editor-view')));
+            $(me.root.querySelector('#editor-view')).show();
+
 //            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
@@ -415,7 +425,7 @@
 
         riot.api.on('copyAssetFile', function (localPath, targetPath) {
             // TODO detect target path đã ở trong asset thì không cần copy
-            BackEnd.copyAssetFile(me.siteName, localPath, targetPath, function(err) {
+            BackEnd.copyAssetFile(me.siteName, localPath, targetPath, function (err) {
             });
         });
     </script>

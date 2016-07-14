@@ -79,6 +79,11 @@
             me.siteName = '';
             me.skeletonInfo = null;
             me.cloning = false;
+            // active first skeleton
+            setTimeout(function(){
+                $(me.root.querySelector('.pricing-card'))[0].click();
+            }, 1);
+
             me.update();
             $(root).modal({
                 backdrop: false,
