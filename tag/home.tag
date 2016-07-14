@@ -155,7 +155,6 @@
         };
 
         me.openAssetFile = function (filePath) {
-            console.log('openAssetFile', filePath);
             me.currentFilePath = filePath;
             me.openRawContentTab({mode: 'auto'});
             me.update();
@@ -166,19 +165,16 @@
                 HideAllTab();
                 me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
-//                console.log('me.currentFileTitle', me.currentFileTitle);
                 me.update();
 
 //            var content = getFileContent(me.currentFilePath);
                 var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
                 if (!content || !content.metaData || !content.metaData.layout) {
-//                    console.log('content missing meta or layout attribute');
                     me.tags['content-view'].reset();
 //                return;
                 } else {
                     me.currentLayout = content.metaData.layout;
                     var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-//                    console.log('content', content);
                     me.tags['content-view'].setContent(content, contentConfig);
                 }
 
@@ -196,7 +192,6 @@
 
         me.openConfigTab = function () {
             me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
-//            console.log('me.currentFileTitle', me.currentFileTitle);
             HideAllTab();
 
             var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
@@ -210,7 +205,6 @@
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
             me.tags['config-view'].event.on('saveLayoutConfig', function (configFieldName, newConfig) {
-                console.log('home saveLayoutConfig configFieldName', configFieldName, newConfig);
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig
                 for (var i = 0; i < contentConfig.length; i++) {
@@ -244,10 +238,8 @@
         };
 
         me.openFile = function (filePath) {
-            console.log($(me.root.querySelector('#editor-view')));
             $(me.root.querySelector('#editor-view')).show();
 
-//            console.log('home openFile', filePath);
             me.tags['breadcrumb'].setPath(filePath);
             me.currentFilePath = filePath;
 
@@ -271,7 +263,6 @@
             switch (me.curTab) {
                 case 'content-view':
                     var content = me.tags['content-view'].getContent();
-                    console.log('save content-view', content);
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
                     break;
                 case 'code-view':
@@ -292,18 +283,15 @@
 
         me.deleteFile = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
-//            console.log('delete file', me.curTab);
             switch (me.curTab) {
                 case 'content-view':
                 case 'code-view':
-//                    console.log('delete file content-view');
                     var contentFilePath = me.currentFilePath;
                     if (contentFilePath.startsWith('content')) {
                         var parts = contentFilePath.split(/[\\\/]/);
                         parts.shift();
                         contentFilePath = parts.join('/');
                     }
-//                    console.log('contentFilePath', contentFilePath);
                     bootbox.confirm({
                         title:    'Delete',
                         message:  `Are you sure you want to delete content "${contentFilePath}" ?`,
@@ -340,14 +328,11 @@
         };
 
         me.newLayout = function () {
-//            console.log('newLayout');
             me.tags['new-layout-dialog'].show();
         };
 
         me.newContent = function () {
-//            console.log('newContent');
             var layoutList = BackEnd.getLayoutList(me.siteName);
-            console.log('layoutList', layoutList);
             me.tags['new-content-dialog'].updateLayoutList(layoutList);
             me.tags['new-content-dialog'].show();
         };
@@ -355,7 +340,6 @@
         riot.api.on('addLayout', function (layoutFileName) {
             try {
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
-                console.log('trigger closeNewContentDialog');
                 riot.api.trigger('closeNewLayoutDialog');
             } catch (ex) {
                 console.log('addLayout', ex);
@@ -370,7 +354,6 @@
                 // reload sidebar file list
                 riot.api.trigger('addContentFile', newContentFilePath);
                 riot.api.trigger('closeNewContentDialog');
-                console.log('open file', newContentFilePath);
                 me.openFile(newContentFilePath);
                 me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
             } catch (ex) {
@@ -412,7 +395,6 @@
             me.tags['github-init-dialog'].event.one('save', function (info) {
                 me.tags['github-init-dialog'].hide();
                 var repoUrl = 'https://' + info.username + ':' + info.password + '@' + (info.url.split('https://')[1]);
-                console.log('repoUrl', repoUrl);
                 me.tags['progress-dialog'].show('Init GitHub Setting');
                 BackEnd.gitInitSite(me.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();

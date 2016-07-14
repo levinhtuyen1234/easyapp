@@ -9,7 +9,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label" for="fieldPredefinedValue">Value</label>
             <div class="col-sm-8">
-                <input type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit.bind(this, 'predefinedValue')}" value="{predefinedValue}">
+                <input type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit.bind(this, 'predefinedValue')}" value={predefinedValue}>
             </div>
         </div>
         <div class="form-group">
@@ -49,6 +49,7 @@
             me.predefinedName = '';
             me.predefinedValue = '';
             me.update();
+            $(me.fieldPredefinedValue).focus();
         };
 
         me.removePredefined = function (index) {

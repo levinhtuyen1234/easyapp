@@ -98,12 +98,15 @@
         var me = this;
         me.mixin('form');
 
-        me.config = {type: 'Text'};
+        me.config = {type: 'Text', displayType: 'ShortText'};
         me.textNumOfCharType = 'Between';
         me.textMatchPatternType = '';
 
         me.on('mount', function () {
             $(me.root.querySelector('.selectpicker')).selectpicker();
+            if (me.config.displayType) {
+                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+            }
         });
 
         me.clear = function () {
@@ -119,8 +122,8 @@
 
         me.loadConfig = function (config) {
             me.config = Object.assign({}, config);
-            // select current textType
-            if (me.config.textType) {
+            // select current displayType
+            if (me.config.displayType) {
                 $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
             }
             me.update();

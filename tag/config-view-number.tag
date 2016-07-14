@@ -36,10 +36,13 @@
         var me = this;
         me.mixin('form');
 
-        me.config = { type: 'Number' };
+        me.config = { type: 'Number', displayType: 'Number' };
 
         me.on('mount', function(){
-            $(me.root.querySelector('.selectpicker')).selectpicker();
+            $(me.root.querySelector('.selectpicker')).selectpicker();// select current displayType
+            if (me.config.displayType) {
+                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+            }
         });
 
         me.clear = function () {
@@ -55,6 +58,9 @@
 
         me.loadConfig = function(config) {
             me.config = Object.assign({}, config);
+            if (me.config.displayType) {
+                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+            }
             me.update();
         }
     </script>

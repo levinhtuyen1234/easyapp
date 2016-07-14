@@ -1,7 +1,7 @@
 <form-field-text class="form-group">
     <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class="col-sm-9 input-group">
-        <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
+        <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
         <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
 
         <markdown-editor show="{config.displayType === 'MarkDown'}" viewOnly="{config.viewOnly}"></markdown-editor>
@@ -36,9 +36,10 @@
         me.on('mount', function () {
             setTimeout(function () {
                 me.setValue(me.value);
+                me['form-' + me.config.name + '-ShortText'].value = me.value;
                 // neu displayType dropdown tu` value -> name selected
                 // TODO tach rieng ra tag rieng neu co hon 3 tag su dung dropdown
-                if (me.config.displayType === 'DropDown') {
+                if (me.config.displayType === 'DropDown' && me.config.predefinedData) {
                     me.config.predefinedData.forEach(function (data) {
                         console.log(data.value, me.value);
                         if (data.value == me.value) {
@@ -72,7 +73,7 @@
     <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
     <div class="col-sm-9 input-group">
-        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" value="{value}" readonly="{config.viewOnly}">
+        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" readonly="{config.viewOnly}">
 
         <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
             <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,8 +94,9 @@
         me.selectedName = '';
 
         me.on('mount', function () {
+            me['form-' + me.config.name + '-Number'].value = me.value;
             // neu displayType dropdown tu` value -> name selected
-            if (me.config.displayType === 'DropDown') {
+            if (me.config.displayType === 'DropDown' && me.config.predefinedData) {
                 me.config.predefinedData.forEach(function (data) {
                     if (data.value == me.value) {
                         me.selectedName = data.name;
@@ -154,7 +156,7 @@
 <form-field-datetime class="form-group">
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class='col-sm-9 input-group date'>
-        <input type='text' class="form-control" onkeyup="{edit.bind(this,'value')}" value="{value}" readonly="{config.viewOnly}"/>
+        <input type='text' class="form-control" id="form-{config.name}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"/>
         <span class="input-group-addon">
                 <span class="glyphicon glyphicon-calendar" disabled="{config.viewOnly}"></span>
             </span>
@@ -166,6 +168,8 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            console.log('form-' + me.config.name);
+            me['form-' + me.config.name].value = me.value;
             var elm = me.root.querySelector('.input-group.date');
             var config = {};
             me.config.displayType = me.config.displayType || 'DateTime';
@@ -177,7 +181,6 @@
                 config.format = 'DD-MM-YYYY hh:mm A';
             $(elm).datetimepicker(config)
                     .on('dp.change', function (e) {
-                        console.log(e.date.format(config.format));
                         me.value = e.date.format(config.format);
                     });
 
@@ -207,7 +210,6 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
-            console.log('typeof(me.value)', typeof(me.value), me.value, me.config.type);
             switch (typeof(me.value)) {
                 case 'undefined':
                 case 'string':
@@ -220,8 +222,6 @@
                     me.value = JSON.stringify(me.value, null, 4);
                     break;
             }
-            console.log('form-field-object mount', 'value', me.value);
-            console.log('form-field-object mount', me.config);
 
             var editorElm = me.root.querySelector('.CodeMirror');
             editor = CodeMirror(editorElm, {
@@ -265,7 +265,7 @@
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
     <div class="col-sm-9 input-group">
-        <input type="text" class="form-control" value="{value}" readonly="{config.viewOnly}">
+        <input type="text" class="form-control" id="form-{config.name}" readonly="{config.viewOnly}">
         <label class="input-group-btn">
             <span class="btn btn-default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
         </label>
@@ -279,6 +279,7 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            me['form-' + me.config.name].value = me.value;
         });
 
         me.showChooseFile = function () {
@@ -291,12 +292,9 @@
             }, function (filePaths) {
                 if (!filePaths || filePaths.length != 1) return;
                 var filePath = filePaths[0];
-                console.log('choose files', filePath);
                 // TODO validate url
                 // TODO copy file to asset/images and fix url to relative
-                console.log('filePath[0]', filePath);
                 var fileName = filePath.split(/[\\\/]/).pop();
-                console.log('fileName', fileName);
                 me.value = '/asset/img/' + fileName;
                 riot.api.trigger('copyAssetFile', filePath, me.value);
                 // copy file vo asset
@@ -386,7 +384,6 @@
 //            var ret = {};
 //            // get value of input
 //            inputs.forEach(function (input) {
-//                console.log('input', input.dataset.name, getInputValue(input));
 //                ret[input.dataset.name] = getInputValue(input);
 //            });
 //            // get editor field
@@ -394,7 +391,6 @@
 //                if (!me.codeEditorMap.hasOwnProperty(fieldName)) continue;
 //                ret[fieldName] = JSON.parse(me.codeEditorMap[fieldName].getValue());
 //            }
-//            console.log('ret', ret);
 //            return ret;
             var ret = {};
             me.formfields.forEach(function (field) {
