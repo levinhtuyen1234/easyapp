@@ -36,7 +36,7 @@ app.on('ready', () => {
         width:    1080,
         minWidth: 680,
         height:   840,
-        icon:     'favicon.ico'
+        // icon:     'file:/' + __dirname + '/favicon.ico'
     });
 
     // if (process.platform === 'linux') {
@@ -55,7 +55,7 @@ app.on('ready', () => {
         mainWindow.maximize();
         // auto reload
         ['tag', 'assets/css', 'assets/js', 'index.html'].forEach(dir => {
-            fs.watch(dir, {persistent: true, recursive: true}, (event, filename) => {
+            fs.watch(__dirname + '/' + dir, {persistent: true, recursive: true}, (event, filename) => {
                 if (filename) {
                     mainWindow.reload();
                 }
@@ -63,9 +63,9 @@ app.on('ready', () => {
         });
     }
 
-    // ipcMain.on('toggleDevTools', ()=> {
-    //     mainWindow.toggleDevTools();
-    // });
+    ipcMain.on('toggleDevTools', ()=> {
+        mainWindow.toggleDevTools();
+    });
 
     app.on('window-all-closed', function () {
         if (process.platform !== 'darwin') {

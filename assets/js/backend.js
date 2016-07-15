@@ -5,14 +5,38 @@ const Path = require('path');
 const ChildProcess = require('child_process');
 
 const BlueBird = require('bluebird');
+const Mkdir = BlueBird.promisify(Fs.mkdir);
 const RimRaf = BlueBird.promisify(require('rimraf'));
 
 const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
-const appRoot = Path.resolve(__dirname, '../../');
-const sitesRoot = Path.resolve(__dirname, '../../sites');
+let appRoot;
+let sitesRoot;
+
+if (__dirname.indexOf('resources/app') || __dirname.indexOf('resources\\app')) {
+    sitesRoot = Path.resolve(__dirname, '../../../../sites');
+    appRoot = Path.resolve(__dirname, '../../../../');
+} else {
+    sitesRoot = Path.resolve(__dirname, '../../sites');
+    appRoot = Path.resolve(__dirname, '../../');
+}
+
+try {
+    Fs.mkdirSync(sitesRoot);
+} catch (_) {
+
+}
+console.log('sitesRoot', sitesRoot);
 
 function getSitePath(siteName) {
     return Path.join(sitesRoot, siteName);
+}
+
+function createSiteFolder(siteName) {
+    console.log('createSiteFolder', sitesRoot, siteName)
+    let sitePath = Path.join(sitesRoot, siteName);
+    return Mkdir(sitePath).then(function () {
+        return sitePath;
+    })
 }
 
 function filterSideBarFile(name) {
@@ -46,19 +70,23 @@ function filterAssetFile(name) {
 }
 
 let ScanDir = function (siteRoot, dir, ret, filter) {
-    for (var name of Fs.readdirSync(dir)) {
-        if (filter && typeof(filter) === 'function')
-            if (filter(name)) continue;
-        var fullPath = Path.join(dir, name);
-        var stat = Fs.statSync(fullPath);
+    try {
+        for (var name of Fs.readdirSync(dir)) {
+            if (filter && typeof(filter) === 'function')
+                if (filter(name)) continue;
+            var fullPath = Path.join(dir, name);
+            var stat = Fs.statSync(fullPath);
 
-        if (stat.isDirectory()) {
-            ScanDir(siteRoot, fullPath, ret, filter);
-        } else {
-            ret.push({name: name, path: Path.relative(siteRoot, fullPath).replace(/\\/g, '/')});
+            if (stat.isDirectory()) {
+                ScanDir(siteRoot, fullPath, ret, filter);
+            } else {
+                ret.push({name: name, path: Path.relative(siteRoot, fullPath).replace(/\\/g, '/')});
+            }
         }
+        return ret;
+    } catch (_) {
+        return ret;
     }
-    return ret;
 };
 
 function getSiteContentFiles(siteName) {
@@ -423,13 +451,14 @@ function SpawnShell(command, args, opts) {
 // }
 
 function spawnGitCmd(command, args, cwd, onProgress) {
-    console.log('command', command, 'cwd', cwd);
-    const privateNodePath = Path.resolve(Path.join(sitesRoot, '..', 'tools', 'node_modules'));
+    const privateNodePath = Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules'));
+
     const ENV_PATH = [
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
-        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'node_modules', '.bin')),
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules', '.bin')),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))
     ].join(';');
+    console.log('command', command, 'args', args, 'cwd', cwd, 'privateNodePath', privateNodePath, 'ENV_PATH', ENV_PATH);
     return SpawnShell(command, args, {
         cwd:        cwd,
         onProgress: onProgress,
@@ -515,6 +544,7 @@ function copyAssetFile(siteName, source, target, cb) {
 }
 
 module.exports = {
+    createSiteFolder:    createSiteFolder,
     getSiteList:         getSiteList,
     getConfigFile:       getConfigFile,
     saveConfigFile:      saveConfigFile,

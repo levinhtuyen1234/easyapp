@@ -78,26 +78,17 @@
 
 <script>
     var BackEnd = require('./assets/js/backend.js');
-//    window.dialog = require('electron').remote.dialog;
-//    console.log('dialog.showOpenDialog', dialog.showOpenDialog);
-//    dialog.showOpenDialog({
-//        properties: ['openFile'],
-//        filters:    [
-//            {name: 'All Media Files', extensions: ['*']}
-//        ]
-//    });
+    //    window.dialog = require('electron').remote.dialog;
+    //    console.log('dialog.showOpenDialog', dialog.showOpenDialog);
+    //    dialog.showOpenDialog({
+    //        properties: ['openFile'],
+    //        filters:    [
+    //            {name: 'All Media Files', extensions: ['*']}
+    //        ]
+    //    });
     window.BackEnd = BackEnd;
 
     var Path = require('path');
-    var Fs = require('fs');
-    var ChildProcess = require('child_process');
-
-    var BlueBird = require('bluebird');
-
-    var mkdir = BlueBird.promisify(Fs.mkdir);
-
-    var GitBin = Path.join(__dirname, 'tools', 'git', 'bin', 'git');
-    var SiteDir = Path.join(__dirname, 'sites');
 
     var curPage;
 
@@ -162,10 +153,9 @@
         },
 
         createSite: function (name, repoUrl, branch) {
-            // TODO detect exists name in sitePath
-            var localPath = Path.join(__dirname, 'sites', name);
-            return mkdir(localPath).then(function () {
-                return BackEnd.gitCheckout(repoUrl, branch, localPath).then(function () {
+//            var localPath = Path.join(__dirname, 'sites', name);
+            return BackEnd.createSiteFolder(name).then(function (sitePath) {
+                return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
                     console.log('git checkout done', name);
                     if (curPage) curPage.unmount();
                     curPage = riot.mount('home', {siteName: name})[0];

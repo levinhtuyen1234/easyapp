@@ -31,14 +31,14 @@
 
         me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'about:blank';
 
-        var nodePath = Path.resolve(Path.join('tools', 'node_modules'));
-        console.log('nodePath', nodePath);
+        var nodePath = Path.resolve(Path.join('tools', 'nodejs', 'node_modules'));
+        console.log('watch-view nodePath', nodePath);
         var PATH = [
-            Path.resolve(Path.join('tools', 'node_modules', '.bin', Path.sep)),
-            Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', Path.sep)),
-            Path.resolve(Path.join(opts.site_name, '..', 'tools', 'git', 'bin', Path.sep))
+            Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')),
+            Path.resolve(Path.join('tools', 'nodejs')),
+            Path.resolve(Path.join('tools', 'git', 'bin'))
         ].join(';');
-        console.log('PATH', PATH);
+        console.log('watch-view PATH', PATH);
 
         function spawnProcess(command, args) {
             args = args || [];
