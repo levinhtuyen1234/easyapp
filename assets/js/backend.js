@@ -12,13 +12,15 @@ const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
 let appRoot;
 let sitesRoot;
 
-if (__dirname.indexOf('resources/app') || __dirname.indexOf('resources\\app')) {
-    sitesRoot = Path.resolve(__dirname, '../../../../sites');
-    appRoot = Path.resolve(__dirname, '../../../../');
-} else {
-    sitesRoot = Path.resolve(__dirname, '../../sites');
-    appRoot = Path.resolve(__dirname, '../../');
-}
+// if (__dirname.indexOf('resources/app') != -1 || __dirname.indexOf('resources\\app') != -1) {
+    sitesRoot = Path.resolve('sites');
+    appRoot = Path.resolve('');
+    console.log('DEV PATH', sitesRoot, appRoot);
+// } else {
+//     sitesRoot = Path.resolve(__dirname, '../../sites');
+//     appRoot = Path.resolve(__dirname, '../../');
+//     console.log('ASAR PATH', sitesRoot, appRoot);
+// }
 
 try {
     Fs.mkdirSync(sitesRoot);
