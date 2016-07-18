@@ -32,18 +32,29 @@ git push --set-upstream origin master
 
 rem create build dir
 mkdir %BUILD_DIR%
+
 rem clone repo to build dir
 cd %BUILD_DIR%
+
+rem echo delete all folder not .git in working dir
+for /D %%F in (*) do (
+   rd %%F /Q /S
+)
+rem echo delete all file in working dir
+for %%F in (*) do (
+   del %%F /Q /S
+)
+
 git clone %REPO% .
 
 rem create and switch to gh-pages branch
 git checkout -B gh-pages
 
-rem delete all folder not .git in working dir
+rem echo delete all folder not .git in working dir
 for /D %%F in (*) do (
    if NOT %%F == ".git" rd %%F /Q /S
 )
-rem delete all file in working dir
+rem echo delete all file in working dir
 for %%F in (*) do (
    del %%F /Q /S
 )
