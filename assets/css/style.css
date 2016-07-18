@@ -174,22 +174,7 @@ body {
 
 /* End Sticky footer styles */
 
-/* START codemirror height auto up to */
-.code-editor.CodeMirror {
-    /*height: 200px;*/
-    /*overflow: auto;*/
-    /*max-height: 200px;*/
-    /*min-height:150px !important;*/
-}
 
-.CodeMirror-scroll {
-    /*height: auto;*/
-    /*max-height: 200px;*/
-    /*min-height:150px !important;*/
-    /*overflow: scroll;*/
-}
-
-/* END codemirror height auto up to */
 
 /* start xs navbar */
 .navbar-xs, .navbar-header {

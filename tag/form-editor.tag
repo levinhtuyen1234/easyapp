@@ -199,9 +199,16 @@
 
 <form-field-object class="form-group">
     <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9">
-        <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px; padding: 0 0 15px 0;"></texarea>
+    <div class="col-sm-9" style="padding: 0; margin: 0;">
+        <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
     </div>
+    <style>
+        .CodeMirror {
+            height: 130px;
+            max-height: 130px;
+            min-height:130px !important;
+        }
+    </style>
     <script>
         var me = this;
         me.mixin('form');
@@ -237,7 +244,7 @@
                 gutter:                  true,
                 readOnly:                !!(me.config.viewOnly),
                 lint:                    true,
-                height:                  'auto',
+//                height:                  150,
                 scrollbarStyle:          'simple',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
                 mode:                    'application/json',
