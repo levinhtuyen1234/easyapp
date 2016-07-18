@@ -8,14 +8,16 @@ const BlueBird = require('bluebird');
 const Mkdir = BlueBird.promisify(Fs.mkdir);
 const RimRaf = BlueBird.promisify(require('rimraf'));
 
-const ignoreName = ['.git', '__PUBLIC', '.gitignore', '.gitkeep'];
+const IGNORE_NAMES = ['.gitignore', '.gitkeep'];
+const IGNORE_FOLDERS = ['.git', '__PUBLIC'];
+const ASSET_EXTS = ['js', 'css', 'html', 'htm', 'ts', 'coffee', 'sass', 'less', 'scss'];
 let appRoot;
 let sitesRoot;
 
 // if (__dirname.indexOf('resources/app') != -1 || __dirname.indexOf('resources\\app') != -1) {
-    sitesRoot = Path.resolve('sites');
-    appRoot = Path.resolve('');
-    console.log('DEV PATH', sitesRoot, appRoot);
+sitesRoot = Path.resolve('sites');
+appRoot = Path.resolve('');
+console.log('DEV PATH', sitesRoot, appRoot);
 // } else {
 //     sitesRoot = Path.resolve(__dirname, '../../sites');
 //     appRoot = Path.resolve(__dirname, '../../');
@@ -34,52 +36,55 @@ function getSitePath(siteName) {
 }
 
 function createSiteFolder(siteName) {
-    console.log('createSiteFolder', sitesRoot, siteName)
+    console.log('createSiteFolder', sitesRoot, siteName);
     let sitePath = Path.join(sitesRoot, siteName);
     return Mkdir(sitePath).then(function () {
         return sitePath;
     })
 }
 
-function filterSideBarFile(name) {
+function filterSideBarFile(name, isDir) {
     var ignoreExt = ['.config.json', '.html'];
-    if (ignoreName.indexOf(name) != -1) return true;
-    for (var i = 0; i < ignoreExt.length; i++) {
-        if (name.endsWith(ignoreExt[i]))
-            return true;
-    }
-    return false;
+    if (IGNORE_NAMES.indexOf(name) != -1) return false;
+    var ext = name.split('.').pop();
+    if (ignoreExt.indexOf(ext) != -1)
+        return false;
+    return true;
 }
 
-function filterOnlyLayoutFile(name) {
-    var ignoreExt = ['.config.json', '.gitkeep'];
-    if (ignoreName.indexOf(name) != -1) return true;
-    for (var i = 0; i < ignoreExt.length; i++) {
-        if (name.endsWith(ignoreExt[i]))
-            return true;
+function filterOnlyLayoutFile(name, isDir) {
+    if (isDir) {
+        if (IGNORE_FOLDERS.indexOf(name) != -1) return false;
+    } else {
+        var ext = name.split('.').pop();
+        if (ext !== 'html') return false;
     }
-    return false;
+    return true;
 }
 
-function filterAssetFile(name) {
-    var ignoreExt = ['.gitkeep'];
-    if (ignoreName.indexOf(name) != -1) return true;
-    for (var i = 0; i < ignoreExt.length; i++) {
-        if (name.endsWith(ignoreExt[i]))
-            return true;
+function filterAssetFile(name, isDir) {
+    if (isDir) {
+        if (IGNORE_FOLDERS.indexOf(name) != -1) return false;
+    } else {
+        if (IGNORE_NAMES.indexOf(name) != -1) return false;
+        var ext = name.split('.').pop();
+        if (ASSET_EXTS.indexOf(ext) == -1) return false;
     }
-    return false;
+    return true;
 }
 
 let ScanDir = function (siteRoot, dir, ret, filter) {
     try {
         for (var name of Fs.readdirSync(dir)) {
-            if (filter && typeof(filter) === 'function')
-                if (filter(name)) continue;
             var fullPath = Path.join(dir, name);
             var stat = Fs.statSync(fullPath);
 
-            if (stat.isDirectory()) {
+            var isDir = stat.isDirectory();
+            if (filter && typeof(filter) === 'function')
+                if (filter(name, isDir) == false)
+                    continue;
+
+            if (isDir) {
                 ScanDir(siteRoot, fullPath, ret, filter);
             } else {
                 ret.push({name: name, path: Path.relative(siteRoot, fullPath).replace(/\\/g, '/')});
