@@ -10,5 +10,7 @@ pushd %~dp0..\ewh-win32-x64
 7za a -scsUTF-8 %~dp0..\dist\ewh.zip * %~dp0..\tools %~dp0..\scripts
 popd
 
+rem clean up
+rd %~dp0..\ewh-win32-x64 /Q /S 
 
 pause
