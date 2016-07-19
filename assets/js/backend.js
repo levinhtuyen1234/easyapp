@@ -54,7 +54,7 @@ function filterSideBarFile(name, isDir) {
 
 function filterOnlyLayoutFile(name, isDir) {
     if (isDir) {
-        if (IGNORE_FOLDERS.indexOf(name) != -1) return false;
+        return false;
     } else {
         var ext = name.split('.').pop();
         if (ext !== 'html') return false;
@@ -131,7 +131,7 @@ function getLayoutList(site) {
     var sitePath = Path.join(sitesRoot, site, 'layout');
     var ret = [];
     for (var name of Fs.readdirSync(sitePath)) {
-        if (filterOnlyLayoutFile(name)) continue;
+        if (filterOnlyLayoutFile(name) == false) continue;
         var fullPath = Path.join(sitePath, name);
         var stat = Fs.statSync(fullPath);
 
