@@ -57,7 +57,7 @@
         };
 
         me.loadConfig = function(config) {
-            me.config = Object.assign({}, config);
+            me.config = Object.assign({type: 'Number', displayType: 'Number' }, config);
             if (me.config.displayType) {
                 $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
             }

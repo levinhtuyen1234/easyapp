@@ -121,7 +121,7 @@
         };
 
         me.loadConfig = function (config) {
-            me.config = Object.assign({}, config);
+            me.config = Object.assign({type: 'Text', displayType: 'ShortText'}, config);
             // select current displayType
             if (me.config.displayType) {
                 $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);

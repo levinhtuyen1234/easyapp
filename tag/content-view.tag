@@ -15,10 +15,12 @@
             // gen form
             me.tags['form-editor'].genForm(content.metaData, contentConfig);
             // set markdown editor content
-            me.tags['markdown-editor'].value(content.markDownData);
+            setTimeout(function () {
+                me.tags['markdown-editor'].value(content.markDownData);
+            }, 1);
         };
 
-        me.reset = function() {
+        me.reset = function () {
             me.tags['form-editor'].clear();
             me.tags['markdown-editor'].value('');
         };
