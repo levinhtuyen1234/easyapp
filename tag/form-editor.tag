@@ -203,10 +203,10 @@
         <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
     </div>
     <style>
-        .CodeMirror {
+        .CodeMirrorForm {
             height: 130px;
             max-height: 130px;
-            min-height:130px !important;
+            min-height: 130px !important;
         }
     </style>
     <script>
@@ -217,6 +217,10 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            setTimeout(function(){
+                $(me.root.querySelectorAll('.CodeMirror')).addClass('CodeMirrorForm');
+            }, 0);
+
             switch (typeof(me.value)) {
                 case 'undefined':
                 case 'string':

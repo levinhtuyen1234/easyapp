@@ -168,7 +168,10 @@
             } else {
                 me.currentFilePath = filePath;
             }
-            me.openRawContentTab({mode: 'auto'});
+            me.openRawContentTab({
+                mode:         'auto',
+                lineWrapping: false
+            });
             me.update();
         };
 
