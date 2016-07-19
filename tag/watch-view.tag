@@ -1,22 +1,22 @@
 <watch-view>
-    <div class="btn-group" data-toggle="buttons">
-        <label class="btn btn-default btn-sm" onclick="{watch}">
-            <input type="radio" name="options"/>Watch
-        </label>
-        <label class="btn btn-default btn-sm" onclick="{buildDev}">
-            <input type="radio" name="options"/>Build (dev)
-        </label>
-        <label class="btn btn-default btn-sm" onclick="{buildProd}">
-            <input type="radio" name="options"/>Build (prod)
-        </label>
-        <!--<label class="btn btn-default" onclick="{npmInstall}">-->
-            <!--<input type="radio" name="options"/>Npm install-->
-        <!--</label>-->
+    <!--<div class="btn-group" data-toggle="buttons">-->
+    <!--<label class="btn btn-default btn-sm" onclick="{watch}">-->
+    <!--<input type="radio" name="options"/>Watch-->
+    <!--</label>-->
+    <!--<label class="btn btn-default btn-sm" onclick="{buildDev}">-->
+    <!--<input type="radio" name="options"/>Build (dev)-->
+    <!--</label>-->
+    <!--<label class="btn btn-default btn-sm" onclick="{buildProd}">-->
+    <!--<input type="radio" name="options"/>Build (prod)-->
+    <!--</label>-->
+    <!--&lt;!&ndash;<label class="btn btn-default" onclick="{npmInstall}">&ndash;&gt;-->
+    <!--&lt;!&ndash;<input type="radio" name="options"/>Npm install&ndash;&gt;-->
+    <!--&lt;!&ndash;</label>&ndash;&gt;-->
 
-        <label class="btn btn-default btn-sm" onclick="{openExternalBrowser}">
-            <a>Open In Browser</a>
-        </label>
-    </div>
+    <!--<label class="btn btn-default btn-sm" onclick="{openExternalBrowser}">-->
+    <!--<a>Open In Browser</a>-->
+    <!--</label>-->
+    <!--</div>-->
 
     <pre style="height: 70vh; overflow: auto;">
         <code class="accesslog hljs"></code>
@@ -32,7 +32,6 @@
         me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'about:blank';
 
         var nodePath = Path.resolve(Path.join('tools', 'nodejs', 'node_modules'));
-        console.log('watch-view nodePath', nodePath);
         var PATH = [
             Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')),
             Path.resolve(Path.join('tools', 'nodejs')),
@@ -58,6 +57,7 @@
                 var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
+                    riot.api.trigger('watchSuccess', reviewUrl[1]);
                     me.iframeUrl = reviewUrl[1];
                     me.update();
                 }
@@ -67,6 +67,8 @@
             newProcess.stderr.on('data', function (data) {
                 console.log(data);
                 me.appendError(data);
+                riot.api.trigger('watchFailed');
+                me.closeWatchProcess();
             });
 
             return newProcess;
@@ -89,34 +91,39 @@
             me.append('close exists process\r\n');
         }
 
-        function closeWatchProcess() {
-            if (!watchProcess)
-                return;
-            closeProcess(watchProcess);
-            watchProcess = null;
-        }
+        me.closeWatchProcess = function () {
+            try {
+                if (!watchProcess)
+                    return;
+                closeProcess(watchProcess);
+                watchProcess = null;
+            } catch(ex) {
+                console.log('watch error', ex);
+            }
+        };
 
         me.watch = function () {
+            if (watchProcess != null) return;
             me.clearLog();
-            closeWatchProcess();
+            me.closeWatchProcess();
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
         me.buildDev = function () {
             me.clearLog();
-            closeWatchProcess();
+            me.closeWatchProcess();
             spawnProcess('gulp.cmd', ['build']);
         };
 
         me.buildProd = function () {
             me.clearLog();
-            closeWatchProcess();
+            me.closeWatchProcess();
             spawnProcess('gulp.cmd', ['build', '--production']);
         };
 
         // close watch process truoc khi app exit
         window.onbeforeunload = function (e) {
-            closeWatchProcess();
+            me.closeWatchProcess();
         };
 
         me.on('mount', function () {

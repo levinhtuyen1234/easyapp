@@ -17,9 +17,12 @@
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Preview
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Watch
                         </a>
+                        <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open external browser to review" onclick="{openExternalReview}" disabled>
+                            <i class="fa fa-fw fa-external-link"></i>
+                        </button>
                     </div>
                     <div class="btn-group" data-toggle="buttons">
                         <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
@@ -149,10 +152,12 @@
             ShowTab('layout-view');
         };
 
-        me.openWatchView = function () {
+        me.openWatchView = function (e) {
             $(me.root.querySelector('#editor-view')).hide();
             $(me.root.querySelector('#watch-view')).show();
             ShowTab('watch-view');
+            me.tags['watch-view'].watch();
+//            var selected = e.target.querySelector('input').checked;
         };
 
         me.openAssetFile = function (filePath) {
@@ -425,6 +430,19 @@
             // TODO detect target path đã ở trong asset thì không cần copy
             BackEnd.copyAssetFile(me.siteName, localPath, targetPath, function (err) {
             });
+        });
+
+        me.openExternalReview = function () {
+            me.tags['watch-view'].openExternalBrowser();
+        };
+
+        riot.api.on('watchSuccess', function () {
+            me.openExternalReviewBtn.disabled = false;
+        });
+
+        riot.api.on('watchFailed', function () {
+            me.openExternalReviewBtn.disabled = true;
+            $(openWatchViewBtn).removeClass('active');
         });
     </script>
 </home>
