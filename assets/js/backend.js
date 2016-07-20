@@ -522,7 +522,7 @@ function gitGenMessage(siteName) {
         }).catch(ex => {
             reject(ex);
         }).then(()=> {
-            output = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g).join('\r\n');
+            output = '"' + output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g).join('" -m "') + '"';
             resolve(output);
         });
     });

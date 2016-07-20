@@ -308,7 +308,7 @@
                     return;
             }
             BackEnd.gitGenMessage(me.opts.siteName).then(function(msg) {
-                return BackEnd.gitCommit(me.opts.siteName, '"' + msg + '"');
+                return BackEnd.gitCommit(me.opts.siteName, msg);
             });
         };
 
