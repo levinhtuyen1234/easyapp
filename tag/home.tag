@@ -276,25 +276,40 @@
 
         me.save = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+            var filePath;
             switch (me.curTab) {
                 case 'content-view':
                     var content = me.tags['content-view'].getContent();
+                    filePath = me.currentFilePath;
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
                     break;
                 case 'code-view':
                     var rawContent = me.tags['code-editor'][0].value();
+                    filePath = me.currentFilePath;
                     // TODO this code view open not just only raw content file but also asset
                     BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);
                     break;
                 case 'layout-view':
                     var layoutContent = me.tags['code-editor'][1].value();
+                    filePath = me.currentLayout;
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;
                 case 'config-view':
                     var contentConfig = me.tags['config-view'].getContentConfig();
+                    filePath = me.currentFilePath;
+                    filePath = me.currentFilePath.split('.');
+                    filePath.pop();
+                    filePath.join('.');
+                    filePath += '.config.json';
                     BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
                     break;
+                default:
+                    // no commit
+                    return;
             }
+            BackEnd.gitGenMessage(me.opts.siteName).then(function(msg) {
+                return BackEnd.gitCommit(me.opts.siteName, '"' + msg + '"');
+            });
         };
 
         me.deleteFile = function () {
@@ -356,6 +371,7 @@
         riot.api.on('addLayout', function (layoutFileName) {
             try {
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
+                BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.api.trigger('closeNewLayoutDialog');
             } catch (ex) {
                 console.log('addLayout', ex);
@@ -372,6 +388,8 @@
                 riot.api.trigger('closeNewContentDialog');
                 me.openFile(newContentFilePath);
                 me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
+                // run git add
+                BackEnd.gitAdd(me.siteName, newContentFilePath);
             } catch (ex) {
                 console.log('addContent', ex);
                 bootbox.alert('create content failed, error ' + ex.message);

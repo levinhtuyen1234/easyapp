@@ -485,7 +485,7 @@ function gitPushGhPages(siteName, onProgress) {
 function gitPushGitHub(siteName, onProgress) {
     const initScriptPath = Path.join(sitesRoot, '..', 'scripts', 'EWH-push-github.bat');
     const workingDirectory = Path.resolve(getSitePath(siteName));
-    console.log('gitPushGitHub', workingDirectory);
+    // console.log('gitPushGitHub', workingDirectory);
     return spawnGitCmd(initScriptPath, [], workingDirectory, onProgress);
 }
 
@@ -506,6 +506,31 @@ function gitCheckout(repositoryUrl, branch, targetDir, onProgress) {
     return spawnGitCmd('git', ['clone', '-b', branch, '--single-branch', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
         return RimRaf(Path.join(targetDir, '.git'));
     });
+}
+
+function gitCommit(siteName, message, onProgress) {
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    return spawnGitCmd('git', ['commit', '-am', message], workingDirectory, onProgress);
+}
+
+function gitGenMessage(siteName) {
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    return new BlueBird((resolve, reject)=> {
+        var output = '';
+        return spawnGitCmd('git', ['status'], workingDirectory, function (data) {
+            output += data + '\r\n';
+        }).catch(ex => {
+            reject(ex);
+        }).then(()=> {
+            output = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g).join('\r\n');
+            resolve(output);
+        });
+    });
+}
+
+function gitAdd(siteName, filePath, onProgress) {
+    const workingDirectory = Path.resolve(getSitePath(siteName));
+    return spawnGitCmd('git', ['add', filePath], workingDirectory, onProgress);
 }
 
 function getLocalDate() {
@@ -565,10 +590,13 @@ module.exports = {
     deleteContentFile:   deleteContentFile,
     getLayoutList:       getLayoutList,
     newLayoutFile:       newLayoutFile,
+    gitAdd:              gitAdd,
     newContentFile:      newContentFile,
     gitCheckout:         gitCheckout,
     gitInitSite:         gitInitSite,
+    gitGenMessage:       gitGenMessage,
     gitImportGitHub:     gitImportGitHub,
+    gitCommit:           gitCommit,
     gitPushGhPages:      gitPushGhPages,
     gitPushGitHub:       gitPushGitHub,
     getSiteLayoutFiles:  getSiteLayoutFiles,
