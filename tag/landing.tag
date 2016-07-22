@@ -91,7 +91,7 @@
         };
 
         me.createSite = function (name, repoUrl, branch) {
-            return riot.api.createSite(name, repoUrl, branch).then(function(){
+            return riot.api.createSite(name, repoUrl, branch).then(function () {
                 me.unmount(true);
             });
         };
@@ -133,11 +133,11 @@
             win.show()
         };
 
-        me.showImportGithub = function(){
+        me.showImportGithub = function () {
             me.tags['dialog-new-site-import'].show();
             me.tags['dialog-new-site-import'].event.one('create', function (info) {
                 me.tags['dialog-new-site-import'].hide();
-                var repoUrl = 'https://' + info.username + ':' + info.password + '@' + (info.url.split('https://')[1]);
+                var repoUrl = 'https://' + encodeURIComponent(info.username) + ':' + encodeURIComponent(info.password) + '@' + (info.url.split('https://')[1]);
                 console.log('repoUrl', repoUrl);
                 me.tags['progress-dialog'].show('Import GitHub Project');
                 BackEnd.gitImportGitHub(info.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {

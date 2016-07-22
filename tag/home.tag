@@ -532,7 +532,7 @@
             me.tags['github-init-dialog'].show();
             me.tags['github-init-dialog'].event.one('save', function (info) {
                 me.tags['github-init-dialog'].hide();
-                var repoUrl = 'https://' + info.username + ':' + info.password + '@' + (info.url.split('https://')[1]);
+                var repoUrl = 'https://' + encodeURIComponent(info.username) + ':' + encodeURIComponent(info.password) + '@' + (info.url.split('https://')[1]);
                 me.tags['progress-dialog'].show('Init GitHub Setting');
                 BackEnd.gitInitSite(me.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();

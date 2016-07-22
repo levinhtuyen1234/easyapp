@@ -173,7 +173,7 @@
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
     });
 
-    riot.api.on('showLandingPage', function(){
+    riot.api.on('showLandingPage', function () {
         if (curPage) curPage.unmount(true);
         console.log('showLandingPage');
         curPage = riot.mount('landing')[0];
