@@ -9,11 +9,11 @@ set "BUILD_DIR=build"
 git init
 git remote add origin %REPO%
 
-rem only ignore if BUILD_DIR not exists in .gitignore 
+rem only ignore if BUILD_DIR not exists in .gitignore
 FOR /F "delims=" %%a in (.gitignore) DO (
 	IF "%%a" == "%BUILD_DIR%/" ( GOTO SKIP_APPEND_BUILD_DIR )
 )
-rem TODO only add if build dir not exists
+
 echo %BUILD_DIR%/>>.gitignore
 :SKIP_APPEND_BUILD_DIR
 
@@ -26,7 +26,7 @@ echo node_modules/>>.gitignore
 
 
 rem commit and push to master
-git add .
+git add .gitignore
 git commit -m "init"
 git push --set-upstream origin master
 
@@ -67,6 +67,12 @@ git branch -d master
 
 rem push changes to remote
 git add .
-git commit -m "init"
+git commit -m "init gh-pages"
 git push
 
+rem go back to root
+cd ..
+rem add all project file
+git add .
+git commit -m "add project files"
+git push --set-upstream origin master
