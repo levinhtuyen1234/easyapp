@@ -86,13 +86,13 @@
         me.sites = BackEnd.getSiteList();
 
         me.openSite = function (siteName) {
-            me.unmount();
+            me.unmount(true);
             riot.mount('home', {siteName: siteName});
         };
 
         me.createSite = function (name, repoUrl, branch) {
             return riot.api.createSite(name, repoUrl, branch).then(function(){
-                me.unmount();
+                me.unmount(true);
             });
         };
 

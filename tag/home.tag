@@ -8,6 +8,9 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-4 pull-left">
+                    <a href="#" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-fw fa-home"></i>
+                    </a>
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-plus"></i> Add Content
                     </a>
@@ -95,8 +98,6 @@
     </div>
 
     <script>
-        const Fs = require('fs');
-
         var me = this;
         me.contentView = null;
         me.configView = null;
@@ -118,6 +119,11 @@
 //                me.tags['side-bar'].activeFile('content/index.md');
             }, 1000);
         });
+
+        me.goToLandingPage = function () {
+//            me.unmount(true);
+            riot.api.trigger('showLandingPage');
+        };
 
         function HideAllTab() {
             $(me.root).find('a[role="tab"]').removeClass('active');
@@ -397,7 +403,7 @@
                     // no commit
                     return;
             }
-            BackEnd.gitGenMessage(me.opts.siteName).then(function(msg) {
+            BackEnd.gitGenMessage(me.opts.siteName).then(function (msg) {
                 return BackEnd.gitCommit(me.opts.siteName, msg);
             });
         };

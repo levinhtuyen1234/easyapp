@@ -149,7 +149,7 @@
     Object.assign(riot.api, {
         openSite: function (sitePath) {
             console.log('openSite', sitePath);
-            landing.unmount();
+            landing.unmount(true);
             home = riot.mount('home', {sitePath: sitePath});
         },
 
@@ -158,7 +158,7 @@
             return BackEnd.createSiteFolder(name).then(function (sitePath) {
                 return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
                     console.log('git checkout done', name);
-                    if (curPage) curPage.unmount();
+                    if (curPage) curPage.unmount(true);
                     curPage = riot.mount('home', {siteName: name})[0];
                 }).catch(function (ex) {
                     console.log(ex.message);
@@ -172,6 +172,12 @@
 //        curPage = riot.mount('landing')[0];
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
     });
+
+    riot.api.on('showLandingPage', function(){
+        if (curPage) curPage.unmount(true);
+        console.log('showLandingPage');
+        curPage = riot.mount('landing')[0];
+    })
 
 </script>
 
