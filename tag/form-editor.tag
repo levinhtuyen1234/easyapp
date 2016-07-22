@@ -419,6 +419,7 @@
         };
 
         me.genForm = function (metaData, contentConfig) {
+            console.log('genForm', metaData, contentConfig);
             // unmount any exists form field
             me.formfields.forEach(function (field) {
                 if (field != undefined)
@@ -432,6 +433,7 @@
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
+                console.log('metaValue', metaValue);
                 var div = document.createElement('div');
                 var tagTypeName = 'form-field-' + fieldConfig.type.toLowerCase();
                 // TODO fix this, tam thoi su dung object cho array luon

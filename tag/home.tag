@@ -21,7 +21,7 @@
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Watch
                         </a>
                         <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open external browser to review" onclick="{openExternalReview}" disabled>
-                            <i class="fa fa-fw fa-external-link"></i>
+                            <i class="fa fa-fw fa-external-link"></i> Open on Browser
                         </button>
                     </div>
                     <div class="btn-group" data-toggle="buttons">
@@ -49,16 +49,19 @@
             <div class="tab-content">
                 <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class=" btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}">
+                        <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{curTab == 'content-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
+                        </a>
+                        <a class=" btn btn-default navbar-btn btn-sm" show="{curTab == 'meta-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.json'))}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta
                         </a>
                         <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
                             <input type="radio" name="options">Raw
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{curTab == 'content-view' || (curTab == 'code-view' && currentFilePath.endsWith('.md')) || (curTab == 'config-view' && currentFilePath.endsWith('.md'))}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm {currentFileTitle.endsWith('.md') ? '' : 'disabled'}" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{curTab == 'meta-view' || curTab == 'config-view' || curTab == 'content-view' || (curTab == 'code-view' && (currentFilePath.endsWith('.json') || currentFilePath.endsWith('.md')))}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
                         </a>
                     </div>
@@ -78,6 +81,7 @@
                         <div class="panel-body">
                             <div class="tab-content">
                                 <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                                <meta-view id="meta-view" role="tabpanel" class="tab-pane"></meta-view>
                                 <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
                                 <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
                                 <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
@@ -205,8 +209,72 @@
             }
         };
 
+        me.openMetaTab = function () {
+            try {
+                HideAllTab();
+
+                me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+                me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
+                me.update();
+
+                var meta = BackEnd.getMetaFile(me.opts.siteName, me.currentFilePath);
+                var metaConfig = BackEnd.getMetaConfigFile(me.opts.siteName, me.currentFilePath);
+                console.log('metaConfig', meta, metaConfig);
+//                if (!content || !content.metaData || !content.metaData.layout) {
+//                    me.tags['content-view'].reset();
+//                return;
+//                } else {
+//                    me.currentLayout = content.metaData.layout;
+//                    var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+                me.tags['meta-view'].setContent(JSON.parse(meta), metaConfig);
+//                }
+
+                ShowTab('meta-view');
+            } catch (ex) {
+                console.log(ex);
+                bootbox.alert('Open meta failed, error ' + ex.message, function () {
+                });
+                me.openRawContentTab({
+                    readOnly: false,
+                    mode:     'json'
+                });
+            }
+        };
+
+        me.openMetaConfigTab = function () {
+            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
+            HideAllTab();
+
+            var content = BackEnd.getMetaFile(me.opts.siteName, me.currentFilePath);
+            content = JSON.parse(content);
+            console.log('meta content', content);
+            var contentConfig = BackEnd.getMetaConfigFile(me.opts.siteName, me.currentFilePath);
+
+            me.tags['config-view'].loadContentConfig(contentConfig);
+            ShowTab('config-view');
+            me.tags['config-view'].event.on('saveConfig', function (configFieldName, newConfig) {
+                console.log('save meta config');
+                newConfig.name = configFieldName;
+                // ghi de` new setting vo contentConfig
+                for (var i = 0; i < contentConfig.length; i++) {
+                    if (contentConfig[i].name === configFieldName) {
+                        contentConfig[i] = newConfig;
+                        break;
+                    }
+                }
+                BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
+            });
+        };
+
         me.openConfigTab = function () {
-            me.currentFileTitle = me.currentFilePath.split(/[/\\/]/).pop();
+            if (me.currentFilePath.endsWith('.json'))
+                me.openMetaConfigTab();
+            else if (me.currentFilePath.endsWith('.md'))
+                me.openContentConfigTab();
+        };
+
+        me.openContentConfigTab = function () {
+            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             HideAllTab();
 
             var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
@@ -219,7 +287,8 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-            me.tags['config-view'].event.on('saveLayoutConfig', function (configFieldName, newConfig) {
+            me.tags['config-view'].event.on('saveConfig', function (configFieldName, newConfig) {
+                console.log('save content config');
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig
                 for (var i = 0; i < contentConfig.length; i++) {
@@ -261,27 +330,41 @@
 
             if (filePath.endsWith('.md')) {
                 me.openContentTab();
-            } else if (filePath.endsWith('.config.json')) {
-                me.openConfigTab();
+//            } else if (filePath.endsWith('.config.json')) {
+//                me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
                 me.currentLayout = me.currentFilePath.split(/[/\\]/);
                 me.currentLayout.shift();
                 me.currentLayout = me.currentLayout.join('/');
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
-                me.openRawContentTab();
+                console.log('filePath', filePath);
+                if (filePath.startsWith('content/metadata')) {
+                    console.log('openMetaTab');
+                    me.openMetaTab();
+                }
+                // openMetaConfigTab
+//                me.openRawContentTab();
             }
             me.update();
         };
 
         me.save = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
+            // TODO add meta, content's config file to git
             var filePath;
             switch (me.curTab) {
                 case 'content-view':
+                    console.log('save content data');
                     var content = me.tags['content-view'].getContent();
                     filePath = me.currentFilePath;
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
+                    break;
+                case 'meta-view':
+                    console.log('save meta data');
+                    var meta = me.tags['meta-view'].getContent();
+                    filePath = me.currentFilePath;
+                    BackEnd.saveMetaFile(me.opts.siteName, me.currentFilePath, meta);
                     break;
                 case 'code-view':
                     var rawContent = me.tags['code-editor'][0].value();
@@ -300,8 +383,15 @@
                     filePath = me.currentFilePath.split('.');
                     filePath.pop();
                     filePath.join('.');
-                    filePath += '.config.json';
-                    BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
+                    if (me.currentFilePath.endsWith('.json')) {
+                        console.log('save meta config');
+                        filePath += '.meta.json';
+                        BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
+                    } else if (me.currentFilePath.endsWith('.md')) {
+                        console.log('save content config');
+                        filePath += '.config.json';
+                        BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
+                    }
                     break;
                 default:
                     // no commit

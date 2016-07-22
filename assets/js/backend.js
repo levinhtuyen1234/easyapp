@@ -54,7 +54,7 @@ function filterSideBarFile(name, isDir) {
 
 function filterOnlyLayoutFile(name, isDir) {
     if (isDir) {
-        return false;
+        return true;
     } else {
         var ext = name.split('.').pop();
         if (ext !== 'html') return false;
@@ -127,19 +127,15 @@ function getSiteAssetFiles(siteName) {
     return files;
 }
 
-function getLayoutList(site) {
-    var sitePath = Path.join(sitesRoot, site, 'layout');
-    var ret = [];
-    for (var name of Fs.readdirSync(sitePath)) {
-        if (filterOnlyLayoutFile(name) == false) continue;
-        var fullPath = Path.join(sitePath, name);
-        var stat = Fs.statSync(fullPath);
-
-        if (stat.isDirectory())
-            continue;
-        ret.push(name);
+function getLayoutList(siteName) {
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var folders = ['layout'];
+    var files = [];
+    for (var folder of folders) {
+        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
     }
-    return ret;
+    return files;
 }
 
 function fileExists(filePath) {
@@ -575,7 +571,57 @@ function copyAssetFile(siteName, source, target, cb) {
     }
 }
 
+function getMetaFile(siteName, filePath) {
+    return Fs.readFileSync(Path.join(sitesRoot, siteName, filePath)).toString();
+}
+
+function getMetaConfigFile(siteName, metaFilePath) {
+    // TODO detect metaConfig file exists, if not create
+    var metaFileContent = readFile(siteName, metaFilePath);
+    var metaData = JSON.parse(metaFileContent);
+    console.log('metaData', metaData);
+    var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
+    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
+    var metaConfig = genSimpleContentConfigFile(metaData);
+
+    if (fileExists(configFullPath)) {
+        // read and return config file
+        var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
+        // merge property from metaConfig -> existsConfig
+        var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
+            return existsConfig.filter(function (curB) {
+                    return cur.name === curB.name;
+                }).length === 0;
+        });
+
+        // update config file neu co field mới
+        if (fieldsOnlyInCurMetaFile.length > 0) {
+            existsConfig = existsConfig.concat(fieldsOnlyInCurMetaFile);
+            Fs.writeFileSync(configFullPath, JSON.stringify(existsConfig, null, 4));
+        }
+        return existsConfig;
+    } else {
+        Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
+        return metaConfig;
+    }
+}
+
+function saveMetaFile(siteName, contentFilePath, metaData) {
+    var fullPath = Path.join(sitesRoot, siteName, contentFilePath);
+    Fs.writeFileSync(fullPath, JSON.stringify(metaData, null, 4));
+}
+
+function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
+    var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
+    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
+    Fs.writeFileSync(configFullPath, metaConfig);
+}
+
 module.exports = {
+    getMetaFile:         getMetaFile,
+    getMetaConfigFile:   getMetaConfigFile,
+    saveMetaFile:        saveMetaFile,
+    saveMetaConfigFile:  saveMetaConfigFile,
     createSiteFolder:    createSiteFolder,
     getSiteList:         getSiteList,
     getConfigFile:       getConfigFile,

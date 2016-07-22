@@ -110,7 +110,7 @@
             var newConfig = formTag.getConfig();
 
             console.log('new config', newConfig);
-            me.event.trigger('saveLayoutConfig', me.curConfigFieldName, newConfig);
+            me.event.trigger('saveConfig', me.curConfigFieldName, newConfig);
         };
 
         me.ShowFieldConfig = function (e) {
