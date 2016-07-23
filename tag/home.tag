@@ -459,7 +459,7 @@
         };
 
         me.newContent = function () {
-            var layoutList = BackEnd.getLayoutList(me.siteName);
+            var layoutList = BackEnd.getRootLayoutList(me.siteName);
             me.tags['new-content-dialog'].updateLayoutList(layoutList);
             me.tags['new-content-dialog'].show();
         };

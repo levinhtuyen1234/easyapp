@@ -73,7 +73,11 @@
         });
 
         me.updateLayoutList = function (layoutList) {
-            me.layoutList = layoutList;
+            var list = [];
+            layoutList.forEach(function (layout) {
+                list.push(layout.name);
+            });
+            me.layoutList = list;
             if (me.layoutList.length > 0)
                 me.contentLayout = me.layoutList[0];
             me.update();

@@ -106,8 +106,12 @@
             if (watchProcess != null) return;
             me.clearLog();
             me.closeWatchProcess();
+
+            me.append('watch starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
+
+        // TODO on unmount close watch process
 
         me.buildDev = function () {
             me.clearLog();

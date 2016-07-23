@@ -62,6 +62,16 @@ function filterOnlyLayoutFile(name, isDir) {
     return true;
 }
 
+function filterOnlyRootLayoutFile(name, isDir) {
+    if (isDir) {
+        return false;
+    } else {
+        var ext = name.split('.').pop();
+        if (ext !== 'html') return false;
+    }
+    return true;
+}
+
 function filterAssetFile(name, isDir) {
     if (isDir) {
         if (IGNORE_FOLDERS.indexOf(name) != -1) return false;
@@ -134,6 +144,17 @@ function getLayoutList(siteName) {
     for (var folder of folders) {
         console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
+    }
+    return files;
+}
+
+function getRootLayoutList(siteName) {
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var folders = ['layout'];
+    var files = [];
+    for (var folder of folders) {
+        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyRootLayoutFile);
     }
     return files;
 }
@@ -635,6 +656,7 @@ module.exports = {
     deleteLayoutFile:    deleteLayoutFile,
     deleteContentFile:   deleteContentFile,
     getLayoutList:       getLayoutList,
+    getRootLayoutList:   getRootLayoutList,
     newLayoutFile:       newLayoutFile,
     gitAdd:              gitAdd,
     newContentFile:      newContentFile,
