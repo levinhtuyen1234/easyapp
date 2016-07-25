@@ -4,8 +4,8 @@
         <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
     </div>
     <div class="list-group" style="overflow: auto;">
-        <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}">
-            <span class={getFileIcon(name)} ></span> {hideExt(name)}
+        <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}" style="{}">
+            <span class={getFileIcon(name, path)} ></span> {isPartial(path) ? 'partial - ' : ''} {hideExt(name)}
         </a>
     </div>
     <script>
@@ -17,10 +17,19 @@
         var $root = $(me.root);
         var curFilePath = '';
 
-        me.getFileIcon = function (name) {
+        me.isPartial = function(path) {
+            console.log(path);
+            return path.indexOf('layout/partial/') != -1;
+        };
+
+        me.getFileIcon = function (name, path) {
             var ext = name.split('\.').pop().toLowerCase();
             switch(ext) {
                 case 'html':
+                    if (me.isPartial(path))
+                    return 'octicon octicon-file-text';
+                        else
+                    return 'octicon octicon-file-code';
                 case 'css':
                 case 'js':
                     return 'octicon octicon-file-code';

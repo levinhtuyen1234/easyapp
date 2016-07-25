@@ -15,9 +15,9 @@
         <!--</div>-->
         <div class="panel-body" style="padding: 0;">
             <div class="tab-content">
-                <file-list-flat id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
-                <file-list-flat id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <file-list-flat id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+                <file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
+                <file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+                <file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
             </div>
         </div>
     </div>
