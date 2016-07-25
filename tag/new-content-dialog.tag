@@ -11,7 +11,7 @@
                         <label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>
                         <div class="col-sm-10">
                             <select id="contentLayoutElm" class="selectpicker" onchange="{edit.bind(this,'contentLayout')}">
-                                <option each="{value in layoutList}" value="{value}">{value}</option>
+                                <option each="{value in layoutList}" value="{value}">{hideExt(value)}</option>
                             </select>
                         </div>
                     </div>
@@ -62,6 +62,13 @@
                     me[name] = e.target.value;
             }
             me.updateFileName();
+        };
+
+        me.hideExt = function(name) {
+            var parts = name.split('.');
+            if (parts.length > 1)
+                parts.pop();
+            return parts[0]
         };
 
         me.add = function () {
