@@ -348,9 +348,10 @@ function newLayoutFile(siteName, layoutFileName) {
 
 function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, isFrontPage) {
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
-    var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
-    var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
+    // var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    // var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
+    var slug = contentBaseName;
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
@@ -638,6 +639,10 @@ function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
     Fs.writeFileSync(configFullPath, metaConfig);
 }
 
+function checkGhPageStatus(siteName) {
+
+}
+
 module.exports = {
     getMetaFile:         getMetaFile,
     getMetaConfigFile:   getMetaConfigFile,
@@ -671,5 +676,6 @@ module.exports = {
     getSiteAssetFiles:   getSiteAssetFiles,
     getSiteContentFiles: getSiteContentFiles,
     readFile:            readFile,
-    copyAssetFile:       copyAssetFile
+    copyAssetFile:       copyAssetFile,
+    checkGhPageStatus:   checkGhPageStatus
 };

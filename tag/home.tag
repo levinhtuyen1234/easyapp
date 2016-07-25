@@ -108,16 +108,19 @@
         me.currentFilePath = '';
         me.currentLayout = '';
         me.currentFileTitle = '';
+        me.githubInited = false;
         me.siteName = me.opts.siteName;
 
         me.on('mount', function () {
 //            riot.mount('side-bar', {siteName: opts.siteName});
 //            riot.mount('breadcrumb', {path: opts.siteName});
             // open index.md file
+
+            // check xem git chua
             setTimeout(function () {
 //                me.openFile('content/index.md');
 //                me.tags['side-bar'].activeFile('content/index.md');
-            }, 1000);
+            }, 1);
         });
 
         me.goToLandingPage = function () {

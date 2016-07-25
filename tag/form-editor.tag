@@ -218,7 +218,7 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
-            setTimeout(function(){
+            setTimeout(function () {
                 $(me.root.querySelectorAll('.CodeMirror')).addClass('CodeMirrorForm');
                 $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('CodeMirrorForm');
             }, 0);
