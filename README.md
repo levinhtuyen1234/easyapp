@@ -32,3 +32,10 @@ Nên chạy với chế độ debug ```DEBUB.cmd``` để dễ dàng refresh (Ct
 do github.io/repo-name nên cần điều chỉnh trong global.json cho phù hợp và build lại
 
  ![](https://raw.githubusercontent.com/easywebhub/easyapp/master/documents/ewa-github-url.png)
+ 
+ #### 6. Build ra application
+pc build app cần chạy command này 1 lần, console quyền admin
+```
+npm install -g electron-packager
+```
+để build file chạy script:  ```scripts/EWH-package.bat```
