@@ -472,6 +472,9 @@
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.api.trigger('closeNewLayoutDialog');
+                setTimeout(function(){
+                    me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + layoutFileName);
+                }, 100);
             } catch (ex) {
                 console.log('addLayout', ex);
                 bootbox.alert('create layout failed, error ' + ex.message);

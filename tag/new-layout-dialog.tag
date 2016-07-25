@@ -12,7 +12,7 @@
                         <label for="layout-filename" class="col-sm-2 control-label">FileName</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="layout-filename" placeholder="FileName" oninput="{updateFileName}" value="{layoutFileName}">
+                                <input type="text" class="form-control" id="layout-filename" placeholder="FileName" oninput="{updateFileName}">
                                 <span class="input-group-addon">.html</span>
                             </div>
                         </div>
@@ -48,19 +48,24 @@
             var combining = /[\u0300-\u036F]/g;
             title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').trim();
             me.layoutFileName = title;
+//
             me.update();
         };
 
-        riot.api.on('closeNewLayoutDialog', function() {
+        riot.api.on('closeNewLayoutDialog', function () {
             console.log('closeNewLayoutDialog');
             $(me.root).modal('hide');
         });
 
         me.show = function () {
             me.layoutFileName = '';
-            me.update();
             $(me.root).modal('show');
             $(me.root).find('.selectpicker').selectpicker();
+            var fieldFileName = $(me['layout-filename']);
+            fieldFileName.val('');
+            setTimeout(function () {
+                fieldFileName.focus();
+            }, 500);
         }
     </script>
 </new-layout-dialog>

@@ -3,9 +3,9 @@
         <span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>
         <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
     </div>
-    <div class="list-group" style="overflow: auto;">
+    <div class="list-group" style="overflow: auto; height: 85vh;">
         <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}" style="{}">
-            <span class={getFileIcon(name, path)} ></span> {isPartial(path) ? 'partial - ' : ''} {hideExt(name)}
+            <span class={getFileIcon(name, path)}></span> {isPartial(path) ? 'partial - ' : ''} {hideExt(name)}
         </a>
     </div>
     <script>
@@ -17,19 +17,18 @@
         var $root = $(me.root);
         var curFilePath = '';
 
-        me.isPartial = function(path) {
-            console.log(path);
+        me.isPartial = function (path) {
             return path.indexOf('layout/partial/') != -1;
         };
 
         me.getFileIcon = function (name, path) {
             var ext = name.split('\.').pop().toLowerCase();
-            switch(ext) {
+            switch (ext) {
                 case 'html':
                     if (me.isPartial(path))
-                    return 'octicon octicon-file-text';
-                        else
-                    return 'octicon octicon-file-code';
+                        return 'octicon octicon-file-text';
+                    else
+                        return 'octicon octicon-file-code';
                 case 'css':
                 case 'js':
                     return 'octicon octicon-file-code';
@@ -71,13 +70,19 @@
             };
         })();
 
-        var sortByExt = function(a, b) {
+        var sortByExt = function (a, b) {
             var aSide = a.name.split('\.');
             var bSide = b.name.split('\.');
             return aSide[0] > bSide[0] || aSide[1] > bSide[1];
         };
 
-        me.hideExt = function(name) {
+        var sortLayout = function (a, b) {
+            if (a.path.startsWith('layout/partial'))
+                return 1;
+            return a.path > b.path;
+        };
+
+        me.hideExt = function (name) {
             var parts = name.split('.');
             if (parts.length > 1)
                 parts.pop();
@@ -85,9 +90,11 @@
         };
 
         me.loadFiles = function (files) {
-            console.log('files', files);
             me.clear();
-            files = files.sort(sortByExt);
+            if (me.opts.type == 'layout')
+                files = files.sort(sortLayout);
+            else
+                files = files.sort(sortByExt);
             me.files = files;
             me.filteredFiles = files;
             me.update();
@@ -98,13 +105,17 @@
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.list-group-item').removeClass('active');
-            $(e.target).addClass('active');
+            $(e.currentTarget).addClass('active');
             me.event.trigger('openFile', filePath);
         };
 
         me.activeFile = function (filePath) {
-            var elm = $root.find('li[data-path="' + filePath + '"]');
+            console.log("filePath", filePath);
+            console.log("query '[data-path=\"' + filePath + '\"]'");
+            var elm = $root.find('[data-path="' + filePath + '"]');
             $root.find('.list-group-item').removeClass('active');
+            window.elm = elm;
+            console.log('elm', elm);
             $(elm).addClass('active');
         };
 
