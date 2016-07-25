@@ -3,9 +3,11 @@
         <span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>
         <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
     </div>
-    <ul class="list-group" style="overflow: auto;">
-        <li each="{filteredFiles}" class="list-group-item file-list-group-item" data-path="{path}" onclick="{openFile}">{name}</li>
-    </ul>
+    <div class="list-group" style="overflow: auto;">
+        <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}">
+            <span class={getFileIcon(name)} ></span> {hideExt(name)}
+        </a>
+    </div>
     <script>
         var me = this;
         me.event = riot.observable();
@@ -14,6 +16,22 @@
 
         var $root = $(me.root);
         var curFilePath = '';
+
+        me.getFileIcon = function (name) {
+            var ext = name.split('\.').pop().toLowerCase();
+            switch(ext) {
+                case 'html':
+                case 'css':
+                case 'js':
+                    return 'octicon octicon-file-code';
+                case 'json':
+                    return 'octicon octicon-settings';
+                case 'md':
+                    return 'octicon octicon-markdown';
+                default:
+                    return 'octicon octicon-file-text';
+            }
+        };
 
         var fuzzySearch = function (needle, haystack) {
             var hLen = haystack.length;
@@ -44,8 +62,23 @@
             };
         })();
 
+        var sortByExt = function(a, b) {
+            var aSide = a.name.split('\.');
+            var bSide = b.name.split('\.');
+            return aSide[0] > bSide[0] || aSide[1] > bSide[1];
+        };
+
+        me.hideExt = function(name) {
+            var parts = name.split('.');
+            if (parts.length > 1)
+                parts.pop();
+            return parts[0]
+        };
+
         me.loadFiles = function (files) {
+            console.log('files', files);
             me.clear();
+            files = files.sort(sortByExt);
             me.files = files;
             me.filteredFiles = files;
             me.update();
