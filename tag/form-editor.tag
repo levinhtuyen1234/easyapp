@@ -205,7 +205,8 @@
     <style>
         .CodeMirrorForm {
             height: 130px;
-            max-height: 130px;
+            /*max-height: 130px;*/
+            resize: vertical;
             min-height: 130px !important;
         }
     </style>
@@ -219,6 +220,7 @@
         me.on('mount', function () {
             setTimeout(function(){
                 $(me.root.querySelectorAll('.CodeMirror')).addClass('CodeMirrorForm');
+                $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('CodeMirrorForm');
             }, 0);
 
             switch (typeof(me.value)) {
@@ -239,7 +241,7 @@
                 value:                   me.value,
                 rtlMoveVisually:         false,
                 showCursorWhenSelecting: false,
-                lineWrapping:            true,
+                lineWrapping:            false,
                 lineNumbers:             true,
                 fixedGutter:             true,
                 foldGutter:              false,
