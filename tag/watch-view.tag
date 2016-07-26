@@ -17,10 +17,12 @@
     <!--<a>Open In Browser</a>-->
     <!--</label>-->
     <!--</div>-->
-
-    <pre style="height: 70vh; overflow: auto;">
-        <code class="accesslog hljs"></code>
-    </pre>
+    <div class="tab-content">
+        <pre style="height: 300px; overflow: auto;">
+            <code class="accesslog hljs"></code>
+        </pre>
+        <webview id="webview" src="about:blank" style="display:flex; height:calc(100vh - 500px)"></webview>
+    </div>
     <script>
         var ChildProcess = require('child_process');
         var Path = require('path');
@@ -58,7 +60,7 @@
                 if (reviewUrl != null) {
                     console.log('found review url', reviewUrl[1]);
                     riot.api.trigger('watchSuccess', reviewUrl[1]);
-                    me.iframeUrl = reviewUrl[1];
+                    me.webview.src = reviewUrl[1];
                     me.update();
                 }
                 me.append(str);
@@ -88,18 +90,18 @@
             }
             me.append('close exists process\r\n');
         }
-//        me.npmInstall = function () {
-//            console.log('npmInstall');
-//            console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
-//            spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
-//        };
+        //        me.npmInstall = function () {
+        //            console.log('npmInstall');
+        //            console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
+        //            spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
+        //        };
 
         // close watch process truoc khi app exit
         window.onbeforeunload = function (e) {
             me.closeWatchProcess();
         };
 
-        riot.api.on('RefreshWatch', function() {
+        riot.api.on('RefreshWatch', function () {
             me.append('refresh watch');
             me.closeWatchProcess();
             me.clear();
@@ -112,7 +114,7 @@
                     return;
                 closeProcess(watchProcess);
                 watchProcess = null;
-            } catch(ex) {
+            } catch (ex) {
                 console.log('watch error', ex);
                 watchProcess = null;
             }
@@ -144,6 +146,7 @@
         me.on('mount', function () {
             me.output = me.root.querySelector('code');
             me.output.innerHTML = '';
+            window.webview = me.webview;
         });
 
         me.clearLog = function () {
@@ -157,14 +160,15 @@
             scrollToBottom();
         };
 
-        me.clear = function() {
-          me.output.innerHTML = '';
+        me.clear = function () {
+            me.output.innerHTML = '';
         };
 
         me.openExternalBrowser = function () {
-            if (me.iframeUrl != 'about:blank') {
+            console.log('openExternalBrowser', me.webview.src);
+            if (me.webview.src != 'about:blank') {
                 const {shell} = require('electron');
-                shell.openExternal(me.iframeUrl);
+                shell.openExternal(me.webview.src);
             }
         };
 

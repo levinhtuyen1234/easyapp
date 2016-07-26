@@ -53,7 +53,7 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2">
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" style="height: calc(100vh - 180px)">
                 <side-bar site_name={opts.siteName}></side-bar>
             </div>
 
