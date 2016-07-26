@@ -2,7 +2,7 @@
     <style>
         .fieldMarkDown {
             resize: vertical;
-            min-height: 290px !important;
+            min-height: 300px !important;
         }
     </style>
     <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
@@ -326,6 +326,7 @@
                 // TODO copy file to asset/images and fix url to relative
                 var fileName = filePath.split(/[\\\/]/).pop();
                 me.value = '/asset/img/' + fileName;
+                me['form-' + me.config.name].value = me.value;
                 riot.api.trigger('copyAssetFile', filePath, me.value);
                 // copy file vo asset
                 me.update();
