@@ -42,7 +42,7 @@
                         <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
                             Deploy
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting">
+                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting" hide="{gitHubInited}">
                             Init
                         </a>
                     </div>
@@ -116,7 +116,7 @@
         me.currentFilePath = '';
         me.currentLayout = '';
         me.currentFileTitle = '';
-        me.githubInited = false;
+        me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
         me.on('mount', function () {
@@ -125,10 +125,15 @@
             // open index.md file
 
             // check xem git chua
-            setTimeout(function () {
+            BackEnd.isGhPageInitialized(me.opts.siteName + '/build').then(function (initialized) {
+                console.log('home github initialized', initialized);
+                me.gitHubInited = initialized;
+                me.update();
+            });
+//            setTimeout(function () {
 //                me.openFile('content/index.md');
 //                me.tags['side-bar'].activeFile('content/index.md');
-            }, 1);
+//            }, 1);
         });
 
         me.goToLandingPage = function () {
@@ -161,7 +166,7 @@
             return SplitContentFile(fileContent);
         }
 
-        me.refreshWatchView = function() {
+        me.refreshWatchView = function () {
             me.openWatchView();
             riot.api.trigger('RefreshWatch');
         };
@@ -485,7 +490,7 @@
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.api.trigger('closeNewLayoutDialog');
-                setTimeout(function(){
+                setTimeout(function () {
                     me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + layoutFileName);
                 }, 100);
             } catch (ex) {
@@ -580,5 +585,7 @@
             me.openExternalReviewBtn.disabled = true;
             $(openWatchViewBtn).removeClass('active');
         });
+
+        // check gh-page branch in build -> hide/show git init button
     </script>
 </home>

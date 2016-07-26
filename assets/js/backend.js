@@ -427,30 +427,31 @@ function MkdirpSync(p, opts, made) {
 function SpawnShell(command, args, opts) {
     opts = opts || {};
     return new BlueBird((resolve, reject) => {
-        var newProcess = ChildProcess.spawn(command, args, {
+        let out = '';
+        let newProcess = ChildProcess.spawn(command, args, {
             env:   opts.env ? opts.env : {},
             cwd:   opts.cwd ? opts.cwd : {},
             shell: true
         });
 
         newProcess.stdout.on('data', function (data) {
-            console.log('data', String.fromCharCode.apply(null, data));
-            if (opts.onProgress) {
-                opts.onProgress(String.fromCharCode.apply(null, data));
-            }
+            let str = String.fromCharCode.apply(null, data);
+            out += str;
+            if (opts.onProgress)
+                opts.onProgress(str);
         });
 
         newProcess.stderr.on('data', function (data) {
-            console.log('data', String.fromCharCode.apply(null, data));
-            if (opts.onProgress) {
-                opts.onProgress(String.fromCharCode.apply(null, data));
-            }
+            let str = String.fromCharCode.apply(null, data);
+            out += str;
+            if (opts.onProgress)
+                opts.onProgress(str);
         });
 
         newProcess.on('exit', (code) => {
             console.log(`Child exited with code ${code}`);
             if (code === 0)
-                resolve();
+                resolve(out);
             else
                 reject(code);
         });
@@ -639,8 +640,10 @@ function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
     Fs.writeFileSync(configFullPath, metaConfig);
 }
 
-function checkGhPageStatus(siteName) {
-
+function isGhPageInitialized(siteName) {
+    return spawnGitCmd('git', ['branch'], getSitePath(siteName)).then(data => {
+        return data.indexOf('* gh-pages') !== -1;
+    })
 }
 
 module.exports = {
@@ -677,5 +680,5 @@ module.exports = {
     getSiteContentFiles: getSiteContentFiles,
     readFile:            readFile,
     copyAssetFile:       copyAssetFile,
-    checkGhPageStatus:   checkGhPageStatus
+    isGhPageInitialized: isGhPageInitialized
 };
