@@ -65,8 +65,8 @@
             });
 
             newProcess.stderr.on('data', function (data) {
-                console.log(data);
-                me.appendError(data);
+                var str = String.fromCharCode.apply(null, data);
+                me.appendError(str);
                 riot.api.trigger('watchFailed');
                 me.closeWatchProcess();
             });
@@ -74,11 +74,9 @@
             return newProcess;
         }
 
-        me.npmInstall = function () {
-            console.log('npmInstall');
-            console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
-            spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
-        };
+        function scrollToBottom() {
+            me.output.parentNode.scrollTop = me.output.parentNode.scrollHeight
+        }
 
         function closeProcess(proc) {
             proc.stdin.pause();
@@ -90,6 +88,23 @@
             }
             me.append('close exists process\r\n');
         }
+//        me.npmInstall = function () {
+//            console.log('npmInstall');
+//            console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
+//            spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
+//        };
+
+        // close watch process truoc khi app exit
+        window.onbeforeunload = function (e) {
+            me.closeWatchProcess();
+        };
+
+        riot.api.on('RefreshWatch', function() {
+            me.append('refresh watch');
+            me.closeWatchProcess();
+            me.clear();
+            me.watch();
+        });
 
         me.closeWatchProcess = function () {
             try {
@@ -99,6 +114,7 @@
                 watchProcess = null;
             } catch(ex) {
                 console.log('watch error', ex);
+                watchProcess = null;
             }
         };
 
@@ -125,11 +141,6 @@
             spawnProcess('gulp.cmd', ['build', '--production']);
         };
 
-        // close watch process truoc khi app exit
-        window.onbeforeunload = function (e) {
-            me.closeWatchProcess();
-        };
-
         me.on('mount', function () {
             me.output = me.root.querySelector('code');
             me.output.innerHTML = '';
@@ -139,15 +150,15 @@
             me.output.innerHTML = '';
         };
 
-        function scrollToBottom() {
-            me.output.parentNode.scrollTop = me.output.parentNode.scrollHeight
-        }
-
         me.append = function (text) {
             var span = document.createElement('span');
             span.innerHTML = text;
             me.output.appendChild(span);
             scrollToBottom();
+        };
+
+        me.clear = function() {
+          me.output.innerHTML = '';
         };
 
         me.openExternalBrowser = function () {

@@ -176,9 +176,9 @@
             if (me.config.displayType === 'Date')
                 config.format = 'DD-MM-YYYY';
             else if (me.config.displayType === 'Time')
-                config.format = 'hh:mm A';
+                config.format = 'hh:mm:ss A';
             else
-                config.format = 'DD-MM-YYYY hh:mm A';
+                config.format = 'DD-MM-YYYY hh:mm:ss A';
             $(elm).datetimepicker(config)
                     .on('dp.change', function (e) {
                         me.value = e.date.format(config.format);

@@ -23,6 +23,14 @@
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Watch
                         </a>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="#" onclick="{refreshWatchView}"><i class="fa fa-refresh"></i> Refresh</a></li>
+                            </ul>
+                        </div>
                         <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open external browser to review" onclick="{openExternalReview}" disabled>
                             <i class="fa fa-fw fa-external-link"></i> Open on Browser
                         </button>
@@ -152,6 +160,11 @@
             // split content thanh meta va markdown
             return SplitContentFile(fileContent);
         }
+
+        me.refreshWatchView = function() {
+            me.openWatchView();
+            riot.api.trigger('RefreshWatch');
+        };
 
         me.openLayoutTab = function () {
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
