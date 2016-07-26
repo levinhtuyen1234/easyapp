@@ -204,8 +204,6 @@
     </div>
     <style>
         .CodeMirrorForm {
-            height: 130px;
-            /*max-height: 130px;*/
             resize: vertical;
             min-height: 130px !important;
         }
@@ -221,6 +219,13 @@
             setTimeout(function () {
                 $(me.root.querySelectorAll('.CodeMirror')).addClass('CodeMirrorForm');
                 $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('CodeMirrorForm');
+
+                $(me.root.querySelectorAll('.CodeMirror')).resizable({
+                    handles: 's',
+                    resize:  function () {
+                        editor.setSize('100%', $(this).height());
+                    }
+                });
             }, 0);
 
             switch (typeof(me.value)) {

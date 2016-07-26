@@ -170,8 +170,6 @@ html, body {
 
 /* End Sticky footer styles */
 
-
-
 /* start xs navbar */
 .navbar-xs, .navbar-header {
     min-height: 28px;
@@ -229,4 +227,8 @@ html, body {
 
 .pricing-card.active {
     border-color: #51a7e8
+}
+
+textarea {
+    resize: vertical;
 }
