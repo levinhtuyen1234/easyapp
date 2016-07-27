@@ -9,7 +9,7 @@
             <div class="row">
                 <div class="col-md-4 pull-left">
                     <a href="#" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-fw fa-home"></i>
+                        <i class="fa fa-fw fa-home"></i>Home
                     </a>
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-plus"></i> Add Content
@@ -21,7 +21,7 @@
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Watch
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -32,7 +32,7 @@
                             </ul>
                         </div>
                         <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open external browser to review" onclick="{openExternalReview}" disabled>
-                            <i class="fa fa-fw fa-external-link"></i> Open on Browser
+                            <i class="fa fa-fw fa-external-link"></i> On Browser
                         </button>
                     </div>
                     <div class="btn-group" data-toggle="buttons">

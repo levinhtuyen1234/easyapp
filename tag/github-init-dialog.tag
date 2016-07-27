@@ -10,7 +10,7 @@
                     <div class="form-group is-empty">
                         <label for="form-repo-url" class="control-label col-sm-4">Repository url (HTTPS)</label>
                         <div class="col-sm-8">
-                            <input type="url" class="form-control" id="form-repo-url" placeholder="" oninput="{edit.bind(this,'repoUrl')}" value="{repoUrl}">
+                            <input type="url" class="form-control" id="form-repo-url" placeholder="Empty Github repository that ends with .git " oninput="{edit.bind(this,'repoUrl')}" value="{repoUrl}">
                             <span class="material-input"></span>
                         </div>
                     </div>

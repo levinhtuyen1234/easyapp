@@ -5,7 +5,7 @@
     </div>
     <div class="list-group" style="overflow: auto; height: 85vh;">
         <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}" style="{}">
-            <span class={getFileIcon(name, path)}></span> {isPartial(path) ? 'partial - ' : ''} {hideExt(name)}
+            <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {isPartial(path) ? '[Partial] ' : ''} {hideExt(name)}
         </a>
     </div>
     <script>
