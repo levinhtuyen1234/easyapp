@@ -20,8 +20,11 @@
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}">
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'user')}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
+                        </a>
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}">
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> BuildDev
                         </a>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -183,12 +186,15 @@
             ShowTab('layout-view');
         };
 
-        me.openWatchView = function (e) {
+        me.openWatchView = function (mode) {
+            console.log('watch view', mode);
             $(me.root.querySelector('#editor-view')).hide();
             $(me.root.querySelector('#watch-view')).show();
             ShowTab('watch-view');
-            me.tags['watch-view'].watch();
-//            var selected = e.target.querySelector('input').checked;
+            if (mode === 'user')
+                me.tags['watch-view'].watch();
+            else if (mode === 'dev')
+                me.tags['watch-view'].watchDev();
         };
 
         me.openAssetFile = function (filePath) {
@@ -597,8 +603,7 @@
         riot.api.on('watchFailed', function () {
             me.openExternalReviewBtn.disabled = true;
             $(openWatchViewBtn).removeClass('active');
+            $(openWatchViewDevBtn).removeClass('active');
         });
-
-        // check gh-page branch in build -> hide/show git init button
     </script>
 </home>

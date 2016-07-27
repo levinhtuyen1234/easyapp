@@ -129,19 +129,28 @@
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
+        me.watchDev = function () {
+            if (watchProcess != null) return;
+            me.clearLog();
+            me.closeWatchProcess();
+
+            me.append('watch dev starting...\r\n');
+            watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+        };
+
         // TODO on unmount close watch process
 
-        me.buildDev = function () {
-            me.clearLog();
-            me.closeWatchProcess();
-            spawnProcess('gulp.cmd', ['build']);
-        };
-
-        me.buildProd = function () {
-            me.clearLog();
-            me.closeWatchProcess();
-            spawnProcess('gulp.cmd', ['build', '--production']);
-        };
+//        me.buildDev = function () {
+//            me.clearLog();
+//            me.closeWatchProcess();
+//            spawnProcess('gulp.cmd', ['build']);
+//        };
+//
+//        me.buildProd = function () {
+//            me.clearLog();
+//            me.closeWatchProcess();
+//            spawnProcess('gulp.cmd', ['build', '--production']);
+//        };
 
         me.on('mount', function () {
             me.output = me.root.querySelector('code');
