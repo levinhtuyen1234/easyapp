@@ -3,7 +3,7 @@
 set "PATH=%PATH%;%~dp0..\tools\7z\"
 rem set working directory to project dir
 pushd %~dp0..
-call electron-packager . ewh --platform=win32 --arch=x64 --ignore=ewh-win32-x64 --ignore=dist --ignore=tools --ignore=data --ignore=.idea --ignore=sites --ignore=scripts --asar=true --overwrite
+call electron-packager . EasyWebBuilder --platform=win32 --arch=x64 --ignore=ewh-win32-x64 --ignore=dist --ignore=tools --ignore=data --ignore=.idea --ignore=sites --ignore=scripts --asar=true --overwrite
 popd
 echo compressing
 pushd %~dp0..\ewh-win32-x64
