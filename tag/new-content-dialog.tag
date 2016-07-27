@@ -3,7 +3,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">Create New Content Using Defined Layout</h2>
+                <h2 class="modal-title">Create new page</h2>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
@@ -18,19 +18,19 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <label for="isFrontPageElm">
-                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> At root (/) folder, used for a Single Page
+                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> To create a single Page, check here
                             </label>
                             <label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="contentTitleElm" class="col-sm-2 control-label">Title</label>
+                        <label for="contentTitleElm" class="col-sm-2 control-label">Page Title</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;" value="{contentTitle}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="contentFilenameElm" class="col-sm-2 control-label">FileName</label>
+                        <label for="contentFilenameElm" class="col-sm-2 control-label">File Name</label>
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">

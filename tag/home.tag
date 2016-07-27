@@ -11,19 +11,19 @@
                     <a href="#" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-home"></i>Home
                     </a>
-                    <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-fw fa-plus"></i> Add Content
+                    <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
+                        <i class="fa fa-fw fa-plus"></i> Add Page
                     </a>
-                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page">
                         <i class="fa fa-fw fa-plus"></i> Add Layout
                     </a>
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'user')}">
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}" title="Build this website on local PC to preview">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}">
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> BuildDev
                         </a>
                         <div class="btn-group" role="group">
@@ -31,21 +31,21 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#" onclick="{refreshWatchView}"><i class="fa fa-refresh"></i> Refresh</a></li>
+                                <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-refresh"></i> Refresh</a></li>
                             </ul>
                         </div>
-                        <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open external browser to review" onclick="{openExternalReview}" disabled>
+                        <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
                             <i class="fa fa-fw fa-external-link"></i> On Browser
                         </button>
                     </div>
                     <div class="btn-group" data-toggle="buttons">
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Sync project to GitHub">
+                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Synchronize to Cloud">
                             <i class="fa fa-fw fa-github"></i> Sync
                         </a>
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy to gh-pages">
+                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy website to live domain">
                             Deploy
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init github setting" hide="{gitHubInited}">
+                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">
                             Init
                         </a>
                     </div>
@@ -56,12 +56,12 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-2" style="height: calc(100vh - 180px)">
+            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="height: calc(100vh - 180px)">
                 <side-bar site_name={opts.siteName}></side-bar>
             </div>
 
             <div class="tab-content">
-                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-10 tab-pane" id="editor-view" role="tabpanel">
+                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-3 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{curTab == 'content-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
