@@ -21,7 +21,7 @@
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i>Watch
+                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
