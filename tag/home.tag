@@ -546,6 +546,19 @@
             me.tags['progress-dialog'].show('Sync to GitHub');
             BackEnd.gitPushGitHub(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
+                // refresh current file to load new changes
+                if (me.currentFilePath) {
+                    switch (me.curTab) {
+                        case 'content-view':
+                        case 'meta-view':
+                        case 'code-view':
+                        case 'layout-view':
+                            me.openFile(me.currentFilePath);
+                            break;
+                        default:
+                            return;
+                    }
+                }
             }).catch(function (err) {
                 console.log(err);
                 me.tags['progress-dialog'].enableClose();
