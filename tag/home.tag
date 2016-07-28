@@ -143,12 +143,7 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
-        me.on('mount', function () {
-//            riot.mount('side-bar', {siteName: opts.siteName});
-//            riot.mount('breadcrumb', {path: opts.siteName});
-            // open index.md file
-
-            // check xem git chua
+        me.checkGhPageStatus = function(){
             BackEnd.isGhPageInitialized(me.opts.siteName + '/build').then(function (initialized) {
                 console.log('home github initialized', initialized);
                 me.gitHubInited = initialized;
@@ -160,6 +155,15 @@
                     me.update();
                 }
             });
+        };
+
+        me.on('mount', function () {
+//            riot.mount('side-bar', {siteName: opts.siteName});
+//            riot.mount('breadcrumb', {path: opts.siteName});
+            // open index.md file
+
+            // check xem git chua
+           me.checkGhPageStatus();
 //            setTimeout(function () {
 //                me.openFile('content/index.md');
 //                me.tags['side-bar'].activeFile('content/index.md');
@@ -606,6 +610,7 @@
                 me.tags['progress-dialog'].show('Init GitHub Setting');
                 BackEnd.gitInitSite(me.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();
+                    me.checkGhPageStatus();
                 }).catch(function (err) {
                     console.log(err);
                     me.tags['progress-dialog'].enableClose();
