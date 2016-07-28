@@ -23,15 +23,16 @@
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">
-                            <input type="radio" name="options">Build Dev
-                        </a>
+                        <!--<a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">-->
+                            <!--<input type="radio" name="options">Build Dev-->
+                        <!--</a>-->
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-refresh"></i> Refresh</a></li>
+                                <li><a href="#" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)"><i class="fa fa-fw fa-cubes"></i> Build Dev</a></li>
+                                <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-fw fa-refresh"></i> Refresh</a></li>
                             </ul>
                         </div>
                         <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
@@ -629,7 +630,6 @@
         riot.api.on('watchFailed', function () {
             me.openExternalReviewBtn.disabled = true;
             $(openWatchViewBtn).removeClass('active');
-            $(openWatchViewDevBtn).removeClass('active');
         });
     </script>
 </home>
