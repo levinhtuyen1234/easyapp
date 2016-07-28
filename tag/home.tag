@@ -56,12 +56,12 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 col-sm-3 col-md-3 col-lg-3" style="height: calc(100vh - 180px)">
+            <div class="col-xs-4 col-sm-4 col-md-4 col-lg-2" style="height: calc(100vh - 180px)">
                 <side-bar site_name={opts.siteName}></side-bar>
             </div>
 
             <div class="tab-content">
-                <div class="col-xs-8 col-sm-9 col-md-9 col-lg-3 tab-pane" id="editor-view" role="tabpanel">
+                <div class="col-xs-8 col-sm-8 col-md-8 col-lg-10 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{curTab == 'content-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
