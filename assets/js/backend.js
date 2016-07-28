@@ -434,6 +434,10 @@ function SpawnShell(command, args, opts) {
             shell: true
         });
 
+        newProcess.on('error', function(err) {
+            reject(err);
+        });
+
         newProcess.stdout.on('data', function (data) {
             let str = String.fromCharCode.apply(null, data);
             out += str;
