@@ -82,47 +82,13 @@
 
 <script>
     var BackEnd = require('./assets/js/backend.js');
-    //    window.dialog = require('electron').remote.dialog;
-    //    console.log('dialog.showOpenDialog', dialog.showOpenDialog);
-    //    dialog.showOpenDialog({
-    //        properties: ['openFile'],
-    //        filters:    [
-    //            {name: 'All Media Files', extensions: ['*']}
-    //        ]
-    //    });
     window.BackEnd = BackEnd;
 
-    var Path = require('path');
+    window.User = require('./user-test');
+    // TO SHOW ALL UNCOMMENT LINE BELLOW
+//    window.User.accountType = 'dev';
 
     var curPage;
-
-    //    function InitRepository(name) {
-    //        return new BlueBird(function (resolve, reject) {
-    //            var errHandler = function (err) {
-    //                if (err) reject(err);
-    //            };
-    //            SimpleGit(Path.join(SiteDir, name))
-    //                    .customBinary(GitBin)
-    //                    .init(false, errHandler)
-    //                    .add()
-    //                    .commit('init', function (err, ret) {
-    //                        if (err) reject(err);
-    //                        else resolve(ret);
-    //                    });
-    //        });
-    //    }
-
-    //    function CloneRepository(repositoryUrl, localPath) {
-    //        return new BlueBird(function (resolve, reject) {
-    //            SimpleGit(Path.join(SiteDir, name))
-    //                    .customBinary(GitBin)
-    //                    .clone(repositoryUrl, localPath, function (err, ret) {
-    //                        if (err) reject(err);
-    //                        else resolve(ret)
-    //                    });
-    //        });
-    //    }
-
     var formMixin = {
         edit: function (keyPath, e) {
             var value;
@@ -171,8 +137,8 @@
     });
 
     riot.compile(function () {
-  //      curPage = riot.mount('window-login')[0];
-        curPage = riot.mount('landing')[0];
+        curPage = riot.mount('window-login')[0];
+//        curPage = riot.mount('landing')[0];
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
     });
 

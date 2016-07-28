@@ -14,13 +14,13 @@
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
                         <i class="fa fa-fw fa-plus"></i> Add Page
                     </a>
-                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page">
+                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Add Layout
                     </a>
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}" title="Build this website on local PC to preview">
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}" title="Build this website on local PC to preview" hide="{User.accountType == 'user'}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)">
@@ -72,10 +72,29 @@
                         <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
                             <input type="radio" name="options">Raw
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{curTab == 'content-view' || (curTab == 'code-view' && currentFilePath.endsWith('.md')) || (curTab == 'config-view' && currentFilePath.endsWith('.md'))}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{
+                            User.accountType == 'dev' && (
+                                curTab == 'content-view' || (
+                                    curTab == 'code-view' &&
+                                    currentFilePath.endsWith('.md')
+                                ) || (
+                                    curTab == 'config-view' &&
+                                    currentFilePath.endsWith('.md')
+                                )
+                            )}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{curTab == 'meta-view' || curTab == 'config-view' || curTab == 'content-view' || (curTab == 'code-view' && (currentFilePath.endsWith('.json') || currentFilePath.endsWith('.md')))}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{
+                            User.accountType == 'dev' && (
+                                curTab == 'meta-view' ||
+                                curTab == 'config-view' ||
+                                curTab == 'content-view' || (
+                                    curTab == 'code-view' && (
+                                        currentFilePath.endsWith('.json') ||
+                                        currentFilePath.endsWith('.md')
+                                    )
+                                )
+                            )}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
                         </a>
                     </div>
@@ -110,6 +129,7 @@
 
     <script>
         var me = this;
+        me.test = true;
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
@@ -140,7 +160,7 @@
         });
 
         me.goToLandingPage = function () {
-//            me.unmount(true);
+            me.unmount(true);
             riot.api.trigger('showLandingPage');
         };
 

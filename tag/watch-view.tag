@@ -125,7 +125,7 @@
             me.clearLog();
             me.closeWatchProcess();
 
-            me.append('watch starting...\r\n');
+            me.append('build starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
@@ -134,7 +134,7 @@
             me.clearLog();
             me.closeWatchProcess();
 
-            me.append('watch dev starting...\r\n');
+            me.append('build dev starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
