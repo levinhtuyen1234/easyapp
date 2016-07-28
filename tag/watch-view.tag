@@ -31,6 +31,8 @@
         var output = '';
         var watchProcess;
 
+        var lastWatchMode = '';
+
         me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : 'about:blank';
 
         var nodePath = Path.resolve(Path.join('tools', 'nodejs', 'node_modules'));
@@ -105,7 +107,10 @@
             me.append('refresh watch');
             me.closeWatchProcess();
             me.clear();
-            me.watch();
+            if (lastWatchMode == 'user')
+                me.watch();
+            else if (lastWatchMode == 'dev')
+                me.watchDev();
         });
 
         me.closeWatchProcess = function () {
@@ -121,22 +126,24 @@
         };
 
         me.watch = function () {
-            if (watchProcess != null) return;
+            if (watchProcess != null && lastWatchMode == 'user') return;
             me.clearLog();
             me.closeWatchProcess();
 
             me.append('build starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
+            lastWatchMode = 'user';
         };
 
         me.watchDev = function () {
-            if (watchProcess != null) return;
+            if (watchProcess != null && lastWatchMode == 'admin') return;
             me.clearLog();
             me.closeWatchProcess();
             console.log('WATCH DEV NEED gulpfile.dev.js');
 
             me.append('build dev starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+            lastWatchMode = 'dev';
         };
 
         // TODO on unmount close watch process
