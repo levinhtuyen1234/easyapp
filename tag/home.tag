@@ -20,7 +20,7 @@
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView}" title="Build this website on local PC to preview">
+                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">

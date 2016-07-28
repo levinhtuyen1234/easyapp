@@ -133,6 +133,7 @@
             if (watchProcess != null) return;
             me.clearLog();
             me.closeWatchProcess();
+            console.log('WATCH DEV NEED gulpfile.dev.js');
 
             me.append('build dev starting...\r\n');
             watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
