@@ -24,7 +24,7 @@
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build Dev
+                            <input type="radio" name="options">Build Dev
                         </a>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
