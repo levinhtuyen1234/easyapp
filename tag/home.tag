@@ -210,6 +210,7 @@
 
         me.showSetDomainDialog = function () {
             bootbox.prompt("New domain", function (domain) {
+                if (domain == null) return;
                 var isDomainValid = /^((?:(?:(?:\w[.\-+]?)*)\w)+)((?:(?:(?:\w[.\-+]?){0,62})\w)+)\.(\w{2,6})$/.test(domain);
                 if (!isDomainValid) {
                     bootbox.alert('Invalid domain', function () {
