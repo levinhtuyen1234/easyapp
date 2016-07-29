@@ -4,11 +4,11 @@
 <config-view>
     <h2>List of fields</h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
-    <ul class="list-group" each="{config in contentConfig}">
-        <li class="list-group-item">
-            {config.displayName} - {config.name} - <strong>{config.type}</strong>
-            <button class="btn btn-xs btn-danger pull-right" style="margin-left: 15px;" onclick="{removeField.bind(this,config.name)}"><i class="fa fa-close"></i></button>
-            <button class="btn btn-xs btn-default pull-right" onclick="{showFieldSettingDialog.bind(this,config.name,config.type,config)}"><i class="fa fa-gear"></i> Setting</button>
+    <ul class="list-group sortable">
+        <li each="{config in contentConfig}" class="list-group-item">
+            <span><i class="fa fa-fw fa-bars"></i> {config.displayName} - {config.name} - <strong>{config.type}</strong></span>
+            <button class="btn btn-sm btn-danger pull-right" style="margin-left: 15px;" onclick="{removeField.bind(this,config.name)}"><i class="fa fa-close"></i></button>
+            <button class="btn btn-sm btn-default pull-right" onclick="{showFieldSettingDialog.bind(this,config.name,config.type,config)}"><i class="fa fa-gear"></i> Setting</button>
             <div class="clearfix"></div>
         </li>
     </ul>
@@ -61,6 +61,7 @@
         me.event = riot.observable();
         var $root = $(me.root);
         me.contentConfig = [];
+        me.hiddenConfig = [];
         me.curFieldType = '';
         me.curConfig = {};
         me.originalFieldType = '';
@@ -143,11 +144,33 @@
 
         me.loadContentConfig = function (contentConfig) {
 //            console.log('[config-view] loadContentConfig', contentConfig);
-            var ignoreFields = ['slug', 'layout'];
+            var hiddenFieldNames = ['slug', 'layout'];
+            me.hiddenConfig = [];
             me.contentConfig = contentConfig.filter(function (config) {
-                return ignoreFields.indexOf(config.name) === -1;
+                if (hiddenFieldNames.indexOf(config.name) !== -1) {
+                    me.hiddenConfig.push(config);
+                    return false;
+                }
+                return true;
             });
             me.update();
+
+            console.log(me.root.querySelectorAll('.sortable'));
+            var configItems = $(me.root.querySelector('.sortable'));
+            var startIndex;
+            configItems.sortable({
+                start: function(e, ui){
+                    startIndex  = ui.item.index();
+                },
+                update: function(e, ui){
+                    var newIndex =  ui.item.index();
+                    console.log('from', startIndex, 'to', newIndex);
+                    var tmp = me.contentConfig[newIndex];
+                    me.contentConfig[newIndex] = me.contentConfig[startIndex];
+                    me.contentConfig[startIndex] = tmp;
+                }
+            });
+            configItems.disableSelection();
         };
 
         me.removeField = function (fieldName) {
@@ -161,7 +184,7 @@
         };
 
         me.getContentConfig = function () {
-            return me.contentConfig;
+            return me.hiddenConfig.concat(me.contentConfig);
         }
     </script>
 

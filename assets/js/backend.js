@@ -169,22 +169,42 @@ function fileExists(filePath) {
 
 function genSimpleContentConfigFile(metaData) {
     var contentConfig = [];
+
+    var fixedFields = [];
+    var tmpFields = [];
+
     for (var key in metaData) {
+        var fields = (key === 'slug' || key === 'layout') ? fixedFields : tmpFields;
         if (!metaData.hasOwnProperty(key)) continue;
         var value = metaData[key];
+
         switch (typeof value) {
             case 'string':
-                contentConfig.push({
-                    name:        key,
-                    displayName: key,
-                    type:        'Text',
-                    validations: [],
-                    viewOnly:    key === 'layout',
-                    required:    false
-                });
+                switch (key) {
+                    case 'date':
+                        fields.push({
+                            name:        key,
+                            displayName: key,
+                            displayType: 'DateTime',
+                            type:        'DateTime',
+                            validations: [],
+                            viewOnly:    key === 'layout',
+                            required:    false
+                        });
+                        break;
+                    default:
+                        fields.push({
+                            name:        key,
+                            displayName: key,
+                            type:        'Text',
+                            validations: [],
+                            viewOnly:    key === 'layout',
+                            required:    false
+                        });
+                }
                 break;
             case 'number':
-                contentConfig.push({
+                fields.push({
                     name:        key,
                     displayName: key,
                     type:        'Number',
@@ -193,7 +213,7 @@ function genSimpleContentConfigFile(metaData) {
                 });
                 break;
             case 'boolean':
-                contentConfig.push({
+                fields.push({
                     name:        key,
                     displayName: key,
                     type:        'Boolean',
@@ -203,7 +223,7 @@ function genSimpleContentConfigFile(metaData) {
                 break;
             case 'object':
                 if (Array.isArray(value)) {
-                    contentConfig.push({
+                    fields.push({
                         name:        key,
                         displayName: key,
                         type:        'Array',
@@ -211,7 +231,7 @@ function genSimpleContentConfigFile(metaData) {
                         required:    false
                     });
                 } else {
-                    contentConfig.push({
+                    fields.push({
                         name:        key,
                         displayName: key,
                         type:        'Object',
@@ -221,7 +241,7 @@ function genSimpleContentConfigFile(metaData) {
                 }
         }
     }
-    return contentConfig;
+    return fixedFields.concat(tmpFields);
 }
 
 var FORM_START = '---json';

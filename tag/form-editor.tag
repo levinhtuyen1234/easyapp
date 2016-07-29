@@ -450,6 +450,7 @@
 
             me.form.innerHTML = '';
             me.codeEditorMap = {};
+
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
