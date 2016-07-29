@@ -24,7 +24,7 @@
                             <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
                         </a>
                         <!--<a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">-->
-                            <!--<input type="radio" name="options">Build Dev-->
+                        <!--<input type="radio" name="options">Build Dev-->
                         <!--</a>-->
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,6 +46,14 @@
                         <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy website to live domain">
                             Deploy
                         </a>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pull-right">
+                                <li><a href="#" onclick="{showSetDomainDialog}" title="Set domain for website"><i class="fa fa-fw fa-globe"></i> Set Domain</a></li>
+                            </ul>
+                        </div>
                         <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">
                             Init
                         </a>
@@ -143,12 +151,12 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
-        me.checkGhPageStatus = function(){
+        me.checkGhPageStatus = function () {
             BackEnd.isGhPageInitialized(me.opts.siteName + '/build').then(function (initialized) {
                 console.log('home github initialized', initialized);
                 me.gitHubInited = initialized;
                 me.update();
-            }).catch(function(ex) {
+            }).catch(function (ex) {
                 if (ex.message.indexOf('ENOENT') != -1) {
                     // build folder not exists
                     me.gitHubInited = false;
@@ -163,7 +171,7 @@
             // open index.md file
 
             // check xem git chua
-           me.checkGhPageStatus();
+            me.checkGhPageStatus();
 //            setTimeout(function () {
 //                me.openFile('content/index.md');
 //                me.tags['side-bar'].activeFile('content/index.md');
@@ -199,6 +207,21 @@
             // split content thanh meta va markdown
             return SplitContentFile(fileContent);
         }
+
+        me.showSetDomainDialog = function () {
+            bootbox.prompt("New domain", function (domain) {
+                var isDomainValid = /^((?:(?:(?:\w[.\-+]?)*)\w)+)((?:(?:(?:\w[.\-+]?){0,62})\w)+)\.(\w{2,6})$/.test(domain);
+                if (!isDomainValid) {
+                    bootbox.alert('Invalid domain', function () {
+                        setTimeout(function () {
+                            $('.bootbox-input.bootbox-input-text.form-control').focus();
+                        }, 1);
+                    });
+                    return false;
+                }
+                BackEnd.setDomain(me.opts.siteName, domain);
+            });
+        };
 
         me.refreshWatchView = function () {
             me.openWatchView();

@@ -434,7 +434,7 @@ function SpawnShell(command, args, opts) {
             shell: true
         });
 
-        newProcess.on('error', function(err) {
+        newProcess.on('error', function (err) {
             reject(err);
         });
 
@@ -650,6 +650,11 @@ function isGhPageInitialized(siteName) {
     })
 }
 
+function setDomain(siteName, domain) {
+    var fullPath = Path.join(sitesRoot, siteName, 'asset', 'CNAME');
+    Fs.writeFileSync(fullPath, domain);
+}
+
 module.exports = {
     getMetaFile:         getMetaFile,
     getMetaConfigFile:   getMetaConfigFile,
@@ -684,5 +689,6 @@ module.exports = {
     getSiteContentFiles: getSiteContentFiles,
     readFile:            readFile,
     copyAssetFile:       copyAssetFile,
-    isGhPageInitialized: isGhPageInitialized
+    isGhPageInitialized: isGhPageInitialized,
+    setDomain:           setDomain
 };
