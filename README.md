@@ -1,7 +1,7 @@
 ### Hướng dẫn sử dụng EasyWebBuilder để phát triên website
   - Xem hướng dẫn tại [đây](http://blog.easywebhub.com/how-to-use-easy-builder-to-build-websites/)
   - Mọi ý kiến đóng góp, bổ sung để cải thiện ứng dụng, hãy tương tác với chúng tôi theo 2 cách
-     + tạo vấn đề trong phần issue tại [đây](https://github.com/easywebhub/easyapp/issues/new)
+     + tạo vấn đề trong phần issue tại [đây](https://github.com/easywebhub/easyapp/issues/new), yêu cầu có account Github
      + gửi email về cho chúng tôi admin@easywebhub.com
 
 ### Tham gia lập trình phát triển EasyWebBuilder, hãy theo hướng dẫn bên dưới
