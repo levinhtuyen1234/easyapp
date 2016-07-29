@@ -232,3 +232,7 @@ html, body {
 textarea {
     resize: vertical;
 }
+
+.btn-group.bootstrap-select, .dropdown-menu {
+    width: auto !important;
+}
