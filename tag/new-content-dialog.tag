@@ -26,7 +26,7 @@
                     <div class="form-group">
                         <label for="contentTitleElm" class="col-sm-2 control-label">Page Title</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;" value="{contentTitle}">
+                            <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;">
                         </div>
                     </div>
                     <div class="form-group">
