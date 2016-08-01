@@ -565,7 +565,9 @@ function gitGenMessage(siteName) {
         }).catch(ex => {
             reject(ex);
         }).then(()=> {
-            output = '"' + output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g).join('" -m "') + '"';
+            console.log('output', output);
+            var match = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g);
+            output = '"' + match.join('" -m "') + '"';
             resolve(output);
         });
     });

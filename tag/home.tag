@@ -353,6 +353,8 @@
                     }
                 }
                 BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
+                // refresh config view
+                me.openMetaConfigTab();
             });
         };
 
@@ -388,6 +390,7 @@
                     }
                 }
                 BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
+                me.openContentConfigTab(); // refresh view
             });
         };
 
