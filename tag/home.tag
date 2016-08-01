@@ -78,7 +78,7 @@
                         <a class=" btn btn-default navbar-btn btn-sm" show="{curTab == 'meta-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.json'))}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">
                             <input type="radio" name="options">Raw
                         </a>
                         <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{
