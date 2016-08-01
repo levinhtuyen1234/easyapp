@@ -31,7 +31,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)"><i class="fa fa-fw fa-cubes"></i> Build Dev</a></li>
+                                <li hide="{User.accountType == 'user'}"><a href="#" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)"><i class="fa fa-fw fa-cubes"></i> Build Dev</a></li>
                                 <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-fw fa-refresh"></i> Refresh</a></li>
                             </ul>
                         </div>
@@ -109,7 +109,9 @@
                     </div>
                     <div class="pull-right">
                         <div class="btn-group" data-toggle="buttons">
-                            <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}">
+                            <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}" hide="{
+                            curTab === 'meta-view' && User.accountType == 'user'
+                            }">
                                 <i class="fa fa-fw fa-remove"></i>Delete
                             </a>
                             <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
