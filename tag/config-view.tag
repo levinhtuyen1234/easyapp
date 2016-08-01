@@ -30,7 +30,6 @@
                                     <option value="Number">Number</option>
                                     <option value="Object">Object</option>
                                     <option value="Text">Text</option>
-                                    <option value="Selection">Selection</option>
                                 </select>
                             </div>
                         </div>
