@@ -589,32 +589,43 @@ function getLocalDate() {
         + '-' + pad(now.getDate())
         + ' ' + pad(now.getHours())
         + ':' + pad(now.getMinutes())
-        + ':' + pad(now.getSeconds())
-        + ' ' + dif + pad(tzo / 60)
-        + ':' + pad(tzo % 60);
+        + ':' + pad(now.getSeconds());
 }
 
-function copyAssetFile(siteName, source, target, cb) {
-    MkdirpSync(Path.join(sitesRoot, siteName, 'asset', 'img')); // TODO generalize this
-    target = Path.join(sitesRoot, siteName, target);
+function addMediaFile(siteName, filePath, cb) {
+    var sitePath = getSitePath(siteName);
+    // check if file already in site's asset folder
+    var relativePath = Path.relative(sitePath, filePath);
+    if (relativePath.startsWith('asset' + Path.sep)) {
+        // file is in sites' asset folder
+        relativePath = relativePath.substr(6); // remove "asset/"
+        cb(null, relativePath.replace(/\\/g, '/'));
+    } else {
+        // copy file vo asset/img
+        var fileName = filePath.split(/[\\\/]/).pop();
+        var targetDir = Path.join(sitesRoot, siteName, 'asset', 'img');
+        var target = Path.join(targetDir, fileName);
+        MkdirpSync(targetDir);
 
-    var cbCalled = false;
+        var cbCalled = false;
+        var done = function (err, filePath) {
+            if (!cbCalled) {
+                if (err) cb(err);
+                else cb(null, filePath);
+                cbCalled = true;
+            }
+        };
 
-    var rd = Fs.createReadStream(source);
-    rd.on('error', done);
+        var rd = Fs.createReadStream(filePath);
+        rd.on('error', done);
 
-    var wr = Fs.createWriteStream(target);
-    wr.on('error', done);
-    wr.on('close', function (ex) {
-        done();
-    });
-    rd.pipe(wr);
-
-    function done(err) {
-        if (!cbCalled) {
-            cb(err);
-            cbCalled = true;
-        }
+        var wr = Fs.createWriteStream(target);
+        wr.on('error', done);
+        wr.on('close', function (ex) {
+            relativePath = Path.join('img', fileName);
+            done(null, relativePath.replace(/\\/g, '/'));
+        });
+        rd.pipe(wr);
     }
 }
 
@@ -708,7 +719,7 @@ module.exports = {
     getSiteAssetFiles:   getSiteAssetFiles,
     getSiteContentFiles: getSiteContentFiles,
     readFile:            readFile,
-    copyAssetFile:       copyAssetFile,
+    addMediaFile:        addMediaFile,
     isGhPageInitialized: isGhPageInitialized,
     setDomain:           setDomain
 };

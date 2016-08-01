@@ -138,6 +138,8 @@
 
     <script>
         var me = this;
+        var dialog = require('electron').remote.dialog;
+        var Path = require('path');
         me.test = true;
         me.contentView = null;
         me.configView = null;
@@ -588,7 +590,6 @@
                     var msg = 'GitHub page url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
                     me.tags['progress-dialog'].showMessage(msg);
                 }
-
             }).catch(function (err) {
                 console.log(err);
                 me.tags['progress-dialog'].enableClose();
@@ -642,12 +643,6 @@
             });
         };
 
-        riot.api.on('copyAssetFile', function (localPath, targetPath) {
-            // TODO detect target path đã ở trong asset thì không cần copy
-            BackEnd.copyAssetFile(me.siteName, localPath, targetPath, function (err) {
-            });
-        });
-
         me.openExternalReview = function () {
             me.tags['watch-view'].openExternalBrowser();
         };
@@ -659,6 +654,25 @@
         riot.api.on('watchFailed', function () {
             me.openExternalReviewBtn.disabled = true;
             $(openWatchViewBtn).removeClass('active');
+        });
+
+        riot.api.on('chooseMediaFile', function (cb) {
+            dialog.showOpenDialog({
+                properties: ['openFile'],
+                filters:    [
+                    {name: 'All Media Files', extensions: ['*']}
+                ]
+            }, function (filePaths) {
+                if (!filePaths || filePaths.length != 1) return;
+                var filePath = filePaths[0];
+                BackEnd.addMediaFile(me.siteName, filePaths[0], function (error, relativePath) {
+                    if (error) {
+                        console.log('addMediaFile', error);
+                    } else {
+                        cb(relativePath);
+                    }
+                })
+            });
         });
     </script>
 </home>

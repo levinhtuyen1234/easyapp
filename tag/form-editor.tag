@@ -314,22 +314,13 @@
 
         me.showChooseFile = function () {
             if (me.config.viewOnly) return;
-            dialog.showOpenDialog({
-                properties: ['openFile'],
-                filters:    [
-                    {name: 'All Media Files', extensions: ['*']}
-                ]
-            }, function (filePaths) {
-                if (!filePaths || filePaths.length != 1) return;
-                var filePath = filePaths[0];
-                // TODO validate url
-                // TODO copy file to asset/images and fix url to relative
-                var fileName = filePath.split(/[\\\/]/).pop();
-                me.value = '/asset/img/' + fileName;
-                me['form-' + me.config.name].value = me.value;
-                riot.api.trigger('copyAssetFile', filePath, me.value);
-                // copy file vo asset
+            riot.api.trigger('chooseMediaFile', function(relativePath) {
+//                me.value = relativePath.split(/[\\\/]/).pop();
+                me.value = relativePath;
+                me['form-' + me.config.name].value = relativePath;
                 me.update();
+
+                console.log('chooseMediaFile cb', 'me.value', me.value, relativePath);
             });
         };
 
