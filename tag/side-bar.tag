@@ -70,7 +70,6 @@
             assetFileTag.loadFiles(files);
         };
 
-        window.rr = me.root;
         me.reloadCurrentTab = function () {
             // get cur tab
             var activeTabHref = $(me.root.querySelector('a.navbar-btn.active')).attr('href');
@@ -87,16 +86,26 @@
             }
         };
 
-        riot.api.on('addContentFile', function (filePath) {
+        var onAddContentFile = function (filePath) {
             me.reloadContentFileTab();
-        });
+        };
 
-        riot.api.on('removeFile', function (filePath) {
+        var onRemoveFile = function (filePath) {
             me.reloadCurrentTab();
-        });
+        };
 
-        riot.api.on('addLayout', function () {
+        var onAddLayout = function () {
             me.reloadLayoutFileTab();
+        };
+
+        riot.api.on('addContentFile', onAddContentFile);
+        riot.api.on('removeFile', onRemoveFile);
+        riot.api.on('addLayout', onAddLayout);
+
+        me.on('unmount', function () {
+            riot.api.off('addContentFile', onAddContentFile);
+            riot.api.off('removeFile', onRemoveFile);
+            riot.api.off('addLayout', onAddLayout);
         });
 
         me.on('mount', function () {
@@ -122,7 +131,6 @@
                 } else
                     me.parent.openAssetFile(filePath);
             });
-
         });
     </script>
 </side-bar>

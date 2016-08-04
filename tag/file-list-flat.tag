@@ -4,7 +4,7 @@
         <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
     </div>
     <div class="list-group" style="overflow: auto; height: 85vh;">
-        <a href="#" each="{filteredFiles}" class="list-group-item" data-path="{path}" onclick="{openFile}" style="{}">
+        <a href="#" each="{filteredFiles}" class="list-group-item truncate" title="{hideExt(name)}" data-path="{path}" onclick="{openFile}" style="{}">
             <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {isPartial(path) ? '[Partial] ' : ''} {hideExt(name)}
         </a>
     </div>

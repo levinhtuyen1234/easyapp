@@ -236,3 +236,11 @@ textarea {
 .btn-group.bootstrap-select, .dropdown-menu {
     width: auto !important;
 }
+
+.truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 5px;
+    padding-left: 20px;
+}

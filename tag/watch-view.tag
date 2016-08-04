@@ -18,10 +18,10 @@
     <!--</label>-->
     <!--</div>-->
     <div class="tab-content">
-        <pre style="height: 300px; overflow: auto;">
+        <pre style="height: 200px; overflow: auto;">
             <code class="accesslog hljs"></code>
         </pre>
-        <webview id="webview" src="about:blank" style="display:flex; height:calc(100vh - 500px)"></webview>
+        <webview id="webview" src="about:blank" style="display:flex; height:70vh"></webview>
     </div>
     <script>
         var ChildProcess = require('child_process');
@@ -103,7 +103,7 @@
             me.closeWatchProcess();
         };
 
-        riot.api.on('RefreshWatch', function () {
+        riot.api.on('refreshWatch', function () {
             me.append('refresh watch');
             me.closeWatchProcess();
             me.clear();

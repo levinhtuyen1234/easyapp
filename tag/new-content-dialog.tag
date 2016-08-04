@@ -75,8 +75,9 @@
             riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.isFrontPageElm.checked);
         };
 
-        riot.api.on('closeNewContentDialog', function () {
-            $(me.root).modal('hide');
+
+        riot.api.on('unmount', function(){
+            riot.api.off('closeNewContentDialog');
         });
 
         me.updateLayoutList = function (layoutList) {
@@ -114,6 +115,9 @@
 
             $(me.root).modal('show');
             $(me.contentLayoutElm).selectpicker('refresh');
+            riot.api.one('closeNewContentDialog', function () {
+                $(me.root).modal('hide');
+            });
         }
     </script>
 </new-content-dialog>

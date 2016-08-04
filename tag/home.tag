@@ -212,6 +212,14 @@
             return SplitContentFile(fileContent);
         }
 
+        me.on('unmount', function () {
+            riot.api.off('addLayout');
+            riot.api.off('addContent');
+            riot.api.off('watchSuccess');
+            riot.api.off('watchFailed');
+            riot.api.off('chooseMediaFile');
+        });
+
         me.showSetDomainDialog = function () {
             bootbox.prompt("New domain", function (domain) {
                 if (domain == null) return;
@@ -230,7 +238,7 @@
 
         me.refreshWatchView = function () {
             me.openWatchView();
-            riot.api.trigger('RefreshWatch');
+            riot.api.trigger('refreshWatch');
         };
 
         me.openLayoutTab = function () {
@@ -311,7 +319,7 @@
 
                 var meta = BackEnd.getMetaFile(me.opts.siteName, me.currentFilePath);
                 var metaConfig = BackEnd.getMetaConfigFile(me.opts.siteName, me.currentFilePath);
-                console.log('metaConfig', meta, metaConfig);
+//                console.log('metaConfig', meta, metaConfig);
 //                if (!content || !content.metaData || !content.metaData.layout) {
 //                    me.tags['content-view'].reset();
 //                return;
@@ -419,8 +427,12 @@
         me.openFile = function (filePath) {
             $(me.root.querySelector('#editor-view')).show();
             $(me.root.querySelector('#watch-view')).hide();
-
-            me.tags['breadcrumb'].setPath(filePath);
+            if (me.tags['breadcrumb'] == null) {
+                console.log('breadcrumb', me.tags);
+                console.trace('bug');
+            } else {
+                me.tags['breadcrumb'].setPath(filePath);
+            }
             me.currentFilePath = filePath;
 
             if (filePath.endsWith('.md')) {
@@ -553,7 +565,7 @@
             me.tags['new-content-dialog'].show();
         };
 
-        riot.api.on('addLayout', function (layoutFileName) {
+        var onAddLayout = function (layoutFileName) {
             try {
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
@@ -565,9 +577,9 @@
                 console.log('addLayout', ex);
                 bootbox.alert('create layout failed, error ' + ex.message);
             }
-        });
+        };
 
-        riot.api.on('addContent', function (layoutFileName, contentTitle, contentFileName, isFrontPage) {
+        var onAddContent = function (layoutFileName, contentTitle, contentFileName, isFrontPage) {
             try {
                 var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, isFrontPage);
                 var newContentFilePath = newFile.path;
@@ -582,6 +594,48 @@
                 console.log('addContent', ex);
                 bootbox.alert('create content failed, error ' + ex.message);
             }
+        };
+
+        var onWatchSuccess = function () {
+            me.openExternalReviewBtn.disabled = false;
+        };
+
+        var onWatchFailed = function () {
+            me.openExternalReviewBtn.disabled = true;
+            $(openWatchViewBtn).removeClass('active');
+        };
+
+        var onChooseMediaFile = function (cb) {
+            dialog.showOpenDialog({
+                properties: ['openFile'],
+                filters:    [
+                    {name: 'All Media Files', extensions: ['*']}
+                ]
+            }, function (filePaths) {
+                if (!filePaths || filePaths.length != 1) return;
+                var filePath = filePaths[0];
+                BackEnd.addMediaFile(me.siteName, filePaths[0], function (error, relativePath) {
+                    if (error) {
+                        console.log('addMediaFile', error);
+                    } else {
+                        cb(relativePath);
+                    }
+                })
+            });
+        };
+
+        riot.api.on('watchSuccess', onWatchSuccess);
+        riot.api.on('watchFailed', onWatchFailed);
+        riot.api.on('chooseMediaFile', onChooseMediaFile);
+        riot.api.on('addLayout', onAddLayout);
+        riot.api.on('addContent', onAddContent);
+
+        me.on('unmount', function () {
+            riot.api.off('watchSuccess', onWatchSuccess);
+            riot.api.off('watchFailed', onWatchFailed);
+            riot.api.off('chooseMediaFile', onChooseMediaFile);
+            riot.api.off('addLayout', onAddLayout);
+            riot.api.off('addContent', onAddContent);
         });
 
         me.deployToGitHub = function () {
@@ -651,33 +705,5 @@
         me.openExternalReview = function () {
             me.tags['watch-view'].openExternalBrowser();
         };
-
-        riot.api.on('watchSuccess', function () {
-            me.openExternalReviewBtn.disabled = false;
-        });
-
-        riot.api.on('watchFailed', function () {
-            me.openExternalReviewBtn.disabled = true;
-            $(openWatchViewBtn).removeClass('active');
-        });
-
-        riot.api.on('chooseMediaFile', function (cb) {
-            dialog.showOpenDialog({
-                properties: ['openFile'],
-                filters:    [
-                    {name: 'All Media Files', extensions: ['*']}
-                ]
-            }, function (filePaths) {
-                if (!filePaths || filePaths.length != 1) return;
-                var filePath = filePaths[0];
-                BackEnd.addMediaFile(me.siteName, filePaths[0], function (error, relativePath) {
-                    if (error) {
-                        console.log('addMediaFile', error);
-                    } else {
-                        cb(relativePath);
-                    }
-                })
-            });
-        });
     </script>
 </home>

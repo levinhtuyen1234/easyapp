@@ -52,10 +52,6 @@
             me.update();
         };
 
-        riot.api.on('closeNewLayoutDialog', function () {
-            console.log('closeNewLayoutDialog');
-            $(me.root).modal('hide');
-        });
 
         me.show = function () {
             me.layoutFileName = '';
@@ -66,6 +62,11 @@
             setTimeout(function () {
                 fieldFileName.focus();
             }, 500);
+
+            riot.api.one('closeNewLayoutDialog', function () {
+                console.log('closeNewLayoutDialog');
+                $(me.root).modal('hide');
+            });
         }
     </script>
 </new-layout-dialog>
