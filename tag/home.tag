@@ -169,17 +169,25 @@
             });
         };
 
-        me.on('mount', function () {
-//            riot.mount('side-bar', {siteName: opts.siteName});
-//            riot.mount('breadcrumb', {path: opts.siteName});
-            // open index.md file
+        me.saveByKeyboard = function() {
+            console.log('saveByKeyboard', me.cur);
+            me.save();
+        };
 
-            // check xem git chua
+        me.on('unmount', function () {
+            riot.api.off('addLayout');
+            riot.api.off('addContent');
+            riot.api.off('watchSuccess');
+            riot.api.off('watchFailed');
+            riot.api.off('chooseMediaFile');
+
+            riot.api.off('codeEditor.save', me.saveByKeyboard);
+        });
+
+        me.on('mount', function () {
             me.checkGhPageStatus();
-//            setTimeout(function () {
-//                me.openFile('content/index.md');
-//                me.tags['side-bar'].activeFile('content/index.md');
-//            }, 1);
+
+            riot.api.on('codeEditor.save', me.saveByKeyboard);
         });
 
         me.goToLandingPage = function () {
@@ -211,14 +219,6 @@
             // split content thanh meta va markdown
             return SplitContentFile(fileContent);
         }
-
-        me.on('unmount', function () {
-            riot.api.off('addLayout');
-            riot.api.off('addContent');
-            riot.api.off('watchSuccess');
-            riot.api.off('watchFailed');
-            riot.api.off('chooseMediaFile');
-        });
 
         me.showSetDomainDialog = function () {
             bootbox.prompt("New domain", function (domain) {
@@ -352,7 +352,7 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-            me.tags['config-view'].event.on('saveConfig', function (configFieldName, newConfig) {
+            me.tags['config-view'].event.one('saveConfig', function (configFieldName, newConfig) {
                 console.log('save meta config');
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig
@@ -458,7 +458,6 @@
 
         me.save = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
-            // TODO add meta, content's config file to git
             var filePath;
             switch (me.curTab) {
                 case 'content-view':
@@ -602,7 +601,7 @@
 
         var onWatchFailed = function () {
             me.openExternalReviewBtn.disabled = true;
-            $(openWatchViewBtn).removeClass('active');
+            $(openWdatchViewBtn).removeClass('active');
         };
 
         var onChooseMediaFile = function (cb) {

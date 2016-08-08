@@ -53,7 +53,8 @@
                     'Ctrl-R':     'replace',
                     'Ctrl-S':     function () {
 //                        parent.saveFile(editor.getValue());
-                        alert('Nop, not implemented yet')
+//                        alert('Nop, not implemented yet')
+                        riot.api.trigger('codeEditor.save');
                     }
                 }
             });

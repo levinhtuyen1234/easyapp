@@ -16,6 +16,13 @@
 
             me.editor = new SimpleMDE(config);
 
+            $(me.root).keypress(function(event) {
+                if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
+                riot.api.trigger('codeEditor.save');
+                event.preventDefault();
+                return false;
+            });
+
             if (me.viewOnly) {
                 setTimeout(function () {
                     me.editor.togglePreview();
