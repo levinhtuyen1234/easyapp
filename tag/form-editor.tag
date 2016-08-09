@@ -1,3 +1,6 @@
+<form-field-category-text class="form-group">
+</form-field-category-text>
+
 <form-field-text class="form-group">
     <style>
         .fieldMarkDown {

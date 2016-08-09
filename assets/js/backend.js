@@ -14,15 +14,9 @@ const ASSET_EXTS = ['js', 'css', 'html', 'htm', 'ts', 'coffee', 'sass', 'less', 
 let appRoot;
 let sitesRoot;
 
-// if (__dirname.indexOf('resources/app') != -1 || __dirname.indexOf('resources\\app') != -1) {
 sitesRoot = Path.resolve('sites');
 appRoot = Path.resolve('');
 console.log('DEV PATH', sitesRoot, appRoot);
-// } else {
-//     sitesRoot = Path.resolve(__dirname, '../../sites');
-//     appRoot = Path.resolve(__dirname, '../../');
-//     console.log('ASAR PATH', sitesRoot, appRoot);
-// }
 
 try {
     Fs.mkdirSync(sitesRoot);
@@ -68,6 +62,7 @@ function filterOnlyRootLayoutFile(name, isDir) {
     } else {
         var ext = name.split('.').pop();
         if (ext !== 'html') return false;
+        if (name.endsWith('.category.html')) return false;
     }
     return true;
 }
@@ -142,7 +137,7 @@ function getLayoutList(siteName) {
     var folders = ['layout'];
     var files = [];
     for (var folder of folders) {
-        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        console.log('getLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
     }
     return files;
@@ -153,7 +148,7 @@ function getRootLayoutList(siteName) {
     var folders = ['layout'];
     var files = [];
     for (var folder of folders) {
-        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        console.log('getRootLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyRootLayoutFile);
     }
     return files;
@@ -366,7 +361,7 @@ function newLayoutFile(siteName, layoutFileName) {
     return {name: layoutFileName, path: layoutFilePath.replace(/\\/g, '/')};
 }
 
-function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, isFrontPage) {
+function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, category, isFrontPage) {
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
     // var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
@@ -377,6 +372,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     "title": "${contentTitle}",
     "slug": "${slug}",
     "description": "",
+    "category": "${category}",
     "layout": "${layoutFileName}",
     "date": "${getLocalDate()}",
     "permalink": true
@@ -641,10 +637,8 @@ function getMetaFile(siteName, filePath) {
 }
 
 function getMetaConfigFile(siteName, metaFilePath) {
-    // TODO detect metaConfig file exists, if not create
     var metaFileContent = readFile(siteName, metaFilePath);
     var metaData = JSON.parse(metaFileContent);
-    console.log('metaData', metaData);
     var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
     var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
     var metaConfig = genSimpleContentConfigFile(metaData);
@@ -693,40 +687,118 @@ function setDomain(siteName, domain) {
     Fs.writeFileSync(fullPath, domain);
 }
 
+function getListConfig(dir) {
+    try {
+        var filePathList = Fs.readdirSync(dir);
+        console.log('filePathList', filePathList);
+        let ret = [];
+        filePathList.forEach(function (filePath) {
+            console.log('filePath', filePath);
+            filePath = Path.join(dir, filePath);
+            var fileName = filePath.split(/[\\\/]/g).pop();
+            var categoryValue = fileName.substr(0, fileName.lastIndexOf('.'));
+            var config = JSON.parse(Fs.readFileSync(filePath));
+            ret.push({
+                name:  config.displayName,
+                value: categoryValue
+            });
+        });
+        return ret;
+    } catch (ex) {
+        console.log(ex);
+        return [];
+    }
+}
+
+var categoryListCache;
+function getCategoryList(siteName) {
+    if (categoryListCache)
+        return categoryListCache;
+    else
+        categoryListCache = getListConfig(Path.join(sitesRoot, siteName, 'content', 'category'));
+    return categoryListCache;
+}
+
+function purgeCategoryListCache() {
+    categoryListCache = null;
+}
+
+function getTagList(siteName) {
+    return getListConfig(Path.join(sitesRoot, siteName, 'content', 'tag'));
+}
+
+
+function getCategoryLayoutList(siteName) {
+    var ret = [];
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var filter = function (fileName, isDir) {
+        if (isDir) return false; // no recursive
+        return fileName.endsWith('.category.html');
+    };
+    return scanDir(siteRoot, 'layout', ret, filter)
+}
+
+function newCategory(siteName, categoryName, categoryFileName) {
+    var defaultCategoryConfig = JSON.stringify({
+        "sortBy":      "date",
+        "reverse":     false,
+        "metadata":    {},
+        "displayName": categoryName,
+        "perPage":     10,
+        "noPageOne":   true,
+        "layout":      "default.category.html",
+        "first":       ":categoryPath/index.html",
+        "path":        ":categoryPath/page/:num/index.html"
+    }, null, 4);
+    try {
+        Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'category'));
+    } catch (_) {
+    }
+    var fullPath = Path.join(sitesRoot, siteName, 'content', 'category', categoryFileName);
+    Fs.writeFileSync(fullPath, defaultCategoryConfig, {flag: 'wx+'});
+    var categoryFilePath = Path.join('content', 'category', categoryFileName);
+    return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/')};
+}
+
 module.exports = {
-    getMetaFile:         getMetaFile,
-    getMetaConfigFile:   getMetaConfigFile,
-    saveMetaFile:        saveMetaFile,
-    saveMetaConfigFile:  saveMetaConfigFile,
-    createSiteFolder:    createSiteFolder,
-    getSiteList:         getSiteList,
-    getConfigFile:       getConfigFile,
-    saveConfigFile:      saveConfigFile,
-    getRawContentFile:   getRawContentFile,
-    getContentFile:      getContentFile,
-    saveContentFile:     saveContentFile,
-    saveRawContentFile:  saveRawContentFile,
-    getLayoutFile:       getLayoutFile,
-    saveLayoutFile:      saveLayoutFile,
-    deleteLayoutFile:    deleteLayoutFile,
-    deleteContentFile:   deleteContentFile,
-    getLayoutList:       getLayoutList,
-    getRootLayoutList:   getRootLayoutList,
-    newLayoutFile:       newLayoutFile,
-    gitAdd:              gitAdd,
-    newContentFile:      newContentFile,
-    gitCheckout:         gitCheckout,
-    gitInitSite:         gitInitSite,
-    gitGenMessage:       gitGenMessage,
-    gitImportGitHub:     gitImportGitHub,
-    gitCommit:           gitCommit,
-    gitPushGhPages:      gitPushGhPages,
-    gitPushGitHub:       gitPushGitHub,
-    getSiteLayoutFiles:  getSiteLayoutFiles,
-    getSiteAssetFiles:   getSiteAssetFiles,
-    getSiteContentFiles: getSiteContentFiles,
-    readFile:            readFile,
-    addMediaFile:        addMediaFile,
-    isGhPageInitialized: isGhPageInitialized,
-    setDomain:           setDomain
+    newCategory:            newCategory,
+    getCategoryLayoutList:  getCategoryLayoutList,
+    getCategoryList:        getCategoryList,
+    purgeCategoryListCache: purgeCategoryListCache,
+    getTagList:             getTagList,
+    getMetaFile:            getMetaFile,
+    getMetaConfigFile:      getMetaConfigFile,
+    saveMetaFile:           saveMetaFile,
+    saveMetaConfigFile:     saveMetaConfigFile,
+    createSiteFolder:       createSiteFolder,
+    getSiteList:            getSiteList,
+    getConfigFile:          getConfigFile,
+    saveConfigFile:         saveConfigFile,
+    getRawContentFile:      getRawContentFile,
+    getContentFile:         getContentFile,
+    saveContentFile:        saveContentFile,
+    saveRawContentFile:     saveRawContentFile,
+    getLayoutFile:          getLayoutFile,
+    saveLayoutFile:         saveLayoutFile,
+    deleteLayoutFile:       deleteLayoutFile,
+    deleteContentFile:      deleteContentFile,
+    getLayoutList:          getLayoutList,
+    getRootLayoutList:      getRootLayoutList,
+    newLayoutFile:          newLayoutFile,
+    gitAdd:                 gitAdd,
+    newContentFile:         newContentFile,
+    gitCheckout:            gitCheckout,
+    gitInitSite:            gitInitSite,
+    gitGenMessage:          gitGenMessage,
+    gitImportGitHub:        gitImportGitHub,
+    gitCommit:              gitCommit,
+    gitPushGhPages:         gitPushGhPages,
+    gitPushGitHub:          gitPushGitHub,
+    getSiteLayoutFiles:     getSiteLayoutFiles,
+    getSiteAssetFiles:      getSiteAssetFiles,
+    getSiteContentFiles:    getSiteContentFiles,
+    readFile:               readFile,
+    addMediaFile:           addMediaFile,
+    isGhPageInitialized:    isGhPageInitialized,
+    setDomain:              setDomain
 };

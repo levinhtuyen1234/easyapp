@@ -1,13 +1,13 @@
 <home>
-    <new-content-dialog></new-content-dialog>
-    <new-layout-dialog></new-layout-dialog>
-    <progress-dialog></progress-dialog>
-    <github-init-dialog></github-init-dialog>
-    <nav class="navbar navbar-default">
-        <br/>
+    <new-category-dialog site-name={opts.siteName}></new-category-dialog>
+    <new-content-dialog site-name={opts.siteName}></new-content-dialog>
+    <new-layout-dialog site-name={opts.siteName}></new-layout-dialog>
+    <progress-dialog site-name={opts.siteName}></progress-dialog>
+    <github-init-dialog site-name={opts.siteName}></github-init-dialog>
+    <nav class="navbar navbar-default" style="padding-top: 5px; height: 38px; min-height: 38px; margin-bottom: 10px;">
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4 pull-left">
+                <div class="col-md-6 pull-left">
                     <a href="#" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-home"></i>Home
                     </a>
@@ -16,6 +16,9 @@
                     </a>
                     <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Add Layout
+                    </a>
+                    <a href="#" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+                        <i class="fa fa-fw fa-plus"></i> Add Category
                     </a>
                 </div>
                 <div class="pull-right">
@@ -72,38 +75,22 @@
             <div class="tab-content">
                 <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{curTab == 'content-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))}">
+                        <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
+                            curTab == 'content-view' ||
+                            ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))
+                            }">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
                         </a>
-                        <a class=" btn btn-default navbar-btn btn-sm" show="{curTab == 'meta-view' || ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.json'))}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
+                        <a class=" btn btn-default navbar-btn btn-sm" show="{isShowMetaTab()}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta
                         </a>
                         <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">
                             <input type="radio" name="options">Raw
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{
-                            User.accountType == 'dev' && (
-                                curTab == 'content-view' || (
-                                    curTab == 'code-view' &&
-                                    currentFilePath.endsWith('.md')
-                                ) || (
-                                    curTab == 'config-view' &&
-                                    currentFilePath.endsWith('.md')
-                                )
-                            )}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
                         </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{
-                            User.accountType == 'dev' && (
-                                curTab == 'meta-view' ||
-                                curTab == 'config-view' ||
-                                curTab == 'content-view' || (
-                                    curTab == 'code-view' && (
-                                        currentFilePath.endsWith('.json') ||
-                                        currentFilePath.endsWith('.md')
-                                    )
-                                )
-                            )}">
+                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{isShowConfigTab()}">
                             <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
                         </a>
                     </div>
@@ -155,6 +142,32 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
+        me.isShowMetaTab = function () {
+            return me.curTab == 'meta-view' ||
+                    ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.json')) ||
+                    (me.curTab == 'code-view' && me.currentFilePath.endsWith('.json') && !me.currentFilePath.startsWith('content/category'));
+
+        };
+
+        me.isShowLayoutTab = function () {
+            return User.accountType == 'dev' &&
+                    ( me.curTab == 'content-view' ||
+                            ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
+                            ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.md') )
+                    )
+        };
+
+        me.isShowConfigTab = function () {
+            return User.accountType == 'dev' &&
+                    (
+                            me.curTab == 'meta-view' ||
+                            me.curTab == 'config-view' ||
+                            me.curTab == 'content-view' ||
+                            ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
+                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/category/') && me.currentFilePath.endsWith('.json'))
+                    )
+        };
+
         me.checkGhPageStatus = function () {
             BackEnd.isGhPageInitialized(me.opts.siteName + '/build').then(function (initialized) {
                 console.log('home github initialized', initialized);
@@ -169,7 +182,7 @@
             });
         };
 
-        me.saveByKeyboard = function() {
+        me.saveByKeyboard = function () {
             console.log('saveByKeyboard', me.cur);
             me.save();
         };
@@ -177,6 +190,7 @@
         me.on('unmount', function () {
             riot.api.off('addLayout');
             riot.api.off('addContent');
+            riot.api.off('addCategory');
             riot.api.off('watchSuccess');
             riot.api.off('watchFailed');
             riot.api.off('chooseMediaFile');
@@ -435,6 +449,7 @@
             }
             me.currentFilePath = filePath;
 
+
             if (filePath.endsWith('.md')) {
                 me.openContentTab();
 //            } else if (filePath.endsWith('.config.json')) {
@@ -445,10 +460,13 @@
                 me.currentLayout = me.currentLayout.join('/');
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
-                console.log('filePath', filePath);
+//                console.log('filePath', filePath);
                 if (filePath.startsWith('content/metadata')) {
-                    console.log('openMetaTab');
+//                    console.log('openMetaTab');
                     me.openMetaTab();
+                } else if (filePath.startsWith('content/category')) {
+//                    console.log('open category config file');
+                    me.openRawContentTab();
                 }
                 // openMetaConfigTab
 //                me.openRawContentTab();
@@ -558,6 +576,10 @@
             me.tags['new-layout-dialog'].show();
         };
 
+        me.newCategory = function () {
+            me.tags['new-category-dialog'].show();
+        };
+
         me.newContent = function () {
             var layoutList = BackEnd.getRootLayoutList(me.siteName);
             me.tags['new-content-dialog'].updateLayoutList(layoutList);
@@ -578,9 +600,9 @@
             }
         };
 
-        var onAddContent = function (layoutFileName, contentTitle, contentFileName, isFrontPage) {
+        var onAddContent = function (layoutFileName, contentTitle, contentFileName, contentCategory, isFrontPage) {
             try {
-                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, isFrontPage);
+                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, contentCategory, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
                 riot.api.trigger('addContentFile', newContentFilePath);
@@ -592,6 +614,22 @@
             } catch (ex) {
                 console.log('addContent', ex);
                 bootbox.alert('create content failed, error ' + ex.message);
+            }
+        };
+
+        var onAddCategory = function (categoryName, categoryFileName) {
+            try {
+                var newFile = BackEnd.newCategory(me.siteName, categoryName, categoryFileName);
+                BackEnd.gitAdd(me.siteName, newFile.path);
+                riot.api.trigger('closeNewCategoryDialog');
+//                setTimeout(function () {
+//                    me.tags['side-bar'].activeFile('content-file-list', 'content/category/' + categoryFileName);
+//                }, 100);
+                BackEnd.purgeCategoryListCache();
+                // TODO purgeCategoryListCache when delete
+            } catch (ex) {
+                console.log('addCategory', ex);
+                bootbox.alert('create category failed, error ' + ex.message);
             }
         };
 
@@ -628,6 +666,7 @@
         riot.api.on('chooseMediaFile', onChooseMediaFile);
         riot.api.on('addLayout', onAddLayout);
         riot.api.on('addContent', onAddContent);
+        riot.api.on('addCategory', onAddCategory);
 
         me.on('unmount', function () {
             riot.api.off('watchSuccess', onWatchSuccess);
@@ -635,6 +674,7 @@
             riot.api.off('chooseMediaFile', onChooseMediaFile);
             riot.api.off('addLayout', onAddLayout);
             riot.api.off('addContent', onAddContent);
+            riot.api.off('addCategory', onAddCategory);
         });
 
         me.deployToGitHub = function () {

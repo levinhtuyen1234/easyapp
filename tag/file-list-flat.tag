@@ -5,7 +5,7 @@
     </div>
     <div class="list-group" style="overflow: auto; height: 85vh;">
         <a href="#" each="{filteredFiles}" class="list-group-item truncate" title="{hideExt(name)}" data-path="{path}" onclick="{openFile}" style="{}">
-            <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {isPartial(path) ? '[Partial] ' : ''} {hideExt(name)}
+            <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {getContentType(path)}{hideExt(name)}
         </a>
     </div>
     <script>
@@ -19,6 +19,14 @@
 
         me.isPartial = function (path) {
             return path.indexOf('layout/partial/') != -1;
+        };
+
+        me.getContentType = function (path) {
+            if (path.indexOf('layout/partial/') != -1)
+                return '[Partial] ';
+            if (path.indexOf('content/category/') != -1)
+                return '[Category] ';
+            return '';
         };
 
         me.getFileIcon = function (name, path) {
@@ -71,9 +79,13 @@
         })();
 
         var sortByExt = function (a, b) {
-            var aSide = a.name.split('\.');
-            var bSide = b.name.split('\.');
-            return aSide[0] > bSide[0] || aSide[1] > bSide[1];
+            if (a.path.startsWith('content/category'))
+                return 1;
+
+            if (a.path.startsWith('content/metadata/'))
+                return 1;
+//            return -1;
+            return a.name > b.name;
         };
 
         var sortLayout = function (a, b) {
@@ -82,19 +94,43 @@
             return a.path > b.path;
         };
 
+        var sortContentFiles = function (files) {
+            var categories = [];
+            var contents = [];
+            var metadataList = [];
+
+            files.forEach(function (file) {
+                if (file.path.startsWith('content/category')) {
+                    categories.push(file);
+                } else if (file.path.startsWith('content/metadata/')) {
+                    metadataList.push(file);
+                } else {
+                    contents.push(file);
+                }
+            });
+
+            categories.sort();
+            metadataList.sort();
+            contents.sort();
+            return metadataList.concat(categories, contents);
+        };
+
         me.hideExt = function (name) {
             var parts = name.split('.');
             if (parts.length > 1)
                 parts.pop();
-            return parts[0]
+            return parts.join('.');
         };
 
         me.loadFiles = function (files) {
             me.clear();
-            if (me.opts.type == 'layout')
+            if (me.opts.type == 'layout') {
                 files = files.sort(sortLayout);
-            else
+            } else if (me.opts.type == 'content') {
+                files = sortContentFiles(files);
+            } else
                 files = files.sort(sortByExt);
+
             me.files = files;
             me.filteredFiles = files;
             me.update();
@@ -110,12 +146,12 @@
         };
 
         me.activeFile = function (filePath) {
-            console.log("filePath", filePath);
-            console.log("query '[data-path=\"' + filePath + '\"]'");
+//            console.log("filePath", filePath);
+//            console.log("query '[data-path=\"' + filePath + '\"]'");
             var elm = $root.find('[data-path="' + filePath + '"]');
             $root.find('.list-group-item').removeClass('active');
             window.elm = elm;
-            console.log('elm', elm);
+//            console.log('elm', elm);
             $(elm).addClass('active');
         };
 

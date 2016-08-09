@@ -9,10 +9,10 @@
                 <label class="text-info">Tạo layout bằng HTML, CSS và HandleBarJS để sử dụng chung cho một hoặc nhiều trang</label>
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label for="layout-filename" class="col-sm-2 control-label">FileName</label>
+                        <label class="col-sm-2 control-label">FileName</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="layout-filename" placeholder="FileName" oninput="{updateFileName}">
+                                <input type="text" class="form-control" name="layoutNameElm" placeholder="FileName" oninput="{updateFileName}">
                                 <span class="input-group-addon">.html</span>
                             </div>
                         </div>
@@ -21,13 +21,13 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" disabled="{layoutFileName==''}" onclick="{add}">Add</button>
+                <button type="button" class="btn btn-primary" disabled="{layoutName==''}" onclick="{add}">Add</button>
             </div>
         </div>
     </div>
     <script>
         var me = this;
-        me.layoutFileName = '';
+        me.layoutName = '';
 
         me.edit = function (name, e) {
             switch (e.target.type) {
@@ -40,21 +40,22 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addLayout', me.layoutFileName + '.html');
+            riot.api.trigger('addLayout', me.layoutName + '.html');
         };
 
         me.updateFileName = function (e) {
             var title = e.target.value;
             var combining = /[\u0300-\u036F]/g;
             title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').trim();
-            me.layoutFileName = title;
+            me.layoutName = title;
 //
             me.update();
         };
 
 
         me.show = function () {
-            me.layoutFileName = '';
+            me.layoutName = '';
+            me.layoutNameElm.value = '';
             $(me.root).modal('show');
             $(me.root).find('.selectpicker').selectpicker();
             var fieldFileName = $(me['layout-filename']);
