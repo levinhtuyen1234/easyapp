@@ -13,8 +13,6 @@
         me.value = opts.value || '';
         me.categoryList = [];
 
-        console.log('form-field-category-text value', me.value);
-
         me.on('mount', function () {
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
             me.categoryList.forEach(function (category) {
@@ -85,7 +83,6 @@
                 // TODO tach rieng ra tag rieng neu co hon 3 tag su dung dropdown
                 if (me.config.displayType === 'DropDown' && me.config.predefinedData) {
                     me.config.predefinedData.forEach(function (data) {
-                        console.log(data.value, me.value);
                         if (data.value == me.value) {
                             me.selectedName = data.name;
                             me.update();
@@ -219,7 +216,6 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
-            console.log('form-' + me.config.name);
             me['form-' + me.config.name].value = me.value;
             var elm = me.root.querySelector('.input-group.date');
             var config = {};
@@ -484,7 +480,6 @@
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
-                console.log('fieldConfig.name', fieldConfig.name);
                 var div = document.createElement('div');
                 var tagTypeName = 'form-field-' + fieldConfig.type.toLowerCase();
                 // special case for category
