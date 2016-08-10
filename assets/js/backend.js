@@ -693,7 +693,7 @@ function getListConfig(dir) {
         console.log('filePathList', filePathList);
         let ret = [];
         filePathList.forEach(function (filePath) {
-            console.log('filePath', filePath);
+            // console.log('filePath', filePath);
             filePath = Path.join(dir, filePath);
             var fileName = filePath.split(/[\\\/]/g).pop();
             var categoryValue = fileName.substr(0, fileName.lastIndexOf('.'));
