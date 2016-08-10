@@ -21,10 +21,15 @@
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Category</label>
                         <div class="col-sm-10">
-                            <div class="input-group">
-                                <input type="checkbox" class="form-control" name="isCategory" onchange="{updatePostfix}">
+                            <div class="checkbox">
+                                <label>
+                                    <!--<input type="checkbox" name="input-{name}" checked="{value}">-->
+                                    <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
+                                </label>
                             </div>
-                        </div>
+                            <!--<div class="input-group">-->
+                            </div>
+                        <!--</div>-->
                     </div>
                 </form>
             </div>
@@ -51,7 +56,12 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addLayout', me.layoutName + '.html');
+            riot.api.trigger('addLayout', me.layoutName + me.postFix);
+        };
+
+        me.updatePostFix = function(e) {
+            me.postFix = e.srcElement.checked ? '.category.html' : '.html';
+            me.update();
         };
 
         me.updateFileName = function (e) {

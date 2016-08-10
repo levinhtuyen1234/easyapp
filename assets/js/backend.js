@@ -193,7 +193,7 @@ function genSimpleContentConfigFile(metaData) {
                             displayName: key,
                             type:        'Text',
                             validations: [],
-                            viewOnly:    key === 'layout',
+                            viewOnly:    key === 'layout' || key === 'slug',
                             required:    false
                         });
                 }
@@ -364,9 +364,9 @@ function newLayoutFile(siteName, layoutFileName) {
 function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, category, isFrontPage) {
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
-    // var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
-    // var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
-    var slug = contentBaseName;
+    var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
+    // var slug = contentBaseName;
     var defaultLayoutContent = `---json
 {
     "title": "${contentTitle}",
