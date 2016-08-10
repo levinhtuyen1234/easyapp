@@ -8,7 +8,7 @@ set "ARCH=x64"
 set "BUILD_FOLDER_NAME=%APP_NAME%-%PLATFORM%-%ARCH%"
 rem set working directory to project dir
 pushd %~dp0..
-call electron-packager . %APP_NAME% --platform=%PLATFORM% --arch=%ARCH% --ignore=%BUILD_FOLDER_NAME% --ignore=dist --ignore=tools --ignore=data --ignore=.idea --ignore=sites --ignore=scripts --asar=true --overwrite
+call electron-packager . %APP_NAME% --platform=%PLATFORM% --arch=%ARCH% --ignore=%BUILD_FOLDER_NAME% --ignore=dist --ignore=tools --ignore=data --ignore=.idea --ignore=sites --ignore=scripts --ignore=template.json --asar=true --overwrite
 popd
 echo compressing
 pushd %~dp0..\%BUILD_FOLDER_NAME%

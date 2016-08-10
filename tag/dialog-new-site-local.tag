@@ -12,13 +12,13 @@
                 <div class="container-fluid">
                     <h3>List of EasyWebHub website template:</h3>
                     <div class="row">
-                        <div each="{key, info in skeletonMap}" class="col-sm-4 col-md-3">
-                            <div class="pricing-card pricing-card-horizontal" onclick="{selectSkeleton.bind(this,info)}">
+                        <div each="{template in templateList}" class="col-sm-4 col-md-3">
+                            <div class="pricing-card pricing-card-horizontal" onclick="{selectSkeleton.bind(this, template)}">
                                 <div class="pricing-card-cta">
                                     <div class="caption" style="text-align: center">
                                         <div style="text-align: center"><i class="fa fa-2x glyphicon fa-plus"></i></div>
                                         <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                        <h4>{info.name}</h4>
+                                        <h4>{template.name}</h4>
                                     </div>
                                 </div>
                             </div>
@@ -46,7 +46,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal" disabled="{cloning}">Close</button>
-                <button type="button" class="btn btn-primary" disabled="{siteName==='' || skeletonInfo==null || cloning}" onclick="{createSite.bind(this, siteName)}">Create</button>
+                <button type="button" class="btn btn-primary" disabled="{siteName==='' || template==null || cloning}" onclick="{createSite.bind(this, siteName)}">Create</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -57,32 +57,21 @@
         var root = me.root;
         var dialog = require('electron').remote.dialog;
 
+        me.templateList = [];
+        try {
+            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString());
+        } catch(ex) {
+            console.log(ex);
+        }
         me.siteName = '';
         me.errMsg = '';
-        me.skeletonMap = {
-            standard: {
-                name:   'standard',
-                url:    'https://github.com/easywebhub/easy-websites.git',
-                branch: 'master'
-            },
-            advanced: {
-                name:   'advanced',
-                url:    'https://github.com/easywebhub/easy-websites.git',
-                branch: 'master-advanced'
-            },
-            'with-advanced': {
-                name:   'with category',
-                url:    'https://github.com/easywebhub/easy-websites.git',
-                branch: 'easywebhub-category'
-            }
-        };
-        me.skeletonInfo = null;
+        me.template = null;
         me.cloning = false;
 
         me.show = function () {
             me.errMsg = '';
             me.siteName = '';
-            me.skeletonInfo = null;
+            me.template = null;
             me.cloning = false;
             // active first skeleton
             setTimeout(function(){
@@ -96,8 +85,8 @@
             });
         };
 
-        me.selectSkeleton = function(skeleton, e) {
-            me.skeletonInfo = skeleton;
+        me.selectSkeleton = function(template, e) {
+            me.template = template;
             $(me.root.querySelectorAll('.pricing-card')).removeClass('active');
             $(e.currentTarget).addClass('active');
         };
@@ -110,7 +99,7 @@
             me.cloning = 1;
             me.errMsg = '';
             me.update();
-            me.parent.createSite(siteName, me.skeletonInfo.url, me.skeletonInfo.branch).then(function (ret) {
+            me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (ret) {
                 // TODO stop loading animation
                 me.cloning = 0;
                 me.update();

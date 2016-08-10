@@ -1,0 +1,12 @@
+[
+	{
+		"name":   "base",
+		"url":    "https://github.com/easywebhub/easy-websites.git",
+		"branch": "master"
+	},
+	{
+		"name":   "with category",
+		"url":    "https://github.com/easywebhub/easy-websites.git",
+		"branch": "easywebhub-category"
+	}
+]
