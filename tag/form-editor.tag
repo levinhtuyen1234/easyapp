@@ -1,7 +1,7 @@
 <form-field-category-text class="form-group">
     <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
     <div class="col-sm-9 input-group">
-        <select class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">
+        <select class="selectpicker" onchange="{edit.bind(this,'value')}">
             <option value=""></option>
             <option each="{category in categoryList}" value="{category.value}">{category.name}</option>
         </select>
@@ -22,10 +22,8 @@
             });
             me.update();
             var dropdown = $(me.root.querySelector('select'));
-            window.dropdown = dropdown;
             dropdown.selectpicker('refresh');
             dropdown.selectpicker('val', me.value);
-            console.log('val', me.value);
         });
 
         me.getValue = function () {
