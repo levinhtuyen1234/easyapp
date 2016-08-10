@@ -69,6 +69,11 @@
                 name:   'advanced',
                 url:    'https://github.com/easywebhub/easy-websites.git',
                 branch: 'master-advanced'
+            },
+            'with-advanced': {
+                name:   'with category',
+                url:    'https://github.com/easywebhub/easy-websites.git',
+                branch: 'easywebhub-category'
             }
         };
         me.skeletonInfo = null;
