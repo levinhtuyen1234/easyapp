@@ -120,9 +120,10 @@
             win.on('closed', function () {
                 win = null
             });
-            win.loadURL('http://book.easywebhub.com/');
+            win.loadURL('http://blog.easywebhub.com/');
             win.show()
         };
+
 
 
         me.showImportGithub = function () {
