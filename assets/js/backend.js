@@ -374,8 +374,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     "description": "",
     "category": "${category}",
     "layout": "${layoutFileName}",
-    "date": "${getLocalDate()}",
-    "permalink": true
+    "date": "${getLocalDate()}"
 }
 ---
 `;
