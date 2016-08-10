@@ -712,15 +712,15 @@ function getListConfig(dir) {
 
 var categoryListCache;
 function getCategoryList(siteName) {
-    if (categoryListCache)
-        return categoryListCache;
-    else
+    // if (categoryListCache)
+    //     return categoryListCache;
+    // else
         categoryListCache = getListConfig(Path.join(sitesRoot, siteName, 'content', 'category'));
     return categoryListCache;
 }
 
 function purgeCategoryListCache() {
-    categoryListCache = null;
+    // categoryListCache = null;
 }
 
 function getTagList(siteName) {
