@@ -13,7 +13,16 @@
                         <div class="col-sm-10">
                             <div class="input-group">
                                 <input type="text" class="form-control" name="layoutNameElm" placeholder="FileName" oninput="{updateFileName}">
-                                <span class="input-group-addon">.html</span>
+                                <span class="input-group-addon">{postFix}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">Category</label>
+                        <div class="col-sm-10">
+                            <div class="input-group">
+                                <input type="checkbox" class="form-control" name="isCategory" onchange="{updatePostfix}">
                             </div>
                         </div>
                     </div>
@@ -28,6 +37,8 @@
     <script>
         var me = this;
         me.layoutName = '';
+        me.postFix = '.html';
+        me.isCategory = false;
 
         me.edit = function (name, e) {
             switch (e.target.type) {
@@ -45,6 +56,7 @@
 
         me.updateFileName = function (e) {
             var title = e.target.value;
+
             var combining = /[\u0300-\u036F]/g;
             title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').trim();
             me.layoutName = title;
