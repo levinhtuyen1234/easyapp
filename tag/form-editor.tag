@@ -11,8 +11,9 @@
         me.mixin('form');
         me.config = opts.config || {};
         me.value = opts.value || '';
+        me.categoryList = [];
 
-        console.log('form-field-category-text opts', me.opts);
+        console.log('form-field-category-text value', me.value);
 
         me.on('mount', function () {
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
@@ -20,7 +21,11 @@
                 category.name = category.name.split('.').join(' / ');
             });
             me.update();
-            $(me.root.querySelector('select')).selectpicker('refresh');
+            var dropdown = $(me.root.querySelector('select'));
+            window.dropdown = dropdown;
+            dropdown.selectpicker('refresh');
+            dropdown.selectpicker('val', me.value);
+            console.log('val', me.value);
         });
 
         me.getValue = function () {
