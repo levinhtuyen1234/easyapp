@@ -1,4 +1,37 @@
 <form-field-category-text class="form-group">
+    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
+    <div class="col-sm-9 input-group">
+        <select class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">
+            <option value=""></option>
+            <option each="{category in categoryList}" value="{category.value}">{category.name}</option>
+        </select>
+    </div>
+    <script>
+        var me = this;
+        me.mixin('form');
+        me.config = opts.config || {};
+        me.value = opts.value || '';
+
+        console.log('form-field-category-text opts', me.opts);
+
+        me.on('mount', function () {
+            me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
+            me.categoryList.forEach(function (category) {
+                category.name = category.name.split('.').join(' / ');
+            });
+            me.update();
+            $(me.root.querySelector('select')).selectpicker('refresh');
+        });
+
+        me.getValue = function () {
+            return me.value;
+        };
+
+        me.setValue = function (value) {
+            me.value = value;
+            me.update();
+        };
+    </script>
 </form-field-category-text>
 
 <form-field-text class="form-group">
@@ -317,7 +350,7 @@
 
         me.showChooseFile = function () {
             if (me.config.viewOnly) return;
-            riot.api.trigger('chooseMediaFile', function(relativePath) {
+            riot.api.trigger('chooseMediaFile', function (relativePath) {
 //                me.value = relativePath.split(/[\\\/]/).pop();
                 me.value = relativePath;
                 me['form-' + me.config.name].value = relativePath;
@@ -345,7 +378,7 @@
         var me = this;
         me.form = null;
         me.formfields = [];
-
+        me.siteName = me.opts.siteName;
         me.codeEditorMap = {};
 
         me.on('mount', function () {
@@ -448,12 +481,18 @@
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
+                console.log('fieldConfig.name', fieldConfig.name);
                 var div = document.createElement('div');
                 var tagTypeName = 'form-field-' + fieldConfig.type.toLowerCase();
+                // special case for category
+                if (fieldConfig.name === 'category') {
+                    tagTypeName = 'form-field-category-text';
+                }
                 // TODO fix this, tam thoi su dung object cho array luon
                 if (tagTypeName === 'form-field-array')
                     tagTypeName = 'form-field-object';
                 div.setAttribute('data-is', tagTypeName);
+                div.setAttribute('site-name',  me.opts.siteName);
                 me.form.appendChild(div);
                 var tag = riot.mount(div, {
                     config: fieldConfig,

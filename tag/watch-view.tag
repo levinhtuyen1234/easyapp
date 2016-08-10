@@ -50,7 +50,7 @@
                     'NODE_PATH': nodePath,
                     'PATH':      PATH
                 },
-                cwd:   Path.resolve(Path.join('sites', opts.site_name)),
+                cwd:   Path.resolve(Path.join('sites', opts.siteName)),
                 shell: true
             });
 
@@ -94,8 +94,8 @@
         }
         //        me.npmInstall = function () {
         //            console.log('npmInstall');
-        //            console.log('npm cli', Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
-        //            spawnProcess('node.exe', [Path.resolve(Path.join(opts.site_name, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
+        //            console.log('npm cli', Path.resolve(Path.join(opts.siteName, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')));
+        //            spawnProcess('node.exe', [Path.resolve(Path.join(opts.siteName, '..', 'tools', 'nodejs', 'node_modules', 'npm', 'bin', 'npm-cli.js')), 'install']);
         //        };
 
         // close watch process truoc khi app exit

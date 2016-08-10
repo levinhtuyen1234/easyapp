@@ -111,16 +111,16 @@
                         </div>
                         <div class="panel-body">
                             <div class="tab-content">
-                                <content-view id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                                <meta-view id="meta-view" role="tabpanel" class="tab-pane"></meta-view>
-                                <code-editor id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <code-editor id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <config-view id="config-view" role="tabpanel" class="tab-pane"></config-view>
+                                <content-view site-name="{siteName}" id="content-view" role="tabpanel" class="tab-pane"></content-view>
+                                <meta-view site-name="{siteName}" id="meta-view" role="tabpanel" class="tab-pane"></meta-view>
+                                <code-editor site-name="{siteName}" id="code-view" role="tabpanel" class="tab-pane"></code-editor>
+                                <code-editor site-name="{siteName}" id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
+                                <config-view site-name="{siteName}" id="config-view" role="tabpanel" class="tab-pane"></config-view>
                             </div>
                         </div>
                     </div>
                 </div>
-                <watch-view id="watch-view" site_name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
+                <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
             </div>
         </div>
     </div>
