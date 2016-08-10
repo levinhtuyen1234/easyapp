@@ -268,6 +268,12 @@
         };
 
         me.openWatchView = function (mode) {
+            if (mode) {
+                me.lastMode = mode;
+            } else {
+                if (!me.lastMode) return;
+                mode = me.lastMode;
+            }
             console.log('watch view', mode);
             $(me.root.querySelector('#editor-view')).hide();
             $(me.root.querySelector('#watch-view')).show();
