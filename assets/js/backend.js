@@ -169,7 +169,7 @@ function genSimpleContentConfigFile(metaData) {
     var tmpFields = [];
 
     for (var key in metaData) {
-        var fields = (key === 'slug' || key === 'layout') ? fixedFields : tmpFields;
+        var fields = (key === 'slug' || key === 'layout' || key === 'category' || key === 'tag') ? fixedFields : tmpFields;
         if (!metaData.hasOwnProperty(key)) continue;
         var value = metaData[key];
 
@@ -361,7 +361,7 @@ function newLayoutFile(siteName, layoutFileName) {
     return {name: layoutFileName, path: layoutFilePath.replace(/\\/g, '/')};
 }
 
-function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, category, isFrontPage) {
+function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, category, tag, isFrontPage) {
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
     var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
     var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
@@ -373,6 +373,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     "slug": "${slug}",
     "description": "",
     "category": "${category}",
+    "tag": "${tag}",
     "layout": "${layoutFileName}",
     "date": "${getLocalDate()}"
 }
@@ -689,11 +690,13 @@ function setDomain(siteName, domain) {
 function getListConfig(dir) {
     try {
         var filePathList = Fs.readdirSync(dir);
-        console.log('filePathList', filePathList);
+        // console.log('filePathList', filePathList);
         let ret = [];
         filePathList.forEach(function (filePath) {
             // console.log('filePath', filePath);
             filePath = Path.join(dir, filePath);
+            var stat = Fs.statSync(filePath);
+            if (!stat.isFile()) return;
             var fileName = filePath.split(/[\\\/]/g).pop();
             var categoryValue = fileName.substr(0, fileName.lastIndexOf('.'));
             var config = JSON.parse(Fs.readFileSync(filePath));
@@ -714,7 +717,7 @@ function getCategoryList(siteName) {
     // if (categoryListCache)
     //     return categoryListCache;
     // else
-        categoryListCache = getListConfig(Path.join(sitesRoot, siteName, 'content', 'category'));
+    categoryListCache = getListConfig(Path.join(sitesRoot, siteName, 'content', 'metadata', 'category'));
     return categoryListCache;
 }
 
@@ -722,8 +725,9 @@ function purgeCategoryListCache() {
     // categoryListCache = null;
 }
 
+// TODO cache getTagList and getCategoryList
 function getTagList(siteName) {
-    return getListConfig(Path.join(sitesRoot, siteName, 'content', 'tag'));
+    return getListConfig(Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag'));
 }
 
 
@@ -735,6 +739,28 @@ function getCategoryLayoutList(siteName) {
         return fileName.endsWith('.category.html');
     };
     return scanDir(siteRoot, 'layout', ret, filter)
+}
+
+function newTag(siteName, tagName, tagFileName) {
+    var defaultTagConfig = JSON.stringify({
+        "sortBy":      "date",
+        "reverse":     false,
+        "metadata":    {},
+        "displayName": tagName,
+        "perPage":     10,
+        "noPageOne":   true,
+        "layout":      "default.tag.html",
+        "first":       "tag/:tag/index.html",
+        "path":        "tag/:tag/page/:num/index.html"
+    }, null, 4);
+    try {
+        Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag'));
+    } catch (_) {
+    }
+    var fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag', tagFileName);
+    Fs.writeFileSync(fullPath, defaultTagConfig, {flag: 'wx+'});
+    var categoryFilePath = Path.join('content', 'metadata', 'category', tagFileName);
+    return {name: tagName, path: categoryFilePath.replace(/\\/g, '/')};
 }
 
 function newCategory(siteName, categoryName, categoryFileName) {
@@ -750,12 +776,12 @@ function newCategory(siteName, categoryName, categoryFileName) {
         "path":        ":categoryPath/page/:num/index.html"
     }, null, 4);
     try {
-        Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'category'));
+        Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'metadata', 'category'));
     } catch (_) {
     }
-    var fullPath = Path.join(sitesRoot, siteName, 'content', 'category', categoryFileName);
+    var fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'category', categoryFileName);
     Fs.writeFileSync(fullPath, defaultCategoryConfig, {flag: 'wx+'});
-    var categoryFilePath = Path.join('content', 'category', categoryFileName);
+    var categoryFilePath = Path.join('content', 'metadata', 'category', categoryFileName);
     return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/')};
 }
 
@@ -764,6 +790,7 @@ module.exports = {
     getCategoryLayoutList:  getCategoryLayoutList,
     getCategoryList:        getCategoryList,
     purgeCategoryListCache: purgeCategoryListCache,
+    newTag:                 newTag,
     getTagList:             getTagList,
     getMetaFile:            getMetaFile,
     getMetaConfigFile:      getMetaConfigFile,

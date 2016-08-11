@@ -24,8 +24,14 @@
         me.getContentType = function (path) {
             if (path.indexOf('layout/partial/') != -1)
                 return '[Partial] ';
-            if (path.indexOf('content/category/') != -1)
+            if (path.endsWith('.category.html'))
                 return '[Category] ';
+            if (path.endsWith('.tag.html'))
+                return '[Tag] ';
+            if (path.indexOf('content/metadata/category/') != -1)
+                return '[Category] ';
+            if (path.indexOf('content/metadata/tag/') != -1)
+                return '[Tag] ';
             return '';
         };
 
@@ -79,7 +85,7 @@
         })();
 
         var sortByExt = function (a, b) {
-            if (a.path.startsWith('content/category'))
+            if (a.path.startsWith('content/metadata/category'))
                 return 1;
 
             if (a.path.startsWith('content/metadata/'))
@@ -88,20 +94,42 @@
             return a.name > b.name;
         };
 
-        var sortLayout = function (a, b) {
-            if (a.path.startsWith('layout/partial'))
-                return 1;
-            return a.path > b.path;
+        var sortLayoutFiles = function (files) {
+            var categories = [];
+            var tags = [];
+            var partials = [];
+            var others = [];
+
+            files.forEach(function (file) {
+                if (file.path.startsWith('layout/partial'))
+                    partials.push(file);
+                else if (file.path.endsWith('.category.html'))
+                    categories.push(file);
+                else if (file.path.endsWith('.tag.html'))
+                    tags.push(file);
+                else
+                    others.push(file);
+            });
+
+            categories.sort();
+            tags.sort();
+            partials.sort();
+            others.sort();
+
+            return partials.concat(categories, tags, others);
         };
 
         var sortContentFiles = function (files) {
             var categories = [];
+            var tags = [];
             var contents = [];
             var metadataList = [];
 
             files.forEach(function (file) {
-                if (file.path.startsWith('content/category')) {
+                if (file.path.startsWith('content/metadata/category/')) {
                     categories.push(file);
+                } else if (file.path.startsWith('content/metadata/tag/')) {
+                    tags.push(file);
                 } else if (file.path.startsWith('content/metadata/')) {
                     metadataList.push(file);
                 } else {
@@ -112,20 +140,24 @@
             categories.sort();
             metadataList.sort();
             contents.sort();
-            return metadataList.concat(categories, contents);
+            return metadataList.concat(categories, tags, contents);
         };
 
         me.hideExt = function (name) {
             var parts = name.split('.');
             if (parts.length > 1)
                 parts.pop();
+
+            if (name.endsWith('.category.html') || name.endsWith('.tag.html'))
+                parts.pop();
+
             return parts.join('.');
         };
 
         me.loadFiles = function (files) {
             me.clear();
             if (me.opts.type == 'layout') {
-                files = files.sort(sortLayout);
+                files = sortLayoutFiles(files);
             } else if (me.opts.type == 'content') {
                 files = sortContentFiles(files);
             } else

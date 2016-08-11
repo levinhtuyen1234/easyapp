@@ -35,6 +35,47 @@
     </script>
 </form-field-category-text>
 
+<form-field-tag-text class="form-group">
+    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
+    <div class="col-sm-9 input-group">
+        <select class="selectpicker" onchange="{editTag}" multiple>
+            <option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>
+        </select>
+    </div>
+    <script>
+        var me = this;
+        me.mixin('form');
+        me.config = opts.config || {};
+        me.value = opts.value || '';
+        me.tagList = [];
+
+        me.editTag = function(e) {
+            var selectedTags = $(e.srcElement).val();
+            if (selectedTags == null)
+                me.value = [];
+            else
+                me.value = selectedTags;
+        };
+
+        me.on('mount', function () {
+            me.tagList = BackEnd.getTagList(me.opts.siteName);
+            me.update();
+            var dropdown = $(me.root.querySelector('select'));
+            dropdown.selectpicker('refresh');
+            dropdown.selectpicker('val', me.value);
+        });
+
+        me.getValue = function () {
+            return me.value;
+        };
+
+        me.setValue = function (value) {
+            me.value = value;
+            me.update();
+        };
+    </script>
+</form-field-tag-text>
+
 <form-field-text class="form-group">
     <style>
         .fieldMarkDown {
@@ -485,6 +526,8 @@
                 // special case for category
                 if (fieldConfig.name === 'category') {
                     tagTypeName = 'form-field-category-text';
+                } else if (fieldConfig.name === 'tag') {
+                    tagTypeName = 'form-field-tag-text';
                 }
                 // TODO fix this, tam thoi su dung object cho array luon
                 if (tagTypeName === 'form-field-array')

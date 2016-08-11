@@ -38,11 +38,20 @@
                     <!--</div>-->
 
                     <div class="form-group">
-                        <label for="contentLayoutElm" class="col-sm-2 control-label">Category</label>
+                        <label for="categoryListElm" class="col-sm-2 control-label">Category</label>
                         <div class="col-sm-10">
                             <select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">
                                 <option value=""></option>
                                 <option each="{category in categoryList}" value="{category.value}">{category.name}</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tagListElm" class="col-sm-2 control-label">Tag</label>
+                        <div class="col-sm-10">
+                            <select id="tagListElm" class="selectpicker" onchange="{editTag}" multiple>
+                                <option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>
                             </select>
                         </div>
                     </div>
@@ -68,15 +77,17 @@
         var me = this;
         me.layoutList = [];
         me.categoryList = [];
+        me.tagList = [];
         me.contentLayout = '';
         me.contentTitle = '';
         me.contentFileName = '';
         me.contentCategory = '';
+        me.contentTag = '';
 
         console.log('SITE NAME', me.opts.siteName);
 
         me.canAdd = function () {
-            return me.contentLayout == '' || me.contentTitle == '' || me.contentTitle == '.md' || me.contentCategory == '';
+            return me.contentLayout == '' || me.contentTitle == '' || me.contentTitle == '.md';
         };
 
         me.edit = function (name, e) {
@@ -90,6 +101,14 @@
             me.updateFileName();
         };
 
+        me.editTag = function(e) {
+            var selectedTags = $(e.srcElement).val();
+            if (selectedTags == null)
+                me.contentTag = '[]';
+            else
+                me.contentTag = JSON.stringify(selectedTags);
+        };
+
         me.hideExt = function (name) {
             var parts = name.split('.');
             if (parts.length > 1)
@@ -98,7 +117,8 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.isFrontPageElm.checked);
+            console.log(me.contentTag);
+//            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.isFrontPageElm.checked);
         };
 
 
@@ -138,16 +158,24 @@
             me.contentTitle = '';
             me.contentTitleElm.value = '';
             me.contentFileName = '';
+
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
-            me.categoryList.forEach(function(category){
+            me.categoryList.forEach(function (category) {
                 category.name = category.name.split('.').join(' / ');
             });
+
+            me.tagList = BackEnd.getTagList(me.opts.siteName);
+            me.tagList.forEach(function (tag) {
+                tag.name = tag.name.split('.').join(' / ');
+            });
+
             me.update();
 
 
             $(me.root).modal('show');
             $(me.contentLayoutElm).selectpicker('refresh');
             $(me.categoryListElm).selectpicker('refresh');
+            $(me.tagListElm).selectpicker('refresh');
             riot.api.one('closeNewContentDialog', function () {
                 $(me.root).modal('hide');
             });

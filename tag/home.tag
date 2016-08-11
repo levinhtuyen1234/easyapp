@@ -1,4 +1,5 @@
 <home>
+    <new-tag-dialog site-name={opts.siteName}></new-tag-dialog>
     <new-category-dialog site-name={opts.siteName}></new-category-dialog>
     <new-content-dialog site-name={opts.siteName}></new-content-dialog>
     <new-layout-dialog site-name={opts.siteName}></new-layout-dialog>
@@ -12,13 +13,16 @@
                         <i class="fa fa-fw fa-home"></i>Home
                     </a>
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
-                        <i class="fa fa-fw fa-plus"></i> Add Page
+                        <i class="fa fa-fw fa-plus"></i> Page
                     </a>
                     <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Add Layout
+                        <i class="fa fa-fw fa-plus"></i> Layout
                     </a>
-                    <a href="#" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Add Category
+                    <a href="#" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
+                        <i class="fa fa-fw fa-plus"></i> Category
+                    </a>
+                    <a href="#" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
+                        <i class="fa fa-fw fa-plus"></i> Tag
                     </a>
                 </div>
                 <div class="pull-right">
@@ -145,7 +149,10 @@
         me.isShowMetaTab = function () {
             return me.curTab == 'meta-view' ||
                     ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.json')) ||
-                    (me.curTab == 'code-view' && me.currentFilePath.endsWith('.json') && !me.currentFilePath.startsWith('content/category'));
+                    (
+                            me.curTab == 'code-view' &&
+                            me.currentFilePath.endsWith('.json') && !me.currentFilePath.startsWith('content/metadata/category') && !me.currentFilePath.startsWith('content/metadata/tag')
+                    );
 
         };
 
@@ -164,7 +171,7 @@
                             me.curTab == 'config-view' ||
                             me.curTab == 'content-view' ||
                             ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
-                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/category/') && me.currentFilePath.endsWith('.json'))
+                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/metadata/category/')&& !me.currentFilePath.startsWith('content/metadata/tag/') && me.currentFilePath.endsWith('.json'))
                     )
         };
 
@@ -467,12 +474,12 @@
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
 //                console.log('filePath', filePath);
-                if (filePath.startsWith('content/metadata')) {
-//                    console.log('openMetaTab');
-                    me.openMetaTab();
-                } else if (filePath.startsWith('content/category')) {
+                if (filePath.startsWith('content/metadata/category') || filePath.startsWith('content/metadata/tag')) {
 //                    console.log('open category config file');
                     me.openRawContentTab();
+                } else if (filePath.startsWith('content/metadata')) {
+//                    console.log('openMetaTab');
+                    me.openMetaTab();
                 }
                 // openMetaConfigTab
 //                me.openRawContentTab();
@@ -586,6 +593,10 @@
             me.tags['new-category-dialog'].show();
         };
 
+        me.newTag = function () {
+            me.tags['new-tag-dialog'].show();
+        };
+
         me.newContent = function () {
             var layoutList = BackEnd.getRootLayoutList(me.siteName);
             me.tags['new-content-dialog'].updateLayoutList(layoutList);
@@ -606,9 +617,9 @@
             }
         };
 
-        var onAddContent = function (layoutFileName, contentTitle, contentFileName, contentCategory, isFrontPage) {
+        var onAddContent = function (layoutFileName, contentTitle, contentFileName, contentCategory, contentTag, isFrontPage) {
             try {
-                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, contentCategory, isFrontPage);
+                var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, contentCategory, contentTag, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
                 riot.api.trigger('addContentFile', newContentFilePath);
@@ -628,14 +639,20 @@
                 var newFile = BackEnd.newCategory(me.siteName, categoryName, categoryFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.api.trigger('closeNewCategoryDialog');
-//                setTimeout(function () {
-//                    me.tags['side-bar'].activeFile('content-file-list', 'content/category/' + categoryFileName);
-//                }, 100);
-                BackEnd.purgeCategoryListCache();
-                // TODO purgeCategoryListCache when delete
             } catch (ex) {
-                console.log('addCategory', ex);
+                console.log('addCategory failed', ex);
                 bootbox.alert('create category failed, error ' + ex.message);
+            }
+        };
+
+        var onAddTag = function (tagName, tagFileName) {
+            try {
+                var newFile = BackEnd.newTag(me.siteName, tagName, tagFileName);
+                BackEnd.gitAdd(me.siteName, newFile.path);
+                riot.api.trigger('closeNewTagDialog');
+            } catch (ex) {
+                console.log('addTag failed', ex);
+                bootbox.alert('create tag failed, error ' + ex.message);
             }
         };
 
@@ -645,7 +662,7 @@
 
         var onWatchFailed = function () {
             me.openExternalReviewBtn.disabled = true;
-            $(openWdatchViewBtn).removeClass('active');
+//            $(openWdatchViewBtn).removeClass('active');
         };
 
         var onChooseMediaFile = function (cb) {
@@ -673,6 +690,7 @@
         riot.api.on('addLayout', onAddLayout);
         riot.api.on('addContent', onAddContent);
         riot.api.on('addCategory', onAddCategory);
+        riot.api.on('addTag', onAddTag);
 
         me.on('unmount', function () {
             riot.api.off('watchSuccess', onWatchSuccess);
@@ -681,6 +699,7 @@
             riot.api.off('addLayout', onAddLayout);
             riot.api.off('addContent', onAddContent);
             riot.api.off('addCategory', onAddCategory);
+            riot.api.off('addTag', onAddTag);
         });
 
         me.deployToGitHub = function () {
