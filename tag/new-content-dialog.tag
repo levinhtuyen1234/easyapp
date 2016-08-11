@@ -117,8 +117,8 @@
         };
 
         me.add = function () {
-            console.log(me.contentTag);
-//            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.isFrontPageElm.checked);
+//            console.log(me.contentTag);
+            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
         };
 
 
