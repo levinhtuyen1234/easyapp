@@ -16,14 +16,14 @@
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
-                            <label for="isFrontPageElm">
-                                <input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> To create a single Page, check here
-                            </label>
-                            <label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>
-                        </div>
-                    </div>
+                    <!--<div class="form-group">-->
+                        <!--<div class="col-sm-offset-2 col-sm-10">-->
+                            <!--<label for="isFrontPageElm">-->
+                                <!--<input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> To create a single Page, check here-->
+                            <!--</label>-->
+                            <!--<label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>-->
+                        <!--</div>-->
+                    <!--</div>-->
                     <div class="form-group">
                         <label for="contentTitleElm" class="col-sm-2 control-label">Page Title</label>
                         <div class="col-sm-10">
@@ -118,7 +118,8 @@
 
         me.add = function () {
 //            console.log(me.contentTag);
-            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
+//            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
+            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
         };
 
 
@@ -142,13 +143,13 @@
             me.contentTitle = title;
             var combining = /[\u0300-\u036F]/g;
             title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').toLowerCase().trim();
-            if (me.isFrontPageElm.checked) {
+//            if (me.isFrontPageElm.checked) {
                 me.contentFileName = title;
-            } else {
-                var contentLayoutBase = me.contentLayout.split('.');
-                contentLayoutBase.pop();
-                me.contentFileName = contentLayoutBase.join('') + '/' + title;
-            }
+//            } else {
+//                var contentLayoutBase = me.contentLayout.split('.');
+//                contentLayoutBase.pop();
+//                me.contentFileName = contentLayoutBase.join('') + '/' + title;
+//            }
 
             me.update();
         };

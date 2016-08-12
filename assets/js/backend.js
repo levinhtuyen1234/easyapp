@@ -30,20 +30,24 @@ function getSitePath(siteName) {
 }
 
 function createSiteFolder(siteName) {
-    console.log('createSiteFolder', sitesRoot, siteName);
+    // console.log('createSiteFolder', sitesRoot, siteName);
     let sitePath = Path.join(sitesRoot, siteName);
     return Mkdir(sitePath).then(function () {
         return sitePath;
     })
 }
 
-function filterSideBarFile(name, isDir) {
-    var ignoreExt = ['.config.json', '.html'];
-    if (IGNORE_NAMES.indexOf(name) != -1) return false;
-    var ext = name.split('.').pop();
-    if (ignoreExt.indexOf(ext) != -1)
-        return false;
-    return true;
+function filterContentFile(name, isDir) {
+    if (isDir) return true;
+    if (name.endsWith('.md'))
+        return true;
+    return false;
+    // var ignoreExt = ['.json', '.html'];
+    // if (IGNORE_NAMES.indexOf(name) != -1) return false;
+    // var ext = name.split('.').pop();
+    // if (ignoreExt.indexOf(ext) != -1)
+    //     return false;
+    // return true;
 }
 
 function filterOnlyLayoutFile(name, isDir) {
@@ -62,7 +66,7 @@ function filterOnlyRootLayoutFile(name, isDir) {
     } else {
         var ext = name.split('.').pop();
         if (ext !== 'html') return false;
-        if (name.endsWith('.category.html')) return false;
+        if (name.endsWith('.category.html') || name.endsWith('.tag.html')) return false;
     }
     return true;
 }
@@ -106,8 +110,9 @@ function getSiteContentFiles(siteName) {
     var folders = ['content'];
     var files = [];
     for (var folder of folders) {
-        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterSideBarFile);
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterContentFile);
     }
+    // console.log('getSiteContentFiles', files);
     return files;
 }
 
@@ -126,7 +131,7 @@ function getSiteAssetFiles(siteName) {
     var folders = ['asset'];
     var files = [];
     for (var folder of folders) {
-        console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
+        // console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterAssetFile);
     }
     return files;
@@ -137,7 +142,7 @@ function getLayoutList(siteName) {
     var folders = ['layout'];
     var files = [];
     for (var folder of folders) {
-        console.log('getLayoutList', Path.join(sitesRoot, siteName, folder));
+        // console.log('getLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
     }
     return files;
@@ -148,7 +153,7 @@ function getRootLayoutList(siteName) {
     var folders = ['layout'];
     var files = [];
     for (var folder of folders) {
-        console.log('getRootLayoutList', Path.join(sitesRoot, siteName, folder));
+        // console.log('getRootLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyRootLayoutFile);
     }
     return files;
@@ -373,7 +378,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     "slug": "${slug}",
     "description": "",
     "category": "${category}",
-    "tag": "${tag}",
+    "tag": ${tag},
     "layout": "${layoutFileName}",
     "date": "${getLocalDate()}"
 }
@@ -736,7 +741,9 @@ function getCategoryLayoutList(siteName) {
     var siteRoot = Path.join(sitesRoot, siteName);
     var filter = function (fileName, isDir) {
         if (isDir) return false; // no recursive
-        return fileName.endsWith('.category.html');
+        if (fileName.endsWith('.category.html')) return false;
+        if (fileName.endsWith('.tag.html')) return false;
+        return true;
     };
     return scanDir(siteRoot, 'layout', ret, filter)
 }
@@ -785,6 +792,26 @@ function newCategory(siteName, categoryName, categoryFileName) {
     return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/')};
 }
 
+function filterOnlyMetadataFile(name, isDir) {
+    if (isDir) {
+        return true;
+    } else {
+        var ext = name.split('.').pop();
+        if (ext !== 'json') return false;
+    }
+    return true;
+}
+
+function getSiteMetadataFiles(siteName) {
+    var siteRoot = Path.join(sitesRoot, siteName);
+    var folders = ['content/metadata'];
+    var files = [];
+    for (var folder of folders) {
+        ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyMetadataFile);
+    }
+    return files;
+}
+
 module.exports = {
     newCategory:            newCategory,
     getCategoryLayoutList:  getCategoryLayoutList,
@@ -793,6 +820,7 @@ module.exports = {
     newTag:                 newTag,
     getTagList:             getTagList,
     getMetaFile:            getMetaFile,
+    getSiteMetadataFiles:   getSiteMetadataFiles,
     getMetaConfigFile:      getMetaConfigFile,
     saveMetaFile:           saveMetaFile,
     saveMetaConfigFile:     saveMetaConfigFile,

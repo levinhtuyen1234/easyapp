@@ -73,7 +73,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 180px)">
-                <side-bar site_name={opts.siteName}></side-bar>
+                <side-bar site-name={opts.siteName}></side-bar>
             </div>
 
             <div class="tab-content">
@@ -340,7 +340,7 @@
             try {
                 HideAllTab();
 
-                me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+                me.tags['side-bar'].activeFile('metadata-file-list', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
                 me.update();
 
@@ -485,6 +485,10 @@
 //                me.openRawContentTab();
             }
             me.update();
+        };
+
+        me.openMetadataFile = function(filePath) {
+            me.openFile(filePath);
         };
 
         me.save = function () {

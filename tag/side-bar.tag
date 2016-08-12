@@ -8,8 +8,11 @@
             <a class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
                 <input type="radio" name="file-list-options">Layout
             </a>
-            <a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Asset
+            <!--<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
+                <!--<input type="radio" name="file-list-options">Asset-->
+            <!--</a>-->
+            <a class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
+                <input type="radio" name="file-list-options">Metadata
             </a>
         </div>
         <!--</div>-->
@@ -17,7 +20,8 @@
             <div class="tab-content">
                 <file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
                 <file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+                <file-list-flat type="metadata" id="metadata-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
+                <!--<file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
             </div>
         </div>
     </div>
@@ -49,25 +53,34 @@
                 case 'layout-file-list':
                     me.tags['file-list-flat'][1].activeFile(filePath);
                     break;
-                case 'asset-file-list':
+//                case 'asset-file-list':
+//                    me.tags['file-list-flat'][2].activeFile(filePath);
+//                    break;
+                case 'metadata-file-list':
                     me.tags['file-list-flat'][2].activeFile(filePath);
                     break;
             }
         };
 
         me.reloadContentFileTab = function () {
-            var files = BackEnd.getSiteContentFiles(opts.site_name);
+            var files = BackEnd.getSiteContentFiles(opts.siteName);
             contentFileTag.loadFiles(files);
         };
 
         me.reloadLayoutFileTab = function () {
-            var files = BackEnd.getSiteLayoutFiles(opts.site_name);
+            var files = BackEnd.getSiteLayoutFiles(opts.siteName);
             layoutFileTag.loadFiles(files);
         };
 
-        me.reloadAssetFileTab = function () {
-            var files = BackEnd.getSiteAssetFiles(opts.site_name);
-            assetFileTag.loadFiles(files);
+        //        me.reloadAssetFileTab = function () {
+        //            var files = BackEnd.getSiteAssetFiles(opts.siteName);
+        //            assetFileTag.loadFiles(files);
+        //        };
+
+        me.reloadMetadataFileTab = function () {
+            var files = BackEnd.getSiteMetadataFiles(opts.siteName);
+            console.log('metadata files', files);
+            metadataFileTag.loadFiles(files);
         };
 
         me.reloadCurrentTab = function () {
@@ -80,8 +93,11 @@
                 case '#layout-file-list':
                     me.reloadLayoutFileTab();
                     break;
-                case '#asset-file-list':
-                    me.reloadAssetFileTab();
+//                case '#asset-file-list':
+//                    me.reloadAssetFileTab();
+//                    break;
+                case '#metadata-file-list':
+                    me.reloadMetadataFileTab();
                     break;
             }
         };
@@ -117,11 +133,13 @@
         me.on('mount', function () {
             contentFileTag = me.tags['file-list-flat'][0];
             layoutFileTag = me.tags['file-list-flat'][1];
-            assetFileTag = me.tags['file-list-flat'][2];
+//            assetFileTag = me.tags['file-list-flat'][2];
+            metadataFileTag = me.tags['file-list-flat'][2];
 
             me.reloadContentFileTab();
             me.reloadLayoutFileTab();
-            me.reloadAssetFileTab();
+            me.reloadMetadataFileTab();
+//            me.reloadAssetFileTab();
 
             contentFileTag.event.on('openFile', function (filePath) {
                 me.parent.openFile(filePath);
@@ -131,11 +149,15 @@
                 me.parent.openFile(filePath);
             });
 
-            assetFileTag.event.on('openFile', function (filePath) {
-                if (!me.parent.openAssetFile) {
-                    console.log('home tag need fn openAssetFile');
-                } else
-                    me.parent.openAssetFile(filePath);
+//            assetFileTag.event.on('openFile', function (filePath) {
+//                if (!me.parent.openAssetFile) {
+//                    console.log('home tag need fn openAssetFile');
+//                } else
+//                    me.parent.openAssetFile(filePath);
+//            });
+
+            metadataFileTag.event.on('openFile', function (filePath) {
+                me.parent.openMetadataFile(filePath);
             });
         });
     </script>
