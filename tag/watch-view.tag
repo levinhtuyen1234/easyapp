@@ -18,10 +18,14 @@
     <!--</label>-->
     <!--</div>-->
     <div class="tab-content">
-        <pre style="height: 200px; overflow: auto;">
-            <code class="accesslog hljs"></code>
-        </pre>
         <webview id="webview" src="about:blank" style="display:flex; height:68vh"></webview>
+        <div>
+          <p style="margin-bottom:-3px;">ConsoleLog of Build Process</p>
+          <pre style="height: 70px; overflow: auto;">
+              <code class="accesslog hljs"></code>
+          </pre>
+      </div>
+
     </div>
     <script>
         var ChildProcess = require('child_process');
