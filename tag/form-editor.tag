@@ -49,7 +49,7 @@
         me.value = opts.value || '';
         me.tagList = [];
 
-        me.editTag = function(e) {
+        me.editTag = function (e) {
             var selectedTags = $(e.srcElement).val();
             if (selectedTags == null)
                 me.value = [];
@@ -412,7 +412,7 @@
 </form-field-media>
 
 <form-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
-    <form class="form-horizontal" style="padding: 5px;">
+    <form class="form-horizontal" style="padding: 5px;" onkeypress="{checkSave}">
     </form>
     <script>
         var me = this;
@@ -424,6 +424,14 @@
         me.on('mount', function () {
             me.form = me.root.querySelector('form');
         });
+
+        me.checkSave = function (e) {
+            if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
+            console.log('Ctrl-S pressed');
+            riot.api.trigger('codeEditor.save');
+            e.preventDefault();
+            return false;
+        };
 
         function genSimpleInput(display, name, type, value) {
             if (type === 'boolean') {
@@ -533,7 +541,7 @@
                 if (tagTypeName === 'form-field-array')
                     tagTypeName = 'form-field-object';
                 div.setAttribute('data-is', tagTypeName);
-                div.setAttribute('site-name',  me.opts.siteName);
+                div.setAttribute('site-name', me.opts.siteName);
                 me.form.appendChild(div);
                 var tag = riot.mount(div, {
                     config: fieldConfig,
