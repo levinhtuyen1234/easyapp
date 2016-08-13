@@ -77,6 +77,7 @@
             </div>
 
             <div class="tab-content">
+                <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane" stype="display:none;"></watch-view>
                 <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
@@ -124,7 +125,7 @@
                         </div>
                     </div>
                 </div>
-                <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane"></watch-view>
+
             </div>
         </div>
     </div>
@@ -282,7 +283,8 @@
                 mode = me.lastMode;
             }
             console.log('watch view', mode);
-            $(me.root.querySelector('#editor-view')).hide();
+            // $(me.root.querySelector('#editor-view')).hide();
+            // $(me.root.querySelector('#editor-view')).show();
             $(me.root.querySelector('#watch-view')).show();
             ShowTab('watch-view');
             if (mode === 'user')
@@ -453,7 +455,7 @@
 
         me.openFile = function (filePath) {
             $(me.root.querySelector('#editor-view')).show();
-            $(me.root.querySelector('#watch-view')).hide();
+            //$(me.root.querySelector('#watch-view')).hide();
             if (me.tags['breadcrumb'] == null) {
                 console.log('breadcrumb', me.tags);
                 console.trace('bug');
