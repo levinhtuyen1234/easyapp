@@ -19,7 +19,7 @@
     <!--</div>-->
     <div class="tab-content">
 
-        <webview id="webview" src="about:blank" style="display:flex; height:50vh"></webview>
+        <webview id="webview" src="about:blank" style="display:flex; height:40vh"></webview>
         <div id="consoleLog" style="height:10vh;">
             <p style="margin-bottom:-3px;">ConsoleLog of Build Process</p>
             <pre style="max-height:100px; overflow: auto;">
