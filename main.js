@@ -33,12 +33,12 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
     mainWindow = new browserWindow({
-        width:    1080,
-        minWidth: 680,
-        height:   840,
-        // icon:     'file:/' + __dirname + '/favicon.ico'
-    });
 
+        minWidth: 1020,
+        minHeight: 740,
+        icon:     'file:/' + __dirname + '/favicon.ico'
+    });
+    mainWindow.maximize();
     // if (process.platform === 'linux') {
     //     windowOptions.icon = path.join(__dirname, '/assets/app-icon/png/512.png')
     // }
