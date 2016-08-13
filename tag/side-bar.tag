@@ -5,15 +5,16 @@
             <a class="btn btn-default navbar-btn btn-sm active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
                 <input type="radio" name="file-list-options">Content
             </a>
+            <a class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
+                <input type="radio" name="file-list-options">Meta
+            </a>
             <a class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
                 <input type="radio" name="file-list-options">Layout
             </a>
             <!--<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
                 <!--<input type="radio" name="file-list-options">Asset-->
             <!--</a>-->
-            <a class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Metadata
-            </a>
+
         </div>
         <!--</div>-->
         <div class="panel-body" style="padding: 0;">
