@@ -3,10 +3,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create New Layout</h4>
+                <h2 class="modal-title">Create new Layout</h2>
             </div>
             <div class="modal-body">
-                <label class="text-info">Tạo layout bằng HTML, CSS và HandleBarJS để sử dụng chung cho một hoặc nhiều trang</label>
+                <h4 class="text-success">(?) apply for one or multiple webpage, using HTML, CSS and <a href="http://handlebarsjs.com">HandlebarJS</a> code</h4>
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">FileName</label>
@@ -17,19 +17,22 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-group">
-                        <label class="col-sm-2 control-label">Category</label>
-                        <div class="col-sm-10">
-                            <div class="checkbox">
-                                <label>
-                                    <!--<input type="checkbox" name="input-{name}" checked="{value}">-->
-                                    <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
-                                </label>
-                            </div>
-                            <!--<div class="input-group">-->
-                            </div>
-                        <!--</div>-->
+                        <div class="col-sm-offset-1 col-sm-10">
+                                <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
+                                <label class="text-center">Is a Partial layout  (click <a href="http://handlebarsjs.com/partials.html" target="_blank">here</a> for a clear explanation)</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-5">
+                              <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
+                              <label class="control-label text-center">Is the layout of a Category</label>
+                        </div>
+                        <div class="col-sm-4">
+                              <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
+                              <label class="control-label text-center">Is the layout of a Tag</label>
+                        </div>
+                        <div class="col-sm-offset-1 col-sm-10">(click <a href="http://blog.easywebhub.com/syntax-of-easywebhub/" target="_blank">here</a> for a clear explanation)</div>
                     </div>
                 </form>
             </div>
