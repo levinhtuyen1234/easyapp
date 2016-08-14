@@ -15,15 +15,16 @@
                     <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
                         <i class="fa fa-fw fa-plus"></i> Page
                     </a>
-                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Layout
-                    </a>
                     <a href="#" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Category
                     </a>
                     <a href="#" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Tag
                     </a>
+                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+                        <i class="fa fa-fw fa-plus"></i> Layout
+                    </a>
+
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
