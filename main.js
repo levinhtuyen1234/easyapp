@@ -36,7 +36,7 @@ app.on('ready', () => {
 
         minWidth: 1020,
         minHeight: 740,
-        icon:     'file:/' + __dirname + '/favicon.ico'
+        //icon:     'file:/' + __dirname + '/favicon.ico'
     });
     mainWindow.maximize();
     // if (process.platform === 'linux') {
