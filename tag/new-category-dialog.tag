@@ -3,10 +3,10 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Create New Category</h4>
+                <h2 class="modal-title">Create new Category</h2>
             </div>
             <div class="modal-body">
-                <label class="text-info"></label>
+
                 <form class="form-horizontal">
                     <div class="form-group">
                         <label class="col-sm-2 control-label">Name</label>
@@ -24,6 +24,8 @@
                             </div>
                         </div>
                     </div>
+                    <label class="text-info">(?)NOTE: The "." of filename is used to define the relationship between 2 categories</label>
+                    <label class="text-info">E.g  <span class="text-danger">category.sub-category.json</span> belongs the <span class="text-danger">category.json</span></label>
                 </form>
             </div>
             <div class="modal-footer">
