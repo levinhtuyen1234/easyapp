@@ -82,7 +82,7 @@
         me.contentTitle = '';
         me.contentFileName = '';
         me.contentCategory = '';
-        me.contentTag = '';
+        me.contentTag = '[]';
 
         console.log('SITE NAME', me.opts.siteName);
 
