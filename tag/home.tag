@@ -80,7 +80,7 @@
             <div class="tab-content">
                 <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane" stype="display:none;"></watch-view>
                 <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel"
-                     style="height: calc(50vh - 160px); overflow: auto;">
+                     style="height: {getFormEditorHeight()}; overflow: auto;">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
                             curTab == 'content-view' ||
@@ -148,6 +148,10 @@
         me.currentFileTitle = '';
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
+
+        me.getFormEditorHeight = function() {
+            return 'calc(100vh - 160px)';
+        };
 
         me.isShowMetaTab = function () {
             return me.curTab == 'meta-view' ||
