@@ -53,14 +53,17 @@ app.on('ready', () => {
     if (debug) {
         mainWindow.webContents.openDevTools();
         mainWindow.maximize();
-        // auto reload
-        ['tag', 'assets/css', 'assets/js', 'index.html'].forEach(dir => {
-            fs.watch(__dirname + '/' + dir, {persistent: true, recursive: true}, (event, filename) => {
-                if (filename) {
-                    mainWindow.reload();
-                }
+
+        if (__dirname.indexOf('.asar') === -1) {
+            // auto reload
+            ['tag', 'assets/css', 'assets/js', 'index.html'].forEach(dir => {
+                fs.watch(__dirname + '/' + dir, {persistent: true, recursive: true}, (event, filename) => {
+                    if (filename) {
+                        mainWindow.reload();
+                    }
+                });
             });
-        });
+        }
     }
 
     ipcMain.on('toggleDevTools', ()=> {

@@ -19,7 +19,7 @@
                         <label for="tagFilenameElm" class="col-sm-2 control-label">File Name</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="tagFilenameElm" placeholder="FileName" oninput="{disableAutoFileName}">
+                                <input type="text" class="form-control" id="tagFilenameElm" placeholder="FileName">
                                 <span class="input-group-addon">.json</span>
                             </div>
                         </div>
@@ -35,7 +35,6 @@
     <script>
         var me = this;
         me.tagName = '';
-        me.manualFileName = false;
         var combining = /[\u0300-\u036F]/g;
 
         me.edit = function (name, e) {
@@ -48,20 +47,16 @@
             }
         };
 
-        me.disableAutoFileName = function () {
-            console.log('disableAutoFileName');
-            me.manualFileName = true;
-        };
-
         me.add = function () {
             riot.api.trigger('addTag', me.tagName, me.tagName + '.json');
         };
 
         me.updateTagName = function (e) {
-            if (me.manualFileName) return;
-
-            me.tagName = e.target.value.trim();
-            me.tagName = me.tagName.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').toLowerCase().trim();
+            me.tagName = e.target.value.trim()
+                    .normalize('NFKD')
+                    .replace(combining, '')
+                    .replace(/\s/g, '-')
+                    .toLowerCase();
             me.tagFilenameElm.value = me.tagName;
 
             me.update();
@@ -71,7 +66,6 @@
             me.tagName = '';
             me.tagNameElm.value = '';
             me.tagFilenameElm.value = '';
-            me.manualFileName = false;
 
             $(me.root).modal('show');
             $(me.root).find('.selectpicker').selectpicker();
