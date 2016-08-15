@@ -122,7 +122,6 @@
             riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
         };
 
-
         riot.api.on('unmount', function () {
             riot.api.off('closeNewContentDialog');
         });

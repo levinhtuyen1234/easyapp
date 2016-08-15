@@ -73,14 +73,14 @@
 
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 180px)">
+            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 60px)">
                 <side-bar site-name={opts.siteName}></side-bar>
             </div>
 
             <div class="tab-content">
                 <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane" stype="display:none;"></watch-view>
                 <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel"
-                  style="height:50vh; overflow: auto; margin-top:5px; padding-top:5px; background:lightgrey;">
+                     style="height: calc(50vh - 160px); overflow: auto;">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
                             curTab == 'content-view' ||
@@ -174,7 +174,7 @@
                             me.curTab == 'config-view' ||
                             me.curTab == 'content-view' ||
                             ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
-                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/metadata/category/')&& !me.currentFilePath.startsWith('content/metadata/tag/') && me.currentFilePath.endsWith('.json'))
+                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/metadata/category/') && !me.currentFilePath.startsWith('content/metadata/tag/') && me.currentFilePath.endsWith('.json'))
                     )
         };
 
@@ -492,7 +492,7 @@
             me.update();
         };
 
-        me.openMetadataFile = function(filePath) {
+        me.openMetadataFile = function (filePath) {
             me.openFile(filePath);
         };
 

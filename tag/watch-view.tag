@@ -1,26 +1,7 @@
 <watch-view>
-    <!--<div class="btn-group" data-toggle="buttons">-->
-    <!--<label class="btn btn-default btn-sm" onclick="{watch}">-->
-    <!--<input type="radio" name="options"/>Watch-->
-    <!--</label>-->
-    <!--<label class="btn btn-default btn-sm" onclick="{buildDev}">-->
-    <!--<input type="radio" name="options"/>Build (dev)-->
-    <!--</label>-->
-    <!--<label class="btn btn-default btn-sm" onclick="{buildProd}">-->
-    <!--<input type="radio" name="options"/>Build (prod)-->
-    <!--</label>-->
-    <!--&lt;!&ndash;<label class="btn btn-default" onclick="{npmInstall}">&ndash;&gt;-->
-    <!--&lt;!&ndash;<input type="radio" name="options"/>Npm install&ndash;&gt;-->
-    <!--&lt;!&ndash;</label>&ndash;&gt;-->
-
-    <!--<label class="btn btn-default btn-sm" onclick="{openExternalBrowser}">-->
-    <!--<a>Open In Browser</a>-->
-    <!--</label>-->
-    <!--</div>-->
     <div class="tab-content">
-
-        <webview id="webview" src="about:blank" style="display:flex; height:40vh"></webview>
-        <div id="consoleLog" style="height:10vh;">
+        <webview id="webview" src="about:blank" style="display:flex; height: calc(50vh - 160px)"></webview>
+        <div id="consoleLog" style="height:100px;">
             <p style="margin-bottom:-3px;">ConsoleLog of Build Process</p>
             <pre style="max-height:100px; overflow: auto;">
                 <code class="accesslog hljs"></code>
