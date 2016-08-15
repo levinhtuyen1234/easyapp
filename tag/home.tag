@@ -5,35 +5,32 @@
     <new-layout-dialog site-name={opts.siteName}></new-layout-dialog>
     <progress-dialog site-name={opts.siteName}></progress-dialog>
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
-    <nav class="navbar navbar-default" style="padding-top: 5px; height: 38px; min-height: 38px; margin-bottom: 10px;">
+    <nav class="navbar navbar-default navbar-fixed-top" style="padding-top: 5px; height: 38px; min-height: 38px;">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-6 pull-left">
-                    <a href="#" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
+                    <a href="#goto-home" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
                         <i class="fa fa-fw fa-home"></i>Home
                     </a>
-                    <a href="#" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
+                    <a href="#add-page" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
                         <i class="fa fa-fw fa-plus"></i> Page
                     </a>
-                    <a href="#" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
+                    <a href="#add-category" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Category
                     </a>
-                    <a href="#" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
+                    <a href="#add-tag" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Tag
                     </a>
-                    <a href="#" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+                    <a href="#add-layout" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
                         <i class="fa fa-fw fa-plus"></i> Layout
                     </a>
-
                 </div>
                 <div class="pull-right">
                     <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-eye"></i> Build
+                        <a class="btn btn-default btn-sm" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
+                            <i class="fa fa-fw fa-eye"></i> Build
                         </a>
-                        <!--<a class="btn btn-default btn-sm" href="#watch-view" id="openWatchViewDevBtn" data-toggle="tab" role="tab" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)" hide="{User.accountType == 'user'}">-->
-                        <!--<input type="radio" name="options">Build Dev-->
-                        <!--</a>-->
+
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="caret"></span>
@@ -71,16 +68,15 @@
         </div>
     </nav>
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="padding-top: 40px;">
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 60px)">
                 <side-bar site-name={opts.siteName}></side-bar>
             </div>
 
             <div class="tab-content">
-                <watch-view id="watch-view" site-name="{siteName}" role="tabpanel" class="tab-pane" stype="display:none;"></watch-view>
-                <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel"
-                     style="height: {getFormEditorHeight()}; overflow: auto;">
+                <watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>
+                <div class="col-xs-8 col-sm-8 col-md-9 col-lg-9 tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">
                     <div class="btn-group" data-toggle="buttons">
                         <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
                             curTab == 'content-view' ||
@@ -150,7 +146,14 @@
         me.siteName = me.opts.siteName;
 
         me.getFormEditorHeight = function() {
-            return 'calc(100vh - 160px)';
+            // show both watch and editor
+            if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
+                console.log("getFormEditorHeight $(me.openWatchViewBtn).hasClass('active') && me.curFilePath != ''");
+                return 'calc(50vh - 30px)';
+            } else {
+                console.log('getFormEditorHeight else');
+                return 'calc(100vh - 30px)';
+            }
         };
 
         me.isShowMetaTab = function () {
@@ -211,12 +214,14 @@
             riot.api.off('addTag', onAddTag);
 
             riot.api.off('codeEditor.save', me.saveByKeyboard);
+            riot.api.off('watchFailed', me.deactiveWatchBtn);
         });
 
         me.on('mount', function () {
             me.checkGhPageStatus();
 
             riot.api.on('codeEditor.save', me.saveByKeyboard);
+            riot.api.on('watchFailed', me.deactiveWatchBtn);
         });
 
         me.goToLandingPage = function () {
@@ -225,12 +230,14 @@
         };
 
         function HideAllTab() {
+            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
         }
 
         function ShowTab(name) {
             me.curTab = name;
             var elm = $(me.root).find('a[href="#' + name + '"]');
+            console.trace('ShowTab', elm);
             elm.tab('show');
             elm.addClass('active');
         }
@@ -290,14 +297,21 @@
                 mode = me.lastMode;
             }
             console.log('watch view', mode);
-            // $(me.root.querySelector('#editor-view')).hide();
-            // $(me.root.querySelector('#editor-view')).show();
+            $(me.openWatchViewBtn).addClass('active');
             $(me.root.querySelector('#watch-view')).show();
-            ShowTab('watch-view');
+            setTimeout(function(){
+                $(me.root.querySelector('#editor-view')).show(); // fix
+            }, 1);
+
+//            ShowTab('watch-view');
             if (mode === 'user')
                 me.tags['watch-view'].watch();
             else if (mode === 'dev')
                 me.tags['watch-view'].watchDev();
+        };
+
+        me.deactiveWatchBtn = function() {
+            $(me.openWatchViewBtn).removeClass('active');
         };
 
         me.openAssetFile = function (filePath) {

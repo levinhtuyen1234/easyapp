@@ -245,6 +245,6 @@ textarea {
     padding-left: 20px;
 }
 
-* {
-    outline: 1px solid red;
-}
+/** {*/
+    /*outline: 1px solid red;*/
+/*}*/

@@ -1,6 +1,6 @@
 <watch-view>
     <div class="tab-content">
-        <webview id="webview" src="about:blank" style="display:flex; height: calc(50vh - 160px)"></webview>
+        <webview id="webview" src="about:blank" style="display:flex; height: calc(50vh - 30px)"></webview>
         <div id="consoleLog" style="height:100px;">
             <p style="margin-bottom:-3px;">ConsoleLog of Build Process</p>
             <pre style="max-height:100px; overflow: auto;">
@@ -48,7 +48,7 @@
                     console.log('found review url', reviewUrl[1]);
                     riot.api.trigger('watchSuccess', reviewUrl[1]);
                     me.webview.src = reviewUrl[1];
-                    $(me.root.querySelector('#consoleLog')).hide();
+                    $(me.consoleLog).hide();
                     me.update();
                 }
                 me.append(str);
@@ -57,7 +57,7 @@
             newProcess.stderr.on('data', function (data) {
                 var str = String.fromCharCode.apply(null, data);
                 me.appendError(str);
-                riot.api.trigger('watchFailed');
+                riot.api.trigger('watchFailed', str);
                 me.closeWatchProcess();
             });
 
