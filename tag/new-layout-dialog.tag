@@ -19,18 +19,18 @@
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-10">
-                                <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
-                                <label class="text-center">Is a Partial layout  (click <a href="http://handlebarsjs.com/partials.html" target="_blank">here</a> for a clear explanation)</label>
+                                <input id="new-layout-is-partial" type="checkbox" name="isCategory" onchange="{updatePostFix}" value="partial">
+                                <label for="new-layout-is-partial" class="text-center">Is a Partial layout  (click <a href="http://handlebarsjs.com/partials.html" target="_blank">here</a> for a clear explanation)</label>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-offset-1 col-sm-5">
-                              <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
-                              <label class="control-label text-center">Is the layout of a Category</label>
+                              <input id="new-layout-is-category" type="checkbox" name="isCategory" onchange="{updatePostFix}" value="category">
+                              <label for="new-layout-is-category" class="control-label text-center">Is the layout of a Category</label>
                         </div>
                         <div class="col-sm-4">
-                              <input type="checkbox" name="isCategory" onchange="{updatePostFix}">
-                              <label class="control-label text-center">Is the layout of a Tag</label>
+                              <input id="new-layout-is-tag" type="checkbox" name="isCategory" onchange="{updatePostFix}" value="tag">
+                              <label for="new-layout-is-tag" class="control-label text-center">Is the layout of a Tag</label>
                         </div>
                         <div class="col-sm-offset-1 col-sm-10">(click <a href="http://blog.easywebhub.com/syntax-of-easywebhub/" target="_blank">here</a> for a clear explanation)</div>
                     </div>
@@ -63,7 +63,14 @@
         };
 
         me.updatePostFix = function(e) {
-            me.postFix = e.srcElement.checked ? '.category.html' : '.html';
+            if (e.srcElement.checked) {
+                $(me.root.querySelectorAll('input[type="checkbox"]')).attr('checked', false);
+                e.srcElement.checked = true;
+                me.postFix = '.' + e.srcElement.value + '.html';
+            } else {
+                me.postFix = '.html';
+            }
+
             me.update();
         };
 
