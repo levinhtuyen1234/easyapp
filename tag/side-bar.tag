@@ -116,16 +116,22 @@
         };
 
         var onAddCategory = function () {
-            me.reloadContentFileTab();
+            me.reloadMetadataFileTab();
+        };
+
+        var onAddTag = function () {
+            me.reloadMetadataFileTab();
         };
 
         riot.api.on('addContentFile', onAddContentFile);
         riot.api.on('addCategory', onAddCategory);
+        riot.api.on('addTag', onAddTag);
         riot.api.on('removeFile', onRemoveFile);
         riot.api.on('addLayout', onAddLayout);
 
         me.on('unmount', function () {
             riot.api.off('addCategory', onAddCategory);
+            riot.api.off('addTag', onAddTag);
             riot.api.off('addContentFile', onAddContentFile);
             riot.api.off('removeFile', onRemoveFile);
             riot.api.off('addLayout', onAddLayout);

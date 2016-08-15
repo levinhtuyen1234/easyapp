@@ -198,12 +198,13 @@
         };
 
         me.on('unmount', function () {
-            riot.api.off('addLayout');
-            riot.api.off('addContent');
-            riot.api.off('addCategory');
-            riot.api.off('watchSuccess');
-            riot.api.off('watchFailed');
-            riot.api.off('chooseMediaFile');
+            riot.api.off('watchSuccess', onWatchSuccess);
+            riot.api.off('watchFailed', onWatchFailed);
+            riot.api.off('chooseMediaFile', onChooseMediaFile);
+            riot.api.off('addLayout', onAddLayout);
+            riot.api.off('addContent', onAddContent);
+            riot.api.off('addCategory', onAddCategory);
+            riot.api.off('addTag', onAddTag);
 
             riot.api.off('codeEditor.save', me.saveByKeyboard);
         });
@@ -699,16 +700,6 @@
         riot.api.on('addContent', onAddContent);
         riot.api.on('addCategory', onAddCategory);
         riot.api.on('addTag', onAddTag);
-
-        me.on('unmount', function () {
-            riot.api.off('watchSuccess', onWatchSuccess);
-            riot.api.off('watchFailed', onWatchFailed);
-            riot.api.off('chooseMediaFile', onChooseMediaFile);
-            riot.api.off('addLayout', onAddLayout);
-            riot.api.off('addContent', onAddContent);
-            riot.api.off('addCategory', onAddCategory);
-            riot.api.off('addTag', onAddTag);
-        });
 
         me.deployToGitHub = function () {
             me.tags['progress-dialog'].show('Deploy to GitHub');
