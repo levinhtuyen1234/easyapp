@@ -225,10 +225,9 @@
 
             setTimeout(function () {
                 var indexFilePath = 'sites/' + me.siteName + '/content/index.md';
-                console.log('indexFilePath', 'sites/' + me.siteName + '/content/index.md');
-                if (BackEnd.fileExists(indexFilePath) == true)
-                    console.log('indexFilePath is exists');
+                if (BackEnd.fileExists(indexFilePath) == true) {
                     me.openFile('content/index.md');
+                }
             }, 1);
         });
 
@@ -238,14 +237,14 @@
         };
 
         function HideAllTab() {
-            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
+//            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
         }
 
         function ShowTab(name) {
             me.curTab = name;
             var elm = $(me.root).find('a[href="#' + name + '"]');
-            console.trace('ShowTab', elm);
+//            console.trace('ShowTab', elm);
             elm.tab('show');
             elm.addClass('active');
         }
