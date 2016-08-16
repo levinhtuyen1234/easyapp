@@ -4,7 +4,7 @@ set datetime=%date% %time%
 
 git branch --set-upstream-to=origin/master
 rem pull update from remote, use ours changes if conflict happen
-git pull -X ours
+git pull -s recursive -X theirs
 rem add all files
 git add .
 rem commit
