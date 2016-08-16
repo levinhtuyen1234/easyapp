@@ -161,9 +161,9 @@ function getRootLayoutList(siteName) {
 
 function fileExists(filePath) {
     try {
-        return Fs.statSync(filePath).isFile()
+        return (Fs.statSync(filePath).isFile());
     } catch (e) {
-        return false;
+        return (false);
     }
 }
 
@@ -813,6 +813,7 @@ function getSiteMetadataFiles(siteName) {
 }
 
 module.exports = {
+    fileExists:             fileExists,
     newCategory:            newCategory,
     getCategoryLayoutList:  getCategoryLayoutList,
     getCategoryList:        getCategoryList,

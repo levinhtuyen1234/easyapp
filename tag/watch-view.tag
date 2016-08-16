@@ -1,8 +1,8 @@
 <watch-view>
     <div class="tab-content">
-        <webview id="webview" src="about:blank" style="display:flex; height: calc(50vh - 30px)"></webview>
+        <webview id="webview" src="about:blank" style="display:flex; height: calc(50vh - 30px);"></webview>
         <div id="consoleLog" style="height:100px;">
-            <p style="margin-bottom:-3px;">ConsoleLog of Build Process</p>
+            <p style="margin: 0;">ConsoleLog of Build Process</p>
             <pre style="max-height:100px; overflow: auto;">
                 <code class="accesslog hljs"></code>
             </pre>
@@ -58,6 +58,7 @@
                 var str = String.fromCharCode.apply(null, data);
                 me.appendError(str);
                 riot.api.trigger('watchFailed', str);
+                $(me.consoleLog).show();
                 me.closeWatchProcess();
             });
 

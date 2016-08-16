@@ -145,11 +145,11 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
-        me.getFormEditorHeight = function() {
+        me.getFormEditorHeight = function () {
             // show both watch and editor
             if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
                 console.log("getFormEditorHeight $(me.openWatchViewBtn).hasClass('active') && me.curFilePath != ''");
-                return 'calc(50vh - 30px)';
+                return 'calc(50vh - 30px); margin-top: 20px; padding: 0;';
             } else {
                 console.log('getFormEditorHeight else');
                 return 'calc(100vh - 30px)';
@@ -222,6 +222,14 @@
 
             riot.api.on('codeEditor.save', me.saveByKeyboard);
             riot.api.on('watchFailed', me.deactiveWatchBtn);
+
+            setTimeout(function () {
+                var indexFilePath = 'sites/' + me.siteName + '/content/index.md';
+                console.log('indexFilePath', 'sites/' + me.siteName + '/content/index.md');
+                if (BackEnd.fileExists(indexFilePath) == true)
+                    console.log('indexFilePath is exists');
+                    me.openFile('content/index.md');
+            }, 1);
         });
 
         me.goToLandingPage = function () {
@@ -299,7 +307,7 @@
             console.log('watch view', mode);
             $(me.openWatchViewBtn).addClass('active');
             $(me.root.querySelector('#watch-view')).show();
-            setTimeout(function(){
+            setTimeout(function () {
                 $(me.root.querySelector('#editor-view')).show(); // fix
             }, 1);
 
@@ -310,7 +318,7 @@
                 me.tags['watch-view'].watchDev();
         };
 
-        me.deactiveWatchBtn = function() {
+        me.deactiveWatchBtn = function () {
             $(me.openWatchViewBtn).removeClass('active');
         };
 
