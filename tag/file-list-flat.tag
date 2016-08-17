@@ -94,6 +94,17 @@
             return a.name > b.name;
         };
 
+        var sortByName = function (a, b) {
+            var val1 = a.name;
+            var val2 = b.name;
+            if (val1 == val2)
+                return 0;
+            if (val1 > val2)
+                return 1;
+            if (val1 < val2)
+                return -1;
+        };
+
         var sortLayoutFiles = function (files) {
             var categories = [];
             var tags = [];
@@ -158,10 +169,11 @@
             me.clear();
             if (me.opts.type == 'layout') {
                 files = sortLayoutFiles(files);
-            } else if (me.opts.type == 'content') {
+            } else if (me.opts.type == 'metadata') {
                 files = sortContentFiles(files);
-            } else
-                files = files.sort(sortByExt);
+            } else {
+                files = files.sort(sortByName);
+            }
 
             me.files = files;
             me.filteredFiles = files;

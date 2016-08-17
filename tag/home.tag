@@ -146,12 +146,11 @@
         me.siteName = me.opts.siteName;
 
         me.getFormEditorHeight = function () {
+            // TODO handle case console build success and failure
             // show both watch and editor
             if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
-                console.log("getFormEditorHeight $(me.openWatchViewBtn).hasClass('active') && me.curFilePath != ''");
                 return 'calc(50vh - 30px); margin-top: 20px; padding: 0;';
             } else {
-                console.log('getFormEditorHeight else');
                 return 'calc(100vh - 30px)';
             }
         };

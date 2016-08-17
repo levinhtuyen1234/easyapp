@@ -19,7 +19,7 @@
                         <label for="tagFilenameElm" class="col-sm-2 control-label">File Name</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="tagFilenameElm" placeholder="FileName">
+                                <input type="text" class="form-control" id="tagFilenameElm" placeholder="FileName" {User.accountType == 'dev' ? 'readonly': ''}>
                                 <span class="input-group-addon">.json</span>
                             </div>
                         </div>
@@ -34,8 +34,8 @@
     </div>
     <script>
         var me = this;
-        me.tagName = '';
         var combining = /[\u0300-\u036F]/g;
+        me.tagName = '';
 
         me.edit = function (name, e) {
             switch (e.target.type) {
@@ -48,17 +48,15 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addTag', me.tagName, me.tagName + '.json');
+            riot.api.trigger('addTag', me.tagName, me.tagFilenameElm.value + '.json');
         };
 
         me.updateTagName = function (e) {
-            me.tagName = e.target.value.trim()
-                    .normalize('NFKD')
+            me.tagName = e.target.value.trim();
+            me.tagFilenameElm.value = me.tagName.normalize('NFKD')
                     .replace(combining, '')
                     .replace(/\s/g, '-')
                     .toLowerCase();
-            me.tagFilenameElm.value = me.tagName;
-
             me.update();
         };
 

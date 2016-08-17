@@ -19,7 +19,7 @@
                         <label for="categoryFilenameElm" class="col-sm-2 control-label">File Name</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="categoryFilenameElm" placeholder="FileName">
+                                <input type="text" class="form-control" id="categoryFilenameElm" placeholder="FileName" {User.accountType == 'dev' ? 'readonly': ''} >
                                 <span class="input-group-addon">.json</span>
                             </div>
                         </div>
@@ -36,8 +36,8 @@
     </div>
     <script>
         var me = this;
-        me.categoryName = '';
         var combining = /[\u0300-\u036F]/g;
+        me.categoryName = '';
 
         me.edit = function (name, e) {
             switch (e.target.type) {
@@ -50,16 +50,16 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addCategory', me.categoryName, me.categoryName + '.json');
+            riot.api.trigger('addCategory', me.categoryName, me.categoryFilenameElm.value + '.json');
         };
 
         me.updateCategoryName = function (e) {
-            me.categoryName = e.target.value.trim()
+            me.categoryName = e.target.value.trim();
+            me.categoryFilenameElm.value = me.categoryName
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/\s/g, '-')
                     .toLowerCase();
-            me.categoryFilenameElm.value = me.categoryName;
             me.update();
         };
 
