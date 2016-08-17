@@ -141,7 +141,7 @@
             var title = me.contentTitleElm.value;
             me.contentTitle = title;
             var combining = /[\u0300-\u036F]/g;
-            title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').toLowerCase().trim();
+            title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').toLowerCase().replace(/[^0-9a-z_-]/g, '').trim();
 //            if (me.isFrontPageElm.checked) {
                 me.contentFileName = title;
 //            } else {

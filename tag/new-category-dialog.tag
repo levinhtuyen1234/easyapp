@@ -59,7 +59,8 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/\s/g, '-')
-                    .toLowerCase();
+                    .toLowerCase()
+                    .replace(/[^0-9a-z_-]/g, '');
             me.update();
         };
 
