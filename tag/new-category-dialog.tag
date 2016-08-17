@@ -19,7 +19,7 @@
                         <label for="categoryFilenameElm" class="col-sm-2 control-label">File Name</label>
                         <div class="col-sm-10">
                             <div class="input-group">
-                                <input type="text" class="form-control" id="categoryFilenameElm" placeholder="FileName" {User.accountType == 'dev' ? 'readonly': ''} >
+                                <input type="text" class="form-control" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="FileName">
                                 <span class="input-group-addon">.json</span>
                             </div>
                         </div>

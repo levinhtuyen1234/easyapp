@@ -80,7 +80,7 @@
 
         me.reloadMetadataFileTab = function () {
             var files = BackEnd.getSiteMetadataFiles(opts.siteName);
-            console.log('metadata files', files);
+//            console.log('metadata files', files);
             metadataFileTag.loadFiles(files);
         };
 
