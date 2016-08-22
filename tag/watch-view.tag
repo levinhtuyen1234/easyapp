@@ -26,7 +26,6 @@
             Path.resolve(Path.join('tools', 'nodejs')),
             Path.resolve(Path.join('tools', 'git', 'bin'))
         ].join(';');
-        console.log('watch-view PATH', PATH);
 
         function spawnProcess(command, args) {
             args = args || [];

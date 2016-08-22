@@ -26,7 +26,8 @@
   },
   "dependencies": {
     "bluebird": "^3.4.0",
-    "electron-shortcut-normalizer": "^1.0.0",    
+    "electron-shortcut-normalizer": "^1.0.0",
+    "jsftp": "^1.5.3",
     "moment": "^2.13.0",
     "rimraf": "^2.5.2"
   }

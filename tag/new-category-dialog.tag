@@ -60,7 +60,7 @@
                     .replace(combining, '')
                     .replace(/\s/g, '-')
                     .toLowerCase()
-                    .replace(/[^0-9a-z_-]/g, '');
+                    .replace(/[^0-9a-z._-]/g, '');
             me.update();
         };
 

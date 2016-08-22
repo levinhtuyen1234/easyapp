@@ -5,6 +5,7 @@
     <new-layout-dialog site-name={opts.siteName}></new-layout-dialog>
     <progress-dialog site-name={opts.siteName}></progress-dialog>
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
+    <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
     <nav class="navbar navbar-default navbar-fixed-top" style="padding-top: 5px; height: 38px; min-height: 38px;">
         <div class="container-fluid">
             <div class="row">
@@ -56,6 +57,7 @@
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu pull-right">
+                                <li><a href="#" onclick="{showFtpDialog}" title="Upload to Ftp server">To FTP server</a></li>
                                 <li><a href="#" onclick="{showSetDomainDialog}" title="Set domain for website"><i class="fa fa-fw fa-globe"></i> Set Domain</a></li>
                             </ul>
                         </div>
@@ -791,6 +793,10 @@
 
         me.openExternalReview = function () {
             me.tags['watch-view'].openExternalBrowser();
+        };
+
+        me.showFtpDialog = function() {
+            me.tags['deploy-ftp-dialog'].show();
         };
     </script>
 </home>
