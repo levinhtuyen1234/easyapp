@@ -162,7 +162,7 @@
     <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
     </label>
     <div class="col-sm-9 input-group">
-        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" readonly="{config.viewOnly}">
+        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
 
         <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
             <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
