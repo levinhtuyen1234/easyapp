@@ -1,6 +1,5 @@
 .idea/
 /data
 /sites
-/node_modules
 /dist
 /ewh-win32-x64
