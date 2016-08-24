@@ -11,6 +11,9 @@
     <script>
         var ChildProcess = require('child_process');
         var Path = require('path');
+        var Fs = require('fs');
+
+        var resizerScript = Fs.readFileSync('assets/js/resizer.min.js').toString();
 
         var me = this;
         var output = '';
@@ -48,6 +51,9 @@
                     riot.api.trigger('watchSuccess', reviewUrl[1]);
                     me.webview.src = reviewUrl[1];
                     $(me.consoleLog).hide();
+                    me.webview.executeJavaScript(resizerScript, false);
+//                    if (!me.webview.isDevToolsOpened())
+//                        me.webview.openDevTools();
                     me.update();
                 }
                 me.append(str);
@@ -149,7 +155,6 @@
         me.on('mount', function () {
             me.output = me.root.querySelector('code');
             me.output.innerHTML = '';
-            window.webview = me.webview;
         });
 
         me.clearLog = function () {
