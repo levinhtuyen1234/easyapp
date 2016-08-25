@@ -33,6 +33,7 @@
 <landing></landing>
 <home></home>
 <window-public></window-public>
+<dialog-login-signup></dialog-login-signup>
 <!-- preload toàn bộ tag -->
 <script src="tag/config-view-array.tag" type="riot/tag"></script>
 <script src="tag/config-view-object.tag" type="riot/tag"></script>
@@ -63,6 +64,7 @@
 <script src="tag/dialog-new-site-local.tag" type="riot/tag"></script>
 <script src="tag/dialog-new-site-import.tag" type="riot/tag"></script>
 <script src="tag/deploy-ftp-dialog.tag" type="riot/tag"></script>
+<script src="tag/dialog-login-signup.tag" type="riot/tag"></script>
 
 <script src="tag/window-login.tag" type="riot/tag"></script>
 <script src="tag/window-public.tag" type="riot/tag"></script>
@@ -148,6 +150,8 @@
 //        curPage = riot.mount('window-login')[0];
         curPage = riot.mount('landing')[0];
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
+
+//        curPage = riot.mount('dialog-login-signup')[0];
     });
 
     riot.api.on('showLandingPage', function () {
