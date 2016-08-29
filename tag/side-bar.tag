@@ -43,9 +43,30 @@
             }
         };
 
+        var onFileActivated = function(tabName) {
+            switch (tabName) {
+                case 'content-file-list':
+                case 'content':
+                    me.tags['file-list-flat'][1].clearActive();
+                    me.tags['file-list-flat'][2].clearActive();
+                    break;
+                case 'layout-file-list':
+                case 'layout':
+                    me.tags['file-list-flat'][0].clearActive();
+                    me.tags['file-list-flat'][2].clearActive();
+                    break;
+                case 'metadata-file-list':
+                case 'metadata':
+                    me.tags['file-list-flat'][0].clearActive();
+                    me.tags['file-list-flat'][1].clearActive();
+                    break;
+            }
+        };
+
         me.activeFile = function (tabName, filePath) {
             // active tab
             me.activeTab(tabName);
+            onFileActivated(tabName);
             // highlight file
             switch (tabName) {
                 case 'content-file-list':
@@ -54,9 +75,6 @@
                 case 'layout-file-list':
                     me.tags['file-list-flat'][1].activeFile(filePath);
                     break;
-//                case 'asset-file-list':
-//                    me.tags['file-list-flat'][2].activeFile(filePath);
-//                    break;
                 case 'metadata-file-list':
                     me.tags['file-list-flat'][2].activeFile(filePath);
                     break;
@@ -123,11 +141,16 @@
             me.reloadMetadataFileTab();
         };
 
+        var onOpenFile = function () {
+            // clear active from other tab
+        };
+
         riot.api.on('addContentFile', onAddContentFile);
         riot.api.on('addCategory', onAddCategory);
         riot.api.on('addTag', onAddTag);
         riot.api.on('removeFile', onRemoveFile);
         riot.api.on('addLayout', onAddLayout);
+        riot.api.on('fileActivated', onFileActivated);
 
         me.on('unmount', function () {
             riot.api.off('addCategory', onAddCategory);
@@ -135,6 +158,7 @@
             riot.api.off('addContentFile', onAddContentFile);
             riot.api.off('removeFile', onRemoveFile);
             riot.api.off('addLayout', onAddLayout);
+            riot.api.off('fileActivated', onFileActivated);
         });
 
         me.on('mount', function () {

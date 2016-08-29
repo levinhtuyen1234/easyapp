@@ -186,6 +186,7 @@
             me.curFilePath = filePath;
             $root.find('.list-group-item').removeClass('active');
             $(e.currentTarget).addClass('active');
+            me.event.trigger('fileActivated', me.opts.type, filePath);
             me.event.trigger('openFile', filePath);
         };
 
@@ -194,9 +195,12 @@
 //            console.log("query '[data-path=\"' + filePath + '\"]'");
             var elm = $root.find('[data-path="' + filePath + '"]');
             $root.find('.list-group-item').removeClass('active');
-            window.elm = elm;
 //            console.log('elm', elm);
             $(elm).addClass('active');
+        };
+
+        me.clearActive = function () {
+            $root.find('.list-group-item').removeClass('active');
         };
 
         me.filter = function (e) {
