@@ -18,6 +18,7 @@
         var me = this;
         var output = '';
         var watchProcess;
+        var watchProcessPids = [];
 
         var lastWatchMode = '';
 
@@ -40,6 +41,7 @@
                 cwd:   Path.resolve(Path.join('sites', opts.siteName)),
                 shell: true
             });
+//            watchProcessPids.push(newProcess.pid);
 
             newProcess.stdout.on('data', function (data) {
                 // find browserSync port in stdout
@@ -82,7 +84,7 @@
             } else if (process.platform === 'win32') {
                 ChildProcess.execSync('taskkill /pid ' + proc.pid + ' /F /T');
             }
-            me.append('close exists process\r\n');
+            me.append('close exists watch process');
         }
         //        me.npmInstall = function () {
         //            console.log('npmInstall');
@@ -112,30 +114,30 @@
                 closeProcess(watchProcess);
                 watchProcess = null;
             } catch (ex) {
-                console.log('watch error', ex);
+                console.log('close watch error', ex);
                 watchProcess = null;
             }
         };
 
         me.watch = function () {
-            if (watchProcess != null && lastWatchMode == 'user') return;
+            if (watchProcess != null) return;
             me.clearLog();
             me.closeWatchProcess();
 
             me.append('build starting...\r\n');
-            watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
             lastWatchMode = 'user';
+            watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
         };
 
         me.watchDev = function () {
-            if (watchProcess != null && lastWatchMode == 'admin') return;
+            if (watchProcess != null) return;
             me.clearLog();
             me.closeWatchProcess();
             console.log('WATCH DEV NEED gulpfile.dev.js');
 
             me.append('build dev starting...\r\n');
-            watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
             lastWatchMode = 'dev';
+            watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
         // TODO on unmount close watch process
