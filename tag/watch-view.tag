@@ -43,22 +43,40 @@
             });
 //            watchProcessPids.push(newProcess.pid);
 
+            var dataBuf = [];
+            var logTimer;
             newProcess.stdout.on('data', function (data) {
-                // find browserSync port in stdout
-                var str = String.fromCharCode.apply(null, data);
-                console.log(str);
-                var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
-                if (reviewUrl != null) {
-                    console.log('found review url', reviewUrl[1]);
-                    riot.api.trigger('watchSuccess', reviewUrl[1]);
-                    me.webview.src = reviewUrl[1];
-                    $(me.consoleLog).hide();
-                    me.webview.executeJavaScript(resizerScript, false);
+                dataBuf.push(String.fromCharCode.apply(null, data));
+                clearTimeout(logTimer);
+
+                logTimer = setTimeout(function(){
+                    // find browserSync port in stdout
+                    var str = dataBuf.join('<br>');
+                    console.log(str);
+                    if (str.indexOf('[Error:') != -1) {
+                        console.log('APPEND ERROR');
+                        me.appendError(str);
+                        riot.api.trigger('watchFailed', str);
+                        $(me.consoleLog).show();
+                    } else {
+                        var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
+
+                        if (reviewUrl != null) {
+                            console.log('APPEND TEXT 1');
+                            console.log('found review url', reviewUrl[1]);
+                            riot.api.trigger('watchSuccess', reviewUrl[1]);
+                            me.webview.src = reviewUrl[1];
+                            me.webview.executeJavaScript(resizerScript, false);
 //                    if (!me.webview.isDevToolsOpened())
 //                        me.webview.openDevTools();
-                    me.update();
-                }
-                me.append(str);
+                            me.update();
+                        }
+                        console.log('APPEND TEXT 2');
+                        me.append(str);
+                        $(me.consoleLog).hide();
+                    }
+                    dataBuf = [];
+                }, 500);
             });
 
             newProcess.stderr.on('data', function (data) {
@@ -66,7 +84,7 @@
                 me.appendError(str);
                 riot.api.trigger('watchFailed', str);
                 $(me.consoleLog).show();
-                me.closeWatchProcess();
+//                me.closeWatchProcess();
             });
 
             return newProcess;
@@ -126,7 +144,7 @@
 
             me.append('build starting...\r\n');
             lastWatchMode = 'user';
-            watchProcess = spawnProcess('gulp.cmd', ['app-watch']);
+            watchProcess = spawnProcess('gulp.cmd', ['--continue', 'app-watch']);
         };
 
         me.watchDev = function () {
@@ -137,7 +155,7 @@
 
             me.append('build dev starting...\r\n');
             lastWatchMode = 'dev';
-            watchProcess = spawnProcess('gulp.cmd', ['--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+            watchProcess = spawnProcess('gulp.cmd', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
         // TODO on unmount close watch process
