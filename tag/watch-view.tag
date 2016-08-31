@@ -54,7 +54,6 @@
                     var str = dataBuf.join('<br>');
                     console.log(str);
                     if (str.indexOf('[Error:') != -1) {
-                        console.log('APPEND ERROR');
                         me.appendError(str);
                         riot.api.trigger('watchFailed', str);
                         $(me.consoleLog).show();
@@ -62,7 +61,6 @@
                         var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
 
                         if (reviewUrl != null) {
-                            console.log('APPEND TEXT 1');
                             console.log('found review url', reviewUrl[1]);
                             riot.api.trigger('watchSuccess', reviewUrl[1]);
                             me.webview.src = reviewUrl[1];
@@ -71,7 +69,6 @@
 //                        me.webview.openDevTools();
                             me.update();
                         }
-                        console.log('APPEND TEXT 2');
                         me.append(str);
                         $(me.consoleLog).hide();
                     }
