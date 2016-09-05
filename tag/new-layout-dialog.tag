@@ -78,7 +78,13 @@
             var title = e.target.value;
 
             var combining = /[\u0300-\u036F]/g;
-            title = title.normalize('NFKD').replace(combining, '').replace(/\s/g, '-').trim();
+            title = title
+                    .normalize('NFKD')
+                    .replace(combining, '')
+                    .replace(/đ/g, 'd')
+                    .replace(/\s+/g, '-')
+                    .toLowerCase()
+                    .trim();
             me.layoutName = title;
 //
             me.update();
