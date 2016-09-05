@@ -627,8 +627,12 @@ Start the description with an upper-case letter.</p>
 <dt class="hdlist1"><code>OPT_COUNTUP(short, long, &amp;int_var, description)</code></dt>
 <dd>
 <p>Introduce a count-up option.
-<code>int_var</code> is incremented on each use of <code>--option</code>, and
-reset to zero with <code>--no-option</code>.</p>
+Each use of <code>--option</code> increments <code>int_var</code>, starting from zero
+(even if initially negative), and <code>--no-option</code> resets it to
+zero. To determine if <code>--option</code> or <code>--no-option</code> was encountered at
+all, initialize <code>int_var</code> to a negative value, and if it is still
+negative after parse_options(), then neither <code>--option</code> nor
+<code>--no-option</code> was seen.</p>
 </dd>
 <dt class="hdlist1"><code>OPT_BIT(short, long, &amp;int_var, description, mask)</code></dt>
 <dd>
@@ -844,7 +848,7 @@ for real-world examples.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2016-05-20 15:43:59 W. Europe Daylight Time
+Last updated 2016-09-03 08:50:08 W. Europe Daylight Time
 </div>
 </div>
 </body>

@@ -51,7 +51,7 @@
 
                 logTimer = setTimeout(function(){
                     // find browserSync port in stdout
-                    var str = dataBuf.join('<br>');
+                    var str = dataBuf.join('');
                     console.log(str);
                     if (str.indexOf('[Error:') != -1) {
                         me.appendError(str);
