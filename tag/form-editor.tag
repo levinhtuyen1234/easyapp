@@ -88,7 +88,7 @@
         <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
         <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
 
-        <markdown-editor class="fieldMarkDown" show="{config.displayType === 'MarkDown'}" viewOnly="{config.viewOnly}"></markdown-editor>
+        <markdown-editor class="fieldMarkDown" if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
 
         <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
             <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -142,14 +142,14 @@
 
         me.getValue = function () {
             if (me.config.displayType === 'MarkDown') {
-                return me.tags['markdown-editor'].value();
+                return me.tags['markdown-editor'].getValue();
             } else
                 return me.value;
         };
 
         me.setValue = function (value) {
             if (me.config.displayType === 'MarkDown') {
-                return me.tags['markdown-editor'].value(value);
+                return me.tags['markdown-editor'].setValue(value);
             } else {
                 me.value = value;
             }

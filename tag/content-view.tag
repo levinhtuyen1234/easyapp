@@ -16,20 +16,20 @@
             // gen content form
             me.tags['form-editor'].genForm(content.metaData, contentConfig);
             // set markdown editor content
-            setTimeout(function () {
-                me.tags['markdown-editor'].value(content.markDownData);
-            }, 1);
+//            setTimeout(function () {
+                me.tags['markdown-editor'].setValue(content.markDownData);
+//            }, 1);
         };
 
         me.reset = function () {
             me.tags['form-editor'].clear();
-            me.tags['markdown-editor'].value('');
+            me.tags['markdown-editor'].setValue('');
         };
 
         me.getContent = function () {
             return {
                 metaData:     me.tags['form-editor'].getForm(),
-                markdownData: me.tags['markdown-editor'].value()
+                markdownData: me.tags['markdown-editor'].getValue()
             };
         }
     </script>

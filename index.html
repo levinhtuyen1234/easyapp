@@ -85,6 +85,11 @@
 <script src="assets/js/codemirror.min.js"></script>
 <script src="assets/js/simplemde.min.js"></script>
 <script src="assets/js/editormd.min.js"></script>
+<script src="assets/js/lib/underscore.min.js"></script>
+<script src="assets/js/lib/raphael.min.js"></script>
+<script src="assets/js/lib/flowchart.min.js"></script>
+<script src="assets/js/lib/sequence-diagram.min.js"></script>
+<script src="assets/js/editormd.en.js"></script>
 <script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
@@ -176,7 +181,6 @@
             try {
                 var curTemplate = JSON.parse(fs.readFileSync('template.json').toString());
                 var newTemplate = JSON.parse(dataJson);
-                console.log(curTemplate, newTemplate);
                 if (newTemplate.version && curTemplate.version && newTemplate.version > curTemplate.version) {
                     console.log('save new template.json to disk');
                     fs.writeFileSync('template.json', dataJson);
