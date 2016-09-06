@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="assets/css/datatables.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
+    <link rel="stylesheet" href="assets/css/editormd.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
@@ -83,12 +84,14 @@
 <script src="assets/js/jsonlint.min.js"></script>
 <script src="assets/js/codemirror.min.js"></script>
 <script src="assets/js/simplemde.min.js"></script>
+<script src="assets/js/editormd.min.js"></script>
 <script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
 <script>module = saveModule;</script>
 
 <script>
+    var fs = require('fs');
     var BackEnd = require('./assets/js/backend.js');
     window.DB = new PouchDB({name: 'db', size: 1000, revs_limit: 8, adapter: 'websql'});
     window.BackEnd = BackEnd;
@@ -153,7 +156,7 @@
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
 
         var userInfo =
-        curPage = riot.mount('landing')[0];
+                curPage = riot.mount('landing')[0];
 //        curPage = riot.mount('dialog-login-signup')[0];
     });
 
@@ -161,7 +164,29 @@
         if (curPage) curPage.unmount(true);
         console.log('showLandingPage');
         curPage = riot.mount('landing')[0];
-    })
+    });
+
+    // check new template.js and write to disk
+    var remoteTemplateUrl = 'https://raw.githubusercontent.com/easywebhub/easyapp/master/template.json';
+    var checkRemoteTemplate = function () {
+        $.ajax({
+            method: 'GET',
+            url:    remoteTemplateUrl
+        }).then(function (dataJson, textStatus) {
+            try {
+                var curTemplate = JSON.parse(fs.readFileSync('template.json').toString());
+                var newTemplate = JSON.parse(dataJson);
+                console.log(curTemplate, newTemplate);
+                if (newTemplate.version && curTemplate.version && newTemplate.version > curTemplate.version) {
+                    console.log('save new template.json to disk');
+                    fs.writeFileSync('template.json', dataJson);
+                }
+            } catch (ex) {
+                console.log('invalid remote template.json', dataJsons);
+            }
+        })
+    };
+    checkRemoteTemplate();
 
 </script>
 

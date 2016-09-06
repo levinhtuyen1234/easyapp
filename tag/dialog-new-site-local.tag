@@ -59,7 +59,7 @@
 
         me.templateList = [];
         try {
-            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString());
+            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString()).templates;
         } catch(ex) {
             console.log(ex);
         }

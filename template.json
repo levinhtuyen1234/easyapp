@@ -1,34 +1,37 @@
-[
-	{
-		"name":   "base",
-		"url":    "https://github.com/easywebhub/easy-websites.git",
-		"branch": "master",
-		"type" : "code base",
-		"themeUrl" : "http://pillar.mediumra.re/",
-		"price" : "Free"
-	},
-	{
-		"name":   "category",
-		"url":    "https://github.com/easywebhub/easy-websites.git",
-		"branch": "easywebhub-category",
-		"type" : "code base",
-		"themeUrl" : "",
-		"price" : "Free"
-	},
-	{
-		"name":   "pillar",
-		"url":    "https://github.com/easywebhub/thinh.pillar.git",
-		"branch": "master",
-		"type" : "website",
-		"themeUrl" : "http://pillar.mediumra.re/",
-		"price" : "19$"
-	},
-	{
-		"name":   "sumoLanding",
-		"url":    "https://github.com/easywebhub/sumolanding.git",
-		"branch": "master",
-		"type" : "website",
-		"themeUrl" : "",
-		"price" : "Free"
-	}
-]
+{
+    "version"  : 1,
+    "templates": [
+        {
+            "name"    : "base",
+            "url"     : "https://github.com/easywebhub/easy-websites.git",
+            "branch"  : "master",
+            "type"    : "code base",
+            "themeUrl": "http://pillar.mediumra.re/",
+            "price"   : "Free"
+        },
+        {
+            "name"    : "category",
+            "url"     : "https://github.com/easywebhub/easy-websites.git",
+            "branch"  : "easywebhub-category",
+            "type"    : "code base",
+            "themeUrl": "",
+            "price"   : "Free"
+        },
+        {
+            "name"    : "pillar",
+            "url"     : "https://github.com/easywebhub/thinh.pillar.git",
+            "branch"  : "master",
+            "type"    : "website",
+            "themeUrl": "http://pillar.mediumra.re/",
+            "price"   : "19$"
+        },
+        {
+            "name"    : "sumoLanding",
+            "url"     : "https://github.com/easywebhub/sumolanding.git",
+            "branch"  : "master",
+            "type"    : "website",
+            "themeUrl": "",
+            "price"   : "Free"
+        }
+    ]
+}
