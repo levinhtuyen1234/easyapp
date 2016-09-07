@@ -3,7 +3,7 @@
 set "PATH=%PATH%;%~dp0..\tools\7z\"
 set "APP_NAME=EasyWebBuilder"
 set "PLATFORM=win32"
-set "ARCH=x64"
+set "ARCH=ia32"
 
 set "BUILD_FOLDER_NAME=%APP_NAME%-%PLATFORM%-%ARCH%"
 rem set working directory to project dir
