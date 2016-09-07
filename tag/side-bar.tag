@@ -32,7 +32,7 @@
         var $root = $(me.root);
         var curFilePath = '';
 
-        var contentFileTag, layoutFileTag, assetFileTag;
+        var contentFileTag, layoutFileTag, assetFileTag, metadataFileTag;
 
         me.activeTab = function (e) {
             $(me.root).find('.navbar-btn').removeClass('active');
@@ -44,6 +44,8 @@
         };
 
         var onFileActivated = function(tabName) {
+            // clear other tab active file
+            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
                 case 'content-file-list':
                 case 'content':

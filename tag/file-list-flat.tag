@@ -186,7 +186,8 @@
             me.curFilePath = filePath;
             $root.find('.list-group-item').removeClass('active');
             $(e.currentTarget).addClass('active');
-            me.event.trigger('fileActivated', me.opts.type, filePath);
+            console.log('TRIGGER fileActivated', filePath);
+            riot.api.trigger('fileActivated', me.opts.type, filePath);
             me.event.trigger('openFile', filePath);
         };
 
@@ -201,6 +202,7 @@
 
         me.clearActive = function () {
             $root.find('.list-group-item').removeClass('active');
+            me.curFilePath = '';
         };
 
         me.filter = function (e) {
