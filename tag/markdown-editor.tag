@@ -34,11 +34,11 @@
 //
 //            me.editor = new SimpleMDE(config);
             me.editor = editormd(id, {
-                width:           "100%",
+                width:           '100%',
                 height:          height,
                 flowChart:       true,
                 sequenceDiagram: true,
-                readOnly: me.viewOnly,
+                readOnly:        me.viewOnly,
                 imageUpload:     false,
                 watch:           false,
                 markdown:        me.value,

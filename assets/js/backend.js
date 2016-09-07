@@ -244,19 +244,26 @@ function genSimpleContentConfigFile(metaData) {
     return fixedFields.concat(tmpFields);
 }
 
-var FORM_START = '---json';
-var FORM_END = '---';
+String.prototype.regexIndexOf = function(regex, startpos) {
+    var indexOf = this.substring(startpos || 0).search(regex);
+    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+};
+
+var FORM_START = /^---json/;
+var FORM_END_1 = /---$/;
+var FORM_END_2 = /---[\r\n]/;
 function SplitContentFile(fileContent) {
-    var start = fileContent.indexOf(FORM_START);
+    var start = fileContent.regexIndexOf(FORM_START);
     if (start == -1) return null;
-    start += FORM_START.length;
+    start += 7;
 
-    var end = fileContent.indexOf(FORM_END, start);
+    var end = fileContent.regexIndexOf(FORM_END_1, start);
+    if (end == -1)
+        end = fileContent.regexIndexOf(FORM_END_2, start);
     if (end == -1) return null;
-
     return {
         metaData:     JSON.parse(fileContent.substr(start, end - start).trim()),
-        markDownData: fileContent.substr(end + FORM_END.length).trim()
+        markDownData: fileContent.substr(end + 3).trim()
     }
 }
 

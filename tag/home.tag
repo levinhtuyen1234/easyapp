@@ -72,7 +72,7 @@
 
     <div class="container-fluid" style="padding-top: 40px;">
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 60px)">
+            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 700px)">
                 <side-bar site-name={opts.siteName}></side-bar>
             </div>
 
@@ -153,7 +153,7 @@
             if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
                 return 'calc(50vh - 30px); margin-top: 20px; padding: 0;';
             } else {
-                return 'calc(100vh - 30px)';
+                return 'calc(100vh - 60px)';
             }
         };
 
