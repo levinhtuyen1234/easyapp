@@ -10,7 +10,7 @@
         </li>
     </ul>
 
-    <div class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal fade" tabindex="-1" role="dialog" name="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -62,6 +62,10 @@
         me.curConfig = {};
         me.originalFieldType = '';
 
+        me.on('unmount', function(){
+
+        });
+
         me.on('mount', function(){
             me.selectorElm = $(me.root.querySelector('.selectpicker'));
             me.selectorElm.selectpicker();
@@ -100,18 +104,19 @@
 
         me.saveConfig = function () {
             var contentType = $root.find('select').val();
-            console.log('click saveConfig', contentType);
+//            console.log('click saveConfig', contentType);
             var formTag = formTags[contentType];
             if (!formTag) return;
 
             var newConfig = formTag.getConfig();
 
-            console.log('new config', newConfig);
+//            console.log('new config', newConfig);
             me.event.trigger('saveConfig', me.curConfigFieldName, newConfig);
+            $(me.dialog).modal('hide');
         };
 
         me.ShowFieldConfig = function (e) {
-            console.log('ShowFieldConfig', e.target.value);
+//            console.log('ShowFieldConfig', e.target.value);
             me.curFieldType = e.target.value;
             // set displayName khi chuyen sang Content type khac
             if (me.curFieldType !== me.originalFieldType) {
@@ -123,7 +128,7 @@
         };
 
         me.showFieldSettingDialog = function (fieldName, fieldType, config) {
-            console.log('show modal field', fieldName);
+//            console.log('show modal field', fieldName);
             me.modalTitle = 'Configuration for ' + fieldName + ', displayName: ' + config.displayName;
             me.curFieldType = fieldType;
             me.curConfigFieldName = fieldName;
@@ -151,7 +156,7 @@
             });
             me.update();
 
-            console.log(me.root.querySelectorAll('.sortable'));
+//            console.log(me.root.querySelectorAll('.sortable'));
             var configItems = $(me.root.querySelector('.sortable'));
             var startIndex;
             configItems.sortable({
@@ -160,7 +165,7 @@
                 },
                 update: function(e, ui){
                     var newIndex =  ui.item.index();
-                    console.log('from', startIndex, 'to', newIndex);
+//                    console.log('from', startIndex, 'to', newIndex);
                     var tmp = me.contentConfig[newIndex];
                     me.contentConfig[newIndex] = me.contentConfig[startIndex];
                     me.contentConfig[startIndex] = tmp;

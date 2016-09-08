@@ -147,6 +147,9 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
+        // handler onSave content config view
+        var onSaveContentConfigView, onSaveMetaConfigView;
+
         me.getFormEditorHeight = function () {
             // TODO handle case console build success and failure
             // show both watch and editor
@@ -240,6 +243,9 @@
         function HideAllTab() {
 //            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
+
+            me.tags['config-view'].event.off('saveConfig', onSaveContentConfigView);
+            me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
         }
 
         function ShowTab(name) {
@@ -405,13 +411,16 @@
 
             var content = BackEnd.getMetaFile(me.opts.siteName, me.currentFilePath);
             content = JSON.parse(content);
-            console.log('meta content', content);
+//            console.log('meta content', content);
             var contentConfig = BackEnd.getMetaConfigFile(me.opts.siteName, me.currentFilePath);
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-            me.tags['config-view'].event.one('saveConfig', function (configFieldName, newConfig) {
+
+            onSaveMetaConfigView = function (configFieldName, newConfig) {
                 console.log('save meta config');
+                me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
+
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig
                 for (var i = 0; i < contentConfig.length; i++) {
@@ -423,7 +432,9 @@
                 BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
                 // refresh config view
                 me.openMetaConfigTab();
-            });
+            };
+
+            me.tags['config-view'].event.on('saveConfig', onSaveMetaConfigView);
         };
 
         me.openConfigTab = function () {
@@ -433,10 +444,13 @@
                 me.openContentConfigTab();
         };
 
+
+        //        var contentConfigSaveEventHooked = false;
         me.openContentConfigTab = function () {
-            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
+
             HideAllTab();
 
+            me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             var content = BackEnd.getContentFile(me.opts.siteName, me.currentFilePath);
             if (!content.metaData.layout) {
                 alert('content missing layout attribute');
@@ -447,8 +461,10 @@
 
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
-            me.tags['config-view'].event.on('saveConfig', function (configFieldName, newConfig) {
+
+            onSaveContentConfigView = function (configFieldName, newConfig) {
                 console.log('save content config');
+                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
                 newConfig.name = configFieldName;
                 // ghi de` new setting vo contentConfig
                 for (var i = 0; i < contentConfig.length; i++) {
@@ -459,7 +475,9 @@
                 }
                 BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
                 me.openContentConfigTab(); // refresh view
-            });
+            };
+
+            me.tags['config-view'].event.on('saveConfig', onSaveContentConfigView);
         };
 
         me.openRawContentTab = function (options) {
@@ -795,7 +813,7 @@
             me.tags['watch-view'].openExternalBrowser();
         };
 
-        me.showFtpDialog = function() {
+        me.showFtpDialog = function () {
             me.tags['deploy-ftp-dialog'].show();
         };
     </script>

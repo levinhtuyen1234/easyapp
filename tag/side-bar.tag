@@ -45,7 +45,7 @@
 
         var onFileActivated = function(tabName) {
             // clear other tab active file
-            console.trace('ACTIVE tab', tabName);
+//            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
                 case 'content-file-list':
                 case 'content':
