@@ -54,11 +54,11 @@
         me.updateTagName = function (e) {
             me.tagName = e.target.value.trim();
             me.tagFilenameElm.value = me.tagName
+                    .toLowerCase()
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
                     .replace(/\s+/g, '-')
-                    .toLowerCase()
                     .trim();
             me.update();
         };

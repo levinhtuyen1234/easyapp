@@ -56,11 +56,11 @@
         me.updateCategoryName = function (e) {
             me.categoryName = e.target.value.trim();
             me.categoryFilenameElm.value = me.categoryName
+                    .toLowerCase()
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
                     .replace(/\s+/g, '-')
-                    .toLowerCase()
                     .trim();
             me.update();
         };

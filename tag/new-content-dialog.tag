@@ -142,11 +142,11 @@
             me.contentTitle = title;
             var combining = /[\u0300-\u036F]/g;
             title = title
+                    .toLowerCase()
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
                     .replace(/\s+/g, '-')
-                    .toLowerCase()
                     .trim();
 //            if (me.isFrontPageElm.checked) {
                 me.contentFileName = title;
