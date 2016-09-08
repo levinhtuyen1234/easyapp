@@ -83,8 +83,8 @@
             min-height: 300px !important;
         }
     </style>
-    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group">
+    <label for="form-{config.name}-{config.displayType}" name="label" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
+    <div class="col-sm-9 input-group" name="content">
         <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
         <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
 
@@ -132,10 +132,14 @@
                 }
 
                 if (me.config.displayType === 'MarkDown') {
-                    $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('fieldMarkDown');
-                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
-                        handles: 's'
-                    });
+//                    $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('fieldMarkDown');
+//                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
+//                        handles: 's'
+//                    });
+                    $(me.label).removeClass('col-sm-3');
+                    $(me.content).removeClass('col-sm-9');
+                    $(me.label).addClass('col-sm-12');
+                    $(me.content).addClass('col-sm-12');
                 }
             }, 1);
         });

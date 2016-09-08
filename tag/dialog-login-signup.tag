@@ -2,7 +2,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-body">
             <div>
-                <ul class="nav nav-tabs nav-pills" role="tablist">
+                <ul class="nav nav-tabs nav-pills" style="border-bottom: 0;" role="tablist">
                     <li class="active {requesting ? 'disabled': ''}"><a disabled="{requesting}" href="#login" data-toggle="tab">Login</a></li>
                     <li class="{requesting ? 'disabled': ''}"><a disabled="{requesting}" href="#register" data-toggle="tab">Register</a></li>
                 </ul>
@@ -107,8 +107,9 @@
         //        };
 
         var thinAdapter = {
-            loginUrl:      'http://api.easywebhub.com//api-user/logon',
-            registerUrl:   'http://api.easywebhub.com/api-user/InsertUser',
+            loginUrl:    'http://api.easywebhub.com/api-user/logon',
+            registerUrl: 'http://api.easywebhub.com/api-user/InsertUser',
+
             loginResponse: function (data) {
                 try {
                     if (data['Result'] === true) {
@@ -189,8 +190,12 @@
                 if (resp.error) {
                     me.errMsg = resp.error.message;
                     console.log('login failed', resp.error.message);
+                    alert(resp.error.message, 'Login failed');
                 } else {
                     console.log('login success', resp.result);
+                    me.unmount(true);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('password', data.password);
                 }
             }).fail(function (err) {
                 console.log('login err', err.statusText);
@@ -206,9 +211,10 @@
             me.requesting = true;
 
             var data = {
-                username: me.registerUsername.value.trim(),
-                password: me.registerPassword.value.trim(),
-                accountType: 'user'
+                username:    me.registerUsername.value.trim(),
+                password:    me.registerPassword.value.trim(),
+                accountType: 'user',
+                websites:    []
             };
 
             $.ajax({
@@ -221,6 +227,7 @@
                 resp = adapter.registerResponse(resp);
                 if (resp.error) {
                     console.log('register failed', resp.error.message);
+                    alert(resp.error.message, 'Register failed');
                 } else {
                     console.log('register success', resp.result);
                     return me.login(null, data.username, data.password);

@@ -2,6 +2,7 @@
     <h3 class="text-success">(?) Sửa đổi giá trị cho từng thuộc tính bên dưới và bấm nút "Save" để áp dụng</h3>
     <h3 class="text-info"> (!) Bấm Sync: đồng bộ cập nhật lên Cloud, Deploy: cập nhật sửa đổi vào thực tế</h3>
     <form-editor site-name="{siteName}"></form-editor>
+    <label class="col-sm-12 control-label" style="text-align: left;">Content</label>
     <markdown-editor site-name="{siteName}"></markdown-editor>
     <script>
         var me = this;
