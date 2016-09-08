@@ -488,6 +488,10 @@
 //            HideAllTab();
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
+            // CHEAT fix front matter codemirror error
+            if(rawStr.endsWith('---')) {
+                rawStr += '\n';
+            }
             var contentCodeEditor = me.tags['code-editor'][0];
             contentCodeEditor.value(rawStr);
 
