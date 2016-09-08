@@ -348,7 +348,7 @@
                 readOnly:                !!(me.config.viewOnly),
                 lint:                    true,
 //                height:                  150,
-                scrollbarStyle:          'simple',
+//                scrollbarStyle:          'simple',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
                 mode:                    'application/json',
                 firstLineNumber:         1,
