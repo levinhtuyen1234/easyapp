@@ -41,6 +41,7 @@
                 readOnly:        me.viewOnly,
                 imageUpload:     false,
                 watch:           true,
+                htmlDecode       : "style,script,iframe",
                 markdown:        me.value,
                 placeholder:     "",
                 path:            'assets/js/lib/',
