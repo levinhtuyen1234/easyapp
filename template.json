@@ -2,14 +2,6 @@
     "version"  : 1,
     "templates": [
         {
-            "name"    : "base",
-            "url"     : "https://github.com/easywebhub/easy-websites.git",
-            "branch"  : "master",
-            "type"    : "code base",
-            "themeUrl": "http://pillar.mediumra.re/",
-            "price"   : "Free"
-        },
-        {
             "name"    : "category",
             "url"     : "https://github.com/easywebhub/easy-websites.git",
             "branch"  : "easywebhub-category",
