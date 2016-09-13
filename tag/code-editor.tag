@@ -1,7 +1,4 @@
 <code-editor>
-    <h3 class="text-success">(?) Editor for designers and developers</h3>
-    <p><span class="text-danger">Raw Form:</span> nội dung thực của Content files (md), front-matter sử dụng cú pháp Json để định nghĩa cấu trúc dữ liệu
-   <br/><span class="text-danger">Layout Form:</span> nội dung của Layout files, chứa HTML, CSS, JS và cú pháp <a target="_blank" href="http://handlebarsjs.com/">HandlebarJS</a> để binding dữ liệu</p>
     <div class="CodeMirror" style="border: 0.1px; padding: 0px; margin-left:-15px; margin-right:-15px; margin-bottom:-15px;"></div>
     <script>
         var me = this;
