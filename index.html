@@ -169,21 +169,33 @@
     });
 
     // check new template.js and write to disk
-    var remoteTemplateUrl = 'https://raw.githubusercontent.com/easywebhub/easyapp/master/template.json';
+    var remoteTemplateUrl = 'https://easywebhub.com/website-marketplace.json';
     var checkRemoteTemplate = function () {
         $.ajax({
             method: 'GET',
             url:    remoteTemplateUrl
-        }).then(function (dataJson, textStatus) {
+        }).then(function (newTemplate) {
             try {
                 var curTemplate = JSON.parse(fs.readFileSync('template.json').toString());
-                var newTemplate = JSON.parse(dataJson);
-                if (newTemplate.version && curTemplate.version && newTemplate.version > curTemplate.version) {
+                if (typeof newTemplate === 'string')
+                    newTemplate = JSON.parse(newTemplate);
+
+                if (typeof newTemplate !== 'object') {
+                    console.log('new template is not an object, do nothing');
+                    return;
+                }
+
+                if ((newTemplate.version && curTemplate.version && newTemplate.version > curTemplate.version) || !curTemplate.version) {
                     console.log('save new template.json to disk');
-                    fs.writeFileSync('template.json', dataJson);
+                    fs.writeFileSync('template.json', JSON.stringify(newTemplate, null, 4));
                 }
             } catch (ex) {
-                console.log('invalid remote template.json', dataJsons);
+                console.log('update template failed', ex);
+                // write new template file if remote data valid
+                if (typeof newTemplate === 'object') {
+                    console.log('try write use remote template');
+                    fs.writeFileSync('template.json', JSON.stringify(newTemplate, null, 4));
+                }
             }
         })
     };
