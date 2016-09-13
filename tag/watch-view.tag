@@ -13,7 +13,7 @@
         var Path = require('path');
         var Fs = require('fs');
 
-        var resizerScript = Fs.readFileSync('assets/js/resizer.min.js').toString();
+        var resizerScript = Fs.readFileSync(__dirname + '/assets/js/resizer.min.js').toString();
 
         var me = this;
         var output = '';

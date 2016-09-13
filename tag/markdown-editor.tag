@@ -17,7 +17,7 @@
                         "h1", "h2", "h3", "h4", "h5", "h6", "|",
                         "list-ul", "list-ol", "hr", "|",
                         "link", "reference-link", "image", "code", "table", "datetime", "html-entities", "pagebreak", "|",
-                         "watch", "preview"
+                        "watch", "preview"
                     ];
                 });
 
@@ -41,7 +41,7 @@
                 readOnly:        me.viewOnly,
                 imageUpload:     false,
                 watch:           true,
-                htmlDecode       : "style,script,iframe",
+                htmlDecode:      "style,script,iframe",
                 markdown:        me.value,
                 placeholder:     "",
                 path:            'assets/js/lib/',

@@ -6,7 +6,6 @@
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/jquery.jspanel.min.css">
-    <link rel="stylesheet" href="assets/css/datatables.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
     <link rel="stylesheet" href="assets/css/editormd.min.css">
@@ -79,7 +78,6 @@
 <script src="assets/js/bootbox.min.js"></script>
 <script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
-<script src="assets/js/datatables.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
 <script src="assets/js/codemirror.min.js"></script>
@@ -97,7 +95,7 @@
 
 <script>
     var fs = require('fs');
-    var BackEnd = require('./assets/js/backend.js');
+    var BackEnd = require(__dirname + '/assets/js/backend.js');
     window.DB = new PouchDB({name: 'db', size: 1000, revs_limit: 8, adapter: 'websql'});
     window.BackEnd = BackEnd;
 
