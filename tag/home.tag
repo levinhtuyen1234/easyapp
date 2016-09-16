@@ -209,23 +209,25 @@
         };
 
         me.on('unmount', function () {
-            riot.api.off('watchSuccess', onWatchSuccess);
-            riot.api.off('watchFailed', onWatchFailed);
-            riot.api.off('chooseMediaFile', onChooseMediaFile);
-            riot.api.off('addLayout', onAddLayout);
-            riot.api.off('addContent', onAddContent);
-            riot.api.off('addCategory', onAddCategory);
-            riot.api.off('addTag', onAddTag);
+            console.trace('unmount home tag');
+            riot.event.off('watchSuccess', onWatchSuccess);
+            riot.event.off('watchFailed', onWatchFailed);
+            riot.event.off('chooseMediaFile', onChooseMediaFile);
+            riot.event.off('addLayout', onAddLayout);
+            riot.event.off('addContent', onAddContent);
+            riot.event.off('addCategory', onAddCategory);
+            riot.event.off('addTag', onAddTag);
 
-            riot.api.off('codeEditor.save', me.saveByKeyboard);
-            riot.api.off('watchFailed', me.deactiveWatchBtn);
+            riot.event.off('codeEditor.save', me.saveByKeyboard);
+            riot.event.off('watchFailed', me.deactiveWatchBtn);
         });
 
         me.on('mount', function () {
+            console.trace('mount home tag');
             me.checkGhPageStatus();
 
-            riot.api.on('codeEditor.save', me.saveByKeyboard);
-            riot.api.on('watchFailed', me.deactiveWatchBtn);
+            riot.event.on('codeEditor.save', me.saveByKeyboard);
+            riot.event.on('watchFailed', me.deactiveWatchBtn);
 
             setTimeout(function () {
                 var indexFilePath = 'sites/' + me.siteName + '/content/index.md';
@@ -237,7 +239,7 @@
 
         me.goToLandingPage = function () {
             me.unmount(true);
-            riot.api.trigger('showLandingPage');
+            riot.event.trigger('showLandingPage');
         };
 
         function HideAllTab() {
@@ -288,7 +290,7 @@
 
         me.refreshWatchView = function () {
             me.openWatchView();
-            riot.api.trigger('refreshWatch');
+            riot.event.trigger('refreshWatch');
         };
 
         me.openLayoutTab = function () {
@@ -623,7 +625,7 @@
                         callback: function (result) {
                             if (result) {
                                 BackEnd.deleteContentFile(me.opts.siteName, contentFilePath);
-                                riot.api.trigger('removeFile');
+                                riot.event.trigger('removeFile');
                                 // hide rightCol
                                 me.curTab = '';
                                 me.tags['breadcrumb'].setPath('');
@@ -664,7 +666,7 @@
             try {
                 var newFile = BackEnd.newLayoutFile(me.siteName, layoutFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
-                riot.api.trigger('closeNewLayoutDialog');
+                riot.event.trigger('closeNewLayoutDialog');
                 setTimeout(function () {
                     me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + layoutFileName);
                 }, 100);
@@ -679,8 +681,8 @@
                 var newFile = BackEnd.newContentFile(me.siteName, layoutFileName, contentTitle, contentFileName, contentCategory, contentTag, isFrontPage);
                 var newContentFilePath = newFile.path;
                 // reload sidebar file list
-                riot.api.trigger('addContentFile', newContentFilePath);
-                riot.api.trigger('closeNewContentDialog');
+                riot.event.trigger('addContentFile', newContentFilePath);
+                riot.event.trigger('closeNewContentDialog');
                 me.openFile(newContentFilePath);
                 me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
                 // run git add
@@ -695,7 +697,7 @@
             try {
                 var newFile = BackEnd.newCategory(me.siteName, categoryName, categoryFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
-                riot.api.trigger('closeNewCategoryDialog');
+                riot.event.trigger('closeNewCategoryDialog');
             } catch (ex) {
                 console.log('addCategory failed', ex);
                 bootbox.alert('create category failed, error ' + ex.message);
@@ -706,7 +708,7 @@
             try {
                 var newFile = BackEnd.newTag(me.siteName, tagName, tagFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
-                riot.api.trigger('closeNewTagDialog');
+                riot.event.trigger('closeNewTagDialog');
             } catch (ex) {
                 console.log('addTag failed', ex);
                 bootbox.alert('create tag failed, error ' + ex.message);
@@ -741,13 +743,13 @@
             });
         };
 
-        riot.api.on('watchSuccess', onWatchSuccess);
-        riot.api.on('watchFailed', onWatchFailed);
-        riot.api.on('chooseMediaFile', onChooseMediaFile);
-        riot.api.on('addLayout', onAddLayout);
-        riot.api.on('addContent', onAddContent);
-        riot.api.on('addCategory', onAddCategory);
-        riot.api.on('addTag', onAddTag);
+        riot.event.on('watchSuccess', onWatchSuccess);
+        riot.event.on('watchFailed', onWatchFailed);
+        riot.event.on('chooseMediaFile', onChooseMediaFile);
+        riot.event.on('addLayout', onAddLayout);
+        riot.event.on('addContent', onAddContent);
+        riot.event.on('addCategory', onAddCategory);
+        riot.event.on('addTag', onAddTag);
 
         me.deployToGitHub = function () {
             me.tags['progress-dialog'].show('Deploy to GitHub');

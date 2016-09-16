@@ -147,20 +147,20 @@
             // clear active from other tab
         };
 
-        riot.api.on('addContentFile', onAddContentFile);
-        riot.api.on('addCategory', onAddCategory);
-        riot.api.on('addTag', onAddTag);
-        riot.api.on('removeFile', onRemoveFile);
-        riot.api.on('addLayout', onAddLayout);
-        riot.api.on('fileActivated', onFileActivated);
+        riot.event.on('addContentFile', onAddContentFile);
+        riot.event.on('addCategory', onAddCategory);
+        riot.event.on('addTag', onAddTag);
+        riot.event.on('removeFile', onRemoveFile);
+        riot.event.on('addLayout', onAddLayout);
+        riot.event.on('fileActivated', onFileActivated);
 
         me.on('unmount', function () {
-            riot.api.off('addCategory', onAddCategory);
-            riot.api.off('addTag', onAddTag);
-            riot.api.off('addContentFile', onAddContentFile);
-            riot.api.off('removeFile', onRemoveFile);
-            riot.api.off('addLayout', onAddLayout);
-            riot.api.off('fileActivated', onFileActivated);
+            riot.event.off('addCategory', onAddCategory);
+            riot.event.off('addTag', onAddTag);
+            riot.event.off('addContentFile', onAddContentFile);
+            riot.event.off('removeFile', onRemoveFile);
+            riot.event.off('addLayout', onAddLayout);
+            riot.event.off('fileActivated', onFileActivated);
         });
 
         me.on('mount', function () {

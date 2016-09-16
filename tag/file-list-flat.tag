@@ -187,7 +187,7 @@
             $root.find('.list-group-item').removeClass('active');
             $(e.currentTarget).addClass('active');
 //            console.log('TRIGGER fileActivated', filePath);
-            riot.api.trigger('fileActivated', me.opts.type, filePath);
+            riot.event.trigger('fileActivated', me.opts.type, filePath);
             me.event.trigger('openFile', filePath);
         };
 

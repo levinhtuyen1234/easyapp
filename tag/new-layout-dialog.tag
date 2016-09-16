@@ -59,7 +59,7 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addLayout', me.layoutName + me.postFix);
+            riot.event.trigger('addLayout', me.layoutName + me.postFix);
         };
 
         me.updatePostFix = function(e) {
@@ -103,7 +103,7 @@
                 fieldFileName.focus();
             }, 500);
 
-            riot.api.one('closeNewLayoutDialog', function () {
+            riot.event.one('closeNewLayoutDialog', function () {
                 console.log('closeNewLayoutDialog');
                 $(me.root).modal('hide');
             });

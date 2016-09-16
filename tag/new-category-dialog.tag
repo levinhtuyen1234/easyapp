@@ -50,7 +50,7 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addCategory', me.categoryName, me.categoryFilenameElm.value + '.json');
+            riot.event.trigger('addCategory', me.categoryName, me.categoryFilenameElm.value + '.json');
         };
 
         me.updateCategoryName = function (e) {
@@ -77,7 +77,7 @@
                 $(me.categoryNameElm).focus();
             }, 500);
 
-            riot.api.one('closeNewCategoryDialog', function () {
+            riot.event.one('closeNewCategoryDialog', function () {
                 console.log('closeNewLayoutDialog');
                 $(me.root).modal('hide');
             });

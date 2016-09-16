@@ -55,14 +55,14 @@
                     console.log(str);
                     if (str.indexOf('[Error:') != -1) {
                         me.appendError(str);
-                        riot.api.trigger('watchFailed', str);
+                        riot.event.trigger('watchFailed', str);
                         $(me.consoleLog).show();
                     } else {
                         var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
 
                         if (reviewUrl != null) {
                             console.log('found review url', reviewUrl[1]);
-                            riot.api.trigger('watchSuccess', reviewUrl[1]);
+                            riot.event.trigger('watchSuccess', reviewUrl[1]);
                             me.webview.src = reviewUrl[1];
                             me.webview.executeJavaScript(resizerScript, false);
 //                    if (!me.webview.isDevToolsOpened())
@@ -79,7 +79,7 @@
             newProcess.stderr.on('data', function (data) {
                 var str = String.fromCharCode.apply(null, data);
                 me.appendError(str);
-                riot.api.trigger('watchFailed', str);
+                riot.event.trigger('watchFailed', str);
                 $(me.consoleLog).show();
 //                me.closeWatchProcess();
             });
@@ -112,7 +112,7 @@
             me.closeWatchProcess();
         };
 
-        riot.api.on('refreshWatch', function () {
+        riot.event.on('refreshWatch', function () {
             me.append('refresh watch');
             me.closeWatchProcess();
             me.clear();

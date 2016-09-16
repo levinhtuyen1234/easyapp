@@ -56,7 +56,7 @@
 
             $(me.root).keypress(function (event) {
                 if (!(event.which == 115 && event.ctrlKey) && !(event.which == 19)) return true;
-                riot.api.trigger('codeEditor.save');
+                riot.event.trigger('codeEditor.save');
                 event.preventDefault();
                 return false;
             });

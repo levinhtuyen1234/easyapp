@@ -48,7 +48,7 @@
         };
 
         me.add = function () {
-            riot.api.trigger('addTag', me.tagName, me.tagFilenameElm.value + '.json');
+            riot.event.trigger('addTag', me.tagName, me.tagFilenameElm.value + '.json');
         };
 
         me.updateTagName = function (e) {
@@ -75,7 +75,7 @@
                 $(me.tagNameElm).focus();
             }, 500);
 
-            riot.api.one('closeNewTagDialog', function () {
+            riot.event.one('closeNewTagDialog', function () {
                 $(me.root).modal('hide');
             });
         }

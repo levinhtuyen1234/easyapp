@@ -118,12 +118,12 @@
 
         me.add = function () {
 //            console.log(me.contentTag);
-//            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
-            riot.api.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
+//            riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
+            riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
         };
 
-        riot.api.on('unmount', function () {
-            riot.api.off('closeNewContentDialog');
+        riot.event.on('unmount', function () {
+            riot.event.off('closeNewContentDialog');
         });
 
         me.updateLayoutList = function (layoutList) {
@@ -183,7 +183,7 @@
             $(me.contentLayoutElm).selectpicker('refresh');
             $(me.categoryListElm).selectpicker('refresh');
             $(me.tagListElm).selectpicker('refresh');
-            riot.api.one('closeNewContentDialog', function () {
+            riot.event.one('closeNewContentDialog', function () {
                 $(me.root).modal('hide');
             });
         }

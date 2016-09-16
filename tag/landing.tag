@@ -39,14 +39,16 @@
         <div class="container-responsive">
             <h2 class="featurette-heading display-heading-2 mt-3">List of your websites</h2>
             <div class="row">
-                <div class="col-sm-3 col-md-3" each={sites}>
-                    <div onclick={openSite.bind(this,name)}>
+                <div class="col-sm-3 col-md-3" each="{site in sites}">
+                    <div onclick={openSite.bind(this,site)}>
                         <div class="pricing-card pricing-card-horizontal">
                             <div class="pricing-card-cta">
                                 <div class="caption" style="text-align: center">
-                                    <div style="text-align: center"><i class="fa fa-4x glyphicon glyphicon-cloud"></i></div>
+                                    <div style="text-align: center">
+                                        <i class="{getSiteIcon(site)}"></i>
+                                    </div>
                                     <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                    <h1>{name}</h1>
+                                    <h1>{site.name}</h1>
                                 </div>
                             </div>
                         </div>
@@ -83,15 +85,68 @@
         var dialog = require('electron').remote.dialog;
 
         var newSite;
-        me.sites = BackEnd.getSiteList();
+        me.sites = [];
 
-        me.openSite = function (siteName) {
+        me.getSiteIcon = function (site) {
+            if (site.remote && site.local) {
+                return 'fa fa-4x fa-cloud';
+            } else if (site.remote) {
+                return 'fa fa-4x fa-cloud-download';
+            } else if (site.local) {
+                return 'fa fa-4x fa-folder-o';
+            }
+        };
+
+        me.on('mount', function () {
+            var sites = BackEnd.getSiteList();
+
+            var remoteSites = Object.assign(User.sites || [], {});
+            console.log('remoteSites', remoteSites);
+            // merge with remote site
+
+            // set local, remote status for local sites
+            sites.forEach(site => {
+                site.local = true;
+                site.remote = false;
+
+                remoteSites.some(remoteSite => {
+                    if (site.name === remoteSite.name) {
+                        site.remote = true;
+                        return true;
+                    }
+                    return false;
+                });
+            });
+
+            // add remote site if not exists
+            remoteSites.forEach(remoteSite => {
+                var exists = sites.some(site => {
+                    return site.name === remoteSite.name;
+                });
+                if (!exists) {
+                    console.log('not exists site', remoteSite);
+                    remoteSite.local = false;
+                    remoteSite.remote = true;
+                    sites.push(remoteSite);
+                }
+            });
+
+            me.sites = sites;
+            me.update();
+        });
+
+        me.openSite = function (site) {
+            if (site.remote && !site.url) {
+                alert('Remote repository not exists in site data');
+                return;
+            }
+            var siteName = site.name;
             me.unmount(true);
-            riot.mount('home', {siteName: siteName});
+            window.curPage = riot.mount('home', {siteName: siteName})[0];
         };
 
         me.createSite = function (name, repoUrl, branch) {
-            return riot.api.createSite(name, repoUrl, branch).then(function () {
+            return riot.event.createSite(name, repoUrl, branch).then(function () {
                 me.unmount(true);
             });
         };
@@ -109,7 +164,7 @@
         //                    properties:  ['openDirectory']
         //                });
         //                if (existSitePath === undefined) return;
-        //                riot.api.openSite(existSitePath);
+        //                riot.event.openSite(existSitePath);
         //                me.unmount();
         //            };
         const BrowserWindow = require('electron').remote.BrowserWindow;
@@ -123,7 +178,6 @@
             win.loadURL('http://blog.easywebhub.com/');
             win.show()
         };
-
 
 
         me.showImportGithub = function () {

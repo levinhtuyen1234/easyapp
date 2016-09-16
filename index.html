@@ -96,14 +96,29 @@
 <script>
     var fs = require('fs');
     var BackEnd = require(__dirname + '/assets/js/backend.js');
-    window.DB = new PouchDB({name: 'db', size: 1000, revs_limit: 8, adapter: 'websql'});
+    var API = require(__dirname + '/assets/js/remote-api.js');
+    window.DB = new PouchDB({name: 'DB', size: 1000, revs_limit: 8, adapter: 'websql'});
+    DB.upsert = function (doc) {
+        return DB.get(doc).then(function (existsDoc) {
+            Object.assign(doc, existsDoc);
+            return DB.put(existsDoc);
+        }).catch(function (err) {
+            if (doc._id)
+                return DB.put(doc);
+            else
+                return DB.post(doc);
+        });
+    };
+
     window.BackEnd = BackEnd;
+    window.API = API;
+
 
     window.User = require('./user-test');
     // TO SHOW ALL UNCOMMENT LINE BELLOW
     window.User.accountType = 'dev';
 
-    var curPage;
+    window.curPage = null;
     var formMixin = {
         edit: function (keyPath, e) {
             var value;
@@ -132,21 +147,29 @@
 
     riot.mixin('form', formMixin);
 
-    riot.api = riot.observable();
-    Object.assign(riot.api, {
+    riot.event = riot.observable();
+    Object.assign(riot.event, {
         openSite: function (sitePath) {
-            console.log('openSite', sitePath);
+            if(window.curPage) window.curPage.unmount(true);
+            console.log('index.html openSite', sitePath);
             landing.unmount(true);
-            home = riot.mount('home', {sitePath: sitePath});
+            window.curPage = riot.mount('home', {sitePath: sitePath})[0];
         },
 
         createSite: function (name, repoUrl, branch) {
 //            var localPath = Path.join(__dirname, 'sites', name);
+            name = name.toLowerCase()
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036F]/g, '')
+                    .replace(/đ/g, 'd')
+                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/\s+/g, '-')
+                    .trim();
             return BackEnd.createSiteFolder(name).then(function (sitePath) {
                 return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
                     console.log('git checkout done', name);
-                    if (curPage) curPage.unmount(true);
-                    curPage = riot.mount('home', {siteName: name})[0];
+                    if (window.curPage) window.curPage.unmount(true);
+                    window.curPage = riot.mount('home', {siteName: name})[0];
                 }).catch(function (ex) {
                     console.log(ex.message);
                 });
@@ -154,18 +177,53 @@
         }
     });
 
+    function CheckAccountAndGoToLanding() {
+        if (window.curPage) window.curPage.unmount(true);
+        DB.get('account').then(function (account) {
+            window.User = account;
+            console.log('TODO server only accept accountType "user"');
+            account.accountType = 'dev';
+            console.log('account on disk', account);
+            window.curPage = riot.mount('landing')[0];
+            // TODO missing api get new site
+        }).catch(function (ex) {
+            console.log('no account in disk');
+            window.curPage = riot.mount('dialog-login-signup')[0];
+        });
+    }
+
     riot.compile(function () {
+        console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
 //        curPage = riot.mount('home', {siteName: 'test1'})[0];
-
-        curPage = riot.mount('landing')[0];
-//        curPage = riot.mount('dialog-login-signup')[0];
+        // uncomment to enable login
+//        CheckAccountAndGoToLanding();
+        window.curPage = riot.mount('landing')[0];
     });
 
-    riot.api.on('showLandingPage', function () {
-        if (curPage) curPage.unmount(true);
+    riot.event.on('loginSuccess', function (account) {
+        console.log('onLoginSuccess, save account to disk', account);
+        account['_id'] = 'account';
+        DB.upsert(account).then(function (response) {
+            CheckAccountAndGoToLanding();
+        }).catch(function (err) {
+            console.log(err);
+        });
+    });
+
+    riot.event.on('logout', function (account) {
+        DB.get('account').then(doc => {
+            DB.remove(doc).then(function () {
+                CheckAccountAndGoToLanding();
+            });
+        }).catch(function (_) {
+        });
+    });
+
+    riot.event.on('showLandingPage', function () {
+        if (window.curPage) window.curPage.unmount(true);
         console.log('showLandingPage');
-        curPage = riot.mount('landing')[0];
+        window.curPage = riot.mount('landing')[0];
     });
 
     // check new template.js and write to disk

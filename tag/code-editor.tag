@@ -51,7 +51,7 @@
                     'Ctrl-S':     function () {
 //                        parent.saveFile(editor.getValue());
 //                        alert('Nop, not implemented yet')
-                        riot.api.trigger('codeEditor.save');
+                        riot.event.trigger('codeEditor.save');
                     }
                 }
             });

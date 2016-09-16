@@ -394,7 +394,7 @@
 
         me.showChooseFile = function () {
             if (me.config.viewOnly) return;
-            riot.api.trigger('chooseMediaFile', function (relativePath) {
+            riot.event.trigger('chooseMediaFile', function (relativePath) {
 //                me.value = relativePath.split(/[\\\/]/).pop();
                 me.value = relativePath;
                 me['form-' + me.config.name].value = relativePath;
@@ -432,7 +432,7 @@
         me.checkSave = function (e) {
             if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
             console.log('Ctrl-S pressed');
-            riot.api.trigger('codeEditor.save');
+            riot.event.trigger('codeEditor.save');
             e.preventDefault();
             return false;
         };

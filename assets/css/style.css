@@ -245,6 +245,10 @@ textarea {
     padding-left: 20px;
 }
 
+.pricing-card-cta {
+    cursor: pointer;
+}
+
 /** {*/
     /*outline: 1px solid red;*/
 /*}*/
