@@ -1,7 +1,16 @@
 <breadcrumb>
-    <ol class="breadcrumb" style="margin: 2px 0 2px 0; padding: 0;">
-        <li each="{name, index in parts}"><a class="pathName">{name}</a></li>
-    </ol>
+    <div class="ui breadcrumb compact" each="{name, index in parts}">
+        <i if="{index > 0 && index <= parts.length - 1}" class="right chevron icon divider"></i>
+        <a class="section {index == parts.length - 1 ? 'active' : ''}">{name}</a>
+    </div>
+    <!--<a class="section">Home</a>-->
+
+    <!--<a class="section">Registration</a>-->
+    <!--<i class="right arrow icon divider"></i>-->
+    <!--<div class="active section">Personal Information</div>-->
+    <!--<ol class="breadcrumb" style="margin: 2px 0 2px 0; padding: 0;">-->
+        <!--<li each="{name, index in parts}"></li>-->
+    <!--</ol>-->
 
     <script>
         var me = this;

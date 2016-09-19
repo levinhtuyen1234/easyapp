@@ -1,4 +1,4 @@
-<progress-dialog class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+<progress-dialog class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

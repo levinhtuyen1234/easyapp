@@ -1,4 +1,4 @@
-<dialog-new-site-local class="modal fade" tabindex="-1" role="dialog">
+<dialog-new-site-local class="ui modal" tabindex="-1" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

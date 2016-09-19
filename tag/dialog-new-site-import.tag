@@ -1,4 +1,4 @@
-<dialog-new-site-import class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
+<dialog-new-site-import class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">

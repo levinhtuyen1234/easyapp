@@ -1,31 +1,59 @@
-<side-bar>
-    <div class="panel panel-default" style="border: 0">
-        <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
-        <div class="btn-group" data-toggle="buttons">
-            <a class="btn btn-default navbar-btn btn-sm active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
-                <input type="radio" name="file-list-options">Content
-            </a>
-            <a class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Meta
-            </a>
-            <a class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Layout
-            </a>
-            <!--<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
-                <!--<input type="radio" name="file-list-options">Asset-->
-            <!--</a>-->
+<side-bar style="">
+    <!--<div class="panel panel-default" style="border: 0">-->
+    <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
+    <!--<div class="ui top fixed menu" style="margin-top: 35px">-->
+    <!--<div class="fluid item">-->
 
-        </div>
-        <!--</div>-->
-        <div class="panel-body" style="padding: 0;">
-            <div class="tab-content">
-                <file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
-                <file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <file-list-flat type="metadata" id="metadata-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <!--<file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
-            </div>
-        </div>
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ui attached labeled tiny fluid buttons">-->
+        <!--<button class="ui button">Content</button>-->
+        <!--<button class="ui button">Meta</button>-->
+        <!--<button class="ui button">Layout</button>-->
+    <!--</div>-->
+    <div class="ui pointing secondary menu" style="margin-bottom: 0">
+        <a class="item active" data-tab="content">Content</a>
+        <a class="item" data-tab="meta">Meta</a>
+        <a class="item" data-tab="layout">Layout</a>
     </div>
+
+    <file-list-flat class="ui bottom attached tab segment" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
+    <!--<div class="ui attached segment" style="max-height: calc(100vh - 40px); padding-right: 0; padding-top:0;">-->
+        <!--<file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>-->
+        <!--<file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
+        <!--<file-list-flat type="metadata" id="metadata-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
+        <!--&lt;!&ndash;<file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>&ndash;&gt;-->
+    <!--</div>-->
+    <!--<div class="ui top fixed menu" style="margin-top: 36px;">-->
+    <!--<a class="item">Content</a>-->
+    <!--<a class="item">Meta</a>-->
+    <!--<a class="item">Layout</a>-->
+    <!--</div>-->
+
+    <!--<div class="btn-group" data-toggle="buttons">-->
+    <!--<button class="ui button active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">-->
+    <!--<input type="radio" name="file-list-options">Content-->
+    <!--</button>-->
+    <!--<button class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
+    <!--<input type="radio" name="file-list-options">Meta-->
+    <!--</button>-->
+    <!--<button class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
+    <!--<input type="radio" name="file-list-options">Layout-->
+    <!--</button>-->
+    <!--&lt;!&ndash;<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">&ndash;&gt;-->
+    <!--&lt;!&ndash;<input type="radio" name="file-list-options">Asset&ndash;&gt;-->
+    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+
+    <!--</div>-->
+
+    <!--<div class="panel-body" style="padding: 0;">-->
+    <!--<div class="tab-content">-->
+    <!---->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <script>
         var me = this;
@@ -43,7 +71,7 @@
             }
         };
 
-        var onFileActivated = function(tabName) {
+        var onFileActivated = function (tabName) {
             // clear other tab active file
 //            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
@@ -164,6 +192,8 @@
         });
 
         me.on('mount', function () {
+            $(me.root.querySelectorAll('.menu .item')).tab();
+
             contentFileTag = me.tags['file-list-flat'][0];
             layoutFileTag = me.tags['file-list-flat'][1];
 //            assetFileTag = me.tags['file-list-flat'][2];

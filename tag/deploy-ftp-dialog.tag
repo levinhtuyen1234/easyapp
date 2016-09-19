@@ -1,4 +1,4 @@
-<deploy-ftp-dialog>
+<deploy-ftp-dialog class="ui modal">
     <div name="ftpDeployForm" class="container-fluid" style="display: none">
         <form class="form-horizontal">
             <div class="form-group">

@@ -1,4 +1,4 @@
-<dialog-login-signup class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" style="margin-top: 20vh">
+<dialog-login-signup class="ui modal" tabindex="-1" role="dialog" data-backdrop="static" style="margin-top: 20vh">
     <div class="modal-dialog" role="document">
         <div class="modal-body">
             <div>

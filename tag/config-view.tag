@@ -10,6 +10,17 @@
         </li>
     </ul>
 
+    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 137px);">
+        <div class="ui celled list">
+            <div class="item" each="{config in contentConfig}" onclick="{openFile}">
+                <i class="content icon"></i>
+                <div class="content">
+                    <a class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" tabindex="-1" role="dialog" name="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">

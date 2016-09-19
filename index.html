@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>EasyWeb Builder</title>
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="assets/css/jquery.jspanel.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
@@ -14,9 +14,12 @@
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
     <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="assets/css/semantic.min.css">
+    <link rel="stylesheet" href="assets/css/layout-default.css">
+    <link rel="stylesheet" href="assets/css/simplebar.css">
 
-    <link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">
-    <link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">
+    <!--<link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">-->
+    <!--<link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">-->
 
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- <link crossorigin="anonymous" href="/assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" /> -->
@@ -76,7 +79,7 @@
 <script src="assets/js/pouchdb.min.js"></script>
 <script src="assets/js/moment.min.js"></script>
 <script src="assets/js/bootbox.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
+<!--<script src="assets/js/bootstrap.min.js"></script>-->
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
@@ -91,6 +94,9 @@
 <script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
+<script src="assets/js/semantic.min.js"></script>
+<script src="assets/js/jquery.layout.js"></script>
+<script src="assets/js/simplebar.js"></script>
 <script>module = saveModule;</script>
 
 <script>
@@ -195,10 +201,10 @@
     riot.compile(function () {
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
-//        curPage = riot.mount('home', {siteName: 'test1'})[0];
+        window.curPage = riot.mount('home', {siteName: 'daksong'})[0];
         // uncomment to enable login
 //        CheckAccountAndGoToLanding();
-        window.curPage = riot.mount('landing')[0];
+//        window.curPage = riot.mount('landing')[0];
     });
 
     riot.event.on('loginSuccess', function (account) {

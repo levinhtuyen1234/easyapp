@@ -1,12 +1,21 @@
 <file-list-flat>
-    <div class="input-group">
-        <span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>
-        <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
+    <div class="ui left icon fluid input">
+        <input placeholder="" type="text" style="border: none">
+        <i class="filter icon"></i>
     </div>
-    <div class="list-group" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 130px)">
-        <a href="#" each="{filteredFiles}" class="list-group-item truncate" title="{hideExt(name)}" data-path="{path}" onclick="{openFile}" style="{}">
-            <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {getContentType(path)}{hideExt(name)}
-        </a>
+    <!--<div class="input-group">-->
+    <!--<span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>-->
+    <!--<input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">-->
+    <!--</div>-->
+    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 137px);">
+        <div class="ui celled list">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}">
+                <i class="{getFileIcon(name, path)} icon"></i>
+                <div class="content">
+                    <a title="{hideExt(name)}" class="truncate">{getContentType(path)}{hideExt(name)}</a>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         var me = this;
@@ -20,6 +29,10 @@
         me.isPartial = function (path) {
             return path.indexOf('layout/partial/') != -1;
         };
+
+        me.on('mount', function () {
+            $(me.root.querySelector('.simplebar')).simplebar();
+        });
 
         me.getContentType = function (path) {
             if (path.indexOf('layout/partial/') != -1)

@@ -6,129 +6,160 @@
     <progress-dialog site-name={opts.siteName}></progress-dialog>
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
     <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
-    <nav class="navbar navbar-default navbar-fixed-top" style="padding-top: 5px; height: 38px; min-height: 38px;">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6 pull-left">
-                    <a href="#goto-home" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-fw fa-home"></i>Home
-                    </a>
-                    <a href="#add-page" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
-                        <i class="fa fa-fw fa-plus"></i> Page
-                    </a>
-                    <a href="#add-category" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Category
-                    </a>
-                    <a href="#add-tag" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Tag
-                    </a>
-                    <a href="#add-layout" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Layout
-                    </a>
-                </div>
-                <div class="pull-right">
-                    <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
-                            <i class="fa fa-fw fa-eye"></i> Build
-                        </a>
 
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li hide="{User.accountType == 'user'}"><a href="#" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)"><i class="fa fa-fw fa-cubes"></i> Build Dev</a></li>
-                                <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-fw fa-refresh"></i> Refresh</a></li>
-                            </ul>
-                        </div>
-                        <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
-                            <i class="fa fa-fw fa-external-link"></i> On Browser
-                        </button>
+    <div class="ui fluid tiny menu" style="margin-top: 0">
+        <a href="#goto-home" onclick="{goToLandingPage}" class="item">
+            <i class="fitted icon home"></i>Home
+        </a>
+        <a href="#add-page" onclick="{newContent}" class="item" title="Create new page using existing layout">
+            <i class="fitted icon plus"></i> Page
+        </a>
+        <a href="#add-category" onclick="{newCategory}" class="item" title="Create new category" hide="{User.accountType == 'user'}">
+            <i class="fitted icon plus"></i> Category
+        </a>
+        <a href="#add-tag" onclick="{newTag}" class="item" title="Create new tag" hide="{User.accountType == 'user'}">
+            <i class="fitted icon plus"></i> Tag
+        </a>
+        <a href="#add-layout" onclick="{newLayout}" class="item" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+            <i class="fitted icon plus"></i> Layout
+        </a>
+
+        <div class="right menu">
+            <a class="item" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
+                <i class="fitted icon eye"></i> Build
+            </a>
+
+            <div class="ui dropdown icon item">
+                <i class="dropdown icon fitted" style="margin: 0"></i>
+                <div class="menu">
+                    <div class="item" hide="{User.accountType == 'user'}">
+                        <i class="fitted icon cubes"></i>
+                        <span onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)">Build Dev</span>
                     </div>
-                    <div class="btn-group" data-toggle="buttons">
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Synchronize to Cloud">
-                            <i class="fa fa-fw fa-github"></i> Sync
-                        </a>
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy website to live domain">
-                            Deploy
-                        </a>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="#" onclick="{showFtpDialog}" title="Upload to Ftp server">To FTP server</a></li>
-                                <li><a href="#" onclick="{showSetDomainDialog}" title="Set domain for website"><i class="fa fa-fw fa-globe"></i> Set Domain</a></li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">
-                            Init
-                        </a>
+                    <div class="item">
+                        <i class="fitted icon refresh"></i>
+                        <span onclick="{refreshWatchView}" title="restart to refresh preview website">Refresh</span>
                     </div>
                 </div>
             </div>
+            <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
+                <i class="fitted icon external"></i> Browser
+            </a>
+            <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud">
+                <i class="fa fa-fw fa-github"></i> Sync
+            </div>
+            <div class="item" onclick="{deployToGitHub}" title="Deploy website to live domain">Deploy</div>
+            <div class="ui dropdown right icon item">
+                <i class="dropdown icon fitted" style="margin: 0"></i>
+                <div class="menu">
+                    <div class="item">
+                        <span onclick="{showFtpDialog}" title="Upload to Ftp server">To FTP server</span>
+                    </div>
+                    <div class="item">
+                        <i class="fitted icon globe"></i>
+                        <span onclick="{showSetDomainDialog}" title="Set domain for website">Set Domain</span>
+                    </div>
+                </div>
+            </div>
+            <a class="item" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">Init</a>
         </div>
-    </nav>
+    </div>
 
-    <div class="container-fluid" style="padding-top: 40px;">
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 700px)">
-                <side-bar site-name={opts.siteName}></side-bar>
-            </div>
-
-            <div class="tab-content col-xs-8 col-sm-8 col-md-9 col-lg-9">
-                <watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>
-                <div class="tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">
-                    <div class="btn-group" data-toggle="buttons">
-                        <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
-                            curTab == 'content-view' ||
-                            ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))
-                            }">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                        </a>
-                        <a class=" btn btn-default navbar-btn btn-sm" show="{isShowMetaTab()}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">
-                            <input type="radio" name="options">Raw
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{isShowConfigTab()}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                        </a>
-                    </div>
-                    <div class="pull-right">
-                        <div class="btn-group" data-toggle="buttons">
-                            <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}" hide="{
-                            curTab === 'meta-view' && User.accountType == 'user'
-                            }">
-                                <i class="fa fa-fw fa-remove"></i>Delete
-                            </a>
-                            <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
-                        </div>
-                    </div>
-                    <!-- EDITOR PANEL -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading panel-heading-sm">
-                            <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-                        </div>
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                <content-view site-name="{siteName}" id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                                <meta-view site-name="{siteName}" id="meta-view" role="tabpanel" class="tab-pane"></meta-view>
-                                <code-editor site-name="{siteName}" id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <code-editor site-name="{siteName}" id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <config-view site-name="{siteName}" id="config-view" role="tabpanel" class="tab-pane"></config-view>
+    <div class="ui one column grid" style="height: calc(100vh - 40px)">
+        <div class="stretched row" style="padding-bottom: 0; padding-top: 0;">
+            <div class="column" name="column" style="padding-right: 0">
+                <div class="ui-layout-west" data-is="area-view" style="overflow-x: hidden;">
+                    <side-bar site-name={opts.siteName}></side-bar>
+                </div>
+                <div class="ui-layout-center">
+                    <div class="ui pointing secondary menu">
+                        <a class="item active" data-tab="content-view">Content Form</a>
+                        <a class="item" data-tab="meta-view">Meta Form</a>
+                        <a class="item disabled" disabled data-tab="code-view">Raw</a>
+                        <a class="item" data-tab="layout-view">Layout</a>
+                        <a class="item" data-tab="config-view">Config</a>
+                        <div class="ui mini right menu"  style="border: none">
+                            <div style="padding: 4px 16px 3px 0">
+                                <div class="ui mini buttons" style="border: none">
+                                    <div class="ui red icon button" onclick="{deleteFile}">
+                                        <i class="delete icon"></i>
+                                    </div>
+                                    <div class="ui blue icon button" onclick="{save}">
+                                        <i class="save icon"></i>
+                                        Save
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                    <content-view site-name="{siteName}" data-tab="content-view" role="tabpanel" class="ui tab segment"></content-view>
+                    <meta-view site-name="{siteName}" data-tab="meta-view" role="tabpanel" class="ui tab segment"></meta-view>
+                    <code-editor site-name="{siteName}" data-tab="code-view" role="tabpanel" class="ui tab segment"></code-editor>
+                    <code-editor site-name="{siteName}" data-tab="layout-view" role="tabpanel" class="ui tab segment"></code-editor>
+                    <config-view site-name="{siteName}" data-tab="config-view" role="tabpanel" class="ui tab segment"></config-view>
+
+                    <!--<watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>-->
+                    <!--<div class="tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">-->
+                    <!--<div class="btn-group" data-toggle="buttons">-->
+                    <!--<a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{-->
+                    <!--curTab == 'content-view' ||-->
+                    <!--((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))-->
+                    <!--}">-->
+                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content-->
+                    <!--</a>-->
+                    <!--<a class=" btn btn-default navbar-btn btn-sm" show="{isShowMetaTab()}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">-->
+                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta-->
+                    <!--</a>-->
+                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">-->
+                    <!--<input type="radio" name="options">Raw-->
+                    <!--</a>-->
+                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">-->
+                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout-->
+                    <!--</a>-->
+                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{isShowConfigTab()}">-->
+                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config-->
+                    <!--</a>-->
+                    <!--</div>-->
+                    <!--<div class="pull-right">-->
+                    <!--<div class="btn-group" data-toggle="buttons">-->
+                    <!--<a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}" hide="{-->
+                    <!--curTab === 'meta-view' && User.accountType == 'user'-->
+                    <!--}">-->
+                    <!--<i class="fa fa-fw fa-remove"></i>Delete-->
+                    <!--</a>-->
+                    <!--<a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--&lt;!&ndash; EDITOR PANEL &ndash;&gt;-->
+                    <!--<div class="panel panel-default">-->
+                    <!--<div class="panel-heading panel-heading-sm">-->
+                    <!--<breadcrumb site_name="{opts.siteName}"></breadcrumb>-->
+                    <!--</div>-->
+                    <!--<div class="panel-body">-->
+                    <!--<div class="tab-content">-->
+
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                </div>
             </div>
         </div>
     </div>
+
+    <!--<div class="container-fluid" style="">-->
+    <!--<div class="row">-->
+    <!--<div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 700px)">-->
+    <!---->
+    <!--</div>-->
+
+    <!--<div class="tab-content col-xs-8 col-sm-8 col-md-9 col-lg-9">-->
+    <!---->
+
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <script>
         var me = this;
@@ -224,7 +255,29 @@
 
         me.on('mount', function () {
             console.trace('mount home tag');
+            $(me.root.querySelectorAll('.menu .item')).tab();
             me.checkGhPageStatus();
+
+            $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
+            $(me.column).layout({
+                west: {
+                    size:           '35%',
+                    spacing_open:   1,
+                    spacing_closed: 20
+                }
+            });
+
+            // create 1px resizer + large click area
+            var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west'))
+                    .css({overflow: "visible"});
+            $("<div></div>").css({
+//                background: "#F00",
+                width:      "100%",
+                height:     "100%",
+                padding:    "0 5px",
+                marginLeft: "0px",
+                opacity:    .20
+            }).prependTo(resizer);
 
             riot.event.on('codeEditor.save', me.saveByKeyboard);
             riot.event.on('watchFailed', me.deactiveWatchBtn);
@@ -491,7 +544,7 @@
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
             // CHEAT fix front matter codemirror error
-            if(rawStr.endsWith('---')) {
+            if (rawStr.endsWith('---')) {
                 rawStr += '\n';
             }
             var contentCodeEditor = me.tags['code-editor'][0];

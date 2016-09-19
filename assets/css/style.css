@@ -242,7 +242,8 @@ textarea {
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 5px;
-    padding-left: 20px;
+    padding-left: 0;
+    color: black;
 }
 
 .pricing-card-cta {
@@ -252,3 +253,10 @@ textarea {
 /** {*/
     /*outline: 1px solid red;*/
 /*}*/
+
+
+.simplebar-content>.list-group-item:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-right: none;
+}
