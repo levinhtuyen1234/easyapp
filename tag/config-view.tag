@@ -1,27 +1,42 @@
 <config-view>
     <h2>List of fields</h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
-    <ul class="list-group sortable">
-        <li each="{config in contentConfig}" class="list-group-item">
-            <span><i class="fa fa-fw fa-bars"></i> {config.displayName} - {config.name} - <strong>{config.type}</strong></span>
-            <button class="btn btn-sm btn-danger pull-right" style="margin-left: 15px;" onclick="{removeField.bind(this,config.name)}"><i class="fa fa-close"></i></button>
-            <button class="btn btn-sm btn-default pull-right" onclick="{showFieldSettingDialog.bind(this,config.name,config.type,config)}"><i class="fa fa-gear"></i> Setting</button>
-            <div class="clearfix"></div>
-        </li>
-    </ul>
-
-    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 137px);">
-        <div class="ui celled list">
-            <div class="item" each="{config in contentConfig}" onclick="{openFile}">
-                <i class="content icon"></i>
-                <div class="content">
-                    <a class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></a>
+    <div class="simplebar" style="overflow: auto; padding: 0; height: calc(100vh - 240px); margin: 0 0 -14px;">
+        <div class="ui celled list sortable">
+            <div each="{config in contentConfig}" class="item" style="cursor: pointer;">
+                <div class="right floated content">
+                    <div class="ui icon mini button" onclick="{showFieldSettingDialog.bind(this,config.name,config.type,config)}"><i class="setting icon"></i></div>
+                    <div class="ui red icon mini button" onclick="{removeField.bind(this,config.name)}"><i class="remove icon"></i></div>
+                </div>
+                <i class="content icon" style="padding-top: 5px"></i>
+                <div class="content" style="padding-top: 6px">
+                    <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" tabindex="-1" role="dialog" name="dialog">
+    <!--<ul class="list-group sortable">-->
+        <!--<li each="{config in contentConfig}" class="list-group-item">-->
+            <!--<span><i class="fa fa-fw fa-bars"></i> {config.displayName} - {config.name} - <strong>{config.type}</strong></span>-->
+            <!--<button class="btn btn-sm btn-danger pull-right" style="margin-left: 15px;" onclick="{removeField.bind(this,config.name)}"><i class="fa fa-close"></i></button>-->
+            <!--<button class="btn btn-sm btn-default pull-right" onclick="{showFieldSettingDialog.bind(this,config.name,config.type,config)}"><i class="fa fa-gear"></i> Setting</button>-->
+            <!--<div class="clearfix"></div>-->
+        <!--</li>-->
+    <!--</ul>-->
+
+    <!--<div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 137px);">-->
+        <!--<div class="ui celled list">-->
+            <!--<div class="item" each="{config in contentConfig}" onclick="{openFile}">-->
+                <!--<i class="content icon"></i>-->
+                <!--<div class="content">-->
+                    <!--<a class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></a>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <div class="ui modal" tabindex="-1" name="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -155,7 +170,7 @@
         };
 
         me.loadContentConfig = function (contentConfig) {
-//            console.log('[config-view] loadContentConfig', contentConfig);
+            console.log('[config-view] loadContentConfig', contentConfig);
             var hiddenFieldNames = ['slug', 'layout'];
             me.hiddenConfig = [];
             me.contentConfig = contentConfig.filter(function (config) {

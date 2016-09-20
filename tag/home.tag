@@ -73,8 +73,8 @@
                 </div>
                 <div class="ui-layout-center">
                     <div class="ui pointing secondary menu">
-                        <a class="item active" data-tab="content-view">Content Form</a>
-                        <a class="item" data-tab="meta-view">Meta Form</a>
+                        <a class="item active" data-tab="content-view">Form</a>
+                        <a class="item" data-tab="meta-view">Form</a>
                         <a class="item disabled" disabled data-tab="code-view">Raw</a>
                         <a class="item" data-tab="layout-view">Layout</a>
                         <a class="item" data-tab="config-view">Config</a>
@@ -93,7 +93,8 @@
                         </div>
                     </div>
 
-                    <content-view site-name="{siteName}" data-tab="content-view" role="tabpanel" class="ui tab segment"></content-view>
+                    <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+                    <content-view site-name="{siteName}" data-tab="content-view" role="tabpanel" class="ui tab segment active"></content-view>
                     <meta-view site-name="{siteName}" data-tab="meta-view" role="tabpanel" class="ui tab segment"></meta-view>
                     <code-editor site-name="{siteName}" data-tab="code-view" role="tabpanel" class="ui tab segment"></code-editor>
                     <code-editor site-name="{siteName}" data-tab="layout-view" role="tabpanel" class="ui tab segment"></code-editor>
@@ -134,7 +135,7 @@
                     <!--&lt;!&ndash; EDITOR PANEL &ndash;&gt;-->
                     <!--<div class="panel panel-default">-->
                     <!--<div class="panel-heading panel-heading-sm">-->
-                    <!--<breadcrumb site_name="{opts.siteName}"></breadcrumb>-->
+
                     <!--</div>-->
                     <!--<div class="panel-body">-->
                     <!--<div class="tab-content">-->
@@ -166,6 +167,7 @@
         var dialog = require('electron').remote.dialog;
         var Path = require('path');
         me.test = true;
+        me.tabBar;
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
@@ -255,7 +257,14 @@
 
         me.on('mount', function () {
             console.trace('mount home tag');
-            $(me.root.querySelectorAll('.menu .item')).tab();
+            me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
+                onLoad: function(tabPath){
+                    console.log('tab onload', tabPath);
+                    if (tabPath == 'config-view') {
+                        me.openConfigTab();
+                    }
+                }
+            });
             me.checkGhPageStatus();
 
             $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
@@ -367,7 +376,8 @@
             }
             console.log('watch view', mode);
             $(me.openWatchViewBtn).addClass('active');
-            $(me.root.querySelector('#watch-view')).show();
+            me.tabBar.tab('change tab', 'watch-view');
+//            $(me.root.querySelector('#watch-view')).show();
             setTimeout(function () {
                 $(me.root.querySelector('#editor-view')).show(); // fix
             }, 1);
@@ -560,7 +570,8 @@
         };
 
         me.openFile = function (filePath) {
-            $(me.root.querySelector('#editor-view')).show();
+//            $(me.root.querySelector('#editor-view')).show();
+            me.tabBar.tab('change tab', 'editor-view');
             //$(me.root.querySelector('#watch-view')).hide();
             if (me.tags['breadcrumb'] == null) {
                 console.log('breadcrumb', me.tags);

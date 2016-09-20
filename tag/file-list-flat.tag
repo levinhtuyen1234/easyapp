@@ -1,22 +1,39 @@
 <file-list-flat>
     <div class="ui left icon fluid input">
-        <input placeholder="" type="text" style="border: none">
+        <input placeholder="" type="text" style="border: none" onkeyup="{onFilterInput}">
         <i class="filter icon"></i>
     </div>
-    <!--<div class="input-group">-->
-    <!--<span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>-->
-    <!--<input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">-->
-    <!--</div>-->
-    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 137px);">
+    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 119px);">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}">
-                <i class="{getFileIcon(name, path)} icon"></i>
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
+                <i class="{getFileIcon(name, path)}"></i>
                 <div class="content">
                     <a title="{hideExt(name)}" class="truncate">{getContentType(path)}{hideExt(name)}</a>
                 </div>
             </div>
         </div>
     </div>
+
+    <style scoped>
+        .ui.celled.list>.item.active {
+            background-color: #2185D0;
+        }
+
+        .ui.celled.list>.item.active>.content>a {
+            color: white;
+        }
+
+        .octicon {
+            display: table-cell;
+            padding-right: 6px;
+        }
+
+        .octicon + div.content {
+            display: table-cell;
+        }
+
+    </style>
+
     <script>
         var me = this;
         me.event = riot.observable();
@@ -194,12 +211,12 @@
         };
 
         me.openFile = function (e) {
-            var filePath = e.target.dataset.path;
+            var filePath = e.item.path;
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
-            $root.find('.list-group-item').removeClass('active');
+            $root.find('.item').removeClass('active');
             $(e.currentTarget).addClass('active');
-//            console.log('TRIGGER fileActivated', filePath);
+
             riot.event.trigger('fileActivated', me.opts.type, filePath);
             me.event.trigger('openFile', filePath);
         };
@@ -208,13 +225,13 @@
 //            console.log("filePath", filePath);
 //            console.log("query '[data-path=\"' + filePath + '\"]'");
             var elm = $root.find('[data-path="' + filePath + '"]');
-            $root.find('.list-group-item').removeClass('active');
+            $root.find('.item').removeClass('active');
 //            console.log('elm', elm);
             $(elm).addClass('active');
         };
 
         me.clearActive = function () {
-            $root.find('.list-group-item').removeClass('active');
+//            $root.find('.ui.celled.list>.item').removeClass('active');
             me.curFilePath = '';
         };
 

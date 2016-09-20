@@ -1,5 +1,5 @@
-<code-editor>
-    <div class="CodeMirror" style="border: 0.1px; padding: 0px; margin-left:-15px; margin-right:-15px; margin-bottom:-15px;"></div>
+<code-editor style="margin: 0; padding: 0;">
+    <div class="CodeMirror" style="border: none; margin: 0; height: calc(100vh - 160px);"></div>
     <script>
         var me = this;
         me.editor = null;
@@ -33,7 +33,7 @@
                 lineWrapping:            true,
                 lineNumbers:             true,
                 fixedGutter:             true,
-                foldGutter:              false,
+                foldGutter:              true,
                 matchBrackets:           true,
                 styleActiveLine:         true,
                 gutter:                  true,
@@ -57,7 +57,7 @@
             });
 //            me.editor.click();
 //            console.log('me.editor', me.editor);
-//            me.editor.setSize('100%', window.innerHeight - 220);
+            me.editor.setSize('100%', window.innerHeight - 100);
         });
     </script>
 </code-editor>

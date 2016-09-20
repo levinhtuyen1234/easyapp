@@ -17,7 +17,7 @@
         <a class="item" data-tab="layout">Layout</a>
     </div>
 
-    <file-list-flat class="ui bottom attached tab segment" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
     <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
     <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
     <!--<div class="ui attached segment" style="max-height: calc(100vh - 40px); padding-right: 0; padding-top:0;">-->
