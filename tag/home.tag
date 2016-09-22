@@ -7,7 +7,7 @@
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
     <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
 
-    <div class="ui fluid tiny menu" style="margin-top: 0">
+    <div class="ui fluid tiny inverted menu" style="margin-top: 0">
         <a href="#goto-home" onclick="{goToLandingPage}" class="item">
             <i class="fitted icon home"></i>Home
         </a>
@@ -68,17 +68,17 @@
     <div class="ui one column grid" style="height: calc(100vh - 40px)">
         <div class="stretched row" style="padding-bottom: 0; padding-top: 0;">
             <div class="column" name="column" style="padding-right: 0">
-                <div class="ui-layout-west" data-is="area-view" style="overflow-x: hidden;">
+                <div class="ui-layout-west" style="overflow-x: hidden;">
                     <side-bar site-name={opts.siteName}></side-bar>
                 </div>
-                <div class="ui-layout-center">
+                <div class="ui-layout-center" style="overflow-y: hidden">
                     <div class="ui pointing secondary menu">
                         <a class="item active" data-tab="content-view">Form</a>
                         <a class="item" data-tab="meta-view">Form</a>
                         <a class="item disabled" disabled data-tab="code-view">Raw</a>
                         <a class="item" data-tab="layout-view">Layout</a>
                         <a class="item" data-tab="config-view">Config</a>
-                        <div class="ui mini right menu"  style="border: none">
+                        <div class="ui mini right menu" style="border: none">
                             <div style="padding: 4px 16px 3px 0">
                                 <div class="ui mini buttons" style="border: none">
                                     <div class="ui red icon button" onclick="{deleteFile}">
@@ -94,11 +94,15 @@
                     </div>
 
                     <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-                    <content-view site-name="{siteName}" data-tab="content-view" role="tabpanel" class="ui tab segment active"></content-view>
-                    <meta-view site-name="{siteName}" data-tab="meta-view" role="tabpanel" class="ui tab segment"></meta-view>
-                    <code-editor site-name="{siteName}" data-tab="code-view" role="tabpanel" class="ui tab segment"></code-editor>
-                    <code-editor site-name="{siteName}" data-tab="layout-view" role="tabpanel" class="ui tab segment"></code-editor>
-                    <config-view site-name="{siteName}" data-tab="config-view" role="tabpanel" class="ui tab segment"></config-view>
+
+                    <!--<div style="height: calc(100vh - 40px)">-->
+                    <content-view site-name="{siteName}" data-tab="content-view"></content-view>
+                    <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
+                    <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
+                    <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
+                    <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
+                    <!--</div>-->
+
 
                     <!--<watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>-->
                     <!--<div class="tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">-->
@@ -258,7 +262,7 @@
         me.on('mount', function () {
             console.trace('mount home tag');
             me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
-                onLoad: function(tabPath){
+                onLoad: function (tabPath) {
                     console.log('tab onload', tabPath);
                     if (tabPath == 'config-view') {
                         me.openConfigTab();
@@ -269,11 +273,12 @@
 
             $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
             $(me.column).layout({
-                west: {
+                west:   {
                     size:           '35%',
                     spacing_open:   1,
                     spacing_closed: 20
-                }
+                },
+                center: {}
             });
 
             // create 1px resizer + large click area
@@ -339,10 +344,9 @@
                 if (domain == null) return;
                 var isDomainValid = /^((?:(?:(?:\w[.\-+]?)*)\w)+)((?:(?:(?:\w[.\-+]?){0,62})\w)+)\.(\w{2,6})$/.test(domain);
                 if (!isDomainValid) {
-                    bootbox.alert('Invalid domain', function () {
-                        setTimeout(function () {
-                            $('.bootbox-input.bootbox-input-text.form-control').focus();
-                        }, 1);
+                    bootbox.alert({
+                        title:   'Alert',
+                        message: 'Invalid domain'
                     });
                     return false;
                 }

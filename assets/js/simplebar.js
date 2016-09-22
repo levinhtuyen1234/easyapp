@@ -112,6 +112,7 @@
         }
 
         this.$scrollbar.on('mousedown', $.proxy(this.startDrag, this));
+        this.$scrollbar.on('mousewheel', $.proxy(this.startScroll, this));
         this.$scrollContentEl.on('scroll', $.proxy(this.startScroll, this));
 
         this.resizeScrollbar();

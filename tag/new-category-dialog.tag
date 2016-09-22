@@ -1,39 +1,35 @@
-<new-category-dialog class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">Create new Category</h2>
+<new-category-dialog class="ui modal" tabindex="-1">
+    <i class="close icon"></i>
+    <div class="header">Create new Category</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label>Name</label>
+                <div class="ui fluid icon input">
+                    <input type="text" id="categoryNameElm" placeholder="Name" oninput="{updateCategoryName}">
+                </div>
             </div>
-            <div class="modal-body">
-
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">Name</label>
-                        <div class="col-sm-10">
-                            <input type="text" name="categoryNameElm" class="form-control" placeholder="Name" oninput="{updateCategoryName}" style="width: 100%">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="categoryFilenameElm" class="col-sm-2 control-label">File Name</label>
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="FileName">
-                                <span class="input-group-addon">.json</span>
-                            </div>
-                        </div>
-                    </div>
-                    <label class="text-info">(?)NOTE: The "." of filename is used to define the relationship between 2 categories</label>
-                    <label class="text-info">E.g <span class="text-danger">category.sub-category.json</span> belongs the <span class="text-danger">category.json</span></label>
-                </form>
+            <div class="field">
+                <label>Filename</label>
+                <div class="ui fluid icon right labeled input">
+                    <input type="text" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
+                    <div class="ui label">.json</div>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" disabled="{categoryName==''}" onclick="{add}">Add</button>
+            <div class="ui info message">
+                <div class="header"><i class="icon help circle"></i> NOTE: The "." of filename is used to define the relationship between 2 categories</div>
+                <div class="description">E.g <div class="ui basic red label">category.sub-category.json</div> belongs the <div class="ui basic red label">category.json</div></div>
             </div>
         </div>
     </div>
+    <div class="actions">
+        <div class="ui button cancel">Cancel</div>
+        <div class="ui button positive icon" disabled="{categoryName==''}" onclick="{add}">
+            <i class="add icon"></i>
+            Add
+        </div>
+    </div>
+
     <script>
         var me = this;
         var combining = /[\u0300-\u036F]/g;

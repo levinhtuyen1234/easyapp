@@ -1,7 +1,7 @@
 <config-view>
     <h2>List of fields</h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
-    <div class="simplebar" style="overflow: auto; padding: 0; height: calc(100vh - 240px); margin: 0 0 -14px;">
+    <div class="" style="overflow: auto; padding: 0; height: calc(100vh - 240px); margin: 0 0 -14px;">
         <div class="ui celled list sortable">
             <div each="{config in contentConfig}" class="item" style="cursor: pointer;">
                 <div class="right floated content">

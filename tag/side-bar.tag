@@ -1,4 +1,4 @@
-<side-bar style="">
+<side-bar>
     <!--<div class="panel panel-default" style="border: 0">-->
     <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
     <!--<div class="ui top fixed menu" style="margin-top: 35px">-->

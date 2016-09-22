@@ -1,12 +1,12 @@
-<new-content-dialog class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
+<new-content-dialog class="ui modal" tabindex="-1">
     <i class="close icon"></i>
     <div class="header">Create new page</div>
     <div class="content">
         <form class="ui form">
-            <div class="one field">
-                <div class="field">
-                    <label>Page Title</label>
-                    <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;">
+            <div class="field">
+                <label>Page Title</label>
+                <div class="ui fluid icon input">
+                    <input type="text" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}">
                 </div>
             </div>
             <div class="field">
@@ -22,50 +22,55 @@
                     </div>
                 </div>
             </div>
-            <div class="two fields">
-                <div class="field">
-                    <label>Category</label>
-                    <div class="ui menu">
-                        <div class="ui fluid selection dropdown">
-                            <input name="gender" type="hidden">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">Choose Category</div>
-                            <div class="menu">
-                                <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
-                            </div>
+            <div class="field">
+                <label>Category</label>
+                <div class="ui menu">
+                    <div class="ui fluid selection dropdown">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Category</div>
+                        <div class="menu">
+                            <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
                         </div>
                     </div>
-
-                    <!--<div class="col-sm-10">-->
-                    <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
-                    <!--<option value=""></option>-->
-                    <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
-                    <!--</select>-->
-                    <!--</div>-->
                 </div>
 
-                <div class="field">
-                    <label>Tag</label>
-                    <div class="ui menu">
-                        <div class="ui fluid dropdown multiple search selection">
-                            <input name="gender" type="hidden">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">Choose Tag</div>
-                            <div class="menu">
-                                <div class="item" each="{tag in tagList}" data-value="{tag.value}">{tag.name}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--<div class="col-sm-10">-->
-                    <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
-                    <!--<option value=""></option>-->
-                    <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
-                    <!--</select>-->
-                    <!--</div>-->
-                </div>
+                <!--<div class="col-sm-10">-->
+                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
+                <!--<option value=""></option>-->
+                <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
+                <!--</select>-->
+                <!--</div>-->
             </div>
 
+            <div class="field">
+                <label>Tag</label>
+                <div class="ui menu">
+                    <div class="ui fluid dropdown multiple selection">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Tag</div>
+                        <div class="menu">
+                            <div class="item" each="{tag in tagList}" data-value="{tag.value}">{tag.name}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div class="col-sm-10">-->
+                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
+                <!--<option value=""></option>-->
+                <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
+                <!--</select>-->
+                <!--</div>-->
+            </div>
+
+            <div class="field">
+                <label>Filename</label>
+                <div class="ui fluid right labeled icon input">
+                    <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
+                    <div class="ui label">.md</div>
+                </div>
+            </div>
 
             <!--<div class="form-group">-->
             <!--<label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>-->
@@ -93,29 +98,32 @@
             <!--</div>-->
 
 
-            <div class="form-group">
-                <label for="tagListElm" class="col-sm-2 control-label">Tag</label>
-                <div class="col-sm-10">
-                    <select id="tagListElm" class="selectpicker" onchange="{editTag}" multiple>
-                        <option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>
-                    </select>
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+            <!--<label for="tagListElm" class="col-sm-2 control-label">Tag</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<select id="tagListElm" class="selectpicker" onchange="{editTag}" multiple>-->
+            <!--<option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>-->
+            <!--</select>-->
+            <!--</div>-->
+            <!--</div>-->
 
-            <div class="form-group">
-                <label for="contentFilenameElm" class="col-sm-2 control-label">File Name</label>
-                <div class="col-sm-10">
-                    <div class="input-group">
-                        <input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">
-                        <span class="input-group-addon">.md</span>
-                    </div>
-                </div>
-            </div>
+            <!--<div class="form-group">-->
+            <!--<label for="contentFilenameElm" class="col-sm-2 control-label">File Name</label>-->
+            <!--<div class="col-sm-10">-->
+            <!--<div class="input-group">-->
+            <!--<input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">-->
+            <!--<span class="input-group-addon">.md</span>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--</div>-->
         </form>
     </div>
     <div class="actions">
         <div class="ui button cancel">Cancel</div>
-        <div class="ui button" disabled="{canAdd()}" onclick="{add}">Add</div>
+        <div class="ui button positive icon" disabled="{canAdd()}" onclick="{add}">
+            <i class="add icon"></i>
+            Add
+        </div>
     </div>
     <script>
         var me = this;

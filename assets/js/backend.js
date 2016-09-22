@@ -3,6 +3,8 @@
 const Fs = require('fs');
 const Path = require('path');
 const ChildProcess = require('child_process');
+const Remote = require('electron').remote;
+const Shell = Remote.shell;
 
 const BlueBird = require('bluebird');
 const Mkdir = BlueBird.promisify(Fs.mkdir);
@@ -244,7 +246,7 @@ function genSimpleContentConfigFile(metaData) {
     return fixedFields.concat(tmpFields);
 }
 
-String.prototype.regexIndexOf = function(regex, startpos) {
+String.prototype.regexIndexOf = function (regex, startpos) {
     var indexOf = this.substring(startpos || 0).search(regex);
     return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
 };
@@ -807,7 +809,12 @@ function getSiteMetadataFiles(siteName) {
     return files;
 }
 
+function showItemInFolder(siteName, filePath) {
+    Shell.showItemInFolder(Path.join(sitesRoot, siteName, filePath));
+}
+
 module.exports = {
+    showItemInFolder:       showItemInFolder,
     fileExists:             fileExists,
     newCategory:            newCategory,
     getCategoryLayoutList:  getCategoryLayoutList,
