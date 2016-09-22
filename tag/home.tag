@@ -7,22 +7,35 @@
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
     <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
 
-    <div class="ui fluid tiny inverted menu" style="margin-top: 0">
-        <a href="#goto-home" onclick="{goToLandingPage}" class="item">
-            <i class="fitted icon home"></i>Home
-        </a>
-        <a href="#add-page" onclick="{newContent}" class="item" title="Create new page using existing layout">
-            <i class="fitted icon plus"></i> Page
-        </a>
-        <a href="#add-category" onclick="{newCategory}" class="item" title="Create new category" hide="{User.accountType == 'user'}">
-            <i class="fitted icon plus"></i> Category
-        </a>
-        <a href="#add-tag" onclick="{newTag}" class="item" title="Create new tag" hide="{User.accountType == 'user'}">
-            <i class="fitted icon plus"></i> Tag
-        </a>
-        <a href="#add-layout" onclick="{newLayout}" class="item" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-            <i class="fitted icon plus"></i> Layout
-        </a>
+    <div class="ui fluid tiny inverted menu" style="margin-top: 0;">
+        <div class="item">
+            <a href="#goto-home" onclick="{goToLandingPage}" class="ui primary button">
+                <i class="ui icon home"></i>
+            </a>
+        </div>
+        <div class="item">
+            <div href="#add-page" onclick="{newContent}" class="ui button" data-position="bottom left" data-tooltip="Create new page using existing layout" >
+                <i class="add icon"></i>Page
+            </div>
+        </div>
+        <div class="item">
+            <a href="#add-category" onclick="{newCategory}" class="ui button" data-position="bottom left" data-tooltip="Create new category" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Category
+            </a>
+        </div>
+        
+        <div class="item">
+            <a href="#add-tag" onclick="{newTag}" class="ui  button" data-position="bottom left" data-tooltip="Create new tag" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Tag
+            </a>
+        </div>
+        
+        <div class="item">
+            <a href="#add-layout" onclick="{newLayout}" class="ui  button" data-position="bottom left" data-tooltip="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Layout
+            </a>
+        </div>
+        
 
         <div class="right menu">
             <a class="item" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
