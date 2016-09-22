@@ -8,7 +8,7 @@
             <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
                 <i class="{getFileIcon(name, path)}"></i>
                 <div class="content">
-                    <a title="{hideExt(name)}" class="truncate">{getContentType(path)}{hideExt(name)}</a>
+                    <a data-tooltip="{hideExt(name)}" data-delay="5000" class="truncate" data-position="bottom center" data-inverted="">{getContentType(path)}{hideExt(name)}</a>
                 </div>
             </div>
         </div>
