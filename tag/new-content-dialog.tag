@@ -146,7 +146,8 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();
 //            if (me.isFrontPageElm.checked) {
