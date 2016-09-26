@@ -18,7 +18,11 @@
             </div>
             <div class="ui info message">
                 <div class="header"><i class="icon help circle"></i> NOTE: The "." of filename is used to define the relationship between 2 categories</div>
-                <div class="description">E.g <div class="ui basic red label">category.sub-category.json</div> belongs the <div class="ui basic red label">category.json</div></div>
+                <div class="description">E.g
+                    <div class="ui basic red label">category.sub-category.json</div>
+                    belongs the
+                    <div class="ui basic red label">category.json</div>
+                </div>
             </div>
         </div>
     </div>
@@ -56,8 +60,8 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
+                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[.’']/g, ' ')
                     .trim();
             me.update();
         };

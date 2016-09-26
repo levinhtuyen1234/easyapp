@@ -1,23 +1,17 @@
 <config-view-prop-predefined-value show="{parent.config.displayType === 'DropDown'}">
     <form class="col-sm-10 col-sm-offset-2 form-horizontal">
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="fieldPredefinedName">Name</label>
-            <div class="col-sm-8">
-                <input type="text" class="form-control" id="fieldPredefinedName" placeholder="Name" onkeyup="{edit.bind(this, 'predefinedName')}" value="{predefinedName}">
-            </div>
+        <div class="field">
+            <label class="" for="fieldPredefinedName">Name</label>
+                <input type="text" class="form-control" id="fieldPredefinedName" placeholder="Name" onkeyup="{edit( 'predefinedName')}" value="{predefinedName}">
         </div>
-        <div class="form-group">
-            <label class="col-sm-2 control-label" for="fieldPredefinedValue">Value</label>
-            <div class="col-sm-8">
-                <input type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit.bind(this, 'predefinedValue')}" value={predefinedValue}>
-            </div>
+        <div class="field">
+            <label class="" for="fieldPredefinedValue">Value</label>
+                <input type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit( 'predefinedValue')}" value={predefinedValue}>
         </div>
-        <div class="form-group">
-            <div class="col-sm-offset-2 col-sm-8">
+        <div class="field">
                 <button type="button" class="btn btn-default" disabled="{predefinedName.trim() === '' || predefinedValue.trim() === ''}" onclick="{addPredefined}">Add</button>
-            </div>
         </div>
-        <ul class="list-group">
+        <ul class="field">
             <li class="list-group-item" each="{data, index in parent.config.predefinedData}">
                 <span>{data.name} - {data.value}
                     <button class="btn btn-sm pull-right" onclick="{removePredefined.bind(this, index)}"><i class="fa fa-close"></i></button>

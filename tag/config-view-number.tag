@@ -1,34 +1,26 @@
 <config-view-number>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display name:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit.bind(this,'config.displayName')}">
-        </div>
+    <div class="field">
+        <label class="">Display name:</label>
+        <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
     <!-- This field is required -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Is required</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
-        </div>
+    <div class="inline field">
+        <input type="checkbox" onchange="{edit( 'config.required')}" checked="{config.required}">
+        <label class="">Is required</label>
     </div>
     <!-- View Only Field -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Only View</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.viewOnly')}" checked="{config.viewOnly}">
-        </div>
+    <div class="inline field">
+        <input type="checkbox" onchange="{edit( 'config.viewOnly')}" checked="{config.viewOnly}">
+        <label class="">Only View</label>
     </div>
 
     <!-- Display Type -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display type:</label>
-        <div class="col-sm-10">
-            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType'); tags['config-view-prop-predefined-value'].update()}">
-                <option value="Number">Number</option>
-                <option value="DropDown">DropDown</option>
-            </select>
-        </div>
+    <div class="field">
+        <label class="">Display type:</label>
+        <select class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+            <option value="Number">Number</option>
+            <option value="DropDown">DropDown</option>
+        </select>
     </div>
     <config-view-prop-predefined-value type="number"></config-view-prop-predefined-value>
 
@@ -36,9 +28,11 @@
         var me = this;
         me.mixin('form');
 
-        me.config = { type: 'Number', displayType: 'Number' };
+        me.config = {type: 'Number', displayType: 'Number'};
 
-        me.on('mount', function(){
+        me.on('mount', function () {
+            $(me.root.querySelector('ui dropdown')).dropdown();
+
             $(me.root.querySelector('.selectpicker')).selectpicker();// select current displayType
             if (me.config.displayType) {
                 $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
@@ -56,8 +50,8 @@
             return me.config;
         };
 
-        me.loadConfig = function(config) {
-            me.config = Object.assign({type: 'Number', displayType: 'Number' }, config);
+        me.loadConfig = function (config) {
+            me.config = Object.assign({type: 'Number', displayType: 'Number'}, config);
             if (me.config.displayType) {
                 $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
             }

@@ -10,27 +10,27 @@
                     <div class="form-group is-empty">
                         <label for="form-repo-url" class="control-label col-sm-4">Folder name</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{edit.bind(this,'siteName')}">
+                            <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{edit('siteName')}">
                             <span class="material-input"></span>
                         </div>
                     </div>
                     <div class="form-group is-empty">
                         <label for="form-repo-url" class="control-label col-sm-4">Repository url (HTTPS)</label>
                         <div class="col-sm-8">
-                            <input type="url" class="form-control" id="form-repo-url" placeholder="ends with .git" oninput="{edit.bind(this,'repoUrl')}" value="{repoUrl}">
+                            <input type="url" class="form-control" id="form-repo-url" placeholder="ends with .git" oninput="{edit('repoUrl')}" value="{repoUrl}">
                             <span class="material-input"></span>
                         </div>
                     </div>
                     <div class="form-group is-empty">
                         <label for="form-username" class="control-label col-sm-4">Username</label>
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="form-username" placeholder="" oninput="{edit.bind(this,'username')}" value="{username}">
+                            <input type="text" class="form-control" id="form-username" placeholder="" oninput="{edit('username')}" value="{username}">
                         </div>
                     </div>
                     <div class="form-group is-empty">
                         <label for="form-password" class="control-label col-sm-4">Password</label>
                         <div class="col-sm-8">
-                            <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit.bind(this,'password')}" value="{password}">
+                            <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit('password')}" value="{password}">
                             <span class="material-input"></span>
                         </div>
                     </div>

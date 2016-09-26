@@ -36,7 +36,7 @@
                 </div>
 
                 <!--<div class="col-sm-10">-->
-                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
+                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit('contentCategory')}">-->
                 <!--<option value=""></option>-->
                 <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
                 <!--</select>-->
@@ -57,7 +57,7 @@
                 </div>
 
                 <!--<div class="col-sm-10">-->
-                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">-->
+                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit('contentCategory')}">-->
                 <!--<option value=""></option>-->
                 <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
                 <!--</select>-->
@@ -75,7 +75,7 @@
             <!--<div class="form-group">-->
             <!--<label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>-->
             <!--<div class="col-sm-10">-->
-            <!--<select id="contentLayoutElm" class="selectpicker" onchange="{edit.bind(this,'contentLayout')}">-->
+            <!--<select id="contentLayoutElm" class="selectpicker" onchange="{edit('contentLayout')}">-->
             <!--<option value=""></option>-->
             <!--<option each="{value in layoutList}" value="{value}">{hideExt(value)}</option>-->
             <!--</select>-->
@@ -93,7 +93,7 @@
             <!--<div class="form-group">-->
             <!--<label for="contentTitleElm" class="col-sm-2 control-label">Category</label>-->
             <!--<div class="col-sm-10">-->
-            <!--<input type="text" class="form-control" placeholder="Category" style="width: 498px;" onchange="{edit.bind(this,'contentCategory')}">-->
+            <!--<input type="text" class="form-control" placeholder="Category" style="width: 498px;" onchange="{edit('contentCategory')}">-->
             <!--</div>-->
             <!--</div>-->
 
@@ -198,8 +198,8 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
+                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[.’']/g, ' ')
                     .trim();
 //            if (me.isFrontPageElm.checked) {
             me.contentFileName = title;

@@ -52,8 +52,8 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
+                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[.’']/g, ' ')
                     .trim();
             me.update();
         };

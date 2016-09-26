@@ -23,19 +23,19 @@
                 <i class="add icon"></i>Category
             </a>
         </div>
-        
+
         <div class="item">
             <a href="#add-tag" onclick="{newTag}" class="ui  button" data-position="bottom left" data-tooltip="Create new tag" hide="{User.accountType == 'user'}">
                 <i class="add icon"></i>Tag
             </a>
         </div>
-        
+
         <div class="item">
             <a href="#add-layout" onclick="{newLayout}" class="ui  button" data-position="bottom left" data-tooltip="Create new layout that using for a page" hide="{User.accountType == 'user'}">
                 <i class="add icon"></i>Layout
             </a>
         </div>
-        
+
 
         <div class="right menu">
             <a class="item" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
@@ -276,7 +276,7 @@
             console.trace('mount home tag');
             me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
                 onLoad: function (tabPath) {
-                    console.log('tab onload', tabPath);
+//                    console.log('tab onload', tabPath);
                     if (tabPath == 'config-view') {
                         me.openConfigTab();
                     }

@@ -60,9 +60,9 @@
             </div>
         </div>
     </div>
-        <!--<select class="selectpicker" onchange="{editTag}" multiple>-->
-            <!--<option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>-->
-        <!--</select>-->
+    <!--<select class="selectpicker" onchange="{editTag}" multiple>-->
+    <!--<option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>-->
+    <!--</select>-->
     <script>
         var me = this;
         me.mixin('form');
@@ -111,22 +111,20 @@
         }
     </style>
     <label for="form-{config.name}-{config.displayType}" name="label" class="" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group" name="content">
-        <input if="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
-        <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
+    <input if="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+    <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
 
-        <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
+    <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
 
-        <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li each="{config.predefinedData}">
-                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-                </li>
-            </ul>
-        </div>
+    <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li each="{config.predefinedData}">
+                <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+            </li>
+        </ul>
     </div>
     <script>
         var me = this;
@@ -158,16 +156,16 @@
                     });
                 }
 
-                if (me.config.displayType === 'MarkDown') {
+//                if (me.config.displayType === 'MarkDown') {
 //                    $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('fieldMarkDown');
 //                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
 //                        handles: 's'
 //                    });
-                    $(me.label).removeClass('col-sm-3');
-                    $(me.content).removeClass('col-sm-9');
-                    $(me.label).addClass('col-sm-12');
-                    $(me.content).addClass('col-sm-12');
-                }
+//                    $(me.label).removeClass('col-sm-3');
+//                    $(me.content).removeClass('col-sm-9');
+//                    $(me.label).addClass('col-sm-12');
+//                    $(me.content).addClass('col-sm-12');
+//                }
             }, 1);
         });
 
@@ -192,7 +190,7 @@
 <form-field-number class="field">
     <label for="form-{config.name}-{config.displayType}" class="" style="text-align: left;">{config.displayName}
     </label>
-    <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
+    <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
 
     <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
         <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -244,7 +242,7 @@
 <form-field-boolean class="inline field">
     <label style="vertical-align: middle; margin-bottom: 12px;">{config.displayName}</label>
     <div class="ui toggle checkbox">
-        <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit.bind(this,'value')}" disabled="{config.viewOnly}">
+        <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit('value')}" disabled="{config.viewOnly}">
     </div>
     <script>
         var me = this;
@@ -269,10 +267,13 @@
 
 <form-field-datetime class="field">
     <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
-    <input type='text' class="form-control" id="form-{config.name}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"/>
-    <span class="input-group-addon">
-        <span class="glyphicon glyphicon-calendar" disabled="{config.viewOnly}"></span>
-    </span>
+    <div class="ui action input">
+        <input type='text' class="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"/>
+        <div class="ui calendar icon button">
+            <i class="calendar link icon"></i>
+        </div>
+    </div>
+
     <script>
         var me = this;
         me.mixin('form');
@@ -281,20 +282,31 @@
 
         me.on('mount', function () {
             me['form-' + me.config.name].value = me.value;
-            var elm = me.root.querySelector('.input-group.date');
+            var elm = me.root.querySelector('input');
             var config = {};
             me.config.displayType = me.config.displayType || 'DateTime';
-            if (me.config.displayType === 'Date')
-                config.format = 'DD-MM-YYYY';
-            else if (me.config.displayType === 'Time')
-                config.format = 'HH:mm:ss';
-            else
-                config.format = 'DD-MM-YYYY HH:mm:ss';
-            $(elm).datetimepicker(config)
-                    .on('dp.change', function (e) {
-                        me.value = e.date.format(config.format);
-                    });
+            var format, calendarType;
+            if (me.config.displayType === 'Date') {
+                format = 'DD-MM-YYYY';
+                calendarType = 'date';
+            } else if (me.config.displayType === 'Time') {
+                format = 'HH:mm:ss';
+                calendarType = 'time';
+            } else {
+                format = 'DD-MM-YYYY HH:mm:ss';
+                calendarType = 'datetime';
+            }
 
+            $(me.root.querySelector('.ui.calendar')).calendar({
+                onChange: function(date, text){
+                    console.log('date', date);
+                    console.log('text', text);
+                    console.log('formated', moment(date).format(format));
+                    me.value = moment(date).format(format);
+                    console.log('name', `form-${config.name}`);
+                    me['form-' + me.config.name].value = me.value;
+                }
+            });
         });
 
         me.getValue = function () {
