@@ -78,7 +78,7 @@
         </div>
     </div>
 
-    <div class="ui one column grid" style="height: calc(100vh - 40px)">
+    <div class="ui one column grid" style="height: calc(100vh - 45px)">
         <div class="stretched row" style="padding-bottom: 0; padding-top: 0;">
             <div class="column" name="column" style="padding-right: 0">
                 <div class="ui-layout-west" style="overflow-x: hidden;">
@@ -86,11 +86,11 @@
                 </div>
                 <div class="ui-layout-center" style="overflow-y: hidden">
                     <div class="ui pointing secondary menu">
-                        <a class="item active" data-tab="content-view">Form</a>
-                        <a class="item" data-tab="meta-view">Form</a>
-                        <a class="item disabled" disabled data-tab="code-view">Raw</a>
-                        <a class="item" data-tab="layout-view">Layout</a>
-                        <a class="item" data-tab="config-view">Config</a>
+                        <a class="item active" data-tab="content-view" onclick="{openContentTab}">Form</a>
+                        <a class="item" data-tab="meta-view" onclick="{openMetaTab}">Form</a>
+                        <a class="item" data-tab="code-view" onclick="{openRawContentTab}">Raw</a>
+                        <a class="item" data-tab="layout-view" onclick="{openLayoutTab}">Layout</a>
+                        <a class="item" data-tab="config-view" onclick="{openConfigTab}">Config</a>
                         <div class="ui mini right menu" style="border: none">
                             <div style="padding: 4px 16px 3px 0">
                                 <div class="ui mini buttons" style="border: none">
@@ -373,12 +373,15 @@
         };
 
         me.openLayoutTab = function () {
+            console.log('onopenLayoutTab');
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.update();
 
             me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
+            console.log('fileContent', fileContent);
             me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + me.currentLayout);
+            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
@@ -588,7 +591,7 @@
 
         me.openFile = function (filePath) {
 //            $(me.root.querySelector('#editor-view')).show();
-            me.tabBar.tab('change tab', 'editor-view');
+            me.tabBar.tab('change tab', 'editor-view', 'home openFile', filePath);
             //$(me.root.querySelector('#watch-view')).hide();
             if (me.tags['breadcrumb'] == null) {
                 console.log('breadcrumb', me.tags);
@@ -600,6 +603,7 @@
 
 
             if (filePath.endsWith('.md')) {
+                    console.log('openContentTab');
                 me.openContentTab();
 //            } else if (filePath.endsWith('.config.json')) {
 //                me.openConfigTab();

@@ -3,7 +3,7 @@
         <input placeholder="" type="text" style="border: none" onkeyup="{onFilterInput}">
         <i class="filter icon"></i>
     </div>
-    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 119px);">
+    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 125px);">
         <div class="ui celled list">
             <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
                 <i class="{getFileIcon(name, path)}"></i>
@@ -36,7 +36,6 @@
 
     <script>
         var me = this;
-        me.event = riot.observable();
         me.files = [];
         me.filteredFiles = [];
 
@@ -212,13 +211,15 @@
 
         me.openFile = function (e) {
             var filePath = e.item.path;
+            console.log('item', e.item);
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.item').removeClass('active');
             $(e.currentTarget).addClass('active');
 
             riot.event.trigger('fileActivated', me.opts.type, filePath);
-            me.event.trigger('openFile', filePath);
+            console.log('fileListFlat open file', filePath);
+            me.trigger('openFile', filePath);
         };
 
         me.activeFile = function (filePath) {

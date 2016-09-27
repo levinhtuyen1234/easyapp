@@ -1,83 +1,100 @@
 <landing>
-    <section class="featurette pb-0 pt-6">
-        <div class="container-responsive">
-            <div class="row">
-                <dialog-new-site-local></dialog-new-site-local>
-                <dialog-new-site-import></dialog-new-site-import>
-                <progress-dialog></progress-dialog>
-                <div class="col-xs-5 col-sm-4 col-md-3">
-                    <div class="pricing-card pricing-card-horizontal">
-                        <div class="pricing-card-cta">
-                            <div class="caption">
-                                <div style="text-align: center"><i class="fa fa-plus fa-4x"></i></div>
-                                <div>
-                                    <a href="#" class="btn btn-block btn-theme-green btn-jumbotron" role="button" onclick={showCreateSite}>Create new site</a>
-                                </div>
-                            </div>
-                        </div>
+    <dialog-new-site-local></dialog-new-site-local>
+    <dialog-new-site-import></dialog-new-site-import>
+    <progress-dialog></progress-dialog>
+    <br>
+    <div class="ui one column centered grid">
+        <div class="ui horizontal list">
+            <div class="item">
+                <div class="ui card" style="text-align: center">
+                    <a class="icon" href="#" onclick="{showCreateSite}">
+                        <i class="add huge link icon"></i>
+                    </a>
+                    <div class="content">
+                        <a class="header" href="#" onclick="{showCreateSite}">Create new site</a>
                     </div>
                 </div>
-                <div class="col-xs-1 col-sm-1 col-md-1" style="text-align: center;">
-                    <h1 class="text-thin" style="padding-top: 100%">OR</h1>
-                </div>
-                <div class="col-xs-5 col-sm-4 col-md-3">
-                    <div class="pricing-card pricing-card-horizontal">
-                        <div class="pricing-card-cta">
-                            <div class="caption">
-                                <div style="text-align: center"><i class="fa fa-github fa-4x"></i></div>
-                                <div>
-                                    <a href="#" class="btn btn-block btn-theme-green btn-jumbotron" role="button" onclick={showImportGithub}>Import GitHub repository</a>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+            <div class="item" style="padding-top: 3em; vertical-align: middle;"><h1>OR</h1></div>
+            <div class="item">
+                <div class="ui card" style="text-align: center">
+                    <a class="icon" href="#" onclick="{showImportGithub}">
+                        <i class="github huge link icon"></i>
+                    </a>
+                    <div class="content">
+                        <a class="header" href="#" onclick="{showImportGithub}">Import GitHub repository</a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
-    <section class="featurette pb-0 pt-6 shade-gray border-top">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">List of your websites</h2>
-            <div class="row">
-                <div class="col-sm-3 col-md-3" each="{site in sites}">
-                    <div onclick={openSite.bind(this,site)}>
-                        <div class="pricing-card pricing-card-horizontal">
-                            <div class="pricing-card-cta">
-                                <div class="caption" style="text-align: center">
-                                    <div style="text-align: center">
-                                        <i class="{getSiteIcon(site)}"></i>
-                                    </div>
-                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                    <h1>{site.name}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    </div>
 
-    <section class="featurette pb-0 pt-6 border-top">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">How to build website?</h2>
-            <div class="pricing-card pricing-card-horizontal">
-                <div class="pricing-card-cta">
-                    <a class="btn btn-block btn-theme-green btn-jumbotron" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a></div>
-                <div class="pricing-card-text display-heading-3 mb-0 text-thin">EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.</div>
+    <h2 class="header">List of your websites</h2>
+    <div class="ui grid">
+        <div class="three wide column" each="{site in sites}">
+            <div class="ui card site" style="text-align: center;" onclick="{openSite(site)}">
+                <div class="content">
+                    <i class="{getSiteIcon(site)} big link icon"></i>
+                    <h2 class="header" style="padding-top:0.5em">{site.name}</h2>
+                </div>
             </div>
         </div>
-    </section>
-    <section class="featurette shade-gradient pb-4">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">Build website faster, easier?</h2>
-            <div class="pricing-card pricing-card-horizontal">
-                <div class="pricing-card-cta">
-                    <a class="btn btn-block btn-theme-green btn-jumbotron" href="http://electron.atom.io/docs/api/menu/" target="_blank" rel="nofollow">Công cụ hỗ trợ</a></div>
-                <div class="pricing-card-text display-heading-3 mb-0 text-thin">GitHub fosters a fast, flexible, and collaborative development process that lets you work on your own or with others.</div>
+    </div>
+
+    <div class="ui two column grid">
+        <div class="column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="header">How to build website?</div>
+                    <div class="description">
+                        EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a class="ui basic green link button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
+        <div class="column">
+            <div class="ui fluid card">
+                <div class="content">
+                    <div class="header">Build website faster, easier?</div>
+                    <div class="description">
+                        EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.
+                    </div>
+                </div>
+                <div class="extra content">
+                    <div class="ui two buttons">
+                        <a class="ui basic green link button" href="http://electron.atom.io/docs/api/menu/" target="_blank" rel="nofollow">Công cụ hỗ trợ</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui cards">
+
+    </div>
+
+
+    <style scoped>
+        .site, .site>.content>.header {
+            cursor: pointer;
+            color: black !important;
+        }
+
+        .site:hover {
+            cursor: pointer;
+            color: #1e70bf !important;
+        }
+
+        .site>.content>.header:hover  {
+            cursor: pointer;
+            color: #1e70bf !important;
+        }
+    </style>
+
     <script>
         var me = this;
         var root = me.root;
@@ -89,11 +106,11 @@
 
         me.getSiteIcon = function (site) {
             if (site.remote && site.local) {
-                return 'fa fa-4x fa-cloud';
+                return 'cloud';
             } else if (site.remote) {
-                return 'fa fa-4x fa-cloud-download';
+                return 'cloud download';
             } else if (site.local) {
-                return 'fa fa-4x fa-folder-o';
+                return 'folder outline';
             }
         };
 
@@ -136,13 +153,15 @@
         });
 
         me.openSite = function (site) {
-            if (site.remote && !site.url) {
-                alert('Remote repository not exists in site data');
-                return;
+            return function (e) {
+                if (site.remote && !site.url) {
+                    alert('Remote repository not exists in site data');
+                    return;
+                }
+                var siteName = site.name;
+                me.unmount(true);
+                window.curPage = riot.mount('home', {siteName: siteName})[0];
             }
-            var siteName = site.name;
-            me.unmount(true);
-            window.curPage = riot.mount('home', {siteName: siteName})[0];
         };
 
         me.createSite = function (name, repoUrl, branch) {
@@ -152,6 +171,7 @@
         };
 
         me.showCreateSite = function () {
+            console.log('showCreateSite', me.tags['dialog-new-site-local']);
             me.tags['dialog-new-site-local'].show();
         };
 

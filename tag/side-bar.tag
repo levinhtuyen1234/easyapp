@@ -1,16 +1,4 @@
 <side-bar>
-    <!--<div class="panel panel-default" style="border: 0">-->
-    <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
-    <!--<div class="ui top fixed menu" style="margin-top: 35px">-->
-    <!--<div class="fluid item">-->
-
-    <!--</div>-->
-    <!--</div>-->
-    <!--<div class="ui attached labeled tiny fluid buttons">-->
-        <!--<button class="ui button">Content</button>-->
-        <!--<button class="ui button">Meta</button>-->
-        <!--<button class="ui button">Layout</button>-->
-    <!--</div>-->
     <div class="ui pointing secondary menu" style="margin-bottom: 0">
         <a class="item active" data-tab="content">Content</a>
         <a class="item" data-tab="meta">Meta</a>
@@ -18,19 +6,8 @@
     </div>
 
     <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
-    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
     <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
-    <!--<div class="ui attached segment" style="max-height: calc(100vh - 40px); padding-right: 0; padding-top:0;">-->
-        <!--<file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>-->
-        <!--<file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
-        <!--<file-list-flat type="metadata" id="metadata-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
-        <!--&lt;!&ndash;<file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>&ndash;&gt;-->
-    <!--</div>-->
-    <!--<div class="ui top fixed menu" style="margin-top: 36px;">-->
-    <!--<a class="item">Content</a>-->
-    <!--<a class="item">Meta</a>-->
-    <!--<a class="item">Layout</a>-->
-    <!--</div>-->
+    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
 
     <!--<div class="btn-group" data-toggle="buttons">-->
     <!--<button class="ui button active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">-->
@@ -204,11 +181,12 @@
             me.reloadMetadataFileTab();
 //            me.reloadAssetFileTab();
 
-            contentFileTag.event.on('openFile', function (filePath) {
+            contentFileTag.on('openFile', function (filePath) {
+                console.log('side-bar on openFile', filePath);
                 me.parent.openFile(filePath);
             });
 
-            layoutFileTag.event.on('openFile', function (filePath) {
+            layoutFileTag.on('openFile', function (filePath) {
                 me.parent.openFile(filePath);
             });
 
@@ -219,7 +197,7 @@
 //                    me.parent.openAssetFile(filePath);
 //            });
 
-            metadataFileTag.event.on('openFile', function (filePath) {
+            metadataFileTag.on('openFile', function (filePath) {
                 me.parent.openMetadataFile(filePath);
             });
         });

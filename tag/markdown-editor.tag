@@ -49,8 +49,8 @@
                 imageUploadURL:  "./php/upload.php?test=dfdf",
                 toolbarIcons:    toolbarIcons,
                 onload:          function () {
-                    loaded = true;
-                    me.setValue(me.value);
+//                    loaded = true;
+//                    me.setValue(me.value);
                 }
             });
 
