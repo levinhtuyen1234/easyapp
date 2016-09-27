@@ -2,36 +2,46 @@
     <dialog-new-site-local></dialog-new-site-local>
     <dialog-new-site-import></dialog-new-site-import>
     <progress-dialog></progress-dialog>
-    <br>
-    
+    <div class="ui hidden section divider"></div>
     <div class="ui one column centered grid container">
-        <div class="ui hidden section divider"></div>
-        <div class="ui horizontal list">
-            <div class="item">
-                <div class="ui card" style="text-align: center">
-                    <a class="icon" href="#" onclick="{showCreateSite}">
-                        <i class="add huge link icon"></i>
-                    </a>
+        <h2 class="ui horizontal divider header">
+        <i class="bar chart icon"></i>
+        Website Marketplace
+        </h2>
+        <div class="ui two column stackable grid container">
+            <div class="three wide column" each="{template in templateList}">
+                <div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">
                     <div class="content">
-                        <a class="header" href="#" onclick="{showCreateSite}">Create new site</a>
-                    </div>
-                </div>
-            </div>
-            <div class="item" style="padding-top: 3em; vertical-align: middle;"><h1>OR</h1></div>
-            <div class="item">
-                <div class="ui card" style="text-align: center">
-                    <a class="icon" href="#" onclick="{showImportGithub}">
-                        <i class="github huge link icon"></i>
-                    </a>
-                    <div class="content">
-                        <a class="header" href="#" onclick="{showImportGithub}">Import GitHub repository</a>
+                        <i class="add big link icon"></i>
+                        <h4 class="header">{template.name}</h4>
                     </div>
                 </div>
             </div>
         </div>
+        <div class="ui hidden section divider"></div>
+        <div class="ui horizontal list">
+            <div class="item">
+                <div class="ui card" >
+                    <button class="ui primary huge icon button" onclick="{showCreateSite}">
+                        <i class="add icon"></i>
+                        Create new site
+                    </button>
+                       
+                  
+                </div>
+            </div>
+            <div class="item" ><h1>OR</h1></div>
+            <div class="item">
+                <div class="ui card" >
+                    <button class="ui primary huge icon button" onclick="{showImportGithub}">
+                        <i class="github icon left"></i>
+                        Import repository
+                    </button>
+                   
+                </div>
+            </div>
+        </div>
     </div>
-    <br>
-    <br>
     <div class="ui hidden section divider"></div>
     <div class="ui two column stackable grid container">
         <h2 class="ui horizontal divider header">
@@ -108,6 +118,13 @@
         var root = me.root;
 
         var dialog = require('electron').remote.dialog;
+
+        me.templateList = [];
+        try {
+            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString()).templates;
+        } catch (ex) {
+            console.log(ex);
+        }
 
         var newSite;
         me.sites = [];
