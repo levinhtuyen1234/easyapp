@@ -3,7 +3,9 @@
     <dialog-new-site-import></dialog-new-site-import>
     <progress-dialog></progress-dialog>
     <br>
-    <div class="ui one column centered grid">
+    
+    <div class="ui one column centered grid container">
+        <div class="ui hidden section divider"></div>
         <div class="ui horizontal list">
             <div class="item">
                 <div class="ui card" style="text-align: center">
@@ -28,20 +30,26 @@
             </div>
         </div>
     </div>
-
-    <h2 class="header">List of your websites</h2>
-    <div class="ui grid">
+    <br>
+    <br>
+    <div class="ui hidden section divider"></div>
+    <div class="ui two column stackable grid container">
+        <h2 class="ui horizontal divider header">
+        <i class="bar chart icon"></i>
+        List of your websites
+        </h2>
         <div class="three wide column" each="{site in sites}">
-            <div class="ui card site" style="text-align: center;" onclick="{openSite(site)}">
-                <div class="content">
+            <div class="ui card site" onclick="{openSite(site)}">
+                <div class="ui center aligned content">
                     <i class="{getSiteIcon(site)} big link icon"></i>
-                    <h2 class="header" style="padding-top:0.5em">{site.name}</h2>
+                    <div class="ui hidden divider"></div>
+                    <h2 class="header">{site.name}</h2>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="ui two column grid">
+    <div class="ui hidden section divider"></div>
+    <div class="ui two column grid container">
         <div class="column">
             <div class="ui fluid card">
                 <div class="content">
@@ -52,7 +60,7 @@
                 </div>
                 <div class="extra content">
                     <div class="ui two buttons">
-                        <a class="ui basic green link button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>
+                        <a class="ui basic green center button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>
                     </div>
                 </div>
             </div>
