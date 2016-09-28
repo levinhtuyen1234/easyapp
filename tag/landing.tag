@@ -2,46 +2,71 @@
     <dialog-new-site-local></dialog-new-site-local>
     <dialog-new-site-import></dialog-new-site-import>
     <progress-dialog></progress-dialog>
-    <br>
-    <div class="ui one column centered grid">
+    <div class="ui hidden section divider"></div>
+    <div class="ui one column centered grid container">
+        <h2 class="ui horizontal divider header">
+        <i class="bar chart icon"></i>
+        Website Marketplace
+        </h2>
+        <div class="ui left aligned search">
+        <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="Search websites...">
+            <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
+        </div>
+        <div class="ui two column stackable grid container">
+            <div class="three wide column" each="{template in templateList}">
+                <div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">
+                    <div class="content">
+                        <i class="add big link icon"></i>
+                        <h4 class="header">{template.name}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="ui hidden section divider"></div>
         <div class="ui horizontal list">
             <div class="item">
-                <div class="ui card" style="text-align: center">
-                    <a class="icon" href="#" onclick="{showCreateSite}">
-                        <i class="add huge link icon"></i>
-                    </a>
-                    <div class="content">
-                        <a class="header" href="#" onclick="{showCreateSite}">Create new site</a>
-                    </div>
+                <div class="ui card" >
+                    <button class="ui primary huge icon button" onclick="{showCreateSite}">
+                        <i class="add icon"></i>
+                        Create new site
+                    </button>
+                       
+                  
                 </div>
             </div>
-            <div class="item" style="padding-top: 3em; vertical-align: middle;"><h1>OR</h1></div>
+            <div class="item" ><h1>OR</h1></div>
             <div class="item">
-                <div class="ui card" style="text-align: center">
-                    <a class="icon" href="#" onclick="{showImportGithub}">
-                        <i class="github huge link icon"></i>
-                    </a>
-                    <div class="content">
-                        <a class="header" href="#" onclick="{showImportGithub}">Import GitHub repository</a>
-                    </div>
+                <div class="ui card" >
+                    <button class="ui primary huge icon button" onclick="{showImportGithub}">
+                        <i class="github icon left"></i>
+                        Import repository
+                    </button>
+                   
                 </div>
             </div>
         </div>
     </div>
-
-    <h2 class="header">List of your websites</h2>
-    <div class="ui grid">
+    <div class="ui hidden section divider"></div>
+    <div class="ui two column stackable grid container">
+        <h2 class="ui horizontal divider header">
+        <i class="bar chart icon"></i>
+        List of your websites
+        </h2>
         <div class="three wide column" each="{site in sites}">
-            <div class="ui card site" style="text-align: center;" onclick="{openSite(site)}">
-                <div class="content">
+            <div class="ui card site" onclick="{openSite(site)}">
+                <div class="ui center aligned content">
                     <i class="{getSiteIcon(site)} big link icon"></i>
-                    <h2 class="header" style="padding-top:0.5em">{site.name}</h2>
+                    <div class="ui hidden divider"></div>
+                    <h2 class="header">{site.name}</h2>
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="ui two column grid">
+    <div class="ui hidden section divider"></div>
+    <div class="ui two column grid container">
         <div class="column">
             <div class="ui fluid card">
                 <div class="content">
@@ -52,7 +77,7 @@
                 </div>
                 <div class="extra content">
                     <div class="ui two buttons">
-                        <a class="ui basic green link button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>
+                        <a class="ui basic green center button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>
                     </div>
                 </div>
             </div>
@@ -100,6 +125,13 @@
         var root = me.root;
 
         var dialog = require('electron').remote.dialog;
+
+        me.templateList = [];
+        try {
+            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString()).templates;
+        } catch (ex) {
+            console.log(ex);
+        }
 
         var newSite;
         me.sites = [];
