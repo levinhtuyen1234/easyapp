@@ -97,10 +97,11 @@
                                     <div class="ui mini buttons" style="border: none">
                                         <div class="ui red icon button" onclick="{deleteFile}">
                                             <i class="delete icon"></i>
+                                            Delete
                                         </div>
-                                        <div class="ui blue icon button" onclick="{save}">
+                                        <div class="ui blue icon button" data-tooltip="'Ctrl+S' to save" data-position="bottom right" onclick="{save}">
                                             <i class="save icon"></i>
-                                            Save
+                                            Save (Ctrl+S)
                                         </div>
                                     </div>
                                 </div>
