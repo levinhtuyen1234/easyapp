@@ -1,7 +1,8 @@
 <bottom-bar>
-    <div class="ui attached tabular mini menu">
+    <div class="ui attached tabular center mini menu">
         <div class="active item" data-tab="webView" style="border-radius: 0 !important;">Preview</div>
-        <div class="item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</div>
+        <div class="item" data-tab="onBrowser" style="border-radius: 0 !important;">Open on Browser</div>
+        <div class="right item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</div>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="webView" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
         <webview id="webview" src="https://www.google.com.vn" style="display:flex; height: 100%"></webview>
@@ -29,7 +30,8 @@
             sda
         </pre>
     </div>
-
+    <div class="ui bottom attached tab segment" data-tab="onBrowser" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
+    </div>
     <script>
         var Path = require('path');
         var Fs = require('fs');
