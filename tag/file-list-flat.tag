@@ -3,7 +3,7 @@
         <input placeholder="" type="text" style="border: none" onkeyup="{onFilterInput}">
         <i class="filter icon"></i>
     </div>
-    <div class="simplebar" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 125px);">
+    <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
             <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
                 <i class="{getFileIcon(name, path)}"></i>

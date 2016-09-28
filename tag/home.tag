@@ -14,7 +14,7 @@
             </a>
         </div>
         <div class="item">
-            <div href="#add-page" onclick="{newContent}" class="ui button" data-position="bottom left" data-tooltip="Create new page using existing layout" >
+            <div href="#add-page" onclick="{newContent}" class="ui button" data-position="bottom left" data-tooltip="Create new page using existing layout">
                 <i class="add icon"></i>Page
             </div>
         </div>
@@ -80,40 +80,43 @@
 
     <div class="ui one column grid" style="height: calc(100vh - 45px)">
         <div class="stretched row" style="padding-bottom: 0; padding-top: 0;">
-            <div class="column" name="column" style="padding-right: 0">
-                <div class="ui-layout-west" style="overflow-x: hidden;">
-                    <side-bar site-name={opts.siteName}></side-bar>
-                </div>
-                <div class="ui-layout-center" style="overflow-y: hidden">
-                    <div class="ui pointing secondary menu">
-                        <a class="item active" data-tab="content-view" onclick="{openContentTab}">Form</a>
-                        <a class="item" data-tab="meta-view" onclick="{openMetaTab}">Form</a>
-                        <a class="item" data-tab="code-view" onclick="{openRawContentTab}">Raw</a>
-                        <a class="item" data-tab="layout-view" onclick="{openLayoutTab}">Layout</a>
-                        <a class="item" data-tab="config-view" onclick="{openConfigTab}">Config</a>
-                        <div class="ui mini right menu" style="border: none">
-                            <div style="padding: 4px 16px 3px 0">
-                                <div class="ui mini buttons" style="border: none">
-                                    <div class="ui red icon button" onclick="{deleteFile}">
-                                        <i class="delete icon"></i>
-                                    </div>
-                                    <div class="ui blue icon button" onclick="{save}">
-                                        <i class="save icon"></i>
-                                        Save
+            <div class="column" id="outer-layout" style="padding-right: 0">
+                <div id="inner-center" class="ui-layout-center">
+                    <div class="ui-layout-west" style="overflow: hidden;">
+                        <side-bar site-name={opts.siteName} style="overflow-y: hidden"></side-bar>
+                    </div>
+                    <div class="ui-layout-center" style="overflow-y: hidden">
+                        <div class="ui pointing secondary menu">
+                            <a class="item active" data-tab="content-view" onclick="{openContentTab}">Form</a>
+                            <a class="item" data-tab="meta-view" onclick="{openMetaTab}">Form</a>
+                            <a class="item" data-tab="code-view" onclick="{openRawContentTab}">Raw</a>
+                            <a class="item" data-tab="layout-view" onclick="{openLayoutTab}">Layout</a>
+                            <a class="item" data-tab="config-view" onclick="{openConfigTab}">Config</a>
+                            <div class="ui mini right menu" style="border: none">
+                                <div style="padding: 4px 16px 3px 0">
+                                    <div class="ui mini buttons" style="border: none">
+                                        <div class="ui red icon button" onclick="{deleteFile}">
+                                            <i class="delete icon"></i>
+                                        </div>
+                                        <div class="ui blue icon button" onclick="{save}">
+                                            <i class="save icon"></i>
+                                            Save
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+
+                        <!--<div style="height: calc(100vh - 40px)">-->
+                        <content-view site-name="{siteName}" data-tab="content-view"></content-view>
+                        <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
+                        <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
+                        <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
+                        <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
                     </div>
 
-                    <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-
-                    <!--<div style="height: calc(100vh - 40px)">-->
-                    <content-view site-name="{siteName}" data-tab="content-view"></content-view>
-                    <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
-                    <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
-                    <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
-                    <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
                     <!--</div>-->
 
 
@@ -161,6 +164,10 @@
                     <!--</div>-->
                     <!--</div>-->
                     <!--</div>-->
+                </div>
+
+                <div class="ui-layout-south">
+                    <h1>Outer SOUTH</h1>
                 </div>
             </div>
         </div>
@@ -285,7 +292,18 @@
             me.checkGhPageStatus();
 
             $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
-            $(me.column).layout({
+
+            $('#outer-layout').layout({
+                center: {
+                    size: '80%'
+                },
+                south:  {
+                    spacing_open:   1,
+                    spacing_closed: 20
+                }
+            });
+
+            $('#inner-center').layout({
                 west:   {
                     size:           '35%',
                     spacing_open:   1,
@@ -293,6 +311,7 @@
                 },
                 center: {}
             });
+
 
             // create 1px resizer + large click area
             var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west'))
@@ -603,7 +622,7 @@
 
 
             if (filePath.endsWith('.md')) {
-                    console.log('openContentTab');
+                console.log('openContentTab');
                 me.openContentTab();
 //            } else if (filePath.endsWith('.config.json')) {
 //                me.openConfigTab();

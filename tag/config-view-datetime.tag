@@ -17,7 +17,7 @@
     <!-- DateTime type -->
     <div class="field">
         <label>Display type:</label>
-        <select class="ui dropdown" onchange="{edit('config.displayType')}">
+        <select id="dateTimeDisplayType" class="ui dropdown" onchange="{edit('config.displayType')}">
             <option value="Time">Time</option>
             <option value="Date">Date</option>
             <option value="DateTime">DateTime</option>
@@ -30,9 +30,10 @@
         me.mixin('form');
 
         me.config = {type: 'DateTime'};
-
+        var dateTimeDisplayType;
         me.on('mount', function () {
-            $(me.root.querySelector('.selectpicker')).selectpicker();
+            dateTimeDisplayType = $(me.root.querySelector('.ui.dropdown'));
+            dateTimeDisplayType.dropdown();
         });
 
         me.clear = function () {
@@ -48,8 +49,8 @@
 
         me.loadConfig = function (config) {
             me.config = Object.assign({}, config);
-            if (me.config.dateTimeType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+            if (me.config.displayType) {
+                dateTimeDisplayType.dropdown('set selected', me.config.displayType);
             }
 
 

@@ -1,13 +1,13 @@
 <side-bar>
-    <div class="ui pointing secondary menu" style="margin-bottom: 0">
+    <div class="ui pointing secondary menu" style="margin-bottom: 0; overflow: hidden">
         <a class="item active" data-tab="content">Content</a>
         <a class="item" data-tab="meta">Meta</a>
         <a class="item" data-tab="layout">Layout</a>
     </div>
 
-    <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
-    <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
-    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
 
     <!--<div class="btn-group" data-toggle="buttons">-->
     <!--<button class="ui button active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">-->

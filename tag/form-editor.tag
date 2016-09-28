@@ -267,10 +267,10 @@
 
 <form-field-datetime class="field">
     <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
-    <div class="ui action input">
-        <input type='text' class="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"/>
-        <div class="ui calendar icon button">
-            <i class="calendar link icon"></i>
+    <div class="ui calendar" ref="validFromCalendar">
+        <div class="ui input left icon">
+            <i class="calendar icon"></i>
+            <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
         </div>
     </div>
 
@@ -297,7 +297,10 @@
                 calendarType = 'datetime';
             }
 
+            console.log('calendarType',calendarType);
+
             $(me.root.querySelector('.ui.calendar')).calendar({
+                type: calendarType,
                 onChange: function(date, text){
                     console.log('date', date);
                     console.log('text', text);
