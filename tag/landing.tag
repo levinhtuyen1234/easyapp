@@ -8,6 +8,13 @@
         <i class="bar chart icon"></i>
         Website Marketplace
         </h2>
+        <div class="ui left aligned search">
+        <div class="ui icon input">
+            <input class="prompt" type="text" placeholder="Search websites...">
+            <i class="search icon"></i>
+        </div>
+        <div class="results"></div>
+        </div>
         <div class="ui two column stackable grid container">
             <div class="three wide column" each="{template in templateList}">
                 <div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">
