@@ -20,6 +20,7 @@
                 <div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">
                     <div class="content">
                         <i class="add big link icon"></i>
+                        <div class="ui hidden divider"></div>
                         <h4 class="header">{template.name}</h4>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
             <div class="item">
                 <div class="ui card" >
                     <button class="ui primary huge icon button" onclick="{showImportGithub}">
-                        <i class="github icon left"></i>
+                        <i class="github icon left aligned"></i>
                         Import repository
                     </button>
                    
