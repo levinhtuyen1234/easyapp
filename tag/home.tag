@@ -55,9 +55,12 @@
                     </div>
                 </div>
             </div>
-            <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
-                <i class="fitted icon external"></i> Browser
+            <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Show Preview" disabled>
+                <i class="fitted icon external"></i>Preview
             </a>
+          <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
+                <i class="fitted icon external"></i> Browser
+            </a> -->
             <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud">
                 <i class="fa fa-fw fa-github"></i> Sync
             </div>
