@@ -167,7 +167,7 @@
                 </div>
 
                 <div class="ui-layout-south">
-                    <h1>Outer SOUTH</h1>
+                    <bottom-bar site-name={opts.siteName}></bottom-bar>
                 </div>
             </div>
         </div>
@@ -295,11 +295,13 @@
 
             $('#outer-layout').layout({
                 center: {
-                    size: '80%'
+                    size: '60%'
                 },
                 south:  {
+                    size:           '40%',
                     spacing_open:   1,
-                    spacing_closed: 20
+                    spacing_closed: 10,
+                    initClosed:     false
                 }
             });
 
@@ -307,7 +309,7 @@
                 west:   {
                     size:           '35%',
                     spacing_open:   1,
-                    spacing_closed: 20
+                    spacing_closed: 10
                 },
                 center: {}
             });
@@ -415,17 +417,17 @@
             }
             console.log('watch view', mode);
             $(me.openWatchViewBtn).addClass('active');
-            me.tabBar.tab('change tab', 'watch-view');
+//            me.tabBar.tab('change tab', 'bottom-bar');
 //            $(me.root.querySelector('#watch-view')).show();
-            setTimeout(function () {
-                $(me.root.querySelector('#editor-view')).show(); // fix
-            }, 1);
+//            setTimeout(function () {
+//                $(me.root.querySelector('#editor-view')).show(); // fix
+//            }, 1);
 
 //            ShowTab('watch-view');
             if (mode === 'user')
-                me.tags['watch-view'].watch();
+                me.tags['bottom-bar'].watch();
             else if (mode === 'dev')
-                me.tags['watch-view'].watchDev();
+                me.tags['bottom-bar'].watchDev();
         };
 
         me.deactiveWatchBtn = function () {
