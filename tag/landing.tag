@@ -34,8 +34,8 @@
                         <i class="add icon"></i>
                         Create new site
                     </button>
-
-
+                       
+                  
                 </div>
             </div>
             <div class="item" ><h1>OR</h1></div>
@@ -45,7 +45,7 @@
                         <i class="github icon left aligned"></i>
                         Import repository
                     </button>
-
+                   
                 </div>
             </div>
         </div>

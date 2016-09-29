@@ -34,22 +34,21 @@
 //
 //            me.editor = new SimpleMDE(config);
             me.editor = editormd(id, {
-                width:            '100%',
-                height:           height,
-                flowChart:        true,
-                sequenceDiagram:  true,
-                toolbarAutoFixed: false,
-                readOnly:         me.viewOnly,
-                imageUpload:      false,
-                watch:            true,
-                htmlDecode:       "style,script,iframe",
-                markdown:         me.value,
-                placeholder:      "",
-                path:             'assets/js/lib/',
-                imageFormats:     ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
-//                imageUploadURL:   "./php/upload.php?test=dfdf",
-                toolbarIcons:     toolbarIcons,
-                onload:           function () {
+                width:           '100%',
+                height:          height,
+                flowChart:       true,
+                sequenceDiagram: true,
+                readOnly:        me.viewOnly,
+                imageUpload:     false,
+                watch:           true,
+                htmlDecode:      "style,script,iframe",
+                markdown:        me.value,
+                placeholder:     "",
+                path:            'assets/js/lib/',
+                imageFormats:    ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                imageUploadURL:  "./php/upload.php?test=dfdf",
+                toolbarIcons:    toolbarIcons,
+                onload:          function () {
 //                    loaded = true;
 //                    me.setValue(me.value);
                 }

@@ -1,5 +1,5 @@
 <bottom-bar>
-    <div class="ui attached tabular mini menu">
+    <div class="ui attached tabular center mini menu">
         <div class="active item" data-tab="webView" style="border-radius: 0 !important;">PC</div>
         <div class=" item" data-tab="webView1" >Tablet</div>
         <div class=" item" data-tab="webView2" >Smartphone</div>
@@ -32,7 +32,6 @@
             sda
         </pre>
     </div>
-
     <script>
         var Path = require('path');
         var Fs = require('fs');
@@ -81,11 +80,11 @@
                 logTimer = setTimeout(function () {
                     // find browserSync port in stdout
                     var str = dataBuf.join('');
-//                    console.log(str);
+                    console.log(str);
                     if (str.indexOf('[Error:') != -1) {
                         me.appendError(str);
                         riot.event.trigger('watchFailed', str);
-//                        $(me.consoleLog).show();
+                        $(me.consoleLog).show();
                     } else {
                         var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
 
@@ -99,7 +98,7 @@
                             me.update();
                         }
                         me.append(str);
-//                        $(me.consoleLog).hide();
+                        $(me.consoleLog).hide();
                     }
                     dataBuf = [];
                 }, 500);
@@ -109,7 +108,7 @@
                 var str = String.fromCharCode.apply(null, data);
                 me.appendError(str);
                 riot.event.trigger('watchFailed', str);
-//                $(me.consoleLog).show();
+                $(me.consoleLog).show();
 //                me.closeWatchProcess();
             });
 
