@@ -1,11 +1,11 @@
-<form-field-category-text class="ui field">
-    <label for="form-{config.name}-{config.displayType}" class="" style="">{config.displayName}</label>
+<form-field-category-text class="inline fields">
+    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
 
-    <div class="ui menu">
-        <div class="ui fluid selection dropdown">
+    <div class="ten wide field">
+        <div class="ui ten wide selection dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
-            <div class="default text">Choose Category</div>
+            <div class="default text">Choose Category             </div>
             <div class="menu">
                 <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
             </div>
@@ -48,13 +48,13 @@
     </script>
 </form-field-category-text>
 
-<form-field-tag-text class="ui field">
-    <label for="form-{config.name}-{config.displayType}" class="" style="">{config.displayName}</label>
-    <div class="ui menu">
-        <div class="ui fluid selection multiple dropdown">
+<form-field-tag-text class="inline fields">
+    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
+    <div class="eight wide field">
+        <div class="ui selection multiple dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
-            <div class="default text">Choose Category</div>
+            <div class="default text">Choose some tags</div>
             <div class="menu">
                 <div class="item" each="{tag in tagList}" data-value="{tag.name}">{tag.name}</div>
             </div>
@@ -103,15 +103,15 @@
     </script>
 </form-field-tag-text>
 
-<form-field-text class="ui field">
+<form-field-text class=" inline field">
     <style>
         .fieldMarkDown {
             resize: vertical;
             min-height: 300px !important;
         }
     </style>
-    <label for="form-{config.name}-{config.displayType}" name="label" class="" style="text-align: left;">{config.displayName}</label>
-    <input if="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+    <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field" style="text-align: left;">{config.displayName}</label>
+    <input if="{config.displayType === 'ShortText'}" class="eight wide field" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
     <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
 
     <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
@@ -265,9 +265,9 @@
     </script>
 </form-field-boolean>
 
-<form-field-datetime class="field">
-    <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
-    <div class="ui calendar" ref="validFromCalendar">
+<form-field-datetime class="inline fields">
+    <label for="form-{config.name}" class="two wide field">{config.displayName}</label>
+    <div class="ui calendar six wide field" ref="validFromCalendar">
         <div class="ui input left icon">
             <i class="calendar icon"></i>
             <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
