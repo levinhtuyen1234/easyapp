@@ -1,63 +1,65 @@
 <side-bar>
-    <div class="panel panel-default" style="border: 0">
-        <!--<div class="panel-heading panel-heading-sm" style="padding: 0; border: 0;">-->
-        <div class="btn-group" data-toggle="buttons">
-            <a class="btn btn-default navbar-btn btn-sm active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">
-                <input type="radio" name="file-list-options">Content
-            </a>
-            <a class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Meta
-            </a>
-            <a class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">
-                <input type="radio" name="file-list-options">Layout
-            </a>
-            <!--<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
-                <!--<input type="radio" name="file-list-options">Asset-->
-            <!--</a>-->
-
-        </div>
-        <!--</div>-->
-        <div class="panel-body" style="padding: 0;">
-            <div class="tab-content">
-                <file-list-flat type="content" id="content-file-list" role="tabpanel" class="tab-pane active"></file-list-flat>
-                <file-list-flat type="layout" id="layout-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <file-list-flat type="metadata" id="metadata-file-list" role="tabpanel" class="tab-pane"></file-list-flat>
-                <!--<file-list-flat type="asset" id="asset-file-list" role="tabpanel" class="tab-pane"></file-list-flat>-->
-            </div>
-        </div>
+    <div class="ui pointing secondary menu" style="margin-bottom: 0; overflow: hidden">
+        <a class="item active" data-tab="content">Content</a>
+        <a class="item" data-tab="meta">Meta</a>
+        <a class="item" data-tab="layout">Layout</a>
     </div>
+
+    <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+    <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+
+    <!--<div class="btn-group" data-toggle="buttons">-->
+    <!--<button class="ui button active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">-->
+    <!--<input type="radio" name="file-list-options">Content-->
+    <!--</button>-->
+    <!--<button class="btn btn-default navbar-btn btn-sm" href="#metadata-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
+    <!--<input type="radio" name="file-list-options">Meta-->
+    <!--</button>-->
+    <!--<button class="btn btn-default navbar-btn btn-sm" href="#layout-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">-->
+    <!--<input type="radio" name="file-list-options">Layout-->
+    <!--</button>-->
+    <!--&lt;!&ndash;<a class="btn btn-default navbar-btn btn-sm" href="#asset-file-list" data-toggle="tab" role="tab" onclick="{activeTab}" hide="{User.accountType == 'user'}">&ndash;&gt;-->
+    <!--&lt;!&ndash;<input type="radio" name="file-list-options">Asset&ndash;&gt;-->
+    <!--&lt;!&ndash;</a>&ndash;&gt;-->
+
+    <!--</div>-->
+
+    <!--<div class="panel-body" style="padding: 0;">-->
+    <!--<div class="tab-content">-->
+    <!---->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
 
     <script>
         var me = this;
         var $root = $(me.root);
         var curFilePath = '';
+        var tab;
 
-        var contentFileTag, layoutFileTag, assetFileTag, metadataFileTag;
+        var contentFileTag, layoutFileTag, metadataFileTag;
 
         me.activeTab = function (e) {
-            $(me.root).find('.navbar-btn').removeClass('active');
             if (typeof(e) === 'object') {
                 $(e.target).addClass('active');
             } else {
-                $(me.root.querySelector('a[href="#' + e + '"]')).addClass('active').tab('show');
+                tab.tab('change tab', e);
             }
         };
 
-        var onFileActivated = function(tabName) {
+        var onFileActivated = function (tabName) {
             // clear other tab active file
 //            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
-                case 'content-file-list':
                 case 'content':
                     me.tags['file-list-flat'][1].clearActive();
                     me.tags['file-list-flat'][2].clearActive();
                     break;
-                case 'layout-file-list':
                 case 'layout':
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][2].clearActive();
                     break;
-                case 'metadata-file-list':
                 case 'metadata':
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][1].clearActive();
@@ -71,13 +73,13 @@
             onFileActivated(tabName);
             // highlight file
             switch (tabName) {
-                case 'content-file-list':
+                case 'content':
                     me.tags['file-list-flat'][0].activeFile(filePath);
                     break;
-                case 'layout-file-list':
+                case 'layout':
                     me.tags['file-list-flat'][1].activeFile(filePath);
                     break;
-                case 'metadata-file-list':
+                case 'metadata':
                     me.tags['file-list-flat'][2].activeFile(filePath);
                     break;
             }
@@ -106,18 +108,16 @@
 
         me.reloadCurrentTab = function () {
             // get cur tab
-            var activeTabHref = $(me.root.querySelector('a.navbar-btn.active')).attr('href');
-            switch (activeTabHref) {
-                case '#content-file-list':
+            var activeTab = $(me.root.querySelector('a.item.active')).data('tab');
+            console.log('reloadCurrentTab activeTab', activeTab);
+            switch (activeTab) {
+                case 'content':
                     me.reloadContentFileTab();
                     break;
-                case '#layout-file-list':
+                case 'layout':
                     me.reloadLayoutFileTab();
                     break;
-//                case '#asset-file-list':
-//                    me.reloadAssetFileTab();
-//                    break;
-                case '#metadata-file-list':
+                case 'metadata':
                     me.reloadMetadataFileTab();
                     break;
             }
@@ -164,32 +164,27 @@
         });
 
         me.on('mount', function () {
+            tab = $(me.root.querySelectorAll('.menu .item')).tab();
+            window.tab = tab;
+
             contentFileTag = me.tags['file-list-flat'][0];
             layoutFileTag = me.tags['file-list-flat'][1];
-//            assetFileTag = me.tags['file-list-flat'][2];
             metadataFileTag = me.tags['file-list-flat'][2];
 
             me.reloadContentFileTab();
             me.reloadLayoutFileTab();
             me.reloadMetadataFileTab();
-//            me.reloadAssetFileTab();
 
-            contentFileTag.event.on('openFile', function (filePath) {
+            contentFileTag.on('openFile', function (filePath) {
+                console.log('side-bar on openFile', filePath);
                 me.parent.openFile(filePath);
             });
 
-            layoutFileTag.event.on('openFile', function (filePath) {
+            layoutFileTag.on('openFile', function (filePath) {
                 me.parent.openFile(filePath);
             });
 
-//            assetFileTag.event.on('openFile', function (filePath) {
-//                if (!me.parent.openAssetFile) {
-//                    console.log('home tag need fn openAssetFile');
-//                } else
-//                    me.parent.openAssetFile(filePath);
-//            });
-
-            metadataFileTag.event.on('openFile', function (filePath) {
+            metadataFileTag.on('openFile', function (filePath) {
                 me.parent.openMetadataFile(filePath);
             });
         });

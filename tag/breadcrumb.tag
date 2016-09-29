@@ -1,15 +1,18 @@
 <breadcrumb>
-    <ol class="breadcrumb" style="margin: 2px 0 2px 0; padding: 0;">
-        <li each="{name, index in parts}"><a class="pathName default-cursor" onclick="{showItemInFolder}">{name}</a></li>
-    </ol>
+    <div class="ui breadcrumb compact truncate" style="padding-left: 10px;">
+        <virtual each="{name, index in parts}">
+            <i if="{index > 0 && index <= parts.length - 1}" class="right chevron icon divider"></i>
+            <div title="{name}" class="section {index == parts.length - 1 ? 'active' : ''}" onclick="{showItemInFolder}">{name}</div>
+        </virtual>
+    </div>
 
     <style>
         .hand-cursor {
-            cursor: pointer !important;
+            cursor: pointer;
         }
 
-        .default-cursor {
-            cursor: default;
+        .hand-cursor:hover {
+            text-decoration: underline;
         }
     </style>
     <script>
@@ -17,11 +20,12 @@
         me.parts = [];
         me.opts.path = me.opts.path ? me.opts.path : '';
 
-        me.setPath = function(filePath) {
+        me.setPath = function (filePath) {
             me.parts = filePath.split(/[\\\/]/);
             me.parts.unshift(me.opts.site_name);
             me.update();
-            var links = $(me.root.querySelectorAll('a'));
+
+            var links = $(me.root.querySelectorAll('.section'));
             if (me.parts[me.parts.length - 1].endsWith('.html')) {
                 links.addClass('hand-cursor');
             } else {
@@ -29,22 +33,18 @@
             }
         };
 
-        me.on('mount', function() {
-            me.setPath(me.opts.path);
-        });
-
-        me.showItemInFolder = function(e) {
-            // only allow click with layout file (.html)
-            if (!me.parts[me.parts.length - 1].endsWith('.html')) {
-                return;
-            }
-
+        me.showItemInFolder = function (e) {
+            if (!me.parts[me.parts.length - 1].endsWith('.html')) return;
             var path = me.parts.slice(1, e.item.index + 1).join('/');
-//            console.log('showItemInFolder', me.opts.site_name + '/' + path);
             BackEnd.showItemInFolder(me.opts.site_name, path);
         };
 
-        me.open = function(index) {
+
+        me.on('mount', function () {
+            me.setPath(me.opts.path);
+        });
+
+        me.open = function (index) {
             var fullPath = me.parts.slice(0, index + 1).join('/');
             if (me.parent.open)
                 me.parent.open(fullPath);

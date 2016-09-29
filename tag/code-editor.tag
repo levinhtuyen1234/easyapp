@@ -1,8 +1,9 @@
-<code-editor>
-    <div class="CodeMirror" style="border: 0.1px; padding: 0px; margin-left:-15px; margin-right:-15px; margin-bottom:-15px;"></div>
+<code-editor style="margin: 0; padding: 0;">
+    <div class="CodeMirror" style="border: none; margin: 0; height: calc(100vh - 140px);"></div>
     <script>
         var me = this;
-        me.editor = null;
+        var editorElm = me.root.querySelector('div.CodeMirror');
+
 
         me.refresh = function () {
             me.editor.refresh();
@@ -13,9 +14,11 @@
         };
 
         me.value = function (value) {
+//            console.log('code editor setvalue', value);
             if (value === undefined) {
                 return me.editor.getValue();
             } else {
+                console.log('me.editor.setValue');
                 me.editor.setValue(value);
 
                 setTimeout(function () {
@@ -25,8 +28,13 @@
         };
 
         me.on('mount', function () {
-            var editorElm = me.root.querySelector('.CodeMirror');
-            me.editor = CodeMirror(editorElm, {
+            console.log('CODE EDITOR on mount', me.opts);
+            if (me.opts.dataTab == "layout-view") {
+                window.layoutView = me;
+            } else {
+                window.codeView = me;
+            }
+            me.editor = CodeMirror(me.root.querySelector('div.CodeMirror'), {
                 value:                   me.opts.content ? me.opts.content : '',
                 rtlMoveVisually:         false,
                 showCursorWhenSelecting: false,
@@ -38,6 +46,7 @@
                 styleActiveLine:         true,
                 gutter:                  true,
                 readOnly:                false,
+                scrollPastEnd:           true,
                 lint:                    true,
 //                theme:                   'material',
                 gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
@@ -57,7 +66,7 @@
             });
 //            me.editor.click();
 //            console.log('me.editor', me.editor);
-//            me.editor.setSize('100%', window.innerHeight - 220);
+            me.editor.setSize('100%', '100%');
         });
     </script>
 </code-editor>

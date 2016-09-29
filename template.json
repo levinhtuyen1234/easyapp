@@ -1,5 +1,5 @@
 {
-    "version": 3,
+    "version": 5,
     "templates": [
         {
             "name": "category",
@@ -34,6 +34,50 @@
                 "blog"
             ],
             "themeUrl": "",
+            "price": "Free"
+        },
+        {
+            "name": "draco",
+            "url": "https://github.com/easywebhub/draco.git",
+            "branch": "master",
+            "type": "website",
+            "tags": [
+                "blog"
+            ],
+            "themeUrl": "http://draco.easywebhub.com",
+            "price": "Free"
+        },
+        {
+            "name": "Global Portfolio",
+            "url": "https://github.com/easywebhub/Global-Portfolio.git",
+            "branch": "master",
+            "type": "website",
+            "tags": [
+                "Personal Blog"
+            ],
+            "themeUrl": "http://globalportfolio.easywebhub.com",
+            "price": "Free"
+        },
+        {
+            "name": "New Providence",
+            "url": "https://github.com/easywebhub/NewProvidence.git",
+            "branch": "master",
+            "type": "website",
+            "tags": [
+                "Personal Blog"
+            ],
+            "themeUrl": "http://newprovidence.easywebhub.com",
+            "price": "Free"
+        },
+        {
+            "name": "Bootstrap Agency",
+            "url": "https://github.com/easywebhub/StartBootstrapAgency.git",
+            "branch": "master",
+            "type": "website",
+            "tags": [
+                "blog"
+            ],
+            "themeUrl": "http://startbootstrapagency.easywebhub.com",
             "price": "Free"
         }
     ]

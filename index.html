@@ -4,19 +4,23 @@
     <meta charset="utf-8">
     <title>EasyWeb Builder</title>
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="assets/css/jquery.jspanel.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
     <link rel="stylesheet" href="assets/css/editormd.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
-    <link rel="stylesheet" href="assets/css/codemirror.min.css">
-    <link rel="stylesheet" href="assets/css/simplemde.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+    <!--<link rel="stylesheet" href="assets/css/simplemde.min.css">-->
+    <!--<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">-->
     <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="assets/css/calendar.css">
+    <link rel="stylesheet" href="assets/css/semantic.min.css">
+    <link rel="stylesheet" href="assets/css/layout-default.css">
+    <link rel="stylesheet" href="assets/css/simplebar.css">
 
-    <link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">
-    <link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">
+    <link rel="stylesheet" href="assets/css/codemirror.min.css">
+    <!--<link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">-->
+    <!--<link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">-->
 
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- <link crossorigin="anonymous" href="/assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" /> -->
@@ -65,6 +69,7 @@
 <script src="tag/dialog-new-site-import.tag" type="riot/tag"></script>
 <script src="tag/deploy-ftp-dialog.tag" type="riot/tag"></script>
 <script src="tag/dialog-login-signup.tag" type="riot/tag"></script>
+<script src="tag/bottom-bar.tag" type="riot/tag"></script>
 
 <script src="tag/window-login.tag" type="riot/tag"></script>
 <script src="tag/window-public.tag" type="riot/tag"></script>
@@ -75,8 +80,9 @@
 <script src="assets/js/jquery-ui.min.js"></script>
 <script src="assets/js/pouchdb.min.js"></script>
 <script src="assets/js/moment.min.js"></script>
-<script src="assets/js/bootbox.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
+<!--<script src="assets/js/bootbox.min.js"></script>-->
+<script src="assets/js/bootbox-semantic-ui.js"></script>
+<!--<script src="assets/js/bootstrap.min.js"></script>-->
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
@@ -91,6 +97,10 @@
 <script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
+<script src="assets/js/semantic.min.js"></script>
+<script src="assets/js/calendar.js"></script>
+<script src="assets/js/jquery.layout.js"></script>
+<script src="assets/js/simplebar.js"></script>
 <script>module = saveModule;</script>
 
 <script>
@@ -120,28 +130,32 @@
 
     window.curPage = null;
     var formMixin = {
-        edit: function (keyPath, e) {
-            var value;
-            switch (e.target.type) {
-                case 'checkbox':
-                    value = e.target.checked;
-                    break;
-                case 'number':
-                    value = parseInt(e.target.value, 10);
-                    break;
-                default:
-                    value = e.target.value;
-            }
+        edit: function (keyPath) {
+            return function (e) {
+                var value;
+                switch (e.target.type) {
+                    case 'checkbox':
+                        value = e.target.checked;
+                        break;
+                    case 'number':
+                        value = parseInt(e.target.value, 10);
+                        break;
+                    default:
+                        value = e.target.value;
+                }
 
-            var schema = this;
-            var pList = keyPath.split('.');
-            var len = pList.length;
-            for (var i = 0; i < len - 1; i++) {
-                var elem = pList[i];
-                if (!schema[elem]) schema[elem] = {};
-                schema = schema[elem];
-            }
-            schema[pList[len - 1]] = value;
+                var schema = this;
+                console.log('schema', schema);
+                console.log('keyPath', keyPath);
+                var pList = keyPath.split('.');
+                var len = pList.length;
+                for (var i = 0; i < len - 1; i++) {
+                    var elem = pList[i];
+                    if (!schema[elem]) schema[elem] = {};
+                    schema = schema[elem];
+                }
+                schema[pList[len - 1]] = value;
+            };
         }
     };
 
@@ -150,7 +164,7 @@
     riot.event = riot.observable();
     Object.assign(riot.event, {
         openSite: function (sitePath) {
-            if(window.curPage) window.curPage.unmount(true);
+            if (window.curPage) window.curPage.unmount(true);
             console.log('index.html openSite', sitePath);
             landing.unmount(true);
             window.curPage = riot.mount('home', {sitePath: sitePath})[0];
@@ -195,7 +209,7 @@
     riot.compile(function () {
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
-//        curPage = riot.mount('home', {siteName: 'test1'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'daksong'})[0];
         // uncomment to enable login
 //        CheckAccountAndGoToLanding();
         window.curPage = riot.mount('landing')[0];

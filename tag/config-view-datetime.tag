@@ -1,35 +1,27 @@
 <config-view-datetime>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display name:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit.bind(this,'config.displayName')}">
-        </div>
+    <div class="field">
+        <label>Display name:</label>
+        <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
     <!-- This field is required -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Is required</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
-        </div>
+    <div class="inline field">
+        <label>Is required</label>
+        <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
     </div>
     <!-- View Only Field -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Only View</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.viewOnly')}" checked="{config.viewOnly}">
-        </div>
+    <div class="inline field">
+        <label>Only View</label>
+        <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
     </div>
 
     <!-- DateTime type -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display type:</label>
-        <div class="col-sm-10">
-            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType')}">
-                <option value="Time">Time</option>
-                <option value="Date">Date</option>
-                <option value="DateTime">DateTime</option>
-            </select>
-        </div>
+    <div class="field">
+        <label>Display type:</label>
+        <select id="dateTimeDisplayType" class="ui dropdown" onchange="{edit('config.displayType')}">
+            <option value="Time">Time</option>
+            <option value="Date">Date</option>
+            <option value="DateTime">DateTime</option>
+        </select>
     </div>
 
 
@@ -38,9 +30,10 @@
         me.mixin('form');
 
         me.config = {type: 'DateTime'};
-
-        me.on('mount', function(){
-            $(me.root.querySelector('.selectpicker')).selectpicker();
+        var dateTimeDisplayType;
+        me.on('mount', function () {
+            dateTimeDisplayType = $(me.root.querySelector('.ui.dropdown'));
+            dateTimeDisplayType.dropdown();
         });
 
         me.clear = function () {
@@ -56,8 +49,8 @@
 
         me.loadConfig = function (config) {
             me.config = Object.assign({}, config);
-            if (me.config.dateTimeType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+            if (me.config.displayType) {
+                dateTimeDisplayType.dropdown('set selected', me.config.displayType);
             }
 
 

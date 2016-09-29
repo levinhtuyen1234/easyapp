@@ -1,13 +1,27 @@
-<content-view stype="height:600px; overflow-x:scroll ; overflow-y: scroll;">
+<content-view class="ui tab segment active simplebar" style="height: calc(100% - 120px); padding-left: 10px; padding-right: 20px; overflow-y: scroll">
     <form-editor site-name="{siteName}"></form-editor>
-    <label class="col-sm-12 control-label" style="text-align: left;">Content</label>
-    <markdown-editor site-name="{siteName}"></markdown-editor>
+
+    <div class="ui form" style="padding-top: 10px;">
+        <div class="field">
+            <label class="" style="text-align: left; font-weight: 700">Content</label>
+            <markdown-editor site-name="{siteName}"></markdown-editor>
+        </div>
+    </div>
+
+
     <script>
         var me = this;
 
         me.formEditor = null;
         me.markdownEditor = null;
         me.siteName = me.opts.siteName;
+
+        me.on('mount', function () {
+            $(me.root).simplebar();
+            $(me.root.querySelector('.simplebar-scroll-content'))
+                    .css('padding-left', '10px')
+                    .css('padding-right', '18px');
+        });
 
         me.setContent = function (content, contentConfig) {
 //            console.log('me.tags', me.tags);
@@ -16,7 +30,7 @@
             me.tags['form-editor'].genForm(content.metaData, contentConfig);
             // set markdown editor content
 //            setTimeout(function () {
-                me.tags['markdown-editor'].setValue(content.markDownData);
+            me.tags['markdown-editor'].setValue(content.markDownData);
 //            }, 1);
         };
 

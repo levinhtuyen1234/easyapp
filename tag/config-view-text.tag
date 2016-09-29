@@ -1,50 +1,42 @@
 <config-view-text>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display name:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit.bind(this,'config.displayName')}">
-        </div>
+    <div class="field">
+        <label>Display name:</label>
+        <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
     <!-- This field is required -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Is required</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
-        </div>
+    <div class="inline field">
+        <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
+        <label class="">Is required</label>
     </div>
     <!-- View Only Field -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Only View</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.viewOnly')}" checked="{config.viewOnly}">
-        </div>
+    <div class="inline field">
+        <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
+        <label class="">Only View</label>
     </div>
     <br>
 
     <!-- Display Type -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display type:</label>
-        <div class="col-sm-10">
-            <select class="selectpicker" onchange="{edit.bind(this,'config.displayType'); tags['config-view-prop-predefined-value'].update()}">
-                <option value="ShortText">Short Text</option>
-                <option value="LongText">Long Text</option>
-                <option value="MarkDown">Markdown</option>
-                <option value="DropDown">DropDown</option>
-            </select>
-        </div>
+    <div class="inline field">
+        <label class="">Display type:</label>
+        <select class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+            <option value="ShortText">Short Text</option>
+            <option value="LongText">Long Text</option>
+            <option value="MarkDown">Markdown</option>
+            <option value="DropDown">DropDown</option>
+        </select>
     </div>
 
     <config-view-prop-predefined-value type="text"></config-view-prop-predefined-value>
     <!--&lt;!&ndash; Specify number of characters &ndash;&gt;-->
     <!--<label>-->
-    <!--<input type="checkbox" data-toggle="collapse" data-target="#textNumOfCharSection" onchange="{edit.bind(this, 'textNumOfChar')}"> Specify number of characters-->
+    <!--<input type="checkbox" data-toggle="collapse" data-target="#textNumOfCharSection" onchange="{edit( 'textNumOfChar')}"> Specify number of characters-->
     <!--</label>-->
     <!--<div class="collapse" id="textNumOfCharSection">-->
     <!--<div class="form-group">-->
     <!--<label class="col-sm-2 control-label"></label>-->
     <!--<div class="col-sm-10">-->
     <!--<form class="form-inline">-->
-    <!--<select class="selectpicker" onchange="{edit.bind(this, 'textNumOfCharType')}" style="width: 240px;">-->
+    <!--<select class="selectpicker" onchange="{edit( 'textNumOfCharType')}" style="width: 240px;">-->
     <!--<option value="Between">Between</option>-->
     <!--<option value="AtLeast">At least</option>-->
     <!--<option value="NotMoreThan">Not more than</option>-->
@@ -58,13 +50,13 @@
     <!--<br>-->
     <!--&lt;!&ndash; Match a specific pattern &ndash;&gt;-->
     <!--<label>-->
-    <!--<input type="checkbox" data-toggle="collapse" data-target="#textMatchPatternSection" onchange="{edit.bind(this, 'textMatchPattern')}"> Match a specific pattern-->
+    <!--<input type="checkbox" data-toggle="collapse" data-target="#textMatchPatternSection" onchange="{edit( 'textMatchPattern')}"> Match a specific pattern-->
     <!--</label>-->
     <!--<div class="collapse" id="textMatchPatternSection">-->
     <!--<label class="col-sm-2 control-label"></label>-->
     <!--<div class="col-sm-10">-->
     <!--<form class="form-inline">-->
-    <!--<select class="selectpicker" onchange="{edit.bind(this, 'textMatchPatternType')}" style="width: 240px;">-->
+    <!--<select class="selectpicker" onchange="{edit( 'textMatchPatternType')}" style="width: 240px;">-->
     <!--<option value="">Custom</option>-->
     <!--<option value="^\w[\w.-]*@([\w-]+\.)+[\w-]+$">Email</option>-->
     <!--<option value="^(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$">URL</option>-->
@@ -78,7 +70,7 @@
 
     <!--&lt;!&ndash; Predefined value &ndash;&gt;-->
     <!--<label>-->
-    <!--<input type="checkbox" data-toggle="collapse" data-target="#textPredefinedValueSection" onchange="{edit.bind(this, 'textPredefined')}"> Predefined value-->
+    <!--<input type="checkbox" data-toggle="collapse" data-target="#textPredefinedValueSection" onchange="{edit( 'textPredefined')}"> Predefined value-->
     <!--</label>-->
     <!--<div class="collapse" id="textPredefinedValueSection">-->
     <!--<label class="col-sm-2 control-label"></label>-->
@@ -103,10 +95,10 @@
         me.textMatchPatternType = '';
 
         me.on('mount', function () {
-            $(me.root.querySelector('.selectpicker')).selectpicker();
-            if (me.config.displayType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
-            }
+//            $(me.root.querySelector('.selectpicker')).selectpicker();
+//            if (me.config.displayType) {
+//                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+//            }
         });
 
         me.clear = function () {
@@ -124,7 +116,7 @@
             me.config = Object.assign({type: 'Text', displayType: 'ShortText'}, config);
             // select current displayType
             if (me.config.displayType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+//                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
             }
             me.update();
         };

@@ -1,11 +1,17 @@
-<form-field-category-text class="form-group">
-    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group">
-        <select class="selectpicker" onchange="{edit.bind(this,'value')}">
-            <option value=""></option>
-            <option each="{category in categoryList}" value="{category.value}">{category.name}</option>
-        </select>
+<form-field-category-text class="inline field">
+    <label for="form-{config.name}-{config.displayType}" class="" style="">{config.displayName}</label>
+
+    <div class="ten wide field">
+        <div class="ui ten wide selection dropdown">
+            <input name="gender" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Choose Category             </div>
+            <div class="menu">
+                <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
+            </div>
+        </div>
     </div>
+
     <script>
         var me = this;
         me.mixin('form');
@@ -19,9 +25,16 @@
                 category.name = category.name.split('.').join(' / ');
             });
             me.update();
-            var dropdown = $(me.root.querySelector('select'));
-            dropdown.selectpicker('refresh');
-            dropdown.selectpicker('val', me.value);
+//            var dropdown = $(me.root.querySelector('select'));
+//            dropdown.selectpicker('refresh');
+//            dropdown.selectpicker('val', me.value);
+
+            $(me.root.querySelector('.ui.dropdown')).dropdown({
+                onChange: function (value, text) {
+                    console.log('on change', value, text);
+                    me.value = value;
+                }
+            }).dropdown('set selected', me.value);
         });
 
         me.getValue = function () {
@@ -35,13 +48,21 @@
     </script>
 </form-field-category-text>
 
-<form-field-tag-text class="form-group">
-    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group">
-        <select class="selectpicker" onchange="{editTag}" multiple>
-            <option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>
-        </select>
+<form-field-tag-text class="inline fields">
+    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
+    <div class="eight wide field">
+        <div class="ui selection multiple dropdown">
+            <input name="gender" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Choose some tags</div>
+            <div class="menu">
+                <div class="item" each="{tag in tagList}" data-value="{tag.name}">{tag.name}</div>
+            </div>
+        </div>
     </div>
+    <!--<select class="selectpicker" onchange="{editTag}" multiple>-->
+    <!--<option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>-->
+    <!--</select>-->
     <script>
         var me = this;
         me.mixin('form');
@@ -60,9 +81,15 @@
         me.on('mount', function () {
             me.tagList = BackEnd.getTagList(me.opts.siteName);
             me.update();
-            var dropdown = $(me.root.querySelector('select'));
-            dropdown.selectpicker('refresh');
-            dropdown.selectpicker('val', me.value);
+//            var dropdown = $(me.root.querySelector('select'));
+//            dropdown.selectpicker('refresh');
+//            dropdown.selectpicker('val', me.value);
+            $(me.root.querySelector('.ui.dropdown')).dropdown({
+                onChange: function (value, text) {
+                    console.log('on change', value, text);
+                    me.value = value;
+                }
+            }).dropdown('set selected', me.value);
         });
 
         me.getValue = function () {
@@ -76,30 +103,28 @@
     </script>
 </form-field-tag-text>
 
-<form-field-text class="form-group">
+<form-field-text class=" inline field">
     <style>
         .fieldMarkDown {
             resize: vertical;
             min-height: 300px !important;
         }
     </style>
-    <label for="form-{config.name}-{config.displayType}" name="label" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9 input-group" name="content">
-        <input show="{config.displayType === 'ShortText'}" type="text" id="form-{config.name}-ShortText" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
-        <textarea show="{config.displayType === 'LongText'}" class="form-control" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"></textarea>
+    <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field" style="text-align: left;">{config.displayName}</label>
+    <input if="{config.displayType === 'ShortText'}" class="eight wide field" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+    <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
 
-        <markdown-editor class="fieldMarkDown" if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
+    <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
 
-        <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li each="{config.predefinedData}">
-                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-                </li>
-            </ul>
-        </div>
+    <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li each="{config.predefinedData}">
+                <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+            </li>
+        </ul>
     </div>
     <script>
         var me = this;
@@ -131,16 +156,16 @@
                     });
                 }
 
-                if (me.config.displayType === 'MarkDown') {
+//                if (me.config.displayType === 'MarkDown') {
 //                    $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('fieldMarkDown');
 //                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
 //                        handles: 's'
 //                    });
-                    $(me.label).removeClass('col-sm-3');
-                    $(me.content).removeClass('col-sm-9');
-                    $(me.label).addClass('col-sm-12');
-                    $(me.content).addClass('col-sm-12');
-                }
+//                    $(me.label).removeClass('col-sm-3');
+//                    $(me.content).removeClass('col-sm-9');
+//                    $(me.label).addClass('col-sm-12');
+//                    $(me.content).addClass('col-sm-12');
+//                }
             }, 1);
         });
 
@@ -162,22 +187,20 @@
     </script>
 </form-field-text>
 
-<form-field-number class="form-group">
-    <label for="form-{config.name}-{config.displayType}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
+<form-field-number class="field">
+    <label for="form-{config.name}-{config.displayType}" class="" style="text-align: left;">{config.displayName}
     </label>
-    <div class="col-sm-9 input-group">
-        <input type="number" show="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}">
+    <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
 
-        <div class="dropdown" show="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li each="{config.predefinedData}">
-                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-                </li>
-            </ul>
-        </div>
+    <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li each="{config.predefinedData}">
+                <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+            </li>
+        </ul>
     </div>
     <script>
         var me = this;
@@ -216,15 +239,10 @@
     </script>
 </form-field-number>
 
-<form-field-boolean class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
-    </label>
-    <div class="col-sm-9">
-        <div class="checkbox">
-            <label>
-                <input type="checkbox" id="form-{config.name}" checked="{value}" onchange="{edit.bind(this,'value')}" disabled="{config.viewOnly}">
-            </label>
-        </div>
+<form-field-boolean class="inline field">
+    <label style="vertical-align: middle; margin-bottom: 12px;">{config.displayName}</label>
+    <div class="ui toggle checkbox">
+        <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit('value')}" disabled="{config.viewOnly}">
     </div>
     <script>
         var me = this;
@@ -233,6 +251,7 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
+            $(me.root.querySelector('.ui.checkbox')).checkbox();
         });
 
         me.getValue = function () {
@@ -246,14 +265,15 @@
     </script>
 </form-field-boolean>
 
-<form-field-datetime class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class='col-sm-9 input-group date'>
-        <input type='text' class="form-control" id="form-{config.name}" onkeyup="{edit.bind(this,'value')}" readonly="{config.viewOnly}"/>
-        <span class="input-group-addon">
-                <span class="glyphicon glyphicon-calendar" disabled="{config.viewOnly}"></span>
-            </span>
+<form-field-datetime class="inline fields">
+    <label for="form-{config.name}" class="two wide field">{config.displayName}</label>
+    <div class="ui calendar six wide field" ref="validFromCalendar">
+        <div class="ui input left icon">
+            <i class="calendar icon"></i>
+            <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+        </div>
     </div>
+
     <script>
         var me = this;
         me.mixin('form');
@@ -262,20 +282,34 @@
 
         me.on('mount', function () {
             me['form-' + me.config.name].value = me.value;
-            var elm = me.root.querySelector('.input-group.date');
+            var elm = me.root.querySelector('input');
             var config = {};
             me.config.displayType = me.config.displayType || 'DateTime';
-            if (me.config.displayType === 'Date')
-                config.format = 'DD-MM-YYYY';
-            else if (me.config.displayType === 'Time')
-                config.format = 'HH:mm:ss';
-            else
-                config.format = 'DD-MM-YYYY HH:mm:ss';
-            $(elm).datetimepicker(config)
-                    .on('dp.change', function (e) {
-                        me.value = e.date.format(config.format);
-                    });
+            var format, calendarType;
+            if (me.config.displayType === 'Date') {
+                format = 'DD-MM-YYYY';
+                calendarType = 'date';
+            } else if (me.config.displayType === 'Time') {
+                format = 'HH:mm:ss';
+                calendarType = 'time';
+            } else {
+                format = 'DD-MM-YYYY HH:mm:ss';
+                calendarType = 'datetime';
+            }
 
+            console.log('calendarType',calendarType);
+
+            $(me.root.querySelector('.ui.calendar')).calendar({
+                type: calendarType,
+                onChange: function(date, text){
+                    console.log('date', date);
+                    console.log('text', text);
+                    console.log('formated', moment(date).format(format));
+                    me.value = moment(date).format(format);
+                    console.log('name', `form-${config.name}`);
+                    me['form-' + me.config.name].value = me.value;
+                }
+            });
         });
 
         me.getValue = function () {
@@ -289,11 +323,9 @@
     </script>
 </form-field-datetime>
 
-<form-field-object class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
-    <div class="col-sm-9" style="padding: 0; margin: 0;">
-        <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
-    </div>
+<form-field-object class="field">
+    <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
+    <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
     <style>
         .CodeMirrorForm {
             resize: vertical;
@@ -371,15 +403,13 @@
     </script>
 </form-field-object>
 
-<form-field-media class="form-group">
-    <label for="form-{config.name}" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}
+<form-field-media class="field">
+    <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}
     </label>
-    <div class="col-sm-9 input-group">
-        <input type="text" class="form-control" id="form-{config.name}" readonly="{config.viewOnly}">
-        <label class="input-group-btn">
-            <span class="btn btn-default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
-        </label>
-    </div>
+    <input type="text" class="form-control" id="form-{config.name}" readonly="{config.viewOnly}">
+    <label class="input-group-btn">
+        <span class="btn btn-default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
+    </label>
     <script>
         var dialog = require('electron').remote.dialog;
         var fs = require('fs');
@@ -415,9 +445,8 @@
     </script>
 </form-field-media>
 
-<form-editor id="{opts.id}" role="tabpanel" class="tab-pane {opts.active ? 'active':''}">
-    <form class="form-horizontal" style="padding: 5px;" onkeypress="{checkSave}">
-    </form>
+<form-editor id="{opts.id}" class="ui form" style="" onkeypress="{checkSave}">
+
     <script>
         var me = this;
         me.form = null;
@@ -426,7 +455,8 @@
         me.codeEditorMap = {};
 
         me.on('mount', function () {
-            me.form = me.root.querySelector('form');
+//            me.form = me.root.querySelector('form');
+            me.form = me.root;
         });
 
         me.checkSave = function (e) {
@@ -440,7 +470,7 @@
         function genSimpleInput(display, name, type, value) {
             if (type === 'boolean') {
                 return `<div class="form-group">
-                    <label for="" class="col-sm-3 control-label" style="text-align: left;">{displayName}
+                    <label for="" class="" style="text-align: left;">{displayName}
                     </label>
                     <div class="col-sm-9">
                         <div class="checkbox">
@@ -452,7 +482,7 @@
                 </div>`;
             }
             return `<div class="form-group">
-                <label for="" class="col-sm-3 control-label" style="text-align: left;">{displayName}
+                <label for="" class="" style="text-align: left;">{displayName}
 
                 </label>
                 <div class="col-sm-9">
@@ -464,7 +494,7 @@
         //        function genArrayInput(config, metaValue) {
         //            metaValue = metaValue ? metaValue : {};
         //            return `<div class="form-group">
-        //                    <label for="" class="col-sm-3 control-label" style="text-align: left;">{config.displayName}</label>
+        //                    <label for="" class="" style="text-align: left;">{config.displayName}</label>
         //                    <div class="col-sm-9">
         //                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '{config.name}')"><i class="fa fa-plus"></i> Add</button>
         //                        <ul class="list-group">

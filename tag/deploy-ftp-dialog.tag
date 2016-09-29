@@ -1,55 +1,47 @@
-<deploy-ftp-dialog>
+<deploy-ftp-dialog class="ui modal">
     <div name="ftpDeployForm" class="container-fluid" style="display: none">
-        <form class="form-horizontal">
-            <div class="form-group">
-                <label for="inputHost" class="col-sm-3 control-label">Ftp host</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputHost" placeholder="" onkeyup="{edit.bind(this, 'host')}">
+        <div class="content" style="margin: 10px">
+            <form class="ui form">
+                <div class="field">
+                    <label for="inputHost" class="">Ftp host</label>
+                    <input type="text" class="form-control" id="inputHost" placeholder="" onkeyup="{edit( 'host')}">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="inputPort" class="col-sm-3 control-label">Port</label>
-                <div class="col-sm-9">
-                    <input type="number" class="form-control" id="inputPort" placeholder="" onkeyup="{edit.bind(this, 'port')}">
+                <div class="field">
+                    <label for="inputPort" class="">Port</label>
+                    <input type="number" class="form-control" id="inputPort" placeholder="" onkeyup="{edit( 'port')}">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="inputRemotePath" class="col-sm-3 control-label">Remote path</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputRemotePath" placeholder="" onkeyup="{edit.bind(this, 'remotePath')}">
+                <div class="field">
+                    <label for="inputRemotePath" class="">Remote path</label>
+                    <input type="text" class="form-control" id="inputRemotePath" placeholder="" onkeyup="{edit( 'remotePath')}">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="inputUsername" class="col-sm-3 control-label">Username</label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="inputUsername" placeholder="" onkeyup="{edit.bind(this, 'username')}">
+                <div class="field">
+                    <label for="inputUsername" class="">Username</label>
+                    <input type="text" class="form-control" id="inputUsername" placeholder="" onkeyup="{edit( 'username')}">
                 </div>
-            </div>
 
-            <div class="form-group">
-                <label for="inputPassword" class="col-sm-3 control-label">Password</label>
-                <div class="col-sm-9">
-                    <input type="password" class="form-control" id="inputPassword" placeholder="" onkeyup="{edit.bind(this, 'password')}">
+                <div class="field">
+                    <label for="inputPassword" class="">Password</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="" onkeyup="{edit( 'password')}">
                 </div>
-            </div>
 
-            <pre style="height: 100px; max-height:100px; overflow: auto;">
+                <pre style="height: 100px; max-height:100px; overflow: auto;">
                 <code name="uploadLog" class="accesslog hljs"></code>
             </pre>
 
-            <div class="progress" style="margin-top: 7px;">
-                <div name="progressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="background-color: #5cb85c;"></div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-sm-offset-5 col-sm-2">
-                    <button type="button" class="btn btn-default" name="processBtn" onclick="{process}">Upload</button>
+                <div class="progress" style="margin-top: 7px;">
+                    <div name="progressBar" class="progress-bar progress-bar-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="background-color: #5cb85c;"></div>
                 </div>
-            </div>
-        </form>
+
+                <div class="field">
+                    <div class="col-sm-offset-5 col-sm-2">
+                        <button type="button" class="btn btn-default" name="processBtn" onclick="{process}">Upload</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
