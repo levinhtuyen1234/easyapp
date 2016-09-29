@@ -54,6 +54,7 @@
                     .replace(/đ/g, 'd')
                     .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
+                    .replace(/\s+/g, '-')
                     .trim();
             me.update();
         };

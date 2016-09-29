@@ -14,7 +14,7 @@
         };
 
         me.value = function (value) {
-            console.log('code editor setvalue', value);
+//            console.log('code editor setvalue', value);
             if (value === undefined) {
                 return me.editor.getValue();
             } else {

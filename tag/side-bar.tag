@@ -36,15 +36,15 @@
         var me = this;
         var $root = $(me.root);
         var curFilePath = '';
+        var tab;
 
-        var contentFileTag, layoutFileTag, assetFileTag, metadataFileTag;
+        var contentFileTag, layoutFileTag, metadataFileTag;
 
         me.activeTab = function (e) {
-            $(me.root).find('.navbar-btn').removeClass('active');
             if (typeof(e) === 'object') {
                 $(e.target).addClass('active');
             } else {
-                $(me.root.querySelector('a[href="#' + e + '"]')).addClass('active').tab('show');
+                tab.tab('change tab', e);
             }
         };
 
@@ -52,17 +52,14 @@
             // clear other tab active file
 //            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
-                case 'content-file-list':
                 case 'content':
                     me.tags['file-list-flat'][1].clearActive();
                     me.tags['file-list-flat'][2].clearActive();
                     break;
-                case 'layout-file-list':
                 case 'layout':
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][2].clearActive();
                     break;
-                case 'metadata-file-list':
                 case 'metadata':
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][1].clearActive();
@@ -76,13 +73,13 @@
             onFileActivated(tabName);
             // highlight file
             switch (tabName) {
-                case 'content-file-list':
+                case 'content':
                     me.tags['file-list-flat'][0].activeFile(filePath);
                     break;
-                case 'layout-file-list':
+                case 'layout':
                     me.tags['file-list-flat'][1].activeFile(filePath);
                     break;
-                case 'metadata-file-list':
+                case 'metadata':
                     me.tags['file-list-flat'][2].activeFile(filePath);
                     break;
             }
@@ -111,18 +108,16 @@
 
         me.reloadCurrentTab = function () {
             // get cur tab
-            var activeTabHref = $(me.root.querySelector('a.navbar-btn.active')).attr('href');
-            switch (activeTabHref) {
-                case '#content-file-list':
+            var activeTab = $(me.root.querySelector('a.item.active')).data('tab');
+            console.log('reloadCurrentTab activeTab', activeTab);
+            switch (activeTab) {
+                case 'content':
                     me.reloadContentFileTab();
                     break;
-                case '#layout-file-list':
+                case 'layout':
                     me.reloadLayoutFileTab();
                     break;
-//                case '#asset-file-list':
-//                    me.reloadAssetFileTab();
-//                    break;
-                case '#metadata-file-list':
+                case 'metadata':
                     me.reloadMetadataFileTab();
                     break;
             }
@@ -169,17 +164,16 @@
         });
 
         me.on('mount', function () {
-            $(me.root.querySelectorAll('.menu .item')).tab();
+            tab = $(me.root.querySelectorAll('.menu .item')).tab();
+            window.tab = tab;
 
             contentFileTag = me.tags['file-list-flat'][0];
             layoutFileTag = me.tags['file-list-flat'][1];
-//            assetFileTag = me.tags['file-list-flat'][2];
             metadataFileTag = me.tags['file-list-flat'][2];
 
             me.reloadContentFileTab();
             me.reloadLayoutFileTab();
             me.reloadMetadataFileTab();
-//            me.reloadAssetFileTab();
 
             contentFileTag.on('openFile', function (filePath) {
                 console.log('side-bar on openFile', filePath);
@@ -189,13 +183,6 @@
             layoutFileTag.on('openFile', function (filePath) {
                 me.parent.openFile(filePath);
             });
-
-//            assetFileTag.event.on('openFile', function (filePath) {
-//                if (!me.parent.openAssetFile) {
-//                    console.log('home tag need fn openAssetFile');
-//                } else
-//                    me.parent.openAssetFile(filePath);
-//            });
 
             metadataFileTag.on('openFile', function (filePath) {
                 me.parent.openMetadataFile(filePath);

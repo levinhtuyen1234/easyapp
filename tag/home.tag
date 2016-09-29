@@ -58,7 +58,7 @@
             <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Show Preview" disabled>
                 <i class="fitted icon external"></i>Preview
             </a>
-          <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
+            <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
                 <i class="fitted icon external"></i> Browser
             </a> -->
             <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud">
@@ -90,17 +90,16 @@
                     </div>
                     <div class="ui-layout-center" style="overflow-y: hidden">
                         <div class="ui pointing secondary menu">
-                            <a class="item active" data-tab="content-view" onclick="{openContentTab}">Form</a>
-                            <a class="item" data-tab="meta-view" onclick="{openMetaTab}">Form</a>
-                            <a class="item" data-tab="code-view" onclick="{openRawContentTab}">Raw</a>
-                            <a class="item" data-tab="layout-view" onclick="{openLayoutTab}">Layout</a>
-                            <a class="item" data-tab="config-view" onclick="{openConfigTab}">Config</a>
+                            <a class="item active" data-tab="content-view" onclick="{openContentTab}" show="{isShowContentTab()}">Form</a>
+                            <a class="item" data-tab="meta-view" onclick="{openMetaTab}" show="{isShowMetaTab()}">Form</a>
+                            <a class="item" data-tab="code-view" onclick="{openRawContentTab}" show="{isShowRawTab()}">Raw</a>
+                            <a class="item" data-tab="layout-view" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">Layout</a>
+                            <a class="item" data-tab="config-view" onclick="{openConfigTab}" show="{isShowConfigTab()}">Config</a>
                             <div class="ui mini right menu" style="border: none">
                                 <div style="padding: 4px 16px 3px 0">
                                     <div class="ui mini buttons" style="border: none">
-                                        <div class="ui red icon button" onclick="{deleteFile}">
+                                        <div class="ui red icon button" onclick="{deleteFile}" hide="{curTab === 'meta-view'}">
                                             <i class="delete icon"></i>
-                                            Delete
                                         </div>
                                         <div class="ui blue icon button" data-tooltip="'Ctrl+S' to save" data-position="bottom right" onclick="{save}">
                                             <i class="save icon"></i>
@@ -221,6 +220,13 @@
             }
         };
 
+        me.isShowContentTab = function() {
+//            console.log('isShowContentTab me.curTab', me.curTab);
+            return me.curTab == 'content-view' ||
+                ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
+
+        };
+
         me.isShowMetaTab = function () {
             return me.curTab == 'meta-view' ||
                     ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.json')) ||
@@ -231,15 +237,30 @@
 
         };
 
-        me.isShowLayoutTab = function () {
+        me.isShowRawTab = function () {
+//            console.log('isShowLayoutTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
-                    ( me.curTab == 'content-view' ||
+                    (
+                            me.curTab == 'code-view' ||
+                            me.curTab == 'config-view' ||
+                            me.curTab == 'content-view' ||
+                            me.curTab == 'meta-view'
+                    )
+        };
+
+        me.isShowLayoutTab = function () {
+//            console.log('isShowLayoutTab me.curTab', me.curTab);
+            return User.accountType == 'dev' &&
+                    (
+                            me.curTab == 'content-view' ||
+                            me.curTab == 'layout-view' ||
                             ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
                             ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.md') )
                     )
         };
 
         me.isShowConfigTab = function () {
+//            console.log('isShowConfigTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
                     (
                             me.curTab == 'meta-view' ||
@@ -288,9 +309,9 @@
             me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
                 onLoad: function (tabPath) {
 //                    console.log('tab onload', tabPath);
-                    if (tabPath == 'config-view') {
-                        me.openConfigTab();
-                    }
+//                    if (tabPath == 'config-view') {
+//                        me.openConfigTab();
+//                    }
                 }
             });
             me.checkGhPageStatus();
@@ -356,11 +377,13 @@
         }
 
         function ShowTab(name) {
+            console.log('ShowTab', name);
             me.curTab = name;
-            var elm = $(me.root).find('a[href="#' + name + '"]');
+            me.tabBar.tab('change tab', name);
+//            var elm = $(me.root).find('a[href="#' + name + '"]');
 //            console.trace('ShowTab', elm);
-            elm.tab('show');
-            elm.addClass('active');
+//            elm.tab('show');
+//            elm.addClass('active');
         }
 
         function UnmountAll() {
@@ -404,9 +427,9 @@
 
             me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
-            console.log('fileContent', fileContent);
+//            console.log('fileContent', fileContent);
             me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + me.currentLayout);
-            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
+//            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
@@ -456,7 +479,7 @@
         me.openContentTab = function () {
             try {
                 HideAllTab();
-                me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+                me.tags['side-bar'].activeFile('content', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
                 me.update();
 
@@ -794,7 +817,7 @@
                 riot.event.trigger('addContentFile', newContentFilePath);
                 riot.event.trigger('closeNewContentDialog');
                 me.openFile(newContentFilePath);
-                me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
+                me.tags['side-bar'].activeFile('content', newContentFilePath);
                 // run git add
                 BackEnd.gitAdd(me.siteName, newContentFilePath);
             } catch (ex) {
@@ -926,7 +949,7 @@
         };
 
         me.openExternalReview = function () {
-            me.tags['watch-view'].openExternalBrowser();
+            me.tags['bottom-bar'].openExternalBrowser();
         };
 
         me.showFtpDialog = function () {

@@ -1,21 +1,16 @@
 <progress-dialog class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">{title}</h4>
-            </div>
-            <div class="modal-body">
-                <pre style="height: 300px; overflow: auto;">
+    <div class="header">{title}</div>
+    <div class="content">
+        <pre style="height: 300px; overflow: auto;">
                     <code class="accesslog hljs"></code>
                 </pre>
-                <br>
-                <span style="text-align: center;" show="{msg!=''}" class="msg"></span>
-            </div>
-            <div class="modal-footer" style="text-align: center;">
-                <button type="button" class="btn btn-default" disabled="{!closable}" data-dismiss="modal">Close</button>
-            </div>
-        </div>
+        <br>
+        <span style="text-align: center;" show="{msg!=''}" class="msg"></span>
     </div>
+    <div class="actions">
+        <button type="button" class="ui button default ok" disabled="{!closable}" data-dismiss="modal">Close</button>
+    </div>
+
     <script>
         var me = this;
         var shell = require('electron').shell;
@@ -27,7 +22,10 @@
         me.closable = true;
 
         me.on('mount', function () {
-            modal = $(me.root);
+            modal = $(me.root).modal({
+                closable: false,
+                keyboard: false
+            });
             output = me.root.querySelector('code');
 
             modal.on('hide.bs.modal', function () {
@@ -40,10 +38,7 @@
             me.text = '';
             me.msg = '';
             output.innerHTML = '';
-            modal.modal({
-                backdrop: 'static',
-                keyboard: false
-            });
+            modal.modal('show');
             me.closable = false;
             me.update();
         };
@@ -64,18 +59,18 @@
             me.update();
         };
 
-        me.showMessage = function(msg) {
+        me.showMessage = function (msg) {
             me.root.querySelector('.msg').innerHTML = msg;
             me.msg = msg;
             //open links externally by default
-            $(me.root.querySelectorAll('a')).on('click', function(event) {
+            $(me.root.querySelectorAll('a')).on('click', function (event) {
                 event.preventDefault();
                 shell.openExternal(this.href);
             });
             me.update();
         };
 
-        me.getText = function() {
+        me.getText = function () {
             return me.text;
         };
 
