@@ -327,6 +327,10 @@
     <div class="title">
         <i class="dropdown icon"></i>
         {config.displayName}
+        &nbsp;
+        <div class="ui mini basic icon float button" onclick="{addChild}">
+            <i class="blue add icon"></i>
+        </div>
     </div>
     <div class="content">
     </div>
@@ -340,12 +344,7 @@
         var content = null;
         var formFields = [];
 
-        console.log('FORM_FIELD_OBJECT value', me.value);
         var genForm = function (metaData, contentConfig) {
-            console.log('form-field-object metaData', metaData);
-            console.log('form-field-object contentConfig', contentConfig);
-//            console.log('genForm', metaData, contentConfig);
-
             content.innerHTML = '';
 
             for (var i = 0; i < contentConfig.length; i++) {
@@ -371,6 +370,13 @@
             }
         };
 
+        me.addChild = function(e) {
+            console.log('add CHILD');
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        };
+
         me.on('mount', function () {
             console.log('create accodion', $(me.root));
             var root = $(me.root);
@@ -387,15 +393,17 @@
     </script>
 </form-field-object>
 
-<form-field-array class="field">
-    <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
-    <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
-    <style>
-        .CodeMirrorForm {
-            resize: vertical;
-            min-height: 130px !important;
-        }
-    </style>
+<form-field-array class="ui styled fluid accordion">
+    <div class="title">
+        <i class="dropdown icon"></i>
+        {config.displayName}
+        &nbsp;
+        <div class="ui mini basic icon button" onclick="{addChild}">
+            <i class="blue add icon"></i>
+        </div>
+    </div>
+    <div class="content">
+    </div>
     <script>
         var me = this;
         me.mixin('form');
@@ -404,64 +412,16 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
-            setTimeout(function () {
-                $(me.root.querySelectorAll('.CodeMirror')).addClass('CodeMirrorForm');
-                $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('CodeMirrorForm');
 
-                $(me.root.querySelectorAll('.CodeMirror')).resizable({
-                    handles: 's',
-                    resize:  function () {
-                        editor.setSize('100%', $(this).height());
-                    }
-                });
-            }, 0);
-
-            switch (typeof(me.value)) {
-                case 'undefined':
-                case 'string':
-                    if (me.config.type === 'Array')
-                        me.value = '[]';
-                    else if (me.config.type === 'Object')
-                        me.value = '{}';
-                    break;
-                case 'object':
-                    me.value = JSON.stringify(me.value, null, 4);
-                    break;
-            }
-
-            var editorElm = me.root.querySelector('.CodeMirror');
-            editor = CodeMirror(editorElm, {
-                value:                   me.value,
-                rtlMoveVisually:         false,
-                showCursorWhenSelecting: false,
-                lineWrapping:            false,
-                lineNumbers:             true,
-                fixedGutter:             true,
-                foldGutter:              false,
-                matchBrackets:           true,
-                styleActiveLine:         true,
-                gutter:                  true,
-                readOnly:                !!(me.config.viewOnly),
-                lint:                    true,
-//                height:                  150,
-//                scrollbarStyle:          'simple',
-                gutters:                 ['CodeMirror-linenumbers', 'CodeMirror-lint-markers'],
-                mode:                    'application/json',
-                firstLineNumber:         1,
-                indentUnit:              4
-            });
-
-            setTimeout(function () {
-                editor.refresh();
-            }, 10);
         });
 
         me.getValue = function () {
-            return JSON.parse(editor.getValue());
+//            return JSON.parse(editor.getValue());
+            return '';
         };
 
         me.setValue = function (value) {
-            editor.setValue(value);
+//            editor.setValue(value);
             me.update();
         };
     </script>

@@ -10,7 +10,25 @@
                 </div>
                 <i class="content icon" style="padding-top: 5px"></i>
                 <div class="content" style="padding-top: 6px">
-                    <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
+                    <virtual if="{config.type === 'Object'}">
+                        <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
+                        <div class="ui fluid celled list sortable">
+                            <div each="{child in config.children}" class="fluid item" style="cursor: pointer;">
+                                <div class="right floated content">
+                                    <div class="ui icon mini button" onclick="{showFieldSettingDialog}"><i class="setting icon"></i></div>
+                                    <div class="ui red icon mini button" onclick="{removeField}"><i class="remove icon"></i></div>
+                                </div>
+                                <i class="archive icon" style="padding-top: 5px"></i>
+                                <div class="content" style="padding-top: 6px">
+                                    <div class="truncate">{child.displayName} - {child.name} - <strong>{child.type}</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </virtual>
+                    <virtual if="{config.type !== 'Object'}">
+                        <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
+                    </virtual>
+
                 </div>
             </div>
         </div>
