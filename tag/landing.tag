@@ -243,7 +243,7 @@
                 BackEnd.gitImportGitHub(info.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();
                     me.tags['progress-dialog'].hide();
-                    me.openSite(info.siteName);
+                    me.openSite(info.siteName)();
                 }).catch(function (err) {
                     console.log(err);
                     me.tags['progress-dialog'].enableClose();

@@ -238,7 +238,8 @@ function genSimpleContentConfigFile(metaData) {
                         displayName: key,
                         type:        'Object',
                         validations: [],
-                        required:    false
+                        required:    false,
+                        children:    genSimpleContentConfigFile(value)
                     });
                 }
         }

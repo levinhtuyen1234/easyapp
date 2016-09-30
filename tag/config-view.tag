@@ -159,7 +159,7 @@
         };
 
         me.loadContentConfig = function (contentConfig) {
-            console.log('[config-view] loadContentConfig');
+            console.log('[config-view] loadContentConfig', contentConfig);
             var hiddenFieldNames = ['slug', 'layout'];
             me.hiddenConfig = [];
             me.contentConfig = contentConfig.filter(function (config) {

@@ -145,8 +145,8 @@
                 }
 
                 var schema = this;
-                console.log('schema', schema);
-                console.log('keyPath', keyPath);
+//                console.log('schema', schema);
+//                console.log('keyPath', keyPath);
                 var pList = keyPath.split('.');
                 var len = pList.length;
                 for (var i = 0; i < len - 1; i++) {
@@ -209,7 +209,7 @@
     riot.compile(function () {
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
-//        window.curPage = riot.mount('home', {siteName: 'daksong'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'retest'})[0];
         // uncomment to enable login
 //        CheckAccountAndGoToLanding();
         window.curPage = riot.mount('landing')[0];

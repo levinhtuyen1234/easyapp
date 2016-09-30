@@ -6,10 +6,10 @@
             <div class="field">
                 <label for="siteNameField" class="">Folder name</label>
                 <input type="text" class="form-control" id="siteNameField" placeholder="" oninput="{edit('siteName')}">
-            </div>siteNameField
+            </div>
             <div class="field">
                 <label for="repoUrlField" class="">Repository url (HTTPS)</label>
-                <input type="url" class="form-control" id="repoUrlField" placeholder="ends with .git" oninput="{edit('repoUrl')}">
+                <input type="url" class="form-control" id="repoUrlField" placeholder="ends with .git" oninput="{editUrl('repoUrl')}">
             </div>
             <div class="field">
                 <label for="usernameField" class="">Username</label>
@@ -23,24 +23,27 @@
     </div>
     <div class="actions">
         <div class="ui deny button">Cancel</div>
-        <div class="ui positive right labeled icon button" disabled="{siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid}"  onclick="{create}">Import
+        <div class="ui positive right labeled icon button" disabled="{siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{create}">Import
             <i class="add icon"></i>
         </div>
     </div>
 
     <script>
         var me = this;
+        me.mixin('form');
 
-        me.edit = function (name, e) {
-            switch (e.target.type) {
-                case 'checkbox':
-                    me[name] = e.target.checked;
-                    break;
-                default:
-                    me[name] = e.target.value;
-            }
-            me.urlValid = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i.test(me.repoUrl);
-            me.update();
+        me.editUrl = function (name) {
+            return function (e) {
+                switch (e.target.type) {
+                    case 'checkbox':
+                        me[name] = e.target.checked;
+                        break;
+                    default:
+                        me[name] = e.target.value;
+                }
+                me.urlValid = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i.test(me.repoUrl);
+                me.update();
+            };
         };
 
         me.event = riot.observable();
@@ -69,6 +72,7 @@
 //            me.password = '8394fca387b64f36ab8c95bfbd99abec90bcc7xx';
 //            me.urlValid = true;
 
+
             me.update();
             $(me.root).modal('show');
         };
@@ -78,6 +82,7 @@
         };
 
         me.create = function () {
+//            console.log(me.siteName, me.repoUrl, me.username, me.password);
             me.event.trigger('create', {
                 siteName: me.siteName,
                 url:      me.repoUrl,

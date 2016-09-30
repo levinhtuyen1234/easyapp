@@ -5,7 +5,7 @@
         <div class="ui ten wide selection dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
-            <div class="default text">Choose Category             </div>
+            <div class="default text">Choose Category</div>
             <div class="menu">
                 <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
             </div>
@@ -297,11 +297,11 @@
                 calendarType = 'datetime';
             }
 
-            console.log('calendarType',calendarType);
+            console.log('calendarType', calendarType);
 
             $(me.root.querySelector('.ui.calendar')).calendar({
-                type: calendarType,
-                onChange: function(date, text){
+                type:     calendarType,
+                onChange: function (date, text) {
                     console.log('date', date);
                     console.log('text', text);
                     console.log('formated', moment(date).format(format));
@@ -323,7 +323,71 @@
     </script>
 </form-field-datetime>
 
-<form-field-object class="field">
+<form-field-object class="ui styled fluid accordion">
+    <div class="title">
+        <i class="dropdown icon"></i>
+        {config.displayName}
+    </div>
+    <div class="content">
+    </div>
+
+    <script>
+        var me = this;
+        me.mixin('form');
+        me.config = opts.config || {};
+        me.value = opts.value || '';
+
+        var content = null;
+        var formFields = [];
+
+        console.log('FORM_FIELD_OBJECT value', me.value);
+        var genForm = function (metaData, contentConfig) {
+            console.log('form-field-object metaData', metaData);
+            console.log('form-field-object contentConfig', contentConfig);
+//            console.log('genForm', metaData, contentConfig);
+
+            content.innerHTML = '';
+
+            for (var i = 0; i < contentConfig.length; i++) {
+                var fieldConfig = contentConfig[i];
+                var metaValue = metaData[fieldConfig.name];
+                var div = document.createElement('div');
+                var tagTypeName = 'form-field-' + fieldConfig.type.toLowerCase();
+                // special case for category
+                if (fieldConfig.name === 'category') {
+                    tagTypeName = 'form-field-category-text';
+                } else if (fieldConfig.name === 'tag') {
+                    tagTypeName = 'form-field-tag-text';
+                }
+
+                div.setAttribute('data-is', tagTypeName);
+                div.setAttribute('site-name', me.opts.siteName);
+                content.appendChild(div);
+                var tag = riot.mount(div, {
+                    config: fieldConfig,
+                    value:  metaValue
+                })[0];
+                formFields.push(tag);
+            }
+        };
+
+        me.on('mount', function () {
+            console.log('create accodion', $(me.root));
+            var root = $(me.root);
+            if (me.opts.parent === 'true') {
+                console.log('PARENT');
+                $(me.root).accordion();
+            }
+
+            content = me.root.querySelector('.content');
+            window.config = me.config;
+            genForm(me.value, me.config.children);
+        })
+
+    </script>
+</form-field-object>
+
+<form-field-array class="field">
     <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}</label>
     <texarea class="code-editor CodeMirror" id="form-{config.name}" style="border: 1px;"></texarea>
     <style>
@@ -401,14 +465,14 @@
             me.update();
         };
     </script>
-</form-field-object>
+</form-field-array>
 
 <form-field-media class="field">
     <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}
     </label>
     <input type="text" class="form-control" id="form-{config.name}" readonly="{config.viewOnly}">
     <label class="input-group-btn">
-        <span class="btn btn-default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
+        <span class="ui button default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
     </label>
     <script>
         var dialog = require('electron').remote.dialog;
@@ -491,47 +555,7 @@
             </div>`;
         }
 
-        //        function genArrayInput(config, metaValue) {
-        //            metaValue = metaValue ? metaValue : {};
-        //            return `<div class="form-group">
-        //                    <label for="" class="" style="text-align: left;">{config.displayName}</label>
-        //                    <div class="col-sm-9">
-        //                        <button class="btn btn-primary btn-sm" onclick="javascript:addArrayItem(this, '{config.name}')"><i class="fa fa-plus"></i> Add</button>
-        //                        <ul class="list-group">
-        //                            <li class="list-group-item clearfix">
-        //                                Aasdfasfasdfsaf
-        //                                <span class="pull-right">
-        //                                    <a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a>
-        //                                </span>
-        //                            </li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                            <li class="list-group-item clearfix">A<span class="pull-right"><a class="btn btn-dander btn-sm"><i class="fa fa-trash"></i></a></span></li>
-        //                        </ul>
-        //                        <input type="text" name="input-{config.name}" data-name="{config.name}" class="form-control" id="" placeholder="{config.name}" value="{metaValue}">
-        //                    </div>
-        //                </div>`;
-        //        }
-
-
         me.getForm = function () {
-//            var inputs = me.form.querySelectorAll('input');
-//            var ret = {};
-//            // get value of input
-//            inputs.forEach(function (input) {
-//                ret[input.dataset.name] = getInputValue(input);
-//            });
-//            // get editor field
-//            for (var fieldName in me.codeEditorMap) {
-//                if (!me.codeEditorMap.hasOwnProperty(fieldName)) continue;
-//                ret[fieldName] = JSON.parse(me.codeEditorMap[fieldName].getValue());
-//            }
-//            return ret;
             var ret = {};
             me.formfields.forEach(function (field) {
                 ret[field.config.name] = (field.getValue());
@@ -548,7 +572,7 @@
         };
 
         me.genForm = function (metaData, contentConfig) {
-//            console.log('genForm', metaData, contentConfig);
+            console.log('genForm', metaData, contentConfig);
             // unmount any exists form field
             me.formfields.forEach(function (field) {
                 if (field != undefined)
@@ -571,9 +595,10 @@
                 } else if (fieldConfig.name === 'tag') {
                     tagTypeName = 'form-field-tag-text';
                 }
-                // TODO fix this, tam thoi su dung object cho array luon
-                if (tagTypeName === 'form-field-array')
-                    tagTypeName = 'form-field-object';
+
+                if (tagTypeName === 'form-field-object')
+                    div.setAttribute('parent', 'true');
+
                 div.setAttribute('data-is', tagTypeName);
                 div.setAttribute('site-name', me.opts.siteName);
                 me.form.appendChild(div);
