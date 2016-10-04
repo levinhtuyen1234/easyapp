@@ -3,6 +3,11 @@
         <label>Display name:</label>
         <input type="text" class="" id="textDisplayName" value="{config.displayName}" onkeyup="{bind('config.displayName')}">
     </div>
+
+    <div class="inline field">
+        <label>Is required</label>
+        <input type="text" class="" id="defaultValue" value="{config.defaultValue}" onkeyup="{bind('config.defaultValue')}">
+    </div>
     <!-- This field is required -->
     <div class="inline field">
         <input type="checkbox" onchange="{bind('config.required')}" checked="{config.required}">

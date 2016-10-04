@@ -1,10 +1,10 @@
 <bottom-bar>
     <div class="ui attached tabular mini menu">
-        <div class="active item" data-tab="webView" style="border-radius: 0 !important;">PC</div>
-        <div class=" item" data-tab="webView1" >Tablet</div>
-        <div class=" item" data-tab="webView2" >Smartphone</div>
-        <div class="item ui button" data-tab="onBrowser" style="border-radius: 0 !important;">Open on Browser</div>
-        <div class="right item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</div>
+        <a class="active item" data-tab="webView" style="border-radius: 0 !important;">PC</a>
+        <a class="item" data-tab="webView1" >Tablet</a>
+        <a class="item" data-tab="webView2" >Smartphone</a>
+        <a class="item ui button" data-tab="onBrowser" style="border-radius: 0 !important;">Open on Browser</a>
+        <a class="right item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</a>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="webView" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
         <webview id="webview" src="https://www.google.com.vn" style="display:flex; height: 100%"></webview>

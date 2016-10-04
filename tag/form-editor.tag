@@ -323,18 +323,19 @@
     </script>
 </form-field-datetime>
 
-<form-field-object class="ui styled fluid accordion">
-    <div class="title">
-        <i class="dropdown icon"></i>
-        {config.displayName}
-        &nbsp;
-        <div class="ui mini basic icon float button" onclick="{addChild}">
-            <i class="blue add icon"></i>
+<form-field-object>
+    <div class="ui styled fluid accordion">
+        <div class="title">
+            <i class="dropdown icon"></i>
+            {config.displayName}
+            &nbsp;
+            <div class="ui mini basic icon float button" onclick="{addChild}">
+                <i class="blue add icon"></i>
+            </div>
+        </div>
+        <div class="content accordion-content">
         </div>
     </div>
-    <div class="content">
-    </div>
-
     <script>
         var me = this;
         me.mixin('form');
@@ -370,37 +371,44 @@
             }
         };
 
-        me.addChild = function(e) {
+        me.addChild = function (e) {
             console.log('add CHILD');
             e.preventDefault();
             e.stopPropagation();
+
+//            me.tags['object-choose-child-type-dialog'].show();
+
             return false;
         };
 
         me.on('mount', function () {
-            console.log('create accodion', $(me.root));
+//            console.log('form-field-object mount', $(me.root));
             var root = $(me.root);
             if (me.opts.parent === 'true') {
                 console.log('PARENT');
-                $(me.root).accordion();
+                $(me.root.querySelector('.ui .accordion')).accordion();
             }
 
-            content = me.root.querySelector('.content');
-            window.config = me.config;
+            content = me.root.querySelector('.accordion-content');
             genForm(me.value, me.config.children);
         })
 
     </script>
 </form-field-object>
 
-<form-field-array class="ui styled fluid accordion">
+<array-add-child-dialog class="ui modal">
+
+</array-add-child-dialog>
+
+<form-field-array class="ui styled fluid accordion field">
+    <array-add-child-dialog></array-add-child-dialog>
     <div class="title">
         <i class="dropdown icon"></i>
         {config.displayName}
         &nbsp;
-        <div class="ui mini basic icon button" onclick="{addChild}">
+        <button name="addBtn" class="ui mini basic icon button" onclick="{addChild}" data-content="Define model before add child">
             <i class="blue add icon"></i>
-        </div>
+        </button>
     </div>
     <div class="content">
     </div>
@@ -408,12 +416,21 @@
         var me = this;
         me.mixin('form');
         me.config = opts.config || {};
-        var editor;
         me.value = opts.value || '';
 
         me.on('mount', function () {
-
+            if (!me.config.model) {
+                $(me.addBtn).popup({
+                    on: 'click'
+                });
+            }
         });
+
+        me.addChild = function () {
+            if (me.config.model) {
+                return;
+            }
+        };
 
         me.getValue = function () {
 //            return JSON.parse(editor.getValue());

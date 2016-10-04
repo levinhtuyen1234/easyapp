@@ -1,74 +1,262 @@
+<add-config-field-dialog class="ui small modal">
+    <i class="close icon" show="{!cloning}"></i>
+    <div class="header">Create new website from EasyWebHub source</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label>Name</label>
+                <div class="ui fluid input">
+                    <input type="text" id="nameField" placeholder="Name" oninput="{edit('fieldName')}">
+                </div>
+            </div>
+            <div class="field">
+                <label>Field type</label>
+                <div class="ui three column grid">
+                    <div each="{contentType in contentTypes}" class="column">
+                        <a class="ui fluid card" onclick="{chooseFieldType}" data-fieldType="{contentType.name}">
+                            <div class="content">
+                                <div class="header">{contentType.name}</div>
+                                <div class="description">
+                                    {contentType.desc}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui deny button">Cancel</div>
+        <div class="ui positive right labeled icon button {disabled : canSubmit()}" onclick="{submit}">Add
+            <i class="add icon"></i>
+        </div>
+    </div>
+
+    <script>
+        var me = this;
+        me.mixin('form');
+
+        var modal;
+        me.fieldName = '';
+        me.fieldType = '';
+
+        me.canSubmit = function () {
+            return !(me.fieldName !== '' && me.fieldType !== '');
+        };
+
+        me.contentTypes = [
+            {
+                name: 'Text',
+                desc: 'Text desc'
+            },
+            {
+                name: 'Number',
+                desc: 'Number desc'
+            },
+            {
+                name: 'Boolean',
+                desc: 'Boolean desc'
+            },
+            {
+                name: 'DateTime',
+                desc: 'DateTime desc'
+            },
+            {
+                name: 'Media',
+                desc: 'Media desc'
+            },
+            {
+                name: 'Object',
+                desc: 'Object desc'
+            },
+            {
+                name: 'Array',
+                desc: 'Array desc'
+            }
+        ];
+
+        var activeFieldType = function (name) {
+            $(me.root).find('.card[data-fieldType="' + name + '"]').addClass('blue');
+            me.fieldType = name;
+            me.update();
+        };
+
+        me.chooseFieldType = function (e) {
+            if (e.srcElement.tagName === 'DIV') {
+                var card = $(e.srcElement).closest('a');
+                me.fieldType = card[0].dataset.fieldType;
+                $(me.root).find('.ui.card').removeClass('blue');
+                card.addClass('blue');
+            }
+        };
+
+        me.on('mount', function () {
+            modal = $(me.root).modal();
+            activeFieldType('Text');
+        });
+
+        me.show = function () {
+            modal.modal('show');
+        };
+
+        me.hide = function () {
+            modal.modal('hide');
+        };
+
+        me.submit = function () {
+            me.trigger('addField', me.fieldName, me.fieldType);
+        };
+    </script>
+</add-config-field-dialog>
+
+<field-setting-dialog class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">{modalTitle}</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="inline field">
+                <label>Field type</label>
+                <select id="fieldTypeDropDown" class="ui dropdown" onchange="{ShowFieldConfig}">
+                    <option value="Array">Array</option>
+                    <option value="Boolean">Boolean</option>
+                    <option value="DateTime">DateTime</option>
+                    <option value="Media">Media</option>
+                    <option value="Number">Number</option>
+                    <option value="Object">Object</option>
+                    <option value="Text">Text</option>
+                </select>
+            </div>
+
+            <config-view-text show="{curFieldType === 'Text'}"></config-view-text>
+            <config-view-array show="{curFieldType === 'Array'}"></config-view-array>
+            <config-view-object show="{curFieldType === 'Object'}"></config-view-object>
+            <config-view-number show="{curFieldType === 'Number'}"></config-view-number>
+            <config-view-boolean show="{curFieldType === 'Boolean'}"></config-view-boolean>
+            <config-view-datetime show="{curFieldType === 'DateTime'}"></config-view-datetime>
+            <config-view-media show="{curFieldType === 'Media'}"></config-view-media>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui button cancel">Close</div>
+        <div class="ui button positive icon" disabled="{layoutName==''}" onclick="{saveConfig}">
+            <i class="save icon"></i>
+            Save
+        </div>
+    </div>
+
+    <script>
+        var me = this;
+        var modal;
+
+        me.curFieldType = '';
+
+        me.on('mount', function () {
+            modal = $(me.root).modal();
+        });
+
+        me.ShowFieldConfig = function (e) {
+            console.log('ShowFieldConfig', e.target.value);
+            me.curFieldType = e.target.value;
+            // set displayName khi chuyen sang Content type khac
+            if (me.curFieldType !== me.originalFieldType) {
+                var configFieldTag = 'config-view-' + me.curFieldType.toLowerCase();
+                me.tags[configFieldTag].loadConfig({
+                    name:        me.curConfig.name,
+                    displayName: me.curConfig.displayName
+                });
+            }
+        };
+
+        me.saveConfig = function () {
+
+        };
+
+        me.show = function () {
+            modal.modal('show');
+        };
+
+        me.hide = function () {
+            modal.modal('hide');
+        };
+    </script>
+</field-setting-dialog>
+
+<!--<config-view-object-node>-->
+<!--<div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>-->
+<!--<div class="ui fluid celled list sortable">-->
+<!--<div each="{child in config.children}" class="fluid item" style="cursor: pointer;">-->
+<!--<div class="right floated content">-->
+<!--<div class="ui icon mini button" onclick="{showFieldSettingDialog}"><i class="setting icon"></i></div>-->
+<!--<div class="ui red icon mini button" onclick="{removeField}"><i class="remove icon"></i></div>-->
+<!--</div>-->
+<!--<i class="archive icon" style="padding-top: 5px"></i>-->
+<!--<div class="content" style="padding-top: 6px">-->
+<!--<div class="truncate">{child.displayName} - {child.name} - <strong>{child.type}</strong></div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</div>-->
+<!--</config-view-object-node>-->
+
+<config-view-object-node>
+    <div class="ui middle aligned divided list sortable" style="padding-left: 10px; padding-top: 3px;">
+        <div each="{config in config.children}" class="item" style="cursor: pointer; border-top: 1px solid rgba(34,36,38,.15)">
+            <div class="right floated content">
+                <div class="ui icon mini button" onclick="{showFieldSettingDialog}"><i class="setting icon"></i></div>
+                <div class="ui red icon mini button" onclick="{removeField}"><i class="remove icon"></i></div>
+            </div>
+            <i class="content icon" style="padding-top: 5px;"></i>
+            <div class="content" style="padding-top: 6px">
+                <div class="header">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
+            </div>
+            <virtual if="{config.type === 'Object'}">
+                <div data-is="config-view-object-node" config="{config}" style="padding-left: 10px; padding-top: 3px;"></div>
+            </virtual>
+        </div>
+    </div>
+
+    <script>
+        var me = this;
+
+        me.on('updated', function () {
+            console.log('nested child updated');
+            var configItems = $(me.root).find('.sortable');
+            var startIndex;
+            configItems.sortable({
+                start: function (e, ui) {
+                    startIndex = ui.item.index();
+                }
+            });
+        })
+    </script>
+</config-view-object-node>
+
 <config-view>
-    <h2>List of fields</h2>
+    <add-config-field-dialog></add-config-field-dialog>
+    <field-setting-dialog></field-setting-dialog>
+    <h2>
+        List of fields
+        <div class="ui button right floated " onclick="{showAddConfigFieldDialog}">Add Field</div>
+    </h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
     <div class="" style="overflow: auto; padding: 0; height: calc(100vh - 240px); margin: 0 0 -14px;">
-        <div class="ui celled list sortable">
+        <div class="ui middle aligned divided list sortable">
             <div each="{config in contentConfig}" class="item" style="cursor: pointer;">
                 <div class="right floated content">
                     <div class="ui icon mini button" onclick="{showFieldSettingDialog}"><i class="setting icon"></i></div>
                     <div class="ui red icon mini button" onclick="{removeField}"><i class="remove icon"></i></div>
                 </div>
-                <i class="content icon" style="padding-top: 5px"></i>
+                <i class="content icon" style="padding-top: 5px;"></i>
                 <div class="content" style="padding-top: 6px">
-                    <virtual if="{config.type === 'Object'}">
-                        <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
-                        <div class="ui fluid celled list sortable">
-                            <div each="{child in config.children}" class="fluid item" style="cursor: pointer;">
-                                <div class="right floated content">
-                                    <div class="ui icon mini button" onclick="{showFieldSettingDialog}"><i class="setting icon"></i></div>
-                                    <div class="ui red icon mini button" onclick="{removeField}"><i class="remove icon"></i></div>
-                                </div>
-                                <i class="archive icon" style="padding-top: 5px"></i>
-                                <div class="content" style="padding-top: 6px">
-                                    <div class="truncate">{child.displayName} - {child.name} - <strong>{child.type}</strong></div>
-                                </div>
-                            </div>
-                        </div>
-                    </virtual>
-                    <virtual if="{config.type !== 'Object'}">
-                        <div class="truncate">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
-                    </virtual>
-
+                    <div class="header">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
                 </div>
+                <virtual if="{config.type === 'Object'}">
+                    <div data-is="config-view-object-node" config="{config}" style="padding-left: 10px; padding-top: 3px;"></div>
+                </virtual>
             </div>
         </div>
     </div>
 
-    <div class="ui modal" tabindex="-1" name="dialog">
-        <i class="close icon"></i>
-        <div class="header">{modalTitle}</div>
-        <div class="content">
-            <div class="ui form">
-                <div class="inline field">
-                    <label>Field type</label>
-                    <select id="fieldTypeDropDown" class="ui dropdown" onchange="{ShowFieldConfig}">
-                        <option value="Array">Array</option>
-                        <option value="Boolean">Boolean</option>
-                        <option value="DateTime">DateTime</option>
-                        <option value="Media">Media</option>
-                        <option value="Number">Number</option>
-                        <option value="Object">Object</option>
-                        <option value="Text">Text</option>
-                    </select>
-                </div>
-
-                <config-view-text show="{curFieldType === 'Text'}"></config-view-text>
-                <config-view-array show="{curFieldType === 'Array'}"></config-view-array>
-                <config-view-object show="{curFieldType === 'Object'}"></config-view-object>
-                <config-view-number show="{curFieldType === 'Number'}"></config-view-number>
-                <config-view-boolean show="{curFieldType === 'Boolean'}"></config-view-boolean>
-                <config-view-datetime show="{curFieldType === 'DateTime'}"></config-view-datetime>
-                <config-view-media show="{curFieldType === 'Media'}"></config-view-media>
-            </div>
-        </div>
-        <div class="actions">
-            <div class="ui button cancel">Close</div>
-            <div class="ui button positive icon" disabled="{layoutName==''}" onclick="{saveConfig}">
-                <i class="save icon"></i>
-                Save
-            </div>
-        </div>
-    </div>
 
     <script>
         var me = this;
@@ -88,6 +276,7 @@
         me.on('mount', function () {
 //            me.selectorElm = $(me.root.querySelector('.selectpicker'));
 //            me.selectorElm.selectpicker();
+
         });
 
         me.addPredefinedText = function (e) {
@@ -134,17 +323,6 @@
             $(me.dialog).modal('hide');
         };
 
-        me.ShowFieldConfig = function (e) {
-            console.log('ShowFieldConfig', e.target.value);
-            me.curFieldType = e.target.value;
-            // set displayName khi chuyen sang Content type khac
-            if (me.curFieldType !== me.originalFieldType) {
-                formTags[me.curFieldType].loadConfig({
-                    name:        me.curConfig.name,
-                    displayName: me.curConfig.displayName
-                });
-            }
-        };
 
         me.showFieldSettingDialog = function (e) {
             console.log('showFieldSettingDialog', e.item);
@@ -162,7 +340,6 @@
                     autofocus: false
                 });
             }
-            window.mydialog = me.modal;
             me.modal.modal('show');
 
 //            me.selectorElm.selectpicker();
@@ -220,7 +397,11 @@
 
         me.getContentConfig = function () {
             return me.hiddenConfig.concat(me.contentConfig);
-        }
+        };
+
+        me.showAddConfigFieldDialog = function () {
+            me.tags['add-config-field-dialog'].show();
+        };
     </script>
 
     <style>
