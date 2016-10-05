@@ -11,7 +11,7 @@
             </div>
             <div class="inline fields">
                 <label class="three wide field">Parent Category</label>
-                <div class="eight wide field">
+                <div class="ui menu fluid">
                     <div class="ui fluid selection dropdown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>

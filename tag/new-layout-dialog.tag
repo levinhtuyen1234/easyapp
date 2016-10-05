@@ -6,11 +6,13 @@
             <div class="ui info message">
                 <div class="header"><i class="icon help circle"></i>Apply for one or multiple webpage, using HTML, CSS and <a href="http://handlebarsjs.com">HandlebarJS</a> code</div>
             </div>
-            <div class="required field">
-                <label>Filename</label>
-                <div class="ui fluid icon right labeled input">
-                    <input type="text" id="layoutNameElm" placeholder="Filename" oninput="{updateFileName}">
-                    <div class="ui label">{postFix}</div>
+            <div class="required inline fields">
+                <label class="two wide field">Filename</label>
+                <div class="eight wide field">
+                    <div class="ui icon right labeled input ">
+                        <input type="text" id="layoutNameElm" placeholder="Filename" oninput="{updateFileName}">
+                        <div class="ui label">{postFix}</div>
+                    </div>
                 </div>
             </div>
             <div class="grouped fields">

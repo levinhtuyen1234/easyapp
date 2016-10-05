@@ -3,15 +3,15 @@
     <div class="header">Create new page</div>
     <div class="content">
         <form class="ui form">
-            <div class="field">
-                <label>Page Title</label>
-                <div class="ui fluid icon input">
+            <div class="inline fields">
+                <label class="two wide field">Page Title</label>
+                <div class="ui icon input eight wide field">
                     <input type="text" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}">
                 </div>
             </div>
-            <div class="field">
-                <label>Layout</label>
-                <div class="ui menu">
+            <div class="inline fields">
+                <label class="two wide field">Layout</label>
+                <div class="ui menu fluid">
                     <div class="ui fluid selection dropdown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
@@ -22,9 +22,9 @@
                     </div>
                 </div>
             </div>
-            <div class="field">
-                <label>Category</label>
-                <div class="ui menu">
+            <div class="inline fields">
+                <label class="two wide field">Category</label>
+                <div class="ui menu fluid">
                     <div class="ui fluid selection dropdown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
@@ -43,9 +43,9 @@
                 <!--</div>-->
             </div>
 
-            <div class="field">
-                <label>Tag</label>
-                <div class="ui menu">
+            <div class="inline fields">
+                <label class="two wide field">Tags</label>
+                <div class="ui menu fluid">
                     <div class="ui fluid dropdown multiple selection">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
@@ -64,11 +64,13 @@
                 <!--</div>-->
             </div>
 
-            <div class="field">
-                <label>Filename</label>
-                <div class="ui fluid right labeled icon input">
-                    <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
-                    <div class="ui label">.md</div>
+            <div class="inline fields">
+                <label class="two wide field">Filename</label>
+                <div class="eight wide field">
+                    <div class="ui fluid right labeled icon input">
+                        <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
+                        <div class="ui label">.md</div>
+                    </div>
                 </div>
             </div>
 
