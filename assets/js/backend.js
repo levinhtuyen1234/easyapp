@@ -6,6 +6,7 @@ const ChildProcess = require('child_process');
 const Remote = require('electron').remote;
 const Shell = Remote.shell;
 
+const _ = require('lodash');
 const BlueBird = require('bluebird');
 const Mkdir = BlueBird.promisify(Fs.mkdir);
 const RimRaf = BlueBird.promisify(require('rimraf'));
@@ -230,7 +231,8 @@ function genSimpleContentConfigFile(metaData) {
                         displayName: key,
                         type:        'Array',
                         validations: [],
-                        required:    false
+                        required:    false,
+                        children:    []
                     });
                 } else {
                     fields.push({
@@ -303,19 +305,20 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     if (fileExists(contentConfigFullPath)) {
         // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
-        // merge property from contentConfig -> existsConfig
-        var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
-            return existsConfig.filter(function (curB) {
-                    return cur.name === curB.name;
-                }).length === 0;
-        });
-
-        // update config file neu co field mới
-        if (fieldsOnlyInCurContentFile.length > 0) {
-            existsConfig = existsConfig.concat(fieldsOnlyInCurContentFile);
-            Fs.writeFileSync(contentConfigFullPath, JSON.stringify(existsConfig, null, 4));
-        }
-        return existsConfig;
+        var newConfig = _.merge(existsConfig, contentConfig);
+        // // merge property from contentConfig -> existsConfig
+        // var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
+        //     return existsConfig.filter(function (curB) {
+        //             return cur.name === curB.name;
+        //         }).length === 0;
+        // });
+        //
+        // // update config file neu co field mới
+        // if (fieldsOnlyInCurContentFile.length > 0) {
+        //     existsConfig = existsConfig.concat(fieldsOnlyInCurContentFile);
+        //     Fs.writeFileSync(contentConfigFullPath, JSON.stringify(existsConfig, null, 4));
+        // }
+        return newConfig;
     } else {
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
         return contentConfig;
@@ -569,13 +572,13 @@ function gitCommit(siteName, message, onProgress) {
 
 function gitGenMessage(siteName) {
     const workingDirectory = Path.resolve(getSitePath(siteName));
-    return new BlueBird((resolve, reject)=> {
+    return new BlueBird((resolve, reject) => {
         var output = '';
         return spawnGitCmd('git', ['status'], workingDirectory, function (data) {
             output += data + '\r\n';
         }).catch(ex => {
             reject(ex);
-        }).then(()=> {
+        }).then(() => {
             console.log('output', output);
             var match = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g);
             if (match == null) {

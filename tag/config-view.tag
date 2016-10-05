@@ -1,6 +1,6 @@
 <add-config-field-dialog class="ui small modal">
     <i class="close icon" show="{!cloning}"></i>
-    <div class="header">Create new website from EasyWebHub source</div>
+    <div class="header">Add new Field</div>
     <div class="content">
         <div class="ui form">
             <div class="field">
@@ -219,7 +219,6 @@
         var me = this;
 
         me.on('updated', function () {
-            console.log('nested child updated');
             var configItems = $(me.root).find('.sortable');
             var startIndex;
             configItems.sortable({
@@ -231,7 +230,7 @@
     </script>
 </config-view-object-node>
 
-<config-view>
+<config-view style="height: calc(100% - 88px);">
     <add-config-field-dialog></add-config-field-dialog>
     <field-setting-dialog></field-setting-dialog>
     <h2>
@@ -239,7 +238,7 @@
         <div class="ui button right floated " onclick="{showAddConfigFieldDialog}">Add Field</div>
     </h2>
     <h3 class="text-success">(?) Click vào Setting button để điều chỉnh hiển thị trong phần Form nhập liệu</h3>
-    <div class="" style="overflow: auto; padding: 0; height: calc(100vh - 240px); margin: 0 0 -14px;">
+    <div class="" style="overflow: scroll; padding: 0; height: calc(100% - 80px); margin: 0 0 -14px; overflow-x: hidden;">
         <div class="ui middle aligned divided list sortable">
             <div each="{config in contentConfig}" class="item" style="cursor: pointer;">
                 <div class="right floated content">

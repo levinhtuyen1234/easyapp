@@ -50,7 +50,7 @@
 
 <form-field-tag-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
-    <div class="eight wide field">
+    <div class="twelve wide field">
         <div class="ui selection multiple dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
@@ -84,7 +84,7 @@
 //            var dropdown = $(me.root.querySelector('select'));
 //            dropdown.selectpicker('refresh');
 //            dropdown.selectpicker('val', me.value);
-            $(me.root.querySelector('.ui.dropdown')).dropdown({
+            $(me.root).find('.ui .dropdown').dropdown({
                 onChange: function (value, text) {
                     console.log('on change', value, text);
                     me.value = value;
@@ -306,7 +306,6 @@
                     console.log('text', text);
                     console.log('formated', moment(date).format(format));
                     me.value = moment(date).format(format);
-                    console.log('name', `form-${config.name}`);
                     me['form-' + me.config.name].value = me.value;
                 }
             });
@@ -324,14 +323,13 @@
 </form-field-datetime>
 
 <form-field-object>
-    <div class="ui styled fluid accordion">
+    <div class="ui styled fluid accordion" style="margin-top: 5px; margin-bottom: 5px;">
         <div class="title">
             <i class="dropdown icon"></i>
-            {config.displayName}
-            &nbsp;
-            <div class="ui mini basic icon float button" onclick="{addChild}">
-                <i class="blue add icon"></i>
-            </div>
+            {config.displayName} &nbsp;
+            <!--<div class="ui mini basic icon float button" onclick="{addChild}">-->
+            <!--<i class="blue add icon"></i>-->
+            <!--</div>-->
         </div>
         <div class="content accordion-content">
         </div>
@@ -347,7 +345,9 @@
 
         var genForm = function (metaData, contentConfig) {
             content.innerHTML = '';
-
+            if (contentConfig == undefined) {
+                console.log('BUG', contentConfig, metaData);
+            }
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
@@ -400,7 +400,7 @@
 
 </array-add-child-dialog>
 
-<form-field-array class="ui styled fluid accordion field">
+<form-field-array class="ui styled fluid accordion field" style="margin-top: 5px; margin-bottom: 5px;">
     <array-add-child-dialog></array-add-child-dialog>
     <div class="title">
         <i class="dropdown icon"></i>
@@ -508,30 +508,6 @@
             return false;
         };
 
-        function genSimpleInput(display, name, type, value) {
-            if (type === 'boolean') {
-                return `<div class="form-group">
-                    <label for="" class="" style="text-align: left;">{displayName}
-                    </label>
-                    <div class="col-sm-9">
-                        <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="input-{name}" checked="{value}">
-                        </label>
-                        </div>
-                    </div>
-                </div>`;
-            }
-            return `<div class="form-group">
-                <label for="" class="" style="text-align: left;">{displayName}
-
-                </label>
-                <div class="col-sm-9">
-                    <input type="{type}" name="input-{name}" class="form-control" id="" placeholder="{value}" value="{value}">
-                </div>
-            </div>`;
-        }
-
         me.getForm = function () {
             var ret = {};
             me.formfields.forEach(function (field) {
@@ -560,7 +536,9 @@
 
             me.form.innerHTML = '';
             me.codeEditorMap = {};
-
+            if (contentConfig == undefined) {
+                console.log('BUG', contentConfig);
+            }
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];

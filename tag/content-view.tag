@@ -1,4 +1,4 @@
-<content-view class="ui tab segment active simplebar" style="height: calc(100% - 120px); padding-left: 10px; padding-right: 20px; overflow-y: scroll">
+<content-view class="ui tab segment active simplebar" style="height: calc(100% - 88px); padding-left: 10px; padding-right: 20px; overflow-y: scroll">
     <form-editor site-name="{siteName}"></form-editor>
 
     <div class="ui form" style="padding-top: 10px;">
