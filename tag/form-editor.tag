@@ -1,8 +1,8 @@
-<form-field-category-text class="inline field">
-    <label for="form-{config.name}-{config.displayType}" class="" style="">{config.displayName}</label>
+<form-field-category-text class="inline fields">
+    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
 
-    <div class="ten wide field">
-        <div class="ui ten wide selection dropdown">
+    <div class="ui menu fluid">
+        <div class="ui fluid selection dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
             <div class="default text">Choose Category</div>
@@ -50,8 +50,8 @@
 
 <form-field-tag-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
-    <div class="twelve wide field">
-        <div class="ui selection multiple dropdown">
+    <div class="ui menu fluid">
+        <div class="ui fluid selection multiple dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
             <div class="default text">Choose some tags</div>

@@ -3,20 +3,37 @@
     <div class="header">Create new Category</div>
     <div class="content">
         <div class="ui form">
-            <div class="field">
-                <label>Name</label>
-                <div class="ui fluid icon input">
+            <div class="inline fields">
+                <label class="three wide field">Category Name</label>
+                <div class="ui fluid icon input eight wide field">
                     <input type="text" id="categoryNameElm" placeholder="Name" oninput="{updateCategoryName}">
                 </div>
             </div>
-            <div class="field">
-                <label>Filename</label>
-                <div class="ui fluid icon right labeled input">
-                    <input type="text" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
-                    <div class="ui label">.json</div>
+            <div class="inline fields">
+                <label class="three wide field">Parent Category</label>
+                <div class="ui menu fluid">
+                    <div class="ui fluid selection dropdown">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Category</div>
+                        <div class="menu">
+                            <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="inline fields">
+                <label class="three wide field">Filename</label>
+                <div class="eight wide field">
+                    <div class="ui icon right labeled input">
+                        <input type="text" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
+                        <div class="ui label">.json</div>
+                    </div>
                 </div>
             </div>
-            <div class="ui info message">
+            
+         <!--   <div class="ui info message">
                 <div class="header"><i class="icon help circle"></i> NOTE: The "." of filename is used to define the relationship between 2 categories</div>
                 <div class="description">E.g
                     <div class="ui basic red label">category.sub-category.json</div>
@@ -24,6 +41,7 @@
                     <div class="ui basic red label">category.json</div>
                 </div>
             </div>
+            -->
         </div>
     </div>
     <div class="actions">
@@ -38,6 +56,7 @@
         var me = this;
         var combining = /[\u0300-\u036F]/g;
         me.categoryName = '';
+        me.categoryList = [];
 
         me.edit = function (name, e) {
             switch (e.target.type) {
@@ -68,6 +87,12 @@
         };
 
         me.show = function () {
+            
+            me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
+            me.categoryList.forEach(function (category) {
+                category.name = category.name.split('.').join(' / ');
+            });
+
             console.log('show category add dialog');
             me.categoryName = '';
             me.categoryNameElm.value = '';

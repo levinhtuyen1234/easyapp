@@ -3,17 +3,20 @@
     <div class="header">Create new Tag</div>
     <div class="content">
         <div class="ui form">
-            <div class="field">
-                <label>Name</label>
-                <div class="ui fluid icon input">
+            <div class="inline fields">
+                <label class="two wide field">Tag Name</label>
+                <div class="ui icon input eight wide field">
                     <input type="text" id="tagNameElm" placeholder="Name" oninput="{updateTagName}">
                 </div>
             </div>
-            <div class="field">
-                <label>Filename</label>
-                <div class="ui fluid icon right labeled input">
-                    <input type="text" id="tagFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
-                    <div class="ui label">.json</div>
+            <div class="inline fields">
+                <label class="two wide field">Filename</label>
+                <div class="eight wide field">
+
+                    <div class="ui icon right labeled input">
+                        <input type="text" id="tagFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
+                        <div class="ui label">.json</div>
+                    </div>
                 </div>
             </div>
         </div>
