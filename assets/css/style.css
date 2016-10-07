@@ -255,11 +255,10 @@ textarea {
 }
 
 /** {*/
-    /*outline: 1px solid red;*/
+/*outline: 1px solid red;*/
 /*}*/
 
-
-.simplebar-content>.list-group-item:first-child {
+.simplebar-content > .list-group-item:first-child {
     border-top-left-radius: 0;
     border-top-right-radius: 0;
     border-right: none;
@@ -267,5 +266,5 @@ textarea {
 
 div.CodeMirrorForm {
     border-radius: .28571429rem;
-    border: 1px solid rgba(34,36,38,.15);
+    border: 1px solid rgba(34, 36, 38, .15);
 }

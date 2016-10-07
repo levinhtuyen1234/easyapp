@@ -4,14 +4,15 @@
         <input type="text"id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
     <!-- This field is required -->
-    <div class="inline field">
+    <div class="inline field ui checkbox">
+        <label class="title">Is required</label>
         <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
-        <label>Is required</label>
     </div>
+    <br>
     <!-- View Only Field -->
-    <div class="inline field">
+    <div class="inline field ui checkbox">
+        <label class="label">Only View</label>
         <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
-        <label>Only View</label>
     </div>
 
     <script>

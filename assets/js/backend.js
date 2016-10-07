@@ -170,7 +170,7 @@ function fileExists(filePath) {
     }
 }
 
-function genSimpleContentConfigFile(metaData) {
+function genSimpleContentConfig(metaData) {
     var contentConfig = [];
 
     var fixedFields = [];
@@ -241,7 +241,7 @@ function genSimpleContentConfigFile(metaData) {
                         type:        'Object',
                         validations: [],
                         required:    false,
-                        children:    genSimpleContentConfigFile(value)
+                        children:    genSimpleContentConfig(value)
                     });
                 }
         }
@@ -300,7 +300,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     // doc file content lay metaData
     var content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
-    var contentConfig = genSimpleContentConfigFile(content.metaData);
+    var contentConfig = genSimpleContentConfig(content.metaData);
 
     if (fileExists(contentConfigFullPath)) {
         // read and return config file
@@ -647,7 +647,7 @@ function getMetaConfigFile(siteName, metaFilePath) {
     var metaData = JSON.parse(metaFileContent);
     var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
     var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
-    var metaConfig = genSimpleContentConfigFile(metaData);
+    var metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
         // read and return config file
@@ -818,6 +818,7 @@ function showItemInFolder(siteName, filePath) {
 }
 
 module.exports = {
+    genSimpleContentConfig: genSimpleContentConfig,
     showItemInFolder:       showItemInFolder,
     fileExists:             fileExists,
     newCategory:            newCategory,

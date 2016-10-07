@@ -4,21 +4,22 @@
         <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
     <!-- This field is required -->
-    <div class="inline field">
+    <div class="inline field ui checkbox">
+        <label class="title">Is required</label>
         <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
-        <label class="">Is required</label>
     </div>
+    <br>
     <!-- View Only Field -->
-    <div class="inline field">
+    <div class="inline field ui checkbox">
+        <label class="label">Only View</label>
         <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
-        <label class="">Only View</label>
     </div>
     <br>
 
     <!-- Display Type -->
     <div class="inline field">
         <label class="">Display type:</label>
-        <select class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+        <select id="displayTypeDropdown" class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
             <option value="ShortText">Short Text</option>
             <option value="LongText">Long Text</option>
             <option value="MarkDown">Markdown</option>
@@ -94,11 +95,13 @@
         me.textNumOfCharType = 'Between';
         me.textMatchPatternType = '';
 
+        var displayTypeDropdown;
+
         me.on('mount', function () {
-//            $(me.root.querySelector('.selectpicker')).selectpicker();
-//            if (me.config.displayType) {
-//                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
-//            }
+            displayTypeDropdown = $(me.displayTypeDropdown).dropdown();
+            if (me.config.displayType) {
+                displayTypeDropdown('set selected', me.config.displayType);
+            }
         });
 
         me.clear = function () {
@@ -116,7 +119,7 @@
             me.config = Object.assign({type: 'Text', displayType: 'ShortText'}, config);
             // select current displayType
             if (me.config.displayType) {
-//                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+                displayTypeDropdown('set selected', me.config.displayType);
             }
             me.update();
         };

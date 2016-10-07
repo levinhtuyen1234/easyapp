@@ -4,21 +4,19 @@
         <input type="text" class="" id="textDisplayName" value="{config.displayName}" onkeyup="{bind('config.displayName')}">
     </div>
 
-    <div class="inline field">
-        <label>Is required</label>
-        <input type="text" class="" id="defaultValue" value="{config.defaultValue}" onkeyup="{bind('config.defaultValue')}">
-    </div>
     <!-- This field is required -->
-    <div class="inline field">
-        <input type="checkbox" onchange="{bind('config.required')}" checked="{config.required}">
-        <label>Is required</label>
+    <div class="inline field ui checkbox">
+        <label class="title">Is required</label>
+        <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
+    </div>
+    <br>
+    <!-- View Only Field -->
+    <div class="inline field ui checkbox">
+        <label class="label">Only View</label>
+        <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
     </div>
 
-    <!-- View Only Field -->
-    <div class="inline field">
-        <input type="checkbox" onchange="{bind('config.viewOnly')}" checked="{config.viewOnly}">
-        <label>Only View</label>
-    </div>
+    <!-- TODO model for children object -->
 
     <script>
         var me = this;

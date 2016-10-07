@@ -385,7 +385,6 @@
 //            console.log('form-field-object mount', $(me.root));
             var root = $(me.root);
             if (me.opts.parent === 'true') {
-                console.log('PARENT');
                 $(me.root.querySelector('.ui .accordion')).accordion();
             }
 
