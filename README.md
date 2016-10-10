@@ -1,3 +1,18 @@
+## EasyWeb based on three important trends:
+ 
+#####  NoSQL: Content Model (replaced for database) 
+  + content of website is defined by Content Model and saved in Json format files without database system
+  + content corresponding with layout
+
+##### Static Generator
+  + webpage and other assets is pre-built by EasyWeb
+  + monitor the change and generate real time
+
+##### Micro services:  dynamic API services
+  + stateless API services clarified by dynamic features of websites
+  + internal and 3rd party services
+  
+  
 ### Hướng dẫn sử dụng EasyWebBuilder để phát triên website
   - Xem hướng dẫn tại [đây](http://blog.easywebhub.com/how-to-use-easy-builder-to-build-websites/)
   - Mọi ý kiến đóng góp, bổ sung để cải thiện ứng dụng, hãy tương tác với chúng tôi theo 2 cách
@@ -12,35 +27,8 @@
 
 #### RUN
  - click vao ```RUN.cmd```
- 
-### Hướng dẫn Sử dụng cơ bản
 
-Nên chạy với chế độ debug ```DEBUB.cmd``` để dễ dàng refresh (Ctrl + R hoặc F5)
-
-#### 1. Login
- - Chỉ cần click vào ```Sign in for EasyWeb``` mà không cần account
-    (điều chỉnh sẽ bổ sung sau)
- 
-#### 2. Chọn 1 website
- - Tạo mới site, sau khi xong cần refresh app, chạy lại để thấy site mới tạo (sẽ FIX)
- - copy source vào thư mục ```/sites/``` refresh để hiển thị
-#### 3. Điều chỉnh nội dung
- - xem hình đính kèm
- ![](https://raw.githubusercontent.com/easywebhub/easyapp/master/documents/ewa-editor.png)
-
-#### 4. public lên github
- 1. tạo 1 repo mới hoàn toàn trên github
- - init account trên easyApp
- - Chạy Install, wath bằng tay,
- - Chạy Sync để lưu code trên github
- - Chạy Deploy để public code lên github.io
-
-#### 5. Điều chỉnh để hoạt động tốt trên github.io/xxx  url
-do github.io/repo-name nên cần điều chỉnh trong global.json cho phù hợp và build lại
-
- ![](https://raw.githubusercontent.com/easywebhub/easyapp/master/documents/ewa-github-url.png)
- 
- #### 6. Build ra application
+#### Build ra application
 pc build app cần chạy command này 1 lần, console quyền admin
 ```
 npm install -g electron-packager
