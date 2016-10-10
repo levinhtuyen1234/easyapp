@@ -18,7 +18,7 @@
     <!-- Display Type -->
     <div class="field">
         <label class="">Display type:</label>
-        <select class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+        <select id="displayTypeDropDown" class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
             <option value="Number">Number</option>
             <option value="DropDown">DropDown</option>
         </select>
@@ -34,9 +34,9 @@
         me.on('mount', function () {
             $(me.root.querySelector('ui dropdown')).dropdown();
 
-            $(me.root.querySelector('.selectpicker')).selectpicker();// select current displayType
+            $(me.displayTypeDropDown).dropdown();// select current displayType
             if (me.config.displayType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+                $(me.displayTypeDropDown).dropdown('set selected', me.config.displayType);
             }
         });
 
@@ -54,7 +54,7 @@
         me.loadConfig = function (config) {
             me.config = Object.assign({type: 'Number', displayType: 'Number'}, config);
             if (me.config.displayType) {
-                $(me.root.querySelector('.selectpicker')).selectpicker('val', me.config.displayType);
+                $(me.displayTypeDropDown).dropdown('set selected', me.config.displayType);
             }
             me.update();
         }

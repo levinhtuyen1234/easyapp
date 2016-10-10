@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="assets/css/octicons.min.css">
     <link rel="stylesheet" href="assets/css/editormd.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
-    <!--<link rel="stylesheet" href="assets/css/simplemde.min.css">-->
+    <link rel="stylesheet" href="assets/css/simplemde.min.css">
     <!--<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">-->
     <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="assets/css/calendar.css">
@@ -210,6 +210,7 @@
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
 //        window.curPage = riot.mount('home', {siteName: 'retest'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'pillar'})[0];
         // uncomment to enable login
 //        CheckAccountAndGoToLanding();
         window.curPage = riot.mount('landing')[0];
@@ -226,7 +227,7 @@
     });
 
     riot.event.on('logout', function (account) {
-        DB.get('account').then(doc => {
+        DB.get('account').then(function (doc) {
             DB.remove(doc).then(function () {
                 CheckAccountAndGoToLanding();
             });
