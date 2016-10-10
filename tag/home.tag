@@ -169,7 +169,7 @@
                     <!--</div>-->
                 </div>
 
-                <div class="ui-layout-south">
+                <div class="ui-layout-north">
                     <bottom-bar site-name={opts.siteName}></bottom-bar>
                 </div>
             </div>
@@ -322,7 +322,7 @@
                 center: {
                     size: '60%'
                 },
-                south:  {
+                north:  {
                     size:           '40%',
                     spacing_open:   1,
                     spacing_closed: 10,
@@ -372,8 +372,8 @@
 //            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
 
-            me.tags['config-view'].event.off('saveConfig', onSaveContentConfigView);
-            me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
+            me.tags['config-view'].off('saveConfig', onSaveContentConfigView);
+            me.tags['config-view'].off('saveConfig', onSaveMetaConfigView);
         }
 
         function ShowTab(name) {
@@ -567,7 +567,7 @@
                 me.openMetaConfigTab();
             };
 
-            me.tags['config-view'].event.on('saveConfig', onSaveMetaConfigView);
+            me.tags['config-view'].on('saveConfig', onSaveMetaConfigView);
         };
 
         me.openConfigTab = function () {
@@ -595,22 +595,23 @@
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
-            onSaveContentConfigView = function (configFieldName, newConfig) {
-                console.log('save content config');
-                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-                newConfig.name = configFieldName;
-                // ghi de` new setting vo contentConfig
-                for (var i = 0; i < contentConfig.length; i++) {
-                    if (contentConfig[i].name === configFieldName) {
-                        contentConfig[i] = newConfig;
-                        break;
-                    }
-                }
-                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
-                me.openContentConfigTab(); // refresh view
+            onSaveContentConfigView = function (newConfig) {
+                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(newConfig, null, 4));
+//                console.log('save content config');
+//                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
+//                newConfig.name = configFieldName;
+//                // ghi de` new setting vo contentConfig
+//                for (var i = 0; i < contentConfig.length; i++) {
+//                    if (contentConfig[i].name === configFieldName) {
+//                        contentConfig[i] = newConfig;
+//                        break;
+//                    }
+//                }
+//                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
+//                me.openContentConfigTab(); // refresh view
             };
 
-            me.tags['config-view'].event.on('saveConfig', onSaveContentConfigView);
+            me.tags['config-view'].on('saveConfig', onSaveContentConfigView);
         };
 
         me.openRawContentTab = function (options) {
@@ -748,11 +749,11 @@
                         buttons:  {
                             'cancel':  {
                                 label:     'Cancel',
-                                className: 'btn-default'
+                                className: 'ui button default'
                             },
                             'confirm': {
                                 label:     'Delete',
-                                className: 'btn-danger'
+                                className: 'ui button red'
                             }
                         },
                         callback: function (result) {

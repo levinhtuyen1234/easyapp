@@ -51,7 +51,7 @@
             return !(me.fieldName !== '' && me.fieldType !== '');
         };
 
-        me.contentTypes = [
+        var allContentType = [
             {
                 name: 'Text',
                 desc: 'Text desc'
@@ -81,6 +81,8 @@
                 desc: 'Array desc'
             }
         ];
+
+        me.contentTypes = allContentType;
 
         var activeFieldType = function (name) {
             $(me.root).find('.ui.card').removeClass('blue');
@@ -123,6 +125,7 @@
 
         me.show = function (parentIndex) {
             me.parentIndex = parentIndex;
+            activeFieldType('Text');
             modal.modal('show');
         };
 
@@ -130,8 +133,18 @@
             modal.modal('hide');
         };
 
+        me.hideFieldTypes = function (hiddenFields) {
+            var tmp = JSON.parse(JSON.stringify(allContentType));
+            me.contentTypes = tmp.filter(function (field) {
+                return !hiddenFields.some(function (name) {
+                    return name == field.name;
+                });
+            });
+            me.update();
+        };
+
         me.submit = function () {
-            console.log('submit', me.parentIndex, me.fieldName, me.fieldType);
+//            console.log('submit', me.parentIndex, me.fieldName, me.fieldType);
             riot.event.trigger('configView.addField', me.parentIndex, me.fieldName, me.fieldType);
         };
     </script>
@@ -144,13 +157,7 @@
             <div class="inline field">
                 <label>Field type</label>
                 <select id="fieldTypeDropDown" class="ui dropdown" onchange="{ShowFieldConfig}">
-                    <option value="Array">Array</option>
-                    <option value="Boolean">Boolean</option>
-                    <option value="DateTime">DateTime</option>
-                    <option value="Media">Media</option>
-                    <option value="Number">Number</option>
-                    <option value="Object">Object</option>
-                    <option value="Text">Text</option>
+                    <option each="{field in fieldTypes}" value="{field.value}">{field.name}</option>
                 </select>
             </div>
 
@@ -176,6 +183,19 @@
         var modal;
 
         me.curFieldType = '';
+
+        var AllFieldTypes = [
+            {name: 'Text', value: 'Text'},
+            {name: 'Number', value: 'Number'},
+            {name: 'Boolean', value: 'Boolean'},
+            {name: 'DateTime', value: 'DateTime'},
+            {name: 'Media', value: 'Media'},
+            {name: 'Object', value: 'Object'},
+            {name: 'Array', value: 'Array'},
+        ];
+
+        me.fieldTypes = AllFieldTypes;
+
         var formTags = {
             'Boolean':  me.tags['config-view-boolean'],
             'DateTime': me.tags['config-view-datetime'],
@@ -188,7 +208,7 @@
 
         me.saveConfig = function () {
             var contentType = me.fieldTypeDropDown.value;
-            console.log('click saveConfig', contentType);
+//            console.log('click saveConfig', contentType);
             var formTag = formTags[contentType];
             if (!formTag) return;
 
@@ -196,8 +216,8 @@
 
             Object.assign(me.curConfig, newConfig);
 
-            console.log('new config', newConfig, 'changed config', me.curConfig);
-            riot.event.trigger('saveConfig');
+//            console.log('new config', newConfig, 'changed config', me.curConfig);
+            me.parent.onFieldSettingChanged();
             modal.modal('hide');
         };
 
@@ -240,15 +260,27 @@
                     displayName: me.curConfig.displayName
                 });
             }
+            me.update();
+        };
+
+        me.hideFieldTypes = function (hiddenFields) {
+            var tmp = JSON.parse(JSON.stringify(AllFieldTypes));
+            me.fieldTypes = tmp.filter(function (field) {
+                return !hiddenFields.some(function (name) {
+                    return name == field.name;
+                });
+            });
+            console.log('me.fieldTypes', me.fieldTypes);
+            me.update();
         };
 
         me.show = function (config) {
-            console.log('config', config);
+//            console.log('config', config);
             me.curConfig = config;
 
             var fieldName = config.name;
             var fieldType = config.type;
-            console.log('showFieldSettingDialog', fieldName);
+//            console.log('showFieldSettingDialog', fieldName);
             me.modalTitle = 'Configuration for ' + fieldName + ', displayName: ' + config.displayName;
             me.curFieldType = fieldType;
             me.curConfigFieldName = fieldName;
@@ -257,12 +289,10 @@
 
             modal.modal('show');
 
-            //            me.selectorElm.selectpicker();
-            //            me.selectorElm.selectpicker('val', fieldType);
-            console.log(me.fieldTypeDropDown);
+//            console.log(me.fieldTypeDropDown);
             $(me.fieldTypeDropDown).dropdown().dropdown('set selected', fieldType);
-            console.log('set selected', fieldType);
-            console.log('fieldType', fieldType, 'formTags', formTags);
+//            console.log('set selected', fieldType);
+//            console.log('fieldType', fieldType, 'formTags', formTags);
             formTags[fieldType].clear(); // clear form setting
             formTags[fieldType].loadConfig(config);
             me.update();
@@ -275,10 +305,10 @@
 </field-setting-dialog>
 
 <config-view-object-node>
-    <div class="ui middle aligned divided list sortable" style="padding-left: 10px; padding-top: 3px;">
+    <div class="ui middle aligned divided list sortable" style="padding-left: 10px; padding-top: 5px;">
         <div each="{config, index in config.children}" class="item" style="cursor: pointer; border-top: 1px solid rgba(34,36,38,.15)" data-parent-index="{parentIndex}">
             <div class="right floated content">
-                <div if="{config.type === 'Object'}" class="ui icon mini button" onclick="{onShowAddFieldDialog}" data-index="{parent.parentIndex + '-' + index}">
+                <div if="{isArrayOrObject(config)}" class="ui icon mini button" onclick="{onShowAddFieldDialog}" data-index="{parent.parentIndex + '-' + index}">
                     <i class="add icon"></i>
                 </div>
                 <div class="ui icon mini button" onclick="{onShowFieldSetting}" data-index="{parentIndex + '-' + index}"><i class="setting icon"></i></div>
@@ -288,13 +318,17 @@
             <div class="content" style="padding-top: 6px">
                 <div class="header">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
             </div>
-            <div if="{config.type === 'Object'}" parent-index="{parent.parentIndex + '-' + index}" data-is="config-view-object-node" style="padding-left: 10px; padding-top: 3px;"></div>
+            <div if="{isArrayOrObject(config)}" parent-index="{parent.parentIndex + '-' + index}" data-is="config-view-object-node" style="padding-left: 10px; padding-top: 3px;"></div>
         </div>
     </div>
 
     <script>
         var me = this;
         me.parentIndex = me.opts.parentIndex;
+
+        me.isArrayOrObject = function (config) {
+            return config.type === 'Object' || config.type === 'Array';
+        };
 
         //        me.on('unmount', function () {
         //            var childTags = me.tags['config-view-object-node'];
@@ -348,7 +382,7 @@
         <div class="ui middle aligned divided list sortable">
             <div each="{config, index in contentConfig}" class="item" style="cursor: pointer;">
                 <div class="right floated content">
-                    <div if="{config.type === 'Object'}" class="ui icon mini button" onclick="{onShowAddFieldDialog}" data-index="{index.toString()}">
+                    <div if="{isArrayOrObject(config)}" class="ui icon mini button" onclick="{onShowAddFieldDialog}" data-index="{index.toString()}">
                         <i class="add icon"></i>
                     </div>
                     <div class="ui icon mini button" onclick="{onShowFieldSetting}" data-index="{index}"><i class="setting icon"></i></div>
@@ -358,7 +392,7 @@
                 <div class="content" style="padding-top: 6px">
                     <div class="header">{config.displayName} - {config.name} - <strong>{config.type}</strong></div>
                 </div>
-                <div if="{config.type === 'Object'}" data-is="config-view-object-node" config="{config}" parent-index="{index.toString()}" style="padding-left: 10px; padding-top: 3px;"></div>
+                <div if="{isArrayOrObject(config)}" data-is="config-view-object-node" config="{config}" parent-index="{index.toString()}" style="padding-left: 10px; padding-top: 3px;"></div>
             </div>
         </div>
     </div>
@@ -366,16 +400,15 @@
         var me = this;
         var _ = require('lodash');
         me.mixin('form');
-        me.event = riot.observable();
-        var $root = $(me.root);
         me.contentConfig = [];
         me.hiddenConfig = [];
-        me.curFieldType = '';
-        me.curConfig = {};
         me.originalFieldType = '';
 
-        var getParentConfig = function (index) {
-            console.log('getParentConfig', index);
+        me.isArrayOrObject = function (config) {
+            return config.type === 'Object' || config.type === 'Array';
+        };
+
+        var getParentConfigChildren = function (index) {
             if (typeof(index == 'number'))
                 index = index.toString();
             if (index == '') return me.contentConfig;
@@ -389,28 +422,46 @@
 
         var getConfig = function (fieldIndex) {
             var parts = fieldIndex.split('-');
+            if (parts.length == 1) {
+                return me.contentConfig[fieldIndex];
+            }
+
             fieldIndex = parts.pop();
             var parentIndex = parts.join('-');
 
-            var configs = getParentConfig(parentIndex);
+            var configs = getParentConfigChildren(parentIndex);
             return configs[fieldIndex];
+        };
+
+        var getParentConfig = function (fieldIndex) {
+            var parts = fieldIndex.split('-');
+            if (parts.length == 1) {
+                return me.contentConfig[fieldIndex];
+            }
+
+            parts.pop();
+
+            var parentIndex = parts.join('-');
+//            console.log('getParentConfig parentIndex', parentIndex);
+            return getConfig(parentIndex);
         };
 
         var changeRowIndex = function (parentIndex, from, to) {
 //            console.log('me.curConfig', me.curConfig);
 //            console.log('changeRowIndex', parentIndex, from, to);
-            var configs = getParentConfig(parentIndex);
+            var configs = getParentConfigChildren(parentIndex);
             var tmp = configs[to];
             configs[to] = configs[from];
             configs[from] = tmp;
+            me.trigger('saveConfig', me.contentConfig);
             refreshConfig();
         };
 
         var addField = function (parentIndex, fieldName, fieldType) {
-            console.log('addField', parent, fieldType, fieldName);
-            var configs = getParentConfig(parentIndex);
+//            console.log('addField', parent, fieldType, fieldName);
+            var configs = getParentConfigChildren(parentIndex);
             var fieldExists = _.some(configs, {'name': fieldName});
-            console.log('configs', configs, {'name': fieldName}, 'fieldExists', fieldExists);
+//            console.log('configs', configs, {'name': fieldName}, 'fieldExists', fieldExists);
             if (fieldExists) {
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldFailed', 'field name "' + fieldName + '" already exists');
             } else {
@@ -418,33 +469,78 @@
                 metaData[fieldName] = fieldType;
                 var config = BackEnd.genSimpleContentConfig(metaData);
                 configs.push(config[0]);
-                console.log('new config object', config);
+//                console.log('new config object', config);
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldSuccess');
+                me.trigger('saveConfig', me.contentConfig);
                 refreshConfig();
             }
         };
 
         var showAddFieldDialog = function (fieldIndex) {
-            console.log('show add field dialog', fieldIndex);
+//            console.log('show add field dialog', fieldIndex);
             me.tags['add-config-field-dialog'].reset();
+
+            // hide Array and Object field type if fieldConfig type is Array
+            var config = getConfig(fieldIndex);
+            if (config && config.type === 'Array') {
+//                console.log('hide array and object field');
+                me.tags['add-config-field-dialog'].hideFieldTypes(['Array', 'Object']);
+            } else {
+                me.tags['add-config-field-dialog'].hideFieldTypes([]);
+            }
+
             me.tags['add-config-field-dialog'].show(fieldIndex);
         };
 
         var showFieldSettingDialog = function (fieldIndex) {
-            console.log('show field setting dialog', fieldIndex);
+//            console.log('show field setting dialog', fieldIndex);
+
+            var parentConfig = getParentConfig(fieldIndex);
             var config = getConfig(fieldIndex);
+            // if parent type is Array hide Array and Object field type
+//            console.log('showFieldSettingDialog parentConfig', parentConfig);
+            if (parentConfig.type === 'Array') {
+//                console.log('showFieldSettingDialog hide FIELDS');
+                me.tags['field-setting-dialog'].hideFieldTypes(['Array', 'Object']);
+            } else {
+                me.tags['field-setting-dialog'].hideFieldTypes([]);
+            }
             me.tags['field-setting-dialog'].show(config);
         };
 
         var removeField = function (fieldIndex) {
-            console.log('remove field', fieldIndex);
-            var parts = fieldIndex.split('-');
-            fieldIndex = parts.pop();
-            var parentIndex = parts.join('-');
+//            console.log('remove field', fieldIndex);
+            var config = getConfig(fieldIndex);
+            bootbox.confirm({
+                title:    'Delete',
+                message:  `Are you sure you want to delete field "${config.name}" ?`,
+                buttons:  {
+                    'cancel':  {
+                        label:     'Cancel',
+                        className: 'ui button default'
+                    },
+                    'confirm': {
+                        label:     'Delete',
+                        className: 'ui button red'
+                    }
+                },
+                callback: function (result) {
+                    if (!result) return;
+                    var parts = fieldIndex.split('-');
+                    fieldIndex = parts.pop();
+                    var parentIndex = parts.join('-');
 
-            var configs = getParentConfig(parentIndex);
-            console.log('removeField', parentIndex, fieldIndex);
-            configs.splice(fieldIndex, 1);
+                    var configs = getParentConfigChildren(parentIndex);
+//            console.log('removeField', parentIndex, fieldIndex);
+                    configs.splice(fieldIndex, 1);
+                    me.trigger('saveConfig', me.contentConfig);
+                    refreshConfig();
+                }
+            });
+        };
+
+        me.onFieldSettingChanged = function() {
+            me.trigger('saveConfig', me.contentConfig);
             refreshConfig();
         };
 
@@ -502,7 +598,7 @@
         };
 
         me.loadContentConfig = function (contentConfig) {
-            console.log('[config-view] loadContentConfig', contentConfig);
+//            console.log('[config-view] loadContentConfig', contentConfig);
             var hiddenFieldNames = ['slug', 'layout'];
             me.hiddenConfig = [];
             me.contentConfig = contentConfig.filter(function (config) {
@@ -529,7 +625,5 @@
         me.getContentConfig = function () {
             return me.hiddenConfig.concat(me.contentConfig);
         };
-
-
     </script>
 </config-view>

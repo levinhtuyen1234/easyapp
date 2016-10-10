@@ -19,7 +19,7 @@
     <!-- Display Type -->
     <div class="inline field">
         <label class="">Display type:</label>
-        <select id="displayTypeDropdown" class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
+        <select id="displayTypeDropDown" class="ui dropdown" onchange="{edit('config.displayType'); tags['config-view-prop-predefined-value'].update()}">
             <option value="ShortText">Short Text</option>
             <option value="LongText">Long Text</option>
             <option value="MarkDown">Markdown</option>
@@ -95,12 +95,13 @@
         me.textNumOfCharType = 'Between';
         me.textMatchPatternType = '';
 
-        var displayTypeDropdown;
+        var dropdown;
 
         me.on('mount', function () {
-            displayTypeDropdown = $(me.displayTypeDropdown).dropdown();
+            dropdown = $(me.displayTypeDropDown).dropdown();
+            console.log('displayTypeDropDown', dropdown);
             if (me.config.displayType) {
-                displayTypeDropdown('set selected', me.config.displayType);
+                dropdown.dropdown('set selected', me.config.displayType);
             }
         });
 
@@ -119,7 +120,7 @@
             me.config = Object.assign({type: 'Text', displayType: 'ShortText'}, config);
             // select current displayType
             if (me.config.displayType) {
-                displayTypeDropdown('set selected', me.config.displayType);
+                dropdown.dropdown('set selected', me.config.displayType);
             }
             me.update();
         };

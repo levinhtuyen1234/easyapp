@@ -58,10 +58,20 @@
 
 html, body {
     height: 100%;
-    font-family: Roboto, Arial, sans-serif;
+    font-family: 'BlinkMacSystemFont', 'Lucida Grande', 'Segoe UI', Ubuntu, Cantarell, sans-serif;
     font-size: 14px;
-    margin: 0;
+    line-height: 1.5;
+    overflow: hidden; /* Prevents rubber-band scrolling of the whole "page" */
+    background-color: #fff; /* To cover OSes with no default background color */
 }
+
+html {
+    font-family: sans-serif;
+    -webkit-user-select: none; /* disable selection */
+    -webkit-user-drag: none; /* disable dragging */
+    cursor: default; /* use default cursor */
+}
+
 
 /*.CodeMirror-line {*/
 /*font-family: Consolas, monospace !important;*/
