@@ -843,9 +843,10 @@
                     {name: 'All Media Files', extensions: ['*']}
                 ]
             }, function (filePaths) {
+                console.log('onChooseMediaFile callback');
                 if (!filePaths || filePaths.length != 1) return;
                 var filePath = filePaths[0];
-                BackEnd.addMediaFile(me.siteName, filePaths[0], function (error, relativePath) {
+                BackEnd.addMediaFile(me.siteName, filePath, function (error, relativePath) {
                     if (error) {
                         console.log('addMediaFile', error);
                     } else {

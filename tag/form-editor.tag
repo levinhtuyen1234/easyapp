@@ -193,7 +193,7 @@
 <form-field-number class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="text-align: left;">{config.displayName}
     </label>
-    <div class="fourteen wide field">
+    <div class="fourteen wide field" style="padding: 0">
         <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
 
         <div class="ui fluid selection dropdown" if="{config.displayType === 'DropDown'}" style="width: 100%">
@@ -391,14 +391,32 @@
         me.on('mount', function () {
 //            console.log('form-field-object mount', $(me.root));
             var root = $(me.root);
-            if (me.opts.parent === 'true') {
-                $(me.root.querySelector('.ui .accordion')).accordion();
-            }
-
             content = me.root.querySelector('.accordion-content');
             genForm(me.value, me.config.children);
-        })
+            if (me.opts.parent === 'true') {
+                var accordion = $(me.root.querySelector('.ui .accordion')).accordion();
 
+
+            }
+            if (me.opts.arrayObject == true) {
+                console.log("$(me.root.find('div.title'))", $(me.root).find('div.title'));
+                $(me.root).find('div.title').hide();
+            }
+        });
+
+        me.getValue = function () {
+            var ret = {};
+            me.formfields.forEach(function (field) {
+                ret[field.config.name] = (field.getValue());
+            });
+            return ret;
+        };
+
+        me.setValue = function (value) {
+//            editor.setValue(value);
+//            me.update();
+            // not needed
+        };
     </script>
 </form-field-object>
 
@@ -424,39 +442,84 @@
         me.config = opts.config || {};
         me.value = opts.value || '';
 
+        var content = null;
+        var formFields = [];
+
+        var genForm = function (metaData, contentConfig) {
+            content.innerHTML = '';
+
+            if (metaData == '') metaData = [];
+            if (contentConfig == undefined || !contentConfig.length || contentConfig.length == 0) {
+                // no array model -> no form render
+                return;
+            }
+
+            var config = {children: contentConfig};
+            metaData.forEach(function (data) {
+
+                var div = document.createElement('div');
+                var tagTypeName = 'form-field-object';
+                div.setAttribute('data-is', tagTypeName);
+                div.setAttribute('site-name', me.opts.siteName);
+                content.appendChild(div);
+                var tag = riot.mount(div, {
+                    config: config,
+                    value:  data,
+                    arrayObject: true
+                })[0];
+                formFields.push(tag);
+            });
+        };
+
         me.on('mount', function () {
             if (!me.config.model) {
                 $(me.addBtn).popup({
                     on: 'click'
                 });
             }
+            content = me.root.querySelector('.content');
+            console.log('ARRAY MOUNT', me.value, me.config.children);
+            genForm(me.value, me.config.children);
+
+            var accordion = $(me.root).accordion();
+
+            for (var i = 1; i <= me.value.length; i++) {
+                accordion.accordion('open', i);
+            }
         });
 
         me.addChild = function () {
             if (me.config.model) {
+                // TODO form add new object
                 return;
             }
         };
 
         me.getValue = function () {
-//            return JSON.parse(editor.getValue());
-            return '';
+            var ret = [];
+            me.formfields.forEach(function (field) {
+                ret.push(field.getValue());
+            });
+            return ret;
         };
 
         me.setValue = function (value) {
-//            editor.setValue(value);
-            me.update();
+            // not needed
         };
     </script>
 </form-field-array>
 
-<form-field-media class="field">
-    <label for="form-{config.name}" class="" style="text-align: left;">{config.displayName}
+<form-field-media class="inline fields">
+    <label for="form-{config.name}" class="two wide field" style="text-align: left;">{config.displayName}
     </label>
-    <input type="text" class="form-control" id="form-{config.name}" readonly="{config.viewOnly}">
-    <label class="input-group-btn">
-        <span class="ui button default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse local</span>
-    </label>
+    <div class="fourteen wide field" style="padding: 0">
+        <div class="ui action input">
+            <input type="text" class="" id="form-{config.name}" readonly="{config.viewOnly}">
+            <button class="ui button default" onclick="{showChooseFile}" disabled="{config.viewOnly}">Browse</button>
+            </label>
+        </div>
+    </div>
+
     <script>
         var dialog = require('electron').remote.dialog;
         var fs = require('fs');
@@ -477,7 +540,7 @@
                 me['form-' + me.config.name].value = relativePath;
                 me.update();
 
-                console.log('chooseMediaFile cb', 'me.value', me.value, relativePath);
+//                console.log('chooseMediaFile cb', 'me.value', me.value, relativePath);
             });
         };
 
@@ -492,8 +555,7 @@
     </script>
 </form-field-media>
 
-<form-editor id="{opts.id}" class="ui form" style="" onkeypress="{checkSave}">
-
+<form-editor id="{opts.id}" class="ui form" onkeypress="{checkSave}">
     <script>
         var me = this;
         me.form = null;
@@ -557,16 +619,24 @@
                     tagTypeName = 'form-field-tag-text';
                 }
 
-                if (tagTypeName === 'form-field-object')
+                if (tagTypeName === 'form-field-array') {
+                    console.log('TYPE ARRAY', 'metaValue', metaValue, 'fieldConfig', fieldConfig);
+                }
+
+                var mountData = {
+                    config: fieldConfig,
+                    value:  metaValue
+                };
+
+                if (tagTypeName === 'form-field-object') {
                     div.setAttribute('parent', 'true');
+                }
 
                 div.setAttribute('data-is', tagTypeName);
                 div.setAttribute('site-name', me.opts.siteName);
                 me.form.appendChild(div);
-                var tag = riot.mount(div, {
-                    config: fieldConfig,
-                    value:  metaValue
-                })[0];
+
+                var tag = riot.mount(div, mountData)[0];
                 me.formfields.push(tag);
             }
         }
