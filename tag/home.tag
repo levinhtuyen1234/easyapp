@@ -377,7 +377,7 @@
         }
 
         function ShowTab(name) {
-            console.log('ShowTab', name);
+//            console.log('ShowTab', name);
             me.curTab = name;
             me.tabBar.tab('change tab', name);
 //            var elm = $(me.root).find('a[href="#' + name + '"]');

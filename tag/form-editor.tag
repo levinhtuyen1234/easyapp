@@ -1,7 +1,7 @@
 <form-field-category-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
 
-    <div class="ui menu fluid">
+    <div class="ui menu fluid" style="margin-left: 10px;">
         <div class="ui fluid selection dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
@@ -50,7 +50,7 @@
 
 <form-field-tag-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
-    <div class="ui menu fluid">
+    <div class="ui menu fluid" style="margin-left: 10px;">
         <div class="ui fluid selection multiple dropdown">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
@@ -103,7 +103,7 @@
     </script>
 </form-field-tag-text>
 
-<form-field-text class=" inline field">
+<form-field-text class="inline fields">
     <style>
         .fieldMarkDown {
             resize: vertical;
@@ -111,20 +111,22 @@
         }
     </style>
     <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field" style="text-align: left;">{config.displayName}</label>
-    <input if="{config.displayType === 'ShortText'}" class="eight wide field" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
-    <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
+    <div class="ui fourteen wide field" style="padding: 0">
+        <input if="{config.displayType === 'ShortText'}" class="" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+        <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
 
-    <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
+        <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
 
-    <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li each="{config.predefinedData}">
-                <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-            </li>
-        </ul>
+        <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li each="{config.predefinedData}">
+                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         var me = this;
@@ -187,20 +189,22 @@
     </script>
 </form-field-text>
 
-<form-field-number class="field">
-    <label for="form-{config.name}-{config.displayType}" class="" style="text-align: left;">{config.displayName}
+<form-field-number class="inline fields">
+    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="text-align: left;">{config.displayName}
     </label>
-    <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+    <div class="fourteen wide field">
+        <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
 
-    <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-        <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li each="{config.predefinedData}">
-                <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-            </li>
-        </ul>
+        <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
+            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li each="{config.predefinedData}">
+                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     <script>
         var me = this;
@@ -239,8 +243,8 @@
     </script>
 </form-field-number>
 
-<form-field-boolean class="inline field">
-    <label style="vertical-align: middle; margin-bottom: 12px;">{config.displayName}</label>
+<form-field-boolean class="inline fields">
+    <label style="vertical-align: middle; margin-bottom: 12px;" class="two wide field">{config.displayName}</label>
     <div class="ui toggle checkbox">
         <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit('value')}" disabled="{config.viewOnly}">
     </div>
@@ -265,12 +269,14 @@
     </script>
 </form-field-boolean>
 
-<form-field-datetime class="inline fields">
-    <label for="form-{config.name}" class="two wide field">{config.displayName}</label>
-    <div class="ui calendar six wide field" ref="validFromCalendar">
-        <div class="ui input left icon">
-            <i class="calendar icon"></i>
-            <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+<form-field-datetime>
+    <div class="inline fields">
+        <label for="form-{config.name}" class="two wide field">{config.displayName}</label>
+        <div class="ui calendar fourteen wide field" ref="validFromCalendar" style="padding:0">
+            <div class="ui input left icon">
+                <i class="calendar icon"></i>
+                <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+            </div>
         </div>
     </div>
 
@@ -297,7 +303,7 @@
                 calendarType = 'datetime';
             }
 
-            console.log('calendarType', calendarType);
+//            console.log('calendarType', calendarType);
 
             $(me.root.querySelector('.ui.calendar')).calendar({
                 type:     calendarType,

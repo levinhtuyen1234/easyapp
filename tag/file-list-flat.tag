@@ -5,10 +5,10 @@
     </div>
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-content="{hideExt(name)}">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
                 <i class="{getFileIcon(name, path)}"></i>
-                <div class="content">
-                    <a class="truncate" data-path="{path}">{getContentType(path)}{hideExt(name)}</a>
+                <div class="content" data-content="{hideExt(name)}">
+                    <a class="truncate">{getContentType(path)}{hideExt(name)}</a>
                 </div>
             </div>
         </div>
@@ -30,6 +30,14 @@
 
         .octicon + div.content {
             display: table-cell;
+        }
+
+        .item {
+            cursor: pointer;
+        }
+
+        .item:hover {
+            background: #F9FAFB;
         }
 
     </style>
@@ -225,10 +233,12 @@
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.item').removeClass('active');
-            $(e.currentTarget).addClass('active');
+//            console.log('e', e);
+//            console.log("$(e.srcElement).closest('.item')", $(e.srcElement).closest('.item'));
+            $(e.srcElement).closest('.item').addClass('active');
 
             riot.event.trigger('fileActivated', me.opts.type, filePath);
-            console.log('fileListFlat open file', filePath);
+//            console.log('fileListFlat open file', filePath);
             me.trigger('openFile', filePath);
         };
 
