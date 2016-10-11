@@ -828,7 +828,14 @@
         };
 
         var onWatchSuccess = function () {
-            me.openExternalReviewBtn.disabled = false;
+            if (me.openExternalReviewBtn === undefined)
+            {
+                
+            }else
+            {
+                me.openExternalReviewBtn.disabled = false;
+            }
+            
         };
 
         var onWatchFailed = function () {
