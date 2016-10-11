@@ -453,7 +453,7 @@
             var tmp = configs[to];
             configs[to] = configs[from];
             configs[from] = tmp;
-            me.trigger('saveConfig', me.contentConfig);
+            me.trigger('saveConfig', me.getContentConfig());
             refreshConfig();
         };
 
@@ -471,7 +471,7 @@
                 configs.push(config[0]);
 //                console.log('new config object', config);
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldSuccess');
-                me.trigger('saveConfig', me.contentConfig);
+                me.trigger('saveConfig', me.getContentConfig());
                 refreshConfig();
             }
         };
@@ -533,14 +533,14 @@
                     var configs = getParentConfigChildren(parentIndex);
 //            console.log('removeField', parentIndex, fieldIndex);
                     configs.splice(fieldIndex, 1);
-                    me.trigger('saveConfig', me.contentConfig);
+                    me.trigger('saveConfig', me.getContentConfig());
                     refreshConfig();
                 }
             });
         };
 
         me.onFieldSettingChanged = function() {
-            me.trigger('saveConfig', me.contentConfig);
+            me.trigger('saveConfig', me.getContentConfig());
             refreshConfig();
         };
 
@@ -599,7 +599,7 @@
 
         me.loadContentConfig = function (contentConfig) {
 //            console.log('[config-view] loadContentConfig', contentConfig);
-            var hiddenFieldNames = ['slug', 'layout'];
+            var hiddenFieldNames = ['slug', 'layout', 'category', 'tag'];
             me.hiddenConfig = [];
             me.contentConfig = contentConfig.filter(function (config) {
                 if (hiddenFieldNames.indexOf(config.name) !== -1) {
@@ -623,6 +623,7 @@
         //        };
 
         me.getContentConfig = function () {
+            // merge cac hidden field vao
             return me.hiddenConfig.concat(me.contentConfig);
         };
     </script>

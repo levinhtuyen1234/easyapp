@@ -200,6 +200,7 @@ function genSimpleContentConfig(metaData) {
                             name:        key,
                             displayName: key,
                             type:        'Text',
+                            displayType: 'ShortText',
                             validations: [],
                             viewOnly:    key === 'layout' || key === 'slug',
                             required:    false
@@ -211,6 +212,7 @@ function genSimpleContentConfig(metaData) {
                     name:        key,
                     displayName: key,
                     type:        'Number',
+                    displayType: 'Number',
                     validations: [],
                     required:    false
                 });
@@ -306,7 +308,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
         // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
         // TODO smarter merge
-        var newConfig = _.merge(existsConfig, contentConfig);
+        var newConfig = _.merge(contentConfig, existsConfig);
         // // merge property from contentConfig -> existsConfig
         // var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
         //     return existsConfig.filter(function (curB) {
@@ -329,7 +331,6 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
 function readFile(site, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, site, filePath)).toString();
 }
-
 
 function getSiteList() {
     var ret = Fs.readdirSync(sitesRoot);
@@ -644,9 +645,9 @@ function getMetaFile(siteName, filePath) {
 }
 
 /*
-* 'content/metadata/category/document.json' ->  category.document.meta.json
-* 'content/metadata/footer.json' -> footer.meta.json
-* */
+ * 'content/metadata/category/document.json' ->  category.document.meta.json
+ * 'content/metadata/footer.json' -> footer.meta.json
+ * */
 function genMetaConfigFileName(contentMetaDataPath) {
     var parts = contentMetaDataPath.split('/');
     parts.shift(); // remove 'content'
@@ -666,7 +667,7 @@ function getMetaConfigFile(siteName, metaFilePath) {
         // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
         // TODO smarter merge
-        var newConfig = _.merge(existsConfig, metaConfig);
+        var newConfig = _.merge(metaConfig, existsConfig);
         // merge property from metaConfig -> existsConfig
         // var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
         //     return existsConfig.filter(function (curB) {

@@ -1,8 +1,8 @@
 <form-field-category-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
 
-    <div class="ui menu fluid" style="margin-left: 10px;">
-        <div class="ui fluid selection dropdown">
+    <div class="ui fourteen wide field" style="padding: 0">
+        <div class="ui fluid selection dropdown" style="width: 100%">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
             <div class="default text">Choose Category</div>
@@ -31,7 +31,6 @@
 
             $(me.root.querySelector('.ui.dropdown')).dropdown({
                 onChange: function (value, text) {
-                    console.log('on change', value, text);
                     me.value = value;
                 }
             }).dropdown('set selected', me.value);
@@ -50,8 +49,8 @@
 
 <form-field-tag-text class="inline fields">
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
-    <div class="ui menu fluid" style="margin-left: 10px;">
-        <div class="ui fluid selection multiple dropdown">
+    <div class="ui fourteen wide field" style="padding: 0">
+        <div class="ui fluid selection multiple dropdown" style="width: 100%">
             <input name="gender" type="hidden">
             <i class="dropdown icon"></i>
             <div class="default text">Choose some tags</div>
@@ -107,7 +106,7 @@
     <style>
         .fieldMarkDown {
             resize: vertical;
-            min-height: 300px !important;
+            min-height: 100px !important;
         }
     </style>
     <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field" style="text-align: left;">{config.displayName}</label>
@@ -115,17 +114,15 @@
         <input if="{config.displayType === 'ShortText'}" class="" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
         <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
 
-        <markdown-editor if="{config.displayType === 'MarkDown'}" height="300px" viewOnly="{config.viewOnly}"></markdown-editor>
+        <markdown-editor if="{config.displayType === 'MarkDown'}" status="false" height="300px" style="width:100%" viewOnly="{config.viewOnly}"></markdown-editor>
 
-        <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li each="{config.predefinedData}">
-                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-                </li>
-            </ul>
+        <div class="ui fluid selection dropdown" if="{config.displayType === 'DropDown'}" style="width: 100%">
+            <input name="" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Choose {config.displayName}</div>
+            <div class="menu">
+                <div class="item" each="{data in config.predefinedData}" data-value="{data.value}">{data.name}</div>
+            </div>
         </div>
     </div>
     <script>
@@ -137,37 +134,41 @@
         me.value = opts.value || '';
         me.selectedName = '';
 
-        me.select = function (name, value) {
-            me.value = value;
-            me.selectedName = name;
-            me.update();
-        };
 
         me.on('mount', function () {
             setTimeout(function () {
                 me.setValue(me.value);
                 me['form-' + me.config.name + '-ShortText'].value = me.value;
                 // neu displayType dropdown tu` value -> name selected
-                // TODO tach rieng ra tag rieng neu co hon 3 tag su dung dropdown
                 if (me.config.displayType === 'DropDown' && me.config.predefinedData) {
-                    me.config.predefinedData.forEach(function (data) {
-                        if (data.value == me.value) {
-                            me.selectedName = data.name;
-                            me.update();
+                    var dropdown = $(me.root).find('.ui.dropdown').dropdown({
+                        onChange: function (value, text) {
+                            me.value = value;
+                            me.selectedName = text;
                         }
                     });
+                    if (me.value)
+                        dropdown.dropdown('set selected', me.value);
+
+//                    me.config.predefinedData.forEach(function (data) {
+//                        if (data.value == me.value) {
+//                            me.selectedName = data.name;
+//                            me.update();
+//                        }
+//                    });
                 }
 
-//                if (me.config.displayType === 'MarkDown') {
-//                    $(me.root.querySelectorAll('.CodeMirror-scroll')).addClass('fieldMarkDown');
-//                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
-//                        handles: 's'
-//                    });
+                if (me.config.displayType === 'MarkDown') {
+                    console.log('set class fieldMarkDown');
+                    $(me.root.querySelectorAll('.CodeMirror-scroll, .CodeMirror-wrap')).addClass('fieldMarkDown');
+                    $(me.root.querySelectorAll('.CodeMirror')).resizable({
+                        handles: 's'
+                    });
 //                    $(me.label).removeClass('col-sm-3');
 //                    $(me.content).removeClass('col-sm-9');
 //                    $(me.label).addClass('col-sm-12');
 //                    $(me.content).addClass('col-sm-12');
-//                }
+                }
             }, 1);
         });
 
@@ -195,15 +196,13 @@
     <div class="fourteen wide field">
         <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
 
-        <div class="dropdown" if="{config.displayType === 'DropDown'}" id="form-{config.name}-DropDown">
-            <button type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {selectedName == '' ? 'Dropdown': selectedName}<span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-                <li each="{config.predefinedData}">
-                    <a href="#" onclick="{select.bind(this, name, value)}">{name}</a>
-                </li>
-            </ul>
+        <div class="ui fluid selection dropdown" if="{config.displayType === 'DropDown'}" style="width: 100%">
+            <input name="" type="hidden">
+            <i class="dropdown icon"></i>
+            <div class="default text">Choose {config.displayName}</div>
+            <div class="menu">
+                <div class="item" each="{data in config.predefinedData}" data-value="{data.value}">{data.name}</div>
+            </div>
         </div>
     </div>
     <script>
@@ -217,12 +216,14 @@
             me['form-' + me.config.name + '-Number'].value = me.value;
             // neu displayType dropdown tu` value -> name selected
             if (me.config.displayType === 'DropDown' && me.config.predefinedData) {
-                me.config.predefinedData.forEach(function (data) {
-                    if (data.value == me.value) {
-                        me.selectedName = data.name;
-                        me.update();
+                var dropdown = $(me.root).find('.ui.dropdown').dropdown({
+                    onChange: function (value, text) {
+                        me.value = value;
+                        me.selectedName = text;
                     }
                 });
+                if (me.value)
+                    dropdown.dropdown('set selected', me.value);
             }
         });
 

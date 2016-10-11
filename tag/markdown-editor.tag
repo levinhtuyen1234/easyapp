@@ -8,18 +8,19 @@
         me.value = me.opts.value || '';
         me.editor = null;
         me.viewOnly = me.opts.viewonly;
-        var loaded = false;
-        var height = me.opts.height || '480px';
-//        var toolbarIcons = me.opts.toolbarIcons || (function () {
-//                    return [
-//                        "undo", "redo", "|",
-//                        "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
-//                        "h1", "h2", "h3", "h4", "h5", "h6", "|",
-//                        "list-ul", "list-ol", "hr", "|",
-//                        "link", "reference-link", "image", "code", "table", "datetime", "html-entities", "pagebreak", "|",
-//                        "watch", "preview"
-//                    ];
-//                });
+
+        var status = me.opts.status ? !(me.opts.status == 'false') : true;
+        var height = me.opts.height || '300px';
+        //        var toolbarIcons = me.opts.toolbarIcons || (function () {
+        //                    return [
+        //                        "undo", "redo", "|",
+        //                        "bold", "del", "italic", "quote", "ucwords", "uppercase", "lowercase", "|",
+        //                        "h1", "h2", "h3", "h4", "h5", "h6", "|",
+        //                        "list-ul", "list-ol", "hr", "|",
+        //                        "link", "reference-link", "image", "code", "table", "datetime", "html-entities", "pagebreak", "|",
+        //                        "watch", "preview"
+        //                    ];
+        //                });
 
         var id = Math.random().toString(36).substr(2, 9);
 
@@ -38,6 +39,7 @@
                     table:          ["", "\n\n| Column 1 | Column 2 | Column 3 |\n| -------- | -------- | -------- |\n| Text     | Text      | Text     |\n\n"]
                 }
             };
+            if (!status) config.status = false;
 
             me.editor = new SimpleMDE(config);
 //            me.editor = editormd(id, {
@@ -69,26 +71,27 @@
                 return false;
             });
 
-//            if (me.viewOnly) {
-//                setTimeout(function () {
-//                    me.editor.togglePreview();
-//                    me.root.querySelector('.editor-toolbar').style.display = 'none';
-//                }, 1);
-//            }
+            if (me.viewOnly) {
+                setTimeout(function () {
+                    me.editor.togglePreview();
+                    me.root.querySelector('.editor-toolbar').style.display = 'none';
+                }, 1);
+            }
         });
 
         me.getValue = function () {
-            return me.editor.getMarkdown();
+//            return me.editor.getMarkdown();
+            return me.editor.value();
         };
 
         me.setValue = function (val) {
             if (me.editor) {
-                if (loaded) {
-                    console.log('setValue val', val);
-                    me.editor.setValue(val);
-                } else {
-                    me.value = val;
-                }
+//                if (loaded) {
+//                console.log('setValue val', val);
+                me.editor.value(val);
+//                } else {
+//                    me.value = val;
+//                }
             }
         };
     </script>

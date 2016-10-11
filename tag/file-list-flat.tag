@@ -5,9 +5,9 @@
     </div>
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}">
                 <i class="{getFileIcon(name, path)}"></i>
-                <div class="content" data-content="{hideExt(name)}">
+                <div class="content">
                     <a class="truncate">{getContentType(path)}{hideExt(name)}</a>
                 </div>
             </div>
