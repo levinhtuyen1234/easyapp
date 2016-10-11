@@ -99,7 +99,7 @@
 
         me.on('mount', function () {
             dropdown = $(me.displayTypeDropDown).dropdown();
-            console.log('displayTypeDropDown', dropdown);
+//            console.log('displayTypeDropDown', dropdown);
             if (me.config.displayType) {
                 dropdown.dropdown('set selected', me.config.displayType);
             }

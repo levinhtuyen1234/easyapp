@@ -72,7 +72,6 @@ html {
     cursor: default; /* use default cursor */
 }
 
-
 /*.CodeMirror-line {*/
 /*font-family: Consolas, monospace !important;*/
 /*}*/
@@ -277,4 +276,9 @@ textarea {
 div.CodeMirrorForm {
     border-radius: .28571429rem;
     border: 1px solid rgba(34, 36, 38, .15);
+}
+
+/* fix popup hide behind splitter */
+.ui.popup {
+    z-index: 99999 !important;
 }

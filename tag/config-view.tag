@@ -270,7 +270,7 @@
                     return name == field.name;
                 });
             });
-            console.log('me.fieldTypes', me.fieldTypes);
+//            console.log('me.fieldTypes', me.fieldTypes);
             me.update();
         };
 

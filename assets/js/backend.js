@@ -305,6 +305,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     if (fileExists(contentConfigFullPath)) {
         // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
+        // TODO smarter merge
         var newConfig = _.merge(existsConfig, contentConfig);
         // // merge property from contentConfig -> existsConfig
         // var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
@@ -642,29 +643,43 @@ function getMetaFile(siteName, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, siteName, filePath)).toString();
 }
 
+/*
+* 'content/metadata/category/document.json' ->  category.document.meta.json
+* 'content/metadata/footer.json' -> footer.meta.json
+* */
+function genMetaConfigFileName(contentMetaDataPath) {
+    var parts = contentMetaDataPath.split('/');
+    parts.shift(); // remove 'content'
+    parts.shift(); // remove 'metadata'
+    return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta.json';
+}
+
 function getMetaConfigFile(siteName, metaFilePath) {
+    console.log('getMetaConfigFile', metaFilePath);
     var metaFileContent = readFile(siteName, metaFilePath);
     var metaData = JSON.parse(metaFileContent);
-    var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
-    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
+    var name = genMetaConfigFileName(metaFilePath);
+    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
     var metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
         // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
+        // TODO smarter merge
+        var newConfig = _.merge(existsConfig, metaConfig);
         // merge property from metaConfig -> existsConfig
-        var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
-            return existsConfig.filter(function (curB) {
-                    return cur.name === curB.name;
-                }).length === 0;
-        });
+        // var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
+        //     return existsConfig.filter(function (curB) {
+        //             return cur.name === curB.name;
+        //         }).length === 0;
+        // });
 
         // update config file neu co field mới
-        if (fieldsOnlyInCurMetaFile.length > 0) {
-            existsConfig = existsConfig.concat(fieldsOnlyInCurMetaFile);
-            Fs.writeFileSync(configFullPath, JSON.stringify(existsConfig, null, 4));
-        }
-        return existsConfig;
+        // if (fieldsOnlyInCurMetaFile.length > 0) {
+        //     existsConfig = existsConfig.concat(fieldsOnlyInCurMetaFile);
+        //     Fs.writeFileSync(configFullPath, JSON.stringify(existsConfig, null, 4));
+        // }
+        return newConfig;
     } else {
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
         return metaConfig;

@@ -550,23 +550,12 @@
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
-            onSaveMetaConfigView = function (configFieldName, newConfig) {
+            onSaveMetaConfigView = function (newConfig) {
                 console.log('save meta config');
-                me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
-
-                newConfig.name = configFieldName;
-                // ghi de` new setting vo contentConfig
-                for (var i = 0; i < contentConfig.length; i++) {
-                    if (contentConfig[i].name === configFieldName) {
-                        contentConfig[i] = newConfig;
-                        break;
-                    }
-                }
-                BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
-                // refresh config view
-                me.openMetaConfigTab();
+                BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(newConfig, null, 4));
             };
 
+            me.tags['config-view'].off('saveConfig');
             me.tags['config-view'].on('saveConfig', onSaveMetaConfigView);
         };
 
@@ -596,21 +585,10 @@
             ShowTab('config-view');
 
             onSaveContentConfigView = function (newConfig) {
+                console.log('save content config');
                 BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(newConfig, null, 4));
-//                console.log('save content config');
-//                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-//                newConfig.name = configFieldName;
-//                // ghi de` new setting vo contentConfig
-//                for (var i = 0; i < contentConfig.length; i++) {
-//                    if (contentConfig[i].name === configFieldName) {
-//                        contentConfig[i] = newConfig;
-//                        break;
-//                    }
-//                }
-//                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
-//                me.openContentConfigTab(); // refresh view
             };
-
+            me.tags['config-view'].off('saveConfig');
             me.tags['config-view'].on('saveConfig', onSaveContentConfigView);
         };
 
@@ -663,13 +641,13 @@
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
 //                console.log('filePath', filePath);
-                if (filePath.startsWith('content/metadata/category') || filePath.startsWith('content/metadata/tag')) {
+//                if (filePath.startsWith('content/metadata/category') || filePath.startsWith('content/metadata/tag')) {
 //                    console.log('open category config file');
-                    me.openRawContentTab();
-                } else if (filePath.startsWith('content/metadata')) {
+//                    me.openRawContentTab();
+//                } else if (filePath.startsWith('content/metadata')) {
 //                    console.log('openMetaTab');
                     me.openMetaTab();
-                }
+//                }
                 // openMetaConfigTab
 //                me.openRawContentTab();
             }

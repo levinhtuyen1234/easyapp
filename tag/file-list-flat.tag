@@ -5,21 +5,21 @@
     </div>
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-content="{hideExt(name)}">
                 <i class="{getFileIcon(name, path)}"></i>
                 <div class="content">
-                    <a data-tooltip="{hideExt(name)}" data-delay="5000" class="truncate" data-position="bottom center" data-inverted="">{getContentType(path)}{hideExt(name)}</a>
+                    <a class="truncate" data-path="{path}">{getContentType(path)}{hideExt(name)}</a>
                 </div>
             </div>
         </div>
     </div>
 
     <style scoped>
-        .ui.celled.list>.item.active {
+        .ui.celled.list > .item.active {
             background-color: #2185D0;
         }
 
-        .ui.celled.list>.item.active>.content>a {
+        .ui.celled.list > .item.active > .content > a {
             color: white;
         }
 
@@ -48,6 +48,16 @@
 
         me.on('mount', function () {
             $(me.root.querySelector('.simplebar')).simplebar();
+            $(me.root).find('.item').popup({
+                position:   'right center',
+                variation:  'inverted wide',
+                lastResort: true,
+                preserve:   false,
+                delay:      {
+                    show: 200,
+                    hide: 0
+                }
+            });
         });
 
         me.getContentType = function (path) {
@@ -211,7 +221,7 @@
 
         me.openFile = function (e) {
             var filePath = e.item.path;
-            console.log('item', e.item);
+//            console.log('item', e.item);
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.item').removeClass('active');

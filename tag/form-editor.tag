@@ -524,7 +524,7 @@
         };
 
         me.genForm = function (metaData, contentConfig) {
-            console.log('genForm', metaData, contentConfig);
+//            console.log('genForm', metaData, contentConfig);
             // unmount any exists form field
             me.formfields.forEach(function (field) {
                 if (field != undefined)
