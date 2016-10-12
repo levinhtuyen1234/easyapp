@@ -171,17 +171,18 @@ function fileExists(filePath) {
 }
 
 function genSimpleContentConfig(metaData) {
-    var contentConfig = [];
-
     var fixedFields = [];
     var tmpFields = [];
 
     for (var key in metaData) {
         var fields = (key === 'slug' || key === 'layout' || key === 'category' || key === 'tag') ? fixedFields : tmpFields;
-        if (!metaData.hasOwnProperty(key)) continue;
+        if (!metaData.hasOwnProperty(key)) {
+            console.log('NOT HAS OWN PROPERTY');
+            continue;
+        }
         var value = metaData[key];
-
-        switch (typeof value) {
+        var valueType = typeof value;
+        switch (valueType) {
             case 'string':
                 switch (key) {
                     case 'date':
@@ -228,13 +229,19 @@ function genSimpleContentConfig(metaData) {
                 break;
             case 'object':
                 if (Array.isArray(value)) {
+                    // use first object in array value to gen model
+                    var children = [];
+                    // chi? tao model khi value[0] type la object
+                    if (value.length >= 1 && typeof(value[0]) === 'object') {
+                        children = genSimpleContentConfig(value[0]);
+                    }
                     fields.push({
                         name:        key,
                         displayName: key,
                         type:        'Array',
                         validations: [],
                         required:    false,
-                        children:    []
+                        children:    children
                     });
                 } else {
                     fields.push({
@@ -246,6 +253,7 @@ function genSimpleContentConfig(metaData) {
                         children:    genSimpleContentConfig(value)
                     });
                 }
+                break;
         }
     }
     return fixedFields.concat(tmpFields);
@@ -295,6 +303,26 @@ function saveRawContentFile(siteName, filePath, content) {
     Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
 }
 
+var mergeConfig = function (existsConfigs, newGenConfigs) {
+    // find new config object
+    var newConfigObjects = _.differenceBy(newGenConfigs, existsConfigs, 'name');
+
+    // merge children
+    for (var i = 0; i < existsConfigs.length; i++) {
+        var existsConfig = existsConfigs[i];
+        var newConfig = _.find(newGenConfigs, {name: existsConfig.name});
+        if (!newConfig) continue;
+
+        if (!existsConfig.children && newConfig.children) {
+            existsConfig.children = newConfig.children;
+        } else if (existsConfig.children && newConfig.children) {
+            existsConfig.children = mergeConfig(existsConfig.children, newConfig.children);
+        }
+    }
+
+    return existsConfigs.concat(newConfigObjects);
+};
+
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
@@ -303,24 +331,10 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
     var contentConfig = genSimpleContentConfig(content.metaData);
-
     if (fileExists(contentConfigFullPath)) {
-        // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
-        // TODO smarter merge
-        var newConfig = _.merge(contentConfig, existsConfig);
-        // // merge property from contentConfig -> existsConfig
-        // var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
-        //     return existsConfig.filter(function (curB) {
-        //             return cur.name === curB.name;
-        //         }).length === 0;
-        // });
-        //
-        // // update config file neu co field mới
-        // if (fieldsOnlyInCurContentFile.length > 0) {
-        //     existsConfig = existsConfig.concat(fieldsOnlyInCurContentFile);
-        //     Fs.writeFileSync(contentConfigFullPath, JSON.stringify(existsConfig, null, 4));
-        // }
+        var newConfig = mergeConfig(existsConfig, contentConfig);
+        Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
         return newConfig;
     } else {
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
@@ -664,22 +678,9 @@ function getMetaConfigFile(siteName, metaFilePath) {
     var metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
-        // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
-        // TODO smarter merge
-        var newConfig = _.merge(metaConfig, existsConfig);
-        // merge property from metaConfig -> existsConfig
-        // var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
-        //     return existsConfig.filter(function (curB) {
-        //             return cur.name === curB.name;
-        //         }).length === 0;
-        // });
-
-        // update config file neu co field mới
-        // if (fieldsOnlyInCurMetaFile.length > 0) {
-        //     existsConfig = existsConfig.concat(fieldsOnlyInCurMetaFile);
-        //     Fs.writeFileSync(configFullPath, JSON.stringify(existsConfig, null, 4));
-        // }
+        var newConfig = mergeConfig(existsConfig, metaConfig);
+        Fs.writeFileSync(configFullPath, JSON.stringify(newConfig, null, 4));
         return newConfig;
     } else {
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));

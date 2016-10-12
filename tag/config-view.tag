@@ -144,7 +144,7 @@
         };
 
         me.submit = function () {
-//            console.log('submit', me.parentIndex, me.fieldName, me.fieldType);
+//            console.log('ADD FIELD', me.parentIndex, me.fieldName, me.fieldType);
             riot.event.trigger('configView.addField', me.parentIndex, me.fieldName, me.fieldType);
         };
     </script>
@@ -468,6 +468,8 @@
                 var metaData = {};
                 metaData[fieldName] = fieldType;
                 var config = BackEnd.genSimpleContentConfig(metaData);
+//                config[0].
+                // TODO fix this de` type
                 configs.push(config[0]);
 //                console.log('new config object', config);
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldSuccess');

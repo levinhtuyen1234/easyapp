@@ -282,3 +282,11 @@ div.CodeMirrorForm {
 .ui.popup {
     z-index: 99999 !important;
 }
+
+.inline.fields:last-child {
+    margin-bottom: 0 !important;
+}
+
+.content.accordion-content {
+    padding-bottom: 7px !important;
+}

@@ -176,19 +176,6 @@
         </div>
     </div>
 
-    <!--<div class="container-fluid" style="">-->
-    <!--<div class="row">-->
-    <!--<div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 700px)">-->
-    <!---->
-    <!--</div>-->
-
-    <!--<div class="tab-content col-xs-8 col-sm-8 col-md-9 col-lg-9">-->
-    <!---->
-
-    <!--</div>-->
-    <!--</div>-->
-    <!--</div>-->
-
     <script>
         var me = this;
         var dialog = require('electron').remote.dialog;
@@ -220,10 +207,10 @@
             }
         };
 
-        me.isShowContentTab = function() {
+        me.isShowContentTab = function () {
 //            console.log('isShowContentTab me.curTab', me.curTab);
             return me.curTab == 'content-view' ||
-                ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
+                    ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
 
         };
 
@@ -326,7 +313,7 @@
                     size:           '40%',
                     spacing_open:   1,
                     spacing_closed: 10,
-                    initClosed:     false
+                    initClosed:     true
                 }
             });
 
@@ -646,7 +633,7 @@
 //                    me.openRawContentTab();
 //                } else if (filePath.startsWith('content/metadata')) {
 //                    console.log('openMetaTab');
-                    me.openMetaTab();
+                me.openMetaTab();
 //                }
                 // openMetaConfigTab
 //                me.openRawContentTab();
@@ -828,14 +815,12 @@
         };
 
         var onWatchSuccess = function () {
-            if (me.openExternalReviewBtn === undefined)
-            {
-                
-            }else
-            {
+            if (me.openExternalReviewBtn === undefined) {
+
+            } else {
                 me.openExternalReviewBtn.disabled = false;
             }
-            
+
         };
 
         var onWatchFailed = function () {

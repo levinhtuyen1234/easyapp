@@ -330,7 +330,7 @@
 </form-field-datetime>
 
 <form-field-object>
-    <div class="ui styled fluid accordion" style="margin-top: 5px; margin-bottom: 5px;">
+    <div class="styled fluid accordion" style="margin-top: 5px; margin-bottom: 5px;">
         <div class="title">
             <i class="dropdown icon"></i>
             {config.displayName} &nbsp;
@@ -354,7 +354,9 @@
             content.innerHTML = '';
             if (contentConfig == undefined) {
                 console.log('BUG', contentConfig, metaData);
+                console.log('PARENT', me);
             }
+
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 var metaValue = metaData[fieldConfig.name];
@@ -394,13 +396,14 @@
             content = me.root.querySelector('.accordion-content');
             genForm(me.value, me.config.children);
             if (me.opts.parent === 'true') {
-                var accordion = $(me.root.querySelector('.ui .accordion')).accordion();
-
-
+                var accordion = $(me.root.querySelector('.accordion'));
+                accordion.addClass('ui');
+                accordion.accordion();
             }
             if (me.opts.arrayObject == true) {
-                console.log("$(me.root.find('div.title'))", $(me.root).find('div.title'));
-                $(me.root).find('div.title').hide();
+//                console.log("$(me.root.find('div.title'))", $(me.root).find('div.title'));
+//                $(me.root).find('div.title').hide();
+                $(me.root).find('div.title').append('Item: ' + me.opts.index);
             }
         });
 
@@ -424,17 +427,19 @@
 
 </array-add-child-dialog>
 
-<form-field-array class="ui styled fluid accordion field" style="margin-top: 5px; margin-bottom: 5px;">
-    <array-add-child-dialog></array-add-child-dialog>
-    <div class="title">
-        <i class="dropdown icon"></i>
-        {config.displayName}
-        &nbsp;
-        <button name="addBtn" class="ui mini basic icon button" onclick="{addChild}" data-content="Define model before add child">
-            <i class="blue add icon"></i>
-        </button>
-    </div>
-    <div class="content">
+<form-field-array>
+    <div class="styled fluid accordion" style="margin-top: 5px; margin-bottom: 5px;">
+        <array-add-child-dialog></array-add-child-dialog>
+        <div class="title">
+            <i class="dropdown icon"></i>
+            {config.displayName}
+            &nbsp;
+            <button name="addBtn" class="ui mini basic icon button" onclick="{addChild}">
+                <i class="blue add icon"></i>
+            </button>
+        </div>
+        <div class="content">
+        </div>
     </div>
     <script>
         var me = this;
@@ -455,18 +460,22 @@
             }
 
             var config = {children: contentConfig};
+            var index = 1;
             metaData.forEach(function (data) {
 
                 var div = document.createElement('div');
                 var tagTypeName = 'form-field-object';
                 div.setAttribute('data-is', tagTypeName);
+//                div.setAttribute('parent', 'true');
                 div.setAttribute('site-name', me.opts.siteName);
                 content.appendChild(div);
                 var tag = riot.mount(div, {
-                    config: config,
-                    value:  data,
-                    arrayObject: true
+                    config:      config,
+                    value:       data,
+                    arrayObject: true,
+                    index:       index
                 })[0];
+                index += 1;
                 formFields.push(tag);
             });
         };
@@ -478,21 +487,29 @@
                 });
             }
             content = me.root.querySelector('.content');
-            console.log('ARRAY MOUNT', me.value, me.config.children);
+//            console.log('ARRAY MOUNT', me.value, me.config.children);
             genForm(me.value, me.config.children);
 
-            var accordion = $(me.root).accordion();
+            if (me.opts.parent === 'true') {
+                var accordion = $(me.root.querySelector('.accordion'));
+                accordion.addClass('ui');
+                accordion.accordion();
 
-            for (var i = 1; i <= me.value.length; i++) {
-                accordion.accordion('open', i);
+                for (var i = 1; i <= me.value.length; i++) {
+                    accordion.accordion('open', i);
+                }
             }
         });
 
-        me.addChild = function () {
+        me.addChild = function (e) {
             if (me.config.model) {
                 // TODO form add new object
                 return;
             }
+            e.preventDefault();
+            e.stopPropagation();
+            console.log();
+            return false;
         };
 
         me.getValue = function () {
@@ -619,16 +636,12 @@
                     tagTypeName = 'form-field-tag-text';
                 }
 
-                if (tagTypeName === 'form-field-array') {
-                    console.log('TYPE ARRAY', 'metaValue', metaValue, 'fieldConfig', fieldConfig);
-                }
-
                 var mountData = {
                     config: fieldConfig,
                     value:  metaValue
                 };
 
-                if (tagTypeName === 'form-field-object') {
+                if (tagTypeName === 'form-field-object' || tagTypeName === 'form-field-array') {
                     div.setAttribute('parent', 'true');
                 }
 
