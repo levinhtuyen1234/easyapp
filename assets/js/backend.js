@@ -170,12 +170,100 @@ function fileExists(filePath) {
     }
 }
 
-function genSimpleContentConfig(metaData) {
+function getDefaultContentConfig(key, valueType) {
+    valueType = valueType.toLowerCase();
+    console.log('getDefaultContentConfig valueType', valueType);
+    switch (valueType) {
+        case 'string':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Text',
+                displayType: 'ShortText',
+                validations: [],
+                viewOnly:    false,
+                required:    false
+            };
+        case 'media':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Media',
+                displayType: '',
+                validations: [],
+                required:    false
+            };
+        case 'datatime':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'DateTime',
+                displayType: 'DateTime',
+                validations: [],
+                required:    false
+            };
+        case 'number':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Number',
+                displayType: 'Number',
+                validations: [],
+                required:    false
+            };
+        case 'boolean':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Boolean',
+                validations: [],
+                required:    false
+            };
+        case 'array':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Array',
+                validations: [],
+                required:    false,
+                children:    []
+            };
+        case 'object':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Object',
+                validations: [],
+                required:    false,
+                children:    []
+            };
+        default:
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Text',
+                displayType: 'ShortText',
+                validations: [],
+                viewOnly:    false,
+                required:    false
+            };
+    }
+}
+
+var DefaultFixedFieldNames = ['slug', 'layout', 'category', 'tag'];
+
+function genSimpleContentConfig(metaData, fixedFieldNames) {
     var fixedFields = [];
     var tmpFields = [];
+    var fixedField = false;
 
     for (var key in metaData) {
-        var fields = (key === 'slug' || key === 'layout' || key === 'category' || key === 'tag') ? fixedFields : tmpFields;
+        var fields = tmpFields;
+        if (fixedFieldNames && fixedFieldNames.indexOf('key') != -1) {
+            fields = fixedFields;
+            fixedField = true;
+        }
+
         if (!metaData.hasOwnProperty(key)) {
             console.log('NOT HAS OWN PROPERTY');
             continue;
@@ -192,7 +280,7 @@ function genSimpleContentConfig(metaData) {
                             displayType: 'DateTime',
                             type:        'DateTime',
                             validations: [],
-                            viewOnly:    key === 'layout',
+                            viewOnly:    (fixedField && key === 'layout'),
                             required:    false
                         });
                         break;
@@ -203,7 +291,7 @@ function genSimpleContentConfig(metaData) {
                             type:        'Text',
                             displayType: 'ShortText',
                             validations: [],
-                            viewOnly:    key === 'layout' || key === 'slug',
+                            viewOnly:    (fixedField && (key === 'layout' || key === 'slug')),
                             required:    false
                         });
                 }
@@ -330,7 +418,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     // doc file content lay metaData
     var content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
-    var contentConfig = genSimpleContentConfig(content.metaData);
+    var contentConfig = genSimpleContentConfig(content.metaData, DefaultFixedFieldNames);
     if (fileExists(contentConfigFullPath)) {
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
         var newConfig = mergeConfig(existsConfig, contentConfig);
@@ -835,49 +923,50 @@ function showItemInFolder(siteName, filePath) {
 }
 
 module.exports = {
-    genSimpleContentConfig: genSimpleContentConfig,
-    showItemInFolder:       showItemInFolder,
-    fileExists:             fileExists,
-    newCategory:            newCategory,
-    getCategoryLayoutList:  getCategoryLayoutList,
-    getCategoryList:        getCategoryList,
-    purgeCategoryListCache: purgeCategoryListCache,
-    newTag:                 newTag,
-    getTagList:             getTagList,
-    getMetaFile:            getMetaFile,
-    getSiteMetadataFiles:   getSiteMetadataFiles,
-    getMetaConfigFile:      getMetaConfigFile,
-    saveMetaFile:           saveMetaFile,
-    saveMetaConfigFile:     saveMetaConfigFile,
-    createSiteFolder:       createSiteFolder,
-    getSiteList:            getSiteList,
-    getConfigFile:          getConfigFile,
-    saveConfigFile:         saveConfigFile,
-    getRawContentFile:      getRawContentFile,
-    getContentFile:         getContentFile,
-    saveContentFile:        saveContentFile,
-    saveRawContentFile:     saveRawContentFile,
-    getLayoutFile:          getLayoutFile,
-    saveLayoutFile:         saveLayoutFile,
-    deleteLayoutFile:       deleteLayoutFile,
-    deleteContentFile:      deleteContentFile,
-    getLayoutList:          getLayoutList,
-    getRootLayoutList:      getRootLayoutList,
-    newLayoutFile:          newLayoutFile,
-    gitAdd:                 gitAdd,
-    newContentFile:         newContentFile,
-    gitCheckout:            gitCheckout,
-    gitInitSite:            gitInitSite,
-    gitGenMessage:          gitGenMessage,
-    gitImportGitHub:        gitImportGitHub,
-    gitCommit:              gitCommit,
-    gitPushGhPages:         gitPushGhPages,
-    gitPushGitHub:          gitPushGitHub,
-    getSiteLayoutFiles:     getSiteLayoutFiles,
-    getSiteAssetFiles:      getSiteAssetFiles,
-    getSiteContentFiles:    getSiteContentFiles,
-    readFile:               readFile,
-    addMediaFile:           addMediaFile,
-    isGhPageInitialized:    isGhPageInitialized,
-    setDomain:              setDomain
+    genSimpleContentConfig:  genSimpleContentConfig,
+    getDefaultContentConfig: getDefaultContentConfig,
+    showItemInFolder:        showItemInFolder,
+    fileExists:              fileExists,
+    newCategory:             newCategory,
+    getCategoryLayoutList:   getCategoryLayoutList,
+    getCategoryList:         getCategoryList,
+    purgeCategoryListCache:  purgeCategoryListCache,
+    newTag:                  newTag,
+    getTagList:              getTagList,
+    getMetaFile:             getMetaFile,
+    getSiteMetadataFiles:    getSiteMetadataFiles,
+    getMetaConfigFile:       getMetaConfigFile,
+    saveMetaFile:            saveMetaFile,
+    saveMetaConfigFile:      saveMetaConfigFile,
+    createSiteFolder:        createSiteFolder,
+    getSiteList:             getSiteList,
+    getConfigFile:           getConfigFile,
+    saveConfigFile:          saveConfigFile,
+    getRawContentFile:       getRawContentFile,
+    getContentFile:          getContentFile,
+    saveContentFile:         saveContentFile,
+    saveRawContentFile:      saveRawContentFile,
+    getLayoutFile:           getLayoutFile,
+    saveLayoutFile:          saveLayoutFile,
+    deleteLayoutFile:        deleteLayoutFile,
+    deleteContentFile:       deleteContentFile,
+    getLayoutList:           getLayoutList,
+    getRootLayoutList:       getRootLayoutList,
+    newLayoutFile:           newLayoutFile,
+    gitAdd:                  gitAdd,
+    newContentFile:          newContentFile,
+    gitCheckout:             gitCheckout,
+    gitInitSite:             gitInitSite,
+    gitGenMessage:           gitGenMessage,
+    gitImportGitHub:         gitImportGitHub,
+    gitCommit:               gitCommit,
+    gitPushGhPages:          gitPushGhPages,
+    gitPushGitHub:           gitPushGitHub,
+    getSiteLayoutFiles:      getSiteLayoutFiles,
+    getSiteAssetFiles:       getSiteAssetFiles,
+    getSiteContentFiles:     getSiteContentFiles,
+    readFile:                readFile,
+    addMediaFile:            addMediaFile,
+    isGhPageInitialized:     isGhPageInitialized,
+    setDomain:               setDomain
 };

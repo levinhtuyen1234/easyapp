@@ -458,20 +458,13 @@
         };
 
         var addField = function (parentIndex, fieldName, fieldType) {
-//            console.log('addField', parent, fieldType, fieldName);
             var configs = getParentConfigChildren(parentIndex);
             var fieldExists = _.some(configs, {'name': fieldName});
-//            console.log('configs', configs, {'name': fieldName}, 'fieldExists', fieldExists);
             if (fieldExists) {
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldFailed', 'field name "' + fieldName + '" already exists');
             } else {
-                var metaData = {};
-                metaData[fieldName] = fieldType;
-                var config = BackEnd.genSimpleContentConfig(metaData);
-//                config[0].
-                // TODO fix this de` type
-                configs.push(config[0]);
-//                console.log('new config object', config);
+                var contentConfig = BackEnd.getDefaultContentConfig(fieldName, fieldType);
+                configs.push(contentConfig);
                 me.tags['add-config-field-dialog'].trigger('configView.addFieldSuccess');
                 me.trigger('saveConfig', me.getContentConfig());
                 refreshConfig();
@@ -541,7 +534,7 @@
             });
         };
 
-        me.onFieldSettingChanged = function() {
+        me.onFieldSettingChanged = function () {
             me.trigger('saveConfig', me.getContentConfig());
             refreshConfig();
         };
