@@ -1,5 +1,5 @@
 <form-field-category-text class="inline fields">
-    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
+    <label for="form-{config.name}-{config.displayType}" class="two wide field truncate" title="{config.displayName}">{config.displayName}</label>
 
     <div class="ui fourteen wide field" style="padding: 0">
         <div class="ui fluid selection dropdown" style="width: 100%">
@@ -18,6 +18,7 @@
         me.config = opts.config || {};
         me.value = opts.value || '';
         me.categoryList = [];
+        var dropdown = null;
 
         me.on('mount', function () {
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
@@ -29,11 +30,12 @@
 //            dropdown.selectpicker('refresh');
 //            dropdown.selectpicker('val', me.value);
 
-            $(me.root.querySelector('.ui.dropdown')).dropdown({
+            dropdown = $(me.root.querySelector('.ui.dropdown')).dropdown({
                 onChange: function (value, text) {
-                    me.value = value;
+                    me.value = dropdown.dropdown('get value');
                 }
-            }).dropdown('set selected', me.value);
+            });
+            dropdown.dropdown('set selected', me.value);
         });
 
         me.getValue = function () {
@@ -42,13 +44,14 @@
 
         me.setValue = function (value) {
             me.value = value;
+            dropdown.dropdown('set selected', me.value);
             me.update();
         };
     </script>
 </form-field-category-text>
 
 <form-field-tag-text class="inline fields">
-    <label for="form-{config.name}-{config.displayType}" class="two wide field" style="">{config.displayName}</label>
+    <label for="form-{config.name}-{config.displayType}" class="two wide field truncate" title="{config.displayName}">{config.displayName}</label>
     <div class="ui fourteen wide field" style="padding: 0">
         <div class="ui fluid selection multiple dropdown" style="width: 100%">
             <input name="gender" type="hidden">
@@ -68,6 +71,7 @@
         me.config = opts.config || {};
         me.value = opts.value || '';
         me.tagList = [];
+        var dropdown = null;
 
         me.editTag = function (e) {
             var selectedTags = $(e.srcElement).val();
@@ -83,12 +87,13 @@
 //            var dropdown = $(me.root.querySelector('select'));
 //            dropdown.selectpicker('refresh');
 //            dropdown.selectpicker('val', me.value);
-            $(me.root).find('.ui .dropdown').dropdown({
+            dropdown = $(me.root).find('.ui .dropdown').dropdown({
                 onChange: function (value, text) {
-                    console.log('on change', value, text);
-                    me.value = value;
+                    me.value = dropdown.dropdown('get value');
                 }
-            }).dropdown('set selected', me.value);
+            });
+
+            dropdown.dropdown('set selected', me.value);
         });
 
         me.getValue = function () {
@@ -97,6 +102,7 @@
 
         me.setValue = function (value) {
             me.value = value;
+            dropdown.dropdown('set selected', me.value);
             me.update();
         };
     </script>
@@ -109,7 +115,7 @@
             min-height: 100px !important;
         }
     </style>
-    <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field" style="text-align: left;">{config.displayName}</label>
+    <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field truncate" data-tooltip="{config.displayName}" style="text-align: left;">{config.displayName}</label>
     <div class="ui fourteen wide field" style="padding: 0">
         <input if="{config.displayType === 'ShortText'}" class="" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
         <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
@@ -159,7 +165,6 @@
                 }
 
                 if (me.config.displayType === 'MarkDown') {
-                    console.log('set class fieldMarkDown');
                     $(me.root.querySelectorAll('.CodeMirror-scroll, .CodeMirror-wrap')).addClass('fieldMarkDown');
                     $(me.root.querySelectorAll('.CodeMirror')).resizable({
                         handles: 's'
@@ -337,6 +342,9 @@
             <!--<div class="ui mini basic icon float button" onclick="{addChild}">-->
             <!--<i class="blue add icon"></i>-->
             <!--</div>-->
+            <button if="{opts.arrayObject}" name="removeBtn" class="ui mini red icon button right floated" onclick="{removeChild}">
+                <i class="remove icon"></i>
+            </button>
         </div>
         <div class="content accordion-content">
         </div>
@@ -409,7 +417,7 @@
 
         me.getValue = function () {
             var ret = {};
-            me.formfields.forEach(function (field) {
+            formFields.forEach(function (field) {
                 ret[field.config.name] = (field.getValue());
             });
             return ret;
@@ -514,7 +522,7 @@
 
         me.getValue = function () {
             var ret = [];
-            me.formfields.forEach(function (field) {
+            formFields.forEach(function (field) {
                 ret.push(field.getValue());
             });
             return ret;
@@ -586,8 +594,10 @@
         });
 
         me.checkSave = function (e) {
+            // check ctrl + S -> save
             if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
             console.log('Ctrl-S pressed');
+//            console.log('me.getForm', me.getForm());
             riot.event.trigger('codeEditor.save');
             e.preventDefault();
             return false;

@@ -50,7 +50,7 @@
 
         var onFileActivated = function (tabName) {
             // clear other tab active file
-//            console.trace('ACTIVE tab', tabName);
+            console.trace('ACTIVE tab', tabName);
             switch (tabName) {
                 case 'content':
                     me.tags['file-list-flat'][1].clearActive();
@@ -60,7 +60,7 @@
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][2].clearActive();
                     break;
-                case 'metadata':
+                case 'meta':
                     me.tags['file-list-flat'][0].clearActive();
                     me.tags['file-list-flat'][1].clearActive();
                     break;
@@ -79,7 +79,7 @@
                 case 'layout':
                     me.tags['file-list-flat'][1].activeFile(filePath);
                     break;
-                case 'metadata':
+                case 'meta':
                     me.tags['file-list-flat'][2].activeFile(filePath);
                     break;
             }
@@ -117,7 +117,7 @@
                 case 'layout':
                     me.reloadLayoutFileTab();
                     break;
-                case 'metadata':
+                case 'meta':
                     me.reloadMetadataFileTab();
                     break;
             }

@@ -113,6 +113,7 @@
             }
             outer: for (var i = 0, j = 0; i < nLen; i++) {
                 var nch = needle.charCodeAt(i);
+                if (nch === 32) continue;
                 while (j < hLen) {
                     if (haystack.charCodeAt(j++) === nch) {
                         continue outer;
@@ -216,7 +217,7 @@
             me.clear();
             if (me.opts.type == 'layout') {
                 files = sortLayoutFiles(files);
-            } else if (me.opts.type == 'metadata') {
+            } else if (me.opts.type == 'meta') {
                 files = sortContentFiles(files);
             } else {
                 files = files.sort(sortByName);
@@ -253,6 +254,8 @@
 
         me.clearActive = function () {
 //            $root.find('.ui.celled.list>.item').removeClass('active');
+//            console.log('clearActive', $root.find('.item').removeClass('active'));
+            $root.find('.item').removeClass('active');
             me.curFilePath = '';
         };
 
