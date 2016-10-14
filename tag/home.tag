@@ -617,7 +617,7 @@
 
 
             if (filePath.endsWith('.md')) {
-                console.log('openContentTab');
+//                console.log('openContentTab');
                 me.openContentTab();
 //            } else if (filePath.endsWith('.config.json')) {
 //                me.openConfigTab();

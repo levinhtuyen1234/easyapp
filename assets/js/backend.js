@@ -265,7 +265,7 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
 
     for (var key in metaData) {
         var fields = tmpFields;
-        if (fixedFieldNames && fixedFieldNames.indexOf('key') != -1) {
+        if (fixedFieldNames && fixedFieldNames.indexOf(key) != -1) {
             fields = fixedFields;
             fixedField = true;
         }

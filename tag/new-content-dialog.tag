@@ -5,14 +5,14 @@
         <form class="ui form">
             <div class="inline fields">
                 <label class="two wide field">Page Title</label>
-                <div class="ui icon input eight wide field">
+                <div class="ui icon input fourteen wide field">
                     <input type="text" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}">
                 </div>
             </div>
             <div class="inline fields">
                 <label class="two wide field">Layout</label>
                 <div class="ui menu fluid">
-                    <div class="ui fluid selection dropdown">
+                    <div class="ui selection dropdown" id="layoutDropDown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Layout</div>
@@ -25,7 +25,7 @@
             <div class="inline fields">
                 <label class="two wide field">Category</label>
                 <div class="ui menu fluid">
-                    <div class="ui fluid selection dropdown">
+                    <div class="ui fluid selection dropdown" id="categoryDropDown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Category</div>
@@ -46,7 +46,7 @@
             <div class="inline fields">
                 <label class="two wide field">Tags</label>
                 <div class="ui menu fluid">
-                    <div class="ui fluid dropdown multiple selection">
+                    <div class="ui fluid dropdown multiple selection" id="tagDropDown">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Tag</div>
@@ -174,10 +174,17 @@
 //            console.log(me.contentTag);
 //            riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
             riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
+//            console.log('me.add', 'addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
         };
 
-        riot.event.on('unmount', function () {
+        me.on('unmount', function () {
             riot.event.off('closeNewContentDialog');
+        });
+
+        me.on('mount', function () {
+            riot.event.on('closeNewContentDialog', function () {
+                $(me.root).modal('hide');
+            });
         });
 
         me.updateLayoutList = function (layoutList) {
@@ -231,16 +238,34 @@
                 tag.name = tag.name.split('.').join(' / ');
             });
 
-            me.update();
+            var categoryDropDown = $(me.categoryDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentCategory = categoryDropDown.dropdown('get value');
+                }
+            });
 
+            var layoutDropDown = $(me.layoutDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentLayout = layoutDropDown.dropdown('get value');
+                }
+            });
+
+            var tagDropDown = $(me.tagDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentTag = tagDropDown.dropdown('get value');
+                }
+            });
+
+            categoryDropDown.dropdown('clear');
+            layoutDropDown.dropdown('clear');
+            tagDropDown.dropdown('clear');
 
             $(me.root).modal('show');
-            $(me.contentLayoutElm).selectpicker('refresh');
-            $(me.categoryListElm).selectpicker('refresh');
-            $(me.tagListElm).selectpicker('refresh');
-            riot.event.one('closeNewContentDialog', function () {
-                $(me.root).modal('hide');
-            });
+//            $(me.contentLayoutElm).selectpicker('refresh');
+//            $(me.categoryListElm).selectpicker('refresh');
+//            $(me.tagListElm).selectpicker('refresh');
+
+            me.update();
         }
     </script>
 </new-content-dialog>

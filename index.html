@@ -132,6 +132,7 @@
     var formMixin = {
         edit: function (keyPath) {
             return function (e) {
+                e.stopPropagation();
                 var value;
                 switch (e.target.type) {
                     case 'checkbox':
@@ -155,6 +156,7 @@
                     schema = schema[elem];
                 }
                 schema[pList[len - 1]] = value;
+
             };
         }
     };
