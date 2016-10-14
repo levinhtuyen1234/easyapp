@@ -11,8 +11,8 @@
             </div>
             <div class="inline fields">
                 <label class="two wide field">Layout</label>
-                <div class="ui menu fluid">
-                    <div class="ui selection dropdown" id="layoutDropDown">
+                <div class="ui fourteen wide field">
+                    <div class="ui selection dropdown" id="layoutDropDown" style="width: 100%">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Layout</div>
@@ -24,8 +24,8 @@
             </div>
             <div class="inline fields">
                 <label class="two wide field">Category</label>
-                <div class="ui menu fluid">
-                    <div class="ui fluid selection dropdown" id="categoryDropDown">
+                <div class="ui fourteen wide field">
+                    <div class="ui fluid selection dropdown" id="categoryDropDown" style="width: 100%">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Category</div>
@@ -45,8 +45,8 @@
 
             <div class="inline fields">
                 <label class="two wide field">Tags</label>
-                <div class="ui menu fluid">
-                    <div class="ui fluid dropdown multiple selection" id="tagDropDown">
+                <div class="ui fourteen wide field">
+                    <div class="ui fluid dropdown multiple selection" id="tagDropDown" style="width: 100%">
                         <input name="gender" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Tag</div>
@@ -66,7 +66,7 @@
 
             <div class="inline fields">
                 <label class="two wide field">Filename</label>
-                <div class="eight wide field">
+                <div class="fourteen wide field">
                     <div class="ui fluid right labeled icon input">
                         <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
                         <div class="ui label">.md</div>
