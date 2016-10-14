@@ -415,7 +415,7 @@
             me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
 //            console.log('fileContent', fileContent);
-            me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + me.currentLayout);
+            me.tags['side-bar'].activeFile('layout', 'layout/' + me.currentLayout);
 //            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
@@ -497,7 +497,7 @@
             try {
                 HideAllTab();
 
-                me.tags['side-bar'].activeFile('metadata-file-list', me.currentFilePath);
+                me.tags['side-bar'].activeFile('meta', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
                 me.update();
 
@@ -580,7 +580,7 @@
         };
 
         me.openRawContentTab = function (options) {
-//            me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+//            me.tags['side-bar'].activeFile('content', me.currentFilePath);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
@@ -767,8 +767,8 @@
                 BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.event.trigger('closeNewLayoutDialog');
                 setTimeout(function () {
-                    me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + layoutFileName);
-                }, 100);
+                    me.tags['side-bar'].activeFile('layout', 'layout/' + layoutFileName);
+                }, 300);
             } catch (ex) {
                 console.log('addLayout', ex);
                 bootbox.alert('create layout failed, error ' + ex.message);
