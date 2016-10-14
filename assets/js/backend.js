@@ -176,48 +176,53 @@ function getDefaultContentConfig(key, valueType) {
     switch (valueType) {
         case 'string':
             return {
-                name:        key,
-                displayName: key,
-                type:        'Text',
-                displayType: 'ShortText',
-                validations: [],
-                viewOnly:    false,
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'Text',
+                displayType:  'ShortText',
+                defaultValue: '',
+                validations:  [],
+                viewOnly:     false,
+                required:     false
             };
         case 'media':
             return {
-                name:        key,
-                displayName: key,
-                type:        'Media',
-                displayType: '',
-                validations: [],
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'Media',
+                displayType:  '',
+                defaultValue: '',
+                validations:  [],
+                required:     false
             };
         case 'datatime':
             return {
-                name:        key,
-                displayName: key,
-                type:        'DateTime',
-                displayType: 'DateTime',
-                validations: [],
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'DateTime',
+                displayType:  'DateTime',
+                defaultValue: '',
+                validations:  [],
+                required:     false
             };
         case 'number':
             return {
-                name:        key,
-                displayName: key,
-                type:        'Number',
-                displayType: 'Number',
-                validations: [],
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'Number',
+                displayType:  'Number',
+                defaultValue: 0,
+                validations:  [],
+                required:     false
             };
         case 'boolean':
             return {
-                name:        key,
-                displayName: key,
-                type:        'Boolean',
-                validations: [],
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'Boolean',
+                defaultValue: false,
+                validations:  [],
+                required:     false
             };
         case 'array':
             return {
@@ -239,13 +244,14 @@ function getDefaultContentConfig(key, valueType) {
             };
         default:
             return {
-                name:        key,
-                displayName: key,
-                type:        'Text',
-                displayType: 'ShortText',
-                validations: [],
-                viewOnly:    false,
-                required:    false
+                name:         key,
+                displayName:  key,
+                type:         'Text',
+                displayType:  'ShortText',
+                defaultValue: '',
+                validations:  [],
+                viewOnly:     false,
+                required:     false
             };
     }
 }
@@ -275,44 +281,48 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
                 switch (key) {
                     case 'date':
                         fields.push({
-                            name:        key,
-                            displayName: key,
-                            displayType: 'DateTime',
-                            type:        'DateTime',
-                            validations: [],
-                            viewOnly:    (fixedField && key === 'layout'),
-                            required:    false
+                            name:         key,
+                            displayName:  key,
+                            displayType:  'DateTime',
+                            type:         'DateTime',
+                            defaultValue: '',
+                            validations:  [],
+                            viewOnly:     (fixedField && key === 'layout'),
+                            required:     false
                         });
                         break;
                     default:
                         fields.push({
-                            name:        key,
-                            displayName: key,
-                            type:        'Text',
-                            displayType: 'ShortText',
-                            validations: [],
-                            viewOnly:    (fixedField && (key === 'layout' || key === 'slug')),
-                            required:    false
+                            name:         key,
+                            displayName:  key,
+                            type:         'Text',
+                            displayType:  'ShortText',
+                            defaultValue: '',
+                            validations:  [],
+                            viewOnly:     (fixedField && (key === 'layout' || key === 'slug')),
+                            required:     false
                         });
                 }
                 break;
             case 'number':
                 fields.push({
-                    name:        key,
-                    displayName: key,
-                    type:        'Number',
-                    displayType: 'Number',
-                    validations: [],
-                    required:    false
+                    name:         key,
+                    displayName:  key,
+                    type:         'Number',
+                    displayType:  'Number',
+                    defaultValue: 0,
+                    validations:  [],
+                    required:     false
                 });
                 break;
             case 'boolean':
                 fields.push({
-                    name:        key,
-                    displayName: key,
-                    type:        'Boolean',
-                    validations: [],
-                    required:    false
+                    name:         key,
+                    displayName:  key,
+                    type:         'Boolean',
+                    defaultValue: false,
+                    validations:  [],
+                    required:     false
                 });
                 break;
             case 'object':
@@ -400,6 +410,14 @@ var mergeConfig = function (existsConfigs, newGenConfigs) {
         var existsConfig = existsConfigs[i];
         var newConfig = _.find(newGenConfigs, {name: existsConfig.name});
         if (!newConfig) continue;
+
+        // merge field exists in newConfig and not in existsConfig
+        for (var key in newConfig) {
+            if (!newConfig.hasOwnProperty(key)) continue;
+            if (key === 'children') continue;
+            if (existsConfig[key]) continue;
+            existsConfig[key] = newConfig[key];
+        }
 
         if (!existsConfig.children && newConfig.children) {
             existsConfig.children = newConfig.children;

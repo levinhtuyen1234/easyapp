@@ -3,6 +3,10 @@
         <label class="">Display name:</label>
         <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
+    <div class="field">
+        <label>Default value:</label>
+        <input type="number" class="" id="fieldDefaultValue" value="{config.defaultValue}" onkeyup="{edit('config.defaultValue')}">
+    </div>
     <!-- This field is required -->
     <div class="inline field ui checkbox">
         <label class="title">Is required</label>

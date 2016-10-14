@@ -191,7 +191,7 @@
             {name: 'DateTime', value: 'DateTime'},
             {name: 'Media', value: 'Media'},
             {name: 'Object', value: 'Object'},
-            {name: 'Array', value: 'Array'},
+            {name: 'Array', value: 'Array'}
         ];
 
         me.fieldTypes = AllFieldTypes;
@@ -256,8 +256,9 @@
             if (me.curFieldType !== me.originalFieldType) {
                 var configFieldTag = 'config-view-' + me.curFieldType.toLowerCase();
                 me.tags[configFieldTag].loadConfig({
-                    name:        me.curConfig.name,
-                    displayName: me.curConfig.displayName
+                    name:         me.curConfig.name,
+                    displayName:  me.curConfig.displayName,
+                    defaultValue: me.curConfig.defaultValue
                 });
             }
             me.update();

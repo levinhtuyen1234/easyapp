@@ -3,6 +3,12 @@
         <label>Display name:</label>
         <input type="text"id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
     </div>
+
+    <div class="inline field ui checkbox">
+        <label class="title">Default value:</label>
+        <input type="checkbox" onchange="{edit('config.defaultValue')}" checked="{config.defaultValue}">
+    </div>
+
     <!-- This field is required -->
     <div class="inline field ui checkbox">
         <label class="title">Is required</label>
