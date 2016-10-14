@@ -1,5 +1,5 @@
-<code-editor style="margin: 0; padding: 0;">
-    <div class="CodeMirror" style="border: none; margin: 0; height: calc(100% - 140px);"></div>
+<code-editor style="margin-bottom: 0; padding: 0; height: calc(100% - 86px); overflow-y: scroll;">
+    <div class="CodeMirror" style="border: none; margin: 0; height: 100%"></div>
     <script>
         var me = this;
         var editorElm = me.root.querySelector('div.CodeMirror');
