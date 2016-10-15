@@ -1,8 +1,16 @@
 <file-list-flat>
+    <div class="ui search fluid">
+        <div class="ui icon input fluid">
+            <input class="prompt" placeholder="enter keywords" type="text" onkeyup="{onFilterInput}">
+            <i class="search icon"></i>
+        </div>
+    </div>
+    <!--
     <div class="ui left icon fluid input">
         <input placeholder="" type="text" style="border: none" onkeyup="{onFilterInput}">
         <i class="filter icon"></i>
     </div>
+    -->
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
             <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}">
