@@ -3,6 +3,7 @@
         <a class="item active" data-tab="content">Content</a>
         <a class="item" data-tab="meta">Meta</a>
         <a class="item" data-tab="layout">Layout</a>
+        <a class="item" data-tab="asset">Asset</a>
     </div>
 
     <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
