@@ -1,41 +1,73 @@
 <github-init-dialog class="ui modal" tabindex="-1" role="dialog" data-backdrop="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">GitHub Settings</h4>
+    
+    <div class="header">Prepare to public website</div>
+    <i class="close icon"></i>
+    <div class="content">
+        <div class="ui form">
+            <div class="ui info message">
+                <div class="header"><i class="icon help circle"></i>
+                    Please make a "Request", we prepare hosting to deploy this website.
+                </div>
+          
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group is-empty">
-                        <label for="form-repo-url" class="control-label col-sm-4">Repository url (HTTPS)</label>
-                        <div class="col-sm-8">
-                            <input type="url" class="form-control" id="form-repo-url" placeholder="Empty Github repository that ends with .git " oninput="{edit('repoUrl')}" value="{repoUrl}">
-                            <span class="material-input"></span>
+            
+            <div class="inline fields">
+                <label class="two wide field">Domain Name</label>
+                <div class="eight wide field">
+                        <div class="ui icon right labeled input">
+                            <input type="text" placeholder="Website name">
+                            <div class="ui label">.easywebhub.com</div>
                         </div>
                     </div>
-                    <div class="form-group is-empty">
-                        <label for="form-username" class="control-label col-sm-4">Username</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="form-username" placeholder="" oninput="{edit('username')}" value="{username}">
-                        </div>
-                    </div>
-                    <div class="form-group is-empty">
-                        <label for="form-password" class="control-label col-sm-4">Password</label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit('password')}" value="{password}">
-                            <span class="material-input"></span>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" disabled="{repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{save}">Save</button>
             </div>
         </div>
+        
+        
+        <!--
+        <form class="ui form">
+            <div class="inline fields">
+                <label class="error message">Sử dụng tạm thời với GitHub repo</label>
+            </div>
+            <div class="inline fields">
+                <label class="two wide field">Repository url (HTTPS)</label>
+                <div class="ui icon input fourteen wide field">
+                    <input type="url" id="form-repo-url" placeholder="Empty Github repository that ends with .git " oninput="{edit('repoUrl')}" value="{repoUrl}">
+                </div>
+            </div>
+            <div class="inline fields">
+                <label class="two wide field">Username</label>
+                <div class="ui icon input fourteen wide field">
+                    <input type="text" id="form-username" placeholder="" oninput="{edit('username')}" value="{username}">
+                </div>
+            </div>
+            <div class="inline fields">
+                <label class="two wide field">Password</label>
+                <div class="ui icon input fourteen wide field">
+                     <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit('password')}" value="{password}">
+                </div>
+            </div>
+           <div class="actions">
+                <div class="ui button cancel">Cancel</div>
+          
+                <div class="ui button positive icon"  disabled="{repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{save}">
+                    <i class="save icon"></i>
+                    Save
+                </div>
+            </div>
+        </form>
+        -->
+      </div>
+    <div class="actions">
+        <div class="ui button cancel">Cancel</div>
+        <div class="ui button positive icon" >
+            <i class="send icon"></i>
+            Request
+        </div>
+        <label class="success">
+            We will setup hosting and domain for your site within 24h. And all is free.
+        </div>
     </div>
-
+    
     <script>
         var me = this;
 

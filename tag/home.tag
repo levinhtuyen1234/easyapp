@@ -77,7 +77,7 @@
                     </div>
                 </div>
             </div>
-            <a class="item" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">Init</a>
+            <a class="item" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">Request</a>
         </div>
     </div>
 
