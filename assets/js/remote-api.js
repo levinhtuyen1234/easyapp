@@ -2,6 +2,10 @@
 
 let Promise = require('bluebird');
 
+var ERROR_MSG = {
+    '444': 'user not exists'
+};
+
 var thinAdapter = {
     loginUrl:               'http://api.easywebhub.com/api-user/logon',
     registerUrl:            'http://api.easywebhub.com/api-user/InsertUser',
@@ -15,6 +19,7 @@ var thinAdapter = {
                 .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
                 .replace(/\s+/g, '-')
                 .trim();
+
             ret.push({
                 displayName: site['DisplayName'],
                 name:        name,
@@ -31,16 +36,18 @@ var thinAdapter = {
                     result: {
                         id:          data['Data']['AccountId'],
                         username:    data['Data']['UserName'],
-                        password:    data['Data']['Password'],
                         accountType: data['Data']['accountType'],
                         sites:       thinAdapter.sitesObjectTransformer(data['Data']['Websites'] || [])
                     }
                 };
             } else {
+                var msg = ERROR_MSG[data['StatusCode'].toString()];
+                if (!msg)
+                    msg = data['Message'];
                 return {
                     error: {
                         code:    data['StatusCode'],
-                        message: data['Message']
+                        message: msg
                     }
                 }
             }
@@ -62,10 +69,13 @@ var thinAdapter = {
                     result: {}
                 };
             } else {
+                var msg = ERROR_MSG[data['StatusCode'].toString()];
+                if (!msg)
+                    msg = data['Message'];
                 return {
                     error: {
                         code:    data['StatusCode'],
-                        message: data['Message']
+                        message: msg
                     }
                 }
             }
@@ -88,7 +98,6 @@ var resolveAdapter = function () {
 var adapter = resolveAdapter();
 
 function login(username, password) {
-    console.log('LOGIN', username, password);
     var data = {
         username: username,
         password: password
@@ -103,6 +112,7 @@ function login(username, password) {
     }).then(function (resp) {
         resp = adapter.loginResponse(resp);
         return new Promise((resolve, reject) => {
+            console.log('LOGIN resp', resp);
             if (resp.error)
                 return reject(resp.error);
             return resolve(resp.result);

@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Show Preview" disabled>
+            <a class="item" data-toggle="tab" title="Show Preview" disabled onclick="{toggleReview}">
                 <i class="fitted icon external"></i>Preview
             </a>
             <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
@@ -121,53 +121,6 @@
                         <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
                     </div>
 
-                    <!--</div>-->
-
-
-                    <!--<watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>-->
-                    <!--<div class="tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">-->
-                    <!--<div class="btn-group" data-toggle="buttons">-->
-                    <!--<a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{-->
-                    <!--curTab == 'content-view' ||-->
-                    <!--((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))-->
-                    <!--}">-->
-                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content-->
-                    <!--</a>-->
-                    <!--<a class=" btn btn-default navbar-btn btn-sm" show="{isShowMetaTab()}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">-->
-                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta-->
-                    <!--</a>-->
-                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">-->
-                    <!--<input type="radio" name="options">Raw-->
-                    <!--</a>-->
-                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">-->
-                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout-->
-                    <!--</a>-->
-                    <!--<a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{isShowConfigTab()}">-->
-                    <!--<input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config-->
-                    <!--</a>-->
-                    <!--</div>-->
-                    <!--<div class="pull-right">-->
-                    <!--<div class="btn-group" data-toggle="buttons">-->
-                    <!--<a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}" hide="{-->
-                    <!--curTab === 'meta-view' && User.accountType == 'user'-->
-                    <!--}">-->
-                    <!--<i class="fa fa-fw fa-remove"></i>Delete-->
-                    <!--</a>-->
-                    <!--<a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--&lt;!&ndash; EDITOR PANEL &ndash;&gt;-->
-                    <!--<div class="panel panel-default">-->
-                    <!--<div class="panel-heading panel-heading-sm">-->
-
-                    <!--</div>-->
-                    <!--<div class="panel-body">-->
-                    <!--<div class="tab-content">-->
-
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <!--</div>-->
                 </div>
 
                 <div class="ui-layout-north">
@@ -195,17 +148,14 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
+        var outerLayout, innerLayout;
+
         // handler onSave content config view
         var onSaveContentConfigView, onSaveMetaConfigView;
 
-        me.getFormEditorHeight = function () {
-            // TODO handle case console build success and failure
-            // show both watch and editor
-            if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
-                return 'calc(50vh - 30px); margin-top: 20px; padding: 0;';
-            } else {
-                return 'calc(100vh - 60px)';
-            }
+        me.toggleReview = function () {
+            console.log('toggleReview');
+            outerLayout.toggle('north');
         };
 
         me.isShowContentTab = function () {
@@ -306,7 +256,7 @@
 
             $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
 
-            $('#outer-layout').layout({
+            outerLayout = $('#outer-layout').layout({
                 center: {
                     size: '60%'
                 },
@@ -318,7 +268,7 @@
                 }
             });
 
-            $('#inner-center').layout({
+            innerLayout = $('#inner-center').layout({
                 west:   {
                     size:           '35%',
                     spacing_open:   1,
@@ -329,13 +279,22 @@
 
 
             // create 1px resizer + large click area
-            var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west'))
-                    .css({overflow: "visible"});
+            var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west')).css({overflow: "visible"});
             $("<div></div>").css({
 //                background: "#F00",
                 width:      "100%",
                 height:     "100%",
                 padding:    "0 5px",
+                marginLeft: "0px",
+                opacity:    .20
+            }).prependTo(resizer);
+
+            resizer = $(me.root.querySelectorAll('.ui-layout-resizer-north')).css({overflow: "visible"});
+            $("<div></div>").css({
+//                background: "#F00",
+                width:      "100%",
+                height:     "100%",
+                padding:    "5px 0",
                 marginLeft: "0px",
                 opacity:    .20
             }).prependTo(resizer);

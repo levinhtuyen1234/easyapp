@@ -7,29 +7,10 @@
         <a class="right item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</a>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="webView" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
-        <webview id="webview" src="https://www.google.com.vn" style="display:flex; height: 100%"></webview>
+        <webview id="webview" src="about:blank" style="display:flex; height: 100%"></webview>
     </div>
     <div class="ui bottom attached tab segment" data-tab="buildLog" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
         <pre class="accesslog hljs" style="height:100%; overflow: auto; margin: 0;font-family: Consolas, monospace;">
-            asdfasd
-            fa
-            dsf
-            as
-            fd
-            asf
-            as
-            df
-            asd
-            fasd
-            f
-            sda
-            df
-            sdf
-            sad
-            fsda
-            f
-            sadf
-            sda
         </pre>
     </div>
 

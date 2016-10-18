@@ -1,5 +1,5 @@
 <file-list-flat>
-    <div class="ui search fluid">
+    <div class="ui search fluid" style="padding-top: 6px;">
         <div class="ui icon input fluid">
             <input class="prompt" placeholder="enter keywords" type="text" onkeyup="{onFilterInput}">
             <i class="search icon"></i>

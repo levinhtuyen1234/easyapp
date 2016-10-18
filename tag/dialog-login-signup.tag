@@ -1,137 +1,155 @@
-<dialog-login-signup class="ui modal" tabindex="-1" role="dialog" data-backdrop="static" style="margin-top: 20vh">
-    <div class="modal-dialog" role="document">
-        <div class="modal-body">
-            <div>
-                <ul class="nav nav-tabs nav-pills" style="border-bottom: 0;" role="tablist">
-                    <li class="active {requesting ? 'disabled': ''}"><a disabled="{requesting}" href="#login" data-toggle="tab">Login</a></li>
-                    <li class="{requesting ? 'disabled': ''}"><a disabled="{requesting}" href="#register" data-toggle="tab">Register</a></li>
-                </ul>
-                <div class="tab-content">
-                    <!-- LOGIN TAB -->
-                    <div role="tabpanel" class="tab-pane fade in active" id="login">
-                        <form class="form-horizontal" method="post" action="">
-                            <div class="form-group ">
-                                <div class="input-group">
-                                    <div class="input-group-addon "><i class="fa fa-user fa-fw"></i></div>
-                                    <input type="text" disabled="{requesting}" name="loginUsername" class="form-control" placeholder="Username" required="required" value="" onkeyup="{isLoginFormValid}">
-                                </div>
-                            </div>
-                            <div class="form-group ">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>
-                                    <input type="password" disabled="{requesting}" name="loginPassword" class="form-control" placeholder="Password" required="required" onkeyup="{isLoginFormValid}">
-                                </div>
-                            </div>
-                            <div class="form-group" style="text-align: center">
-                                <a href='#' class="btn btn-default {(isLoginFormValid() && !requesting) ? '': 'disabled'} " disabled="{!isLoginFormValid && requesting}" onclick="{login}">
-                                    Login
-                                    <i class="fa fa-spinner fa-pulse fa-fw" if="{requesting}"></i>
-                                </a>
-                            </div>
-                        </form>
-                    </div>
-
-                    <!-- REGISTER TAB -->
-                    <div role="tabpanel" class="tab-pane fade" id="register">
-                        <form class="form-horizontal" method="post" action="">
-                            <div class="form-group ">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                                    <input type="text" disabled="{requesting}" name="registerUsername" class="form-control" placeholder="Username" required="required" value="">
-                                </div>
-                            </div>
-                            <div class="form-group ">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock fa-fw"></i></div>
-                                    <input type="password" disabled="{requesting}" name="registerPassword" class="form-control" placeholder="Password" required="required" onkeyup="{isRegisterFormValid}">
-                                </div>
-                            </div>
-                            <div class="form-group ">
-                                <div class="input-group">
-                                    <div class="input-group-addon"><i class="fa fa-lock fa-fw"></i></div>
-                                    <input type="password" disabled="{requesting}" name="registerConfirmPassword" class="form-control" placeholder="Confirm Password" required="required" onkeyup="{isRegisterFormValid}">
-                                </div>
-                            </div>
-                            <span if="{errorMsg !== ''}" class="alert alert-danger help-block">{errorMsg}</span>
-                            <div class="form-group" style="text-align: center">
-                                <a href='#' class="btn btn-default {(isRegisterFormValid() && !requesting) ? '': 'disabled'}" disabled="{!isRegisterFormValid && requesting}" onclick="{register}">
-                                    Register
-                                    <i class="fa fa-spinner fa-pulse fa-fw" if="{requesting}"></i>
-                                </a>
-                            </div>
-                        </form>
-                    </div>
+<dialog-login-signup class="ui small modal" tabindex="-1" role="dialog" data-backdrop="static" style="margin-top: 20vh; width: 460px;margin-left: -16vw;">
+    <!--<div class="header" style="border-bottom: 0">-->
+    <!--Account Settings-->
+    <!--<div class="sub header">Manage your account settings and set e-mail preferences.</div>-->
+    <!--</div>-->
+    <div class="ui header" style="">
+        <i class="{isLogin ? 'sign in' : 'signup'} icon" style=""></i>
+        <div class="content" style="text-align: left">
+            {isLogin ? 'Login' : 'Register'}
+            <!--<div class="sub header">Manage your account settings and set e-mail preferences.</div>-->
+        </div>
+    </div>
+    <div class="content">
+        <form class="ui form error {loading : isRequesting}">
+            <div class="required field">
+                <div class="ui left icon input">
+                    <i class="user icon"></i>
+                    <input name="usernameField" type="text" placeholder="Username" onkeyup="{edit('username')}">
                 </div>
             </div>
-        </div>
+            <div class="required field">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input name="passwordField" type="password" placeholder="Password" onkeyup="{edit('password')}">
+                </div>
+            </div>
+            <div show="{!isLogin}" class="required field" id="confirmPasswordField">
+                <div class="ui left icon input">
+                    <i class="lock icon"></i>
+                    <input name="confirmPasswordField" type="password" placeholder="Confirm Password" onkeyup="{edit('confirmPassword')}">
+                </div>
+            </div>
+            <div show="{errorMsg != ''}" class="ui error message">
+                <!--<div class="header">{isLogin ? 'Login' : 'Sign Up'} Error</div>-->
+                <p>{errorMsg}</p>
+            </div>
+            <div class="ui fluid button blue" onclick="{submit}">{isLogin ? 'Sign In' : 'Sign Up'}</div>
+            <div show="{isLogin}" class="ui message" style="text-align: center;">
+                New to us? <a href="#" onclick="{changeMode}">Sign Up</a>
+            </div>
+            <div show="{!isLogin}" class="ui message" style="text-align: center;">
+                Already have an account? <a href="#" onclick="{changeMode}">Sign In</a>
+            </div>
+        </form>
     </div>
 
     <script>
         var me = this;
-        me.requesting = false;
+        me.mixin('form');
+
+        me.isRequesting = false;
+        me.isLogin = true;
         me.errorMsg = '';
+        var modal = null;
+
+        me.changeMode = function () {
+            me.isLogin = !me.isLogin;
+            me.errorMsg = '';
+
+            me.usernameField.value = '';
+            me.passwordField.value = '';
+            me.confirmPasswordField.value = '';
+
+            me.update();
+        };
 
         me.on('mount', function () {
             console.log('show login register dialog');
-            $(me.root).modal('show');
+            modal = $(me.root).modal({
+                closable: false
+            });
+            modal.modal('show');
         });
 
         me.on('unmount', function () {
             console.log('hide login register dialog');
-            $(me.root).modal('hide');
+            modal.modal('hide');
         });
 
-        me.login = function (e, username, password) {
-            console.log('LOGIN', username, password);
-            me.requesting = true;
-            username = username || me.loginUsername.value.trim();
-            password = password || me.loginPassword.value.trim();
+        me.submit = function () {
+            if (me.isLogin) {
+                me.login();
+            } else {
+                me.register();
+            }
+        };
 
-            API.login(username, password).then(function (result) {
-                console.log('login success, trigger loginSuccess');
-                me.unmount(true);
-                riot.event.trigger('loginSuccess', result);
-            }).catch(function (err) {
-                me.errMsg = err.statusText;
-                me.requesting = false;
-                me.update();
-            });
+        me.login = function () {
+            me.isRequesting = true;
+
+            try {
+                validateLoginForm();
+
+                API.login(me.username, me.password).then(function (result) {
+                    console.log('login success, trigger loginSuccess');
+                    me.isRequesting = false;
+                    me.unmount(true);
+                    riot.event.trigger('loginSuccess', result);
+                }).catch(function (err) {
+                    me.errorMsg = err.message;
+                    me.isRequesting = false;
+                    me.update();
+                });
+            } catch (ex) {
+                me.errorMsg = ex.message;
+                me.isRequesting = false;
+            }
         };
 
         me.register = function () {
             console.log('REGISTER');
-            me.requesting = true;
+            me.isRequesting = true;
 
-            var data = {
-                username:    me.registerUsername.value.trim(),
-                password:    me.registerPassword.value.trim(),
-                accountType: 'user',
-                websites:    []
-            };
-            API.register(data).then(function () {
-                console.log('register success, call login', data.username, data.password);
-                return me.login(null, data.username, data.password);
-            }).catch(function (err) {
-                alert(err.message, 'Register failed');
-                me.requesting = false;
-                me.update();
-            });
+            try {
+                validateRegisterForm();
+                var data = {
+                    username:    me.username,
+                    password:    me.password,
+                    accountType: 'user',
+                    websites:    []
+                };
+
+                API.register(data).then(function () {
+                    console.log('register success, call login', data.username, data.password);
+                    return me.login(null, data.username, data.password);
+                }).catch(function (err) {
+//                alert(err.message, 'Register failed');
+                    me.errorMsg = err.message;
+                    me.isRequesting = false;
+                    me.update();
+                });
+            } catch (ex) {
+                me.errorMsg = ex.message;
+                me.isRequesting = false;
+            }
         };
 
-        me.isLoginFormValid = function () {
-            return me.loginUsername.value.trim() !== '' &&
-                    me.loginPassword.value.trim() !== ''
+        var validateLoginForm = function () {
+            if (me.username == undefined || ((me.username = me.username.trim()) === '')) {
+                throw new Error('username is empty');
+            }
+
+            if (me.password == undefined || ((me.password = me.password.trim()) === '')) {
+                throw new Error('password is empty');
+            }
         };
 
-        me.isRegisterFormValid = function () {
-            var username = me.registerUsername.value.trim();
-            var password = me.registerUsername.value.trim();
-            var confirmPassword = me.registerConfirmPassword.value.trim();
-            console.log('username', username, 'password', password, 'confirmPassword', confirmPassword);
-            return username !== '' &&
-                    password !== '' &&
-                    confirmPassword !== '' &&
-                    password === confirmPassword;
+        var validateRegisterForm = function () {
+            validateLoginForm();
+            if (me.password != me.confirmPassword) {
+                throw new Error('password not match');
+            }
         };
     </script>
 </dialog-login-signup>
