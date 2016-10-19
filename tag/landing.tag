@@ -2,6 +2,243 @@
     <dialog-new-site-local></dialog-new-site-local>
     <dialog-new-site-import></dialog-new-site-import>
     <progress-dialog></progress-dialog>
+
+<div class="des-hero">
+
+    <div class="ui grid container ">
+
+    <div class="eight wide column">
+
+    <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_logo-easyweb-white-1.png" class="ui image" width="200" alt="">
+
+
+    </div>
+
+        <div class="eight wide column" style="text-align: right">
+
+        <div class="ui  dropdown top right pointing">
+        <input type="hidden" name="gender">
+    <img class="ui avatar image" src="http://semantic-ui.com/images/avatar/small/jenny.jpg">
+            <span>Username</span>
+
+            <i class="dropdown icon"></i>
+
+            <div class="menu">
+            <a class="item" href="#link1"><i class="edit icon"></i> Sửa thông tin</a>
+            <a class="item" href="#link2"><i class="lock icon"></i> Đổi mật khẩu</a>
+            <div class="divider"></div>
+            <a class="item" href="#link3"><i class="sign out icon"></i> Đăng xuất</a>
+            </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <div class="ui grid container ">
+        <div class="wide column">
+
+
+
+        <h1 class="ui header huge">
+            Present your website, easily
+        </h1>
+
+        <p>An open framework lets you build up websites <br/> with only HTML, CSS, JS skills</p>
+        <br/>
+        <div><i class="angle down icon large"></i></div>
+
+        </div>
+
+    </div>
+</div>
+<div class="user-project">
+    <div class="ui grid container ">
+
+        <div class="sixteen wide column">
+
+            <h2 class="ui header weight-300" >
+           Your projects:
+            <div class="sub header">Choose your projects to continue make your own awesome website</div>
+            </h2>
+
+
+    <div class="ui four stackable doubling cards">
+        <a class="ui card" href="">
+            <div class="image">
+            <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-preview-oneui-large-preview.jpg">
+            </div>
+            <div class="content">
+                <div class="header">Pillar</div>
+                <div class="description">
+
+                    <p>Landing page for your company</p>
+
+
+                </div>
+            </div>
+
+    <div class="extra content">
+    <i class="edit icon"></i>
+    Last edit: 25/10/2016 00h25min
+    </div>
+
+        </a>
+
+        <a class="ui card" href="">
+        <div class="image">
+        <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01preview-main-large-preview.jpg">
+        </div>
+        <div class="content">
+        <div class="header">Sumo Landing</div>
+        <div class="description">
+        Multipurposes landing page
+        </div>
+        </div>
+
+    <div class="extra content">
+    <i class="edit icon"></i>
+    Last edit: 25/10/2016 00h25min
+    </div>
+        </a>
+
+        <a class="ui card" href="/examples/theming.html">
+        <div class="image">
+        <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-homepage-edit10-large-preview.jpg">
+        </div>
+        <div class="content">
+        <div class="header">Draco</div>
+        <div class="description">
+        Sample resume
+        </div>
+        </div>
+
+    <div class="extra content">
+    <i class="edit icon"></i>
+    Last edit: 25/10/2016 00h25min
+    </div>
+        </a>
+
+        <a class="ui card" href="/examples/theming.html">
+        <div class="image">
+        <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-preview-large-preview.jpg">
+        </div>
+        <div class="content">
+        <div class="header">New providence</div>
+        <div class="description">
+        Present your apps in easy way.
+        </div>
+        </div>
+
+    <div class="extra content">
+    <i class="edit icon"></i>
+    Last edit: 25/10/2016 00h25min
+    </div>
+        </a>
+
+    </div>
+
+
+        </div>
+
+    </div>
+</div>
+
+
+    <div class="marketplace">
+    <div class="ui grid container ">
+
+    <div class="sixteen wide column">
+
+
+    <h1 class="ui header weight-300" style="
+    margin: 0;
+    "> Marketplace </h1>
+    <h1 class="ui header weight-300 orange" style="margin: 20px 0 15px; font-size: 3em">Website template</h1>
+
+    <h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>
+
+
+    <div class="ui three stackable doubling cards">
+    <a class="ui card" href="">
+    <div class="image">
+    <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-preview-oneui-large-preview.jpg">
+    </div>
+    <div class="content">
+    <div class="header">Pillar</div>
+    <div class="description">
+
+    <p>Landing page for your company</p>
+
+
+    </div>
+    </div>
+
+    <div class="extra content">
+        <i>by</i> <b style="color:black">Someone</b>
+    </div>
+
+    </a>
+
+
+    <a class="ui card" href="">
+    <div class="image">
+    <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01preview-main-large-preview.jpg">
+    </div>
+    <div class="content">
+    <div class="header">Sumo Landing</div>
+    <div class="description">
+    Multipurposes landing page
+    </div>
+    </div>
+
+    <div class="extra content">
+    <i>by</i> <b style="color:black">Someone</b>
+    </div>
+    </a>
+
+    <a class="ui card" href="/examples/theming.html">
+    <div class="image">
+    <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-homepage-edit10-large-preview.jpg">
+    </div>
+    <div class="content">
+    <div class="header">Draco</div>
+    <div class="description">
+    Sample resume
+    </div>
+    </div>
+
+    <div class="extra content">
+    <i>by</i> <b style="color:black">Someone</b>
+    </div>
+    </a>
+
+    <a class="ui card" href="/examples/theming.html">
+    <div class="image">
+    <img src="https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-preview-large-preview.jpg">
+    </div>
+    <div class="content">
+    <div class="header">New providence</div>
+    <div class="description">
+    Present your apps in easy way.
+    </div>
+    </div>
+
+    <div class="extra content">
+    <i>by</i> <b style="color:black">Someone</b>
+    </div>
+    </a>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+
     <div class="ui hidden section divider"></div>
     <div class="ui one column centered grid container">
         <h2 class="ui horizontal divider header">
@@ -250,6 +487,14 @@
                 });
             });
         };
+    </script>
+
+    <script>
+
+    $(document).ready(function(){
+        $('.ui.dropdown').dropdown();
+    });
+
     </script>
 
 </landing>
