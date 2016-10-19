@@ -10,7 +10,7 @@
     <div class="ui fluid tiny inverted menu" style="margin-top: 0;">
         <div class="item">
             <a href="#goto-home" onclick="{goToLandingPage}" class="ui primary button">
-                <i class="ui icon home"></i>
+                <i class="ui icon home" style="margin: 0"></i>
             </a>
         </div>
         <div class="item">
@@ -230,8 +230,6 @@
 
         me.on('unmount', function () {
             console.trace('unmount home tag');
-            riot.event.off('watchSuccess', onWatchSuccess);
-            riot.event.off('watchFailed', onWatchFailed);
             riot.event.off('chooseMediaFile', onChooseMediaFile);
             riot.event.off('addLayout', onAddLayout);
             riot.event.off('addContent', onAddContent);
@@ -774,20 +772,6 @@
             }
         };
 
-        var onWatchSuccess = function () {
-            if (me.openExternalReviewBtn === undefined) {
-
-            } else {
-                me.openExternalReviewBtn.disabled = false;
-            }
-
-        };
-
-        var onWatchFailed = function () {
-            me.openExternalReviewBtn.disabled = true;
-//            $(openWdatchViewBtn).removeClass('active');
-        };
-
         var onChooseMediaFile = function (cb) {
             dialog.showOpenDialog({
                 properties: ['openFile'],
@@ -808,8 +792,6 @@
             });
         };
 
-        riot.event.on('watchSuccess', onWatchSuccess);
-        riot.event.on('watchFailed', onWatchFailed);
         riot.event.on('chooseMediaFile', onChooseMediaFile);
         riot.event.on('addLayout', onAddLayout);
         riot.event.on('addContent', onAddContent);
@@ -878,10 +860,6 @@
                     me.tags['progress-dialog'].enableClose();
                 });
             });
-        };
-
-        me.openExternalReview = function () {
-            me.tags['bottom-bar'].openExternalBrowser();
         };
 
         me.showFtpDialog = function () {

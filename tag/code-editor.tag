@@ -28,7 +28,6 @@
         };
 
         me.on('mount', function () {
-            console.log('CODE EDITOR on mount', me.opts);
             if (me.opts.dataTab == "layout-view") {
                 window.layoutView = me;
             } else {
