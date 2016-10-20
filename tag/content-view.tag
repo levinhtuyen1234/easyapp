@@ -29,24 +29,20 @@
         });
 
         me.setContent = function (content, contentConfig) {
-//            console.log('me.tags', me.tags);
-//            console.log('contentConfig', contentConfig);
             // gen content form
-//            console.log('setContent', content.metaData);
-            var contentFieldConfig = contentConfig.filter(function(config) { return config.name === '__content__'})[0];
-            console.log('contentFieldConfig', contentFieldConfig);
+            var contentFieldConfig = contentConfig.filter(function (config) {
+                return config.name === '__content__'
+            })[0];
             me.tags['form-editor'].genForm(content.metaData, contentConfig);
             // set markdown editor content
-//            setTimeout(function () {
             if (contentFieldConfig.hidden) {
-                console.log('HIDE contentMarkDownEditorField');
+//                console.log('HIDE contentMarkDownEditorField');
                 $(contentMarkDownEditorField).hide();
             } else {
-                console.log('SHOW contentMarkDownEditorField');
+//                console.log('SHOW contentMarkDownEditorField');
                 $(contentMarkDownEditorField).show();
             }
             me.tags['markdown-editor'].setValue(content.markDownData);
-//            }, 1);
         };
 
         me.reset = function () {
