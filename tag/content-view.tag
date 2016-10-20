@@ -32,6 +32,7 @@
 //            console.log('me.tags', me.tags);
 //            console.log('contentConfig', contentConfig);
             // gen content form
+            console.log('setContent', content.metaData);
             me.tags['form-editor'].genForm(content.metaData, contentConfig);
             // set markdown editor content
 //            setTimeout(function () {

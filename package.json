@@ -31,6 +31,7 @@
     "jsftp": "^1.5.3",
     "lodash": "^4.16.3",
     "moment": "^2.13.0",
-    "rimraf": "^2.5.4"
+    "rimraf": "^2.5.4",
+    "smtp-connection": "^2.12.1"
   }
 }

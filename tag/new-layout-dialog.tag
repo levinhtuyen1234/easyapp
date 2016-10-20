@@ -7,11 +7,13 @@
                 <div class="header"><i class="icon help circle"></i>Apply for one or multiple webpage, using HTML, CSS and <a href="http://handlebarsjs.com">HandlebarJS</a> code</div>
             </div>
             <div class="required inline fields">
-                <label>Filename</label>
-                <div class="ui right labeled input" style="width: calc(100% - 228px);">
-                    <div show="{prefix!=''}" class="ui label">{prefix}</div>
-                    <input type="text" placeholder="Filename" oninput="{updateFileName}">
-                    <div class="ui label">{postfix}</div>
+                <label class="two wide field">Filename</label>
+                <div class="ui fourteen wide field">
+                    <div class="ui right labeled input" style="width: 100%;">
+                        <div show="{prefix!=''}" class="ui label">{prefix}</div>
+                        <input type="text" placeholder="Filename" oninput="{updateFileName}">
+                        <div class="ui label">{postfix}</div>
+                    </div>
                 </div>
             </div>
 
@@ -88,7 +90,7 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();

@@ -5,14 +5,15 @@
         <div class="ui form">
             <div class="inline fields">
                 <label class="two wide field">Tag Name</label>
-                <div class="ui icon input eight wide field">
-                    <input type="text" id="tagNameElm" placeholder="Name" oninput="{updateTagName}">
+                <div class="ui fourteen wide field">
+                    <div class="ui icon input">
+                        <input type="text" id="tagNameElm" placeholder="Name" oninput="{updateTagName}">
+                    </div>
                 </div>
             </div>
             <div class="inline fields">
                 <label class="two wide field">Filename</label>
-                <div class="eight wide field">
-
+                <div class="fourteen wide field">
                     <div class="ui icon right labeled input">
                         <input type="text" id="tagFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
                         <div class="ui label">.json</div>
@@ -55,7 +56,7 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();

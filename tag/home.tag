@@ -7,7 +7,7 @@
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
     <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
 
-    <div class="ui fluid tiny inverted menu" style="margin-top: 0;">
+    <div class="ui fluid tiny inverted menu" style="margin-top: 0; border-radius: 0;">
         <div class="item">
             <a href="#goto-home" onclick="{goToLandingPage}" class="ui primary button">
                 <i class="ui icon home" style="margin: 0"></i>

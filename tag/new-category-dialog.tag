@@ -5,15 +5,17 @@
         <div class="ui form">
             <div class="inline fields">
                 <label class="three wide field">Category Name</label>
-                <div class="ui fluid icon input eight wide field">
-                    <input type="text" id="categoryNameElm" placeholder="Name" oninput="{updateCategoryName}">
+                <div class="ui thirteen wide field">
+                    <div class="ui fluid icon input">
+                        <input type="text" id="categoryNameElm" placeholder="Name" oninput="{updateCategoryName}">
+                    </div>
                 </div>
             </div>
             <div class="inline fields">
                 <label class="three wide field">Parent Category</label>
-                <div class="ui menu fluid">
-                    <div class="ui fluid selection dropdown">
-                        <input name="gender" type="hidden">
+                <div class="ui thirteen wide field">
+                    <div class="ui fluid selection dropdown" style="width: 100%">
+                        <input name="category" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Category</div>
                         <div class="menu">
@@ -21,27 +23,27 @@
                         </div>
                     </div>
                 </div>
-                
+
             </div>
             <div class="inline fields">
                 <label class="three wide field">Filename</label>
-                <div class="eight wide field">
+                <div class="thirteen wide field">
                     <div class="ui icon right labeled input">
                         <input type="text" id="categoryFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
                         <div class="ui label">.json</div>
                     </div>
                 </div>
             </div>
-            
-         <!--   <div class="ui info message">
-                <div class="header"><i class="icon help circle"></i> NOTE: The "." of filename is used to define the relationship between 2 categories</div>
-                <div class="description">E.g
-                    <div class="ui basic red label">category.sub-category.json</div>
-                    belongs the
-                    <div class="ui basic red label">category.json</div>
-                </div>
-            </div>
-            -->
+
+            <!--   <div class="ui info message">
+                   <div class="header"><i class="icon help circle"></i> NOTE: The "." of filename is used to define the relationship between 2 categories</div>
+                   <div class="description">E.g
+                       <div class="ui basic red label">category.sub-category.json</div>
+                       belongs the
+                       <div class="ui basic red label">category.json</div>
+                   </div>
+               </div>
+               -->
         </div>
     </div>
     <div class="actions">
@@ -79,7 +81,7 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();
@@ -87,7 +89,7 @@
         };
 
         me.show = function () {
-            
+
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
             me.categoryList.forEach(function (category) {
                 category.name = category.name.split('.').join(' / ');

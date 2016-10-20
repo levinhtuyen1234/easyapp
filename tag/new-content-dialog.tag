@@ -34,13 +34,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="col-sm-10">-->
-                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit('contentCategory')}">-->
-                <!--<option value=""></option>-->
-                <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
-                <!--</select>-->
-                <!--</div>-->
             </div>
 
             <div class="inline fields">
@@ -55,13 +48,6 @@
                         </div>
                     </div>
                 </div>
-
-                <!--<div class="col-sm-10">-->
-                <!--<select id="categoryListElm" class="selectpicker" onchange="{edit('contentCategory')}">-->
-                <!--<option value=""></option>-->
-                <!--<option each="{category in categoryList}" value="{category.value}">{category.name}</option>-->
-                <!--</select>-->
-                <!--</div>-->
             </div>
 
             <div class="inline fields">
@@ -73,51 +59,6 @@
                     </div>
                 </div>
             </div>
-
-            <!--<div class="form-group">-->
-            <!--<label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>-->
-            <!--<div class="col-sm-10">-->
-            <!--<select id="contentLayoutElm" class="selectpicker" onchange="{edit('contentLayout')}">-->
-            <!--<option value=""></option>-->
-            <!--<option each="{value in layoutList}" value="{value}">{hideExt(value)}</option>-->
-            <!--</select>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--<div class="form-group">-->
-            <!--<div class="col-sm-offset-2 col-sm-10">-->
-            <!--<label for="isFrontPageElm">-->
-            <!--<input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> To create a single Page, check here-->
-            <!--</label>-->
-            <!--<label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="form-group">-->
-            <!--<label for="contentTitleElm" class="col-sm-2 control-label">Category</label>-->
-            <!--<div class="col-sm-10">-->
-            <!--<input type="text" class="form-control" placeholder="Category" style="width: 498px;" onchange="{edit('contentCategory')}">-->
-            <!--</div>-->
-            <!--</div>-->
-
-
-            <!--<div class="form-group">-->
-            <!--<label for="tagListElm" class="col-sm-2 control-label">Tag</label>-->
-            <!--<div class="col-sm-10">-->
-            <!--<select id="tagListElm" class="selectpicker" onchange="{editTag}" multiple>-->
-            <!--<option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>-->
-            <!--</select>-->
-            <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="form-group">-->
-            <!--<label for="contentFilenameElm" class="col-sm-2 control-label">File Name</label>-->
-            <!--<div class="col-sm-10">-->
-            <!--<div class="input-group">-->
-            <!--<input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">-->
-            <!--<span class="input-group-addon">.md</span>-->
-            <!--</div>-->
-            <!--</div>-->
-            <!--</div>-->
         </form>
     </div>
     <div class="actions">
@@ -207,7 +148,7 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();

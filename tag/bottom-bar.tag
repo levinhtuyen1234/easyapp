@@ -231,7 +231,6 @@
                 if (aTag.hasClass('active')) return;
                 aTag.siblings().removeClass('active');
                 aTag.addClass('active');
-                console.log('show webview tab', deviceType);
 
                 tab.tab('change tab', 'webview');
                 var contents = me.webview.getWebContents();
