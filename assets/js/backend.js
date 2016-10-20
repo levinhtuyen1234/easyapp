@@ -354,6 +354,26 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
                 break;
         }
     }
+
+    // add _config to fixed fields if not exists
+    if (fixedField) {
+        var contentField = _.find(fixedFields, {name: '__content__'});
+        if (!contentField) {
+            fixedFields.push({
+                name:         '__content__',
+                displayName:  '[Content]',
+                type:         'Text',
+                displayType:  'MarkDown',
+                defaultValue: '',
+                validations:  [],
+                hidden:       false,
+                viewOnly:     false,
+                required:     false
+            })
+        }
+    }
+
+
     return fixedFields.concat(tmpFields);
 }
 

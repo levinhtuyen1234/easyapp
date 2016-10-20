@@ -22,6 +22,12 @@
     </div>
     <br>
 
+    <div class="inline field ui checkbox" show="{config.name === '__content__'}">
+        <label class="title">Is hidden</label>
+        <input type="checkbox" onchange="{edit('config.hidden')}" checked="{config.hidden}">
+    </div>
+    <br>
+
     <!-- Display Type -->
     <div class="inline field">
         <label class="">Display type:</label>

@@ -634,8 +634,10 @@
             if (contentConfig == undefined) {
                 console.log('BUG', contentConfig);
             }
+            // render all field excet __content__
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
+                if (fieldConfig.name === '__content__') continue;
                 var metaValue = metaData[fieldConfig.name];
                 var div = document.createElement('div');
                 var tagTypeName = 'form-field-' + fieldConfig.type.toLowerCase();
