@@ -21,7 +21,7 @@
                         <a class="item disabled" data-value="changeUserData"><i class="edit icon"></i> Edit profile</a>
                         <a class="item disabled" data-value="changeUserPassword"><i class="lock icon"></i> Change password</a>
                         <div class="divider"></div>
-                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Log out<</a>
+                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Log out</a>
                     </div>
                 </div>
             </div>
