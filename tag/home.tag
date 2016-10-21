@@ -45,13 +45,13 @@
             <div class="ui dropdown icon item">
                 <i class="dropdown icon fitted" style="margin: 0"></i>
                 <div class="menu">
-                    <div class="item" hide="{User.accountType == 'user'}">
+                    <div class="item" hide="{User.accountType == 'user'}" data-value="watchDev" onclick="{openWatchView.bind(this, 'dev')}">
                         <i class="fitted icon cubes"></i>
-                        <span onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)">Build Dev</span>
+                        <span title="Build this website on local PC to preview (Dev mode)">Build Dev</span>
                     </div>
-                    <div class="item">
+                    <div class="item" data-value="refreshWatch" onclick="{refreshWatchView}">
                         <i class="fitted icon refresh"></i>
-                        <span onclick="{refreshWatchView}" title="restart to refresh preview website">Refresh</span>
+                        <span title="restart to refresh preview website">Refresh</span>
                     </div>
                 </div>
             </div>
@@ -158,6 +158,10 @@
             outerLayout.toggle('north');
         };
 
+        me.openReview = function () {
+            outerLayout.open('north');
+        };
+
         me.isShowContentTab = function () {
 //            console.log('isShowContentTab me.curTab', me.curTab);
             return me.curTab == 'content-view' ||
@@ -252,7 +256,12 @@
             });
             me.checkGhPageStatus();
 
-            $(me.root.querySelectorAll('.ui.dropdown')).dropdown(); // init dropdown
+            $(me.root.querySelectorAll('.ui.dropdown')).dropdown({
+                onChange: function (value, text) {
+                    if (value == '') return;
+                    $(this).dropdown('clear');
+                }
+            }); // init dropdown
 
             outerLayout = $('#outer-layout').layout({
                 center: {
@@ -360,9 +369,13 @@
             });
         };
 
-        me.refreshWatchView = function () {
+        me.refreshWatchView = function (e) {
             me.openWatchView();
+            console.log('refreshWatchView');
             riot.event.trigger('refreshWatch');
+            setTimeout(function () {
+                $(e.srcElement).closest('.item').removeClass('active');
+            }, 1);
         };
 
         me.openLayoutTab = function () {
@@ -396,6 +409,7 @@
 //            }, 1);
 
 //            ShowTab('watch-view');
+            me.openReview();
             if (mode === 'user')
                 me.tags['bottom-bar'].watch();
             else if (mode === 'dev')

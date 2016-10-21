@@ -5,7 +5,7 @@
             <div class="field">
                 <label>Name</label>
                 <div class="ui fluid input">
-                    <input type="text" id="nameField" placeholder="Name" oninput="{edit('fieldName')}">
+                    <input type="text" id="nameField" placeholder="Name" oninput="{edit.bind(this, 'fieldName')}">
                 </div>
             </div>
             <div class="field">

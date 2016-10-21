@@ -130,34 +130,31 @@
 
     window.curPage = null;
     var formMixin = {
-        edit: function (keyPath) {
-            return function (e) {
-                e.stopPropagation();
-                var value;
-                switch (e.target.type) {
-                    case 'checkbox':
-                        value = e.target.checked;
-                        break;
-                    case 'number':
-                        value = parseInt(e.target.value, 10);
-                        break;
-                    default:
-                        value = e.target.value;
-                }
+        edit: function (keyPath, e) {
+            e.stopPropagation();
+            var value;
+            switch (e.target.type) {
+                case 'checkbox':
+                    value = e.target.checked;
+                    break;
+                case 'number':
+                    value = parseInt(e.target.value, 10);
+                    break;
+                default:
+                    value = e.target.value;
+            }
 
-                var schema = this;
+            var schema = this;
 //                console.log('schema', schema);
 //                console.log('keyPath', keyPath);
-                var pList = keyPath.split('.');
-                var len = pList.length;
-                for (var i = 0; i < len - 1; i++) {
-                    var elem = pList[i];
-                    if (!schema[elem]) schema[elem] = {};
-                    schema = schema[elem];
-                }
-                schema[pList[len - 1]] = value;
-
-            };
+            var pList = keyPath.split('.');
+            var len = pList.length;
+            for (var i = 0; i < len - 1; i++) {
+                var elem = pList[i];
+                if (!schema[elem]) schema[elem] = {};
+                schema = schema[elem];
+            }
+            schema[pList[len - 1]] = value;
         }
     };
 
@@ -184,8 +181,8 @@
             return BackEnd.createSiteFolder(name).then(function (sitePath) {
                 return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
                     console.log('git checkout done', name);
-                    if (window.curPage) window.curPage.unmount(true);
-                    window.curPage = riot.mount('home', {siteName: name})[0];
+//                    if (window.curPage) window.curPage.unmount(true);
+//                    window.curPage = riot.mount('home', {siteName: name})[0];
                 }).catch(function (ex) {
                     console.log(ex.message);
                 });
@@ -212,7 +209,7 @@
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
 //        window.curPage = riot.mount('home', {siteName: 'retest'})[0];
-//        window.curPage = riot.mount('home', {siteName: 'pillar'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'tmp'})[0];
         // uncomment to enable login
 //        CheckAccountAndGoToLanding();
         window.curPage = riot.mount('landing')[0];
@@ -277,7 +274,6 @@
     checkRemoteTemplate();
 
 </script>
-
 
 
 <!--<div class="container site-footer-container" style="padding: 0;">-->

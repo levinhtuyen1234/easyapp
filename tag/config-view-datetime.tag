@@ -1,24 +1,24 @@
 <config-view-datetime>
     <div class="field">
         <label>Display name:</label>
-        <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit('config.displayName')}">
+        <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit.bind(this,'config.displayName')}">
     </div>
     <!-- This field is required -->
     <div class="inline field ui checkbox">
         <label class="title">Is required</label>
-        <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
+        <input type="checkbox" onchange="{edit.bind(this,'config.required')}" checked="{config.required}">
     </div>
     <br>
     <!-- View Only Field -->
     <div class="inline field ui checkbox">
         <label class="label">Only View</label>
-        <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
+        <input type="checkbox" onchange="{edit.bind(this,'config.viewOnly')}" checked="{config.viewOnly}">
     </div>
 
     <!-- DateTime type -->
     <div class="field">
         <label>Display type:</label>
-        <select id="dateTimeDisplayType" class="ui dropdown" onchange="{edit('config.displayType')}">
+        <select id="dateTimeDisplayType" class="ui dropdown" onchange="{edit.bind(this,'config.displayType')}">
             <option value="Time">Time</option>
             <option value="Date">Date</option>
             <option value="DateTime">DateTime</option>

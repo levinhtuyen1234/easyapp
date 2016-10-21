@@ -117,8 +117,8 @@
     </style>
     <label for="form-{config.name}-{config.displayType}" name="label" class="two wide field truncate" data-tooltip="{config.displayName}" style="text-align: left;">{config.displayName}</label>
     <div class="ui fourteen wide field" style="padding: 0">
-        <input if="{config.displayType === 'ShortText'}" class="" type="text" id="form-{config.name}-ShortText" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
-        <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit('value')}" readonly="{config.viewOnly}"></textarea>
+        <input if="{config.displayType === 'ShortText'}" class="" type="text" id="form-{config.name}-ShortText" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}">
+        <textarea if="{config.displayType === 'LongText'}" style="height: 150px; min-height: 150px;" rows="5" id="form-{config.name}-LongText" value="{value}" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}"></textarea>
 
         <markdown-editor if="{config.displayType === 'MarkDown'}" status="false" height="300px" style="width:100%" viewOnly="{config.viewOnly}"></markdown-editor>
 
@@ -199,7 +199,7 @@
     <label for="form-{config.name}-{config.displayType}" class="two wide field" style="text-align: left;">{config.displayName}
     </label>
     <div class="fourteen wide field" style="padding: 0">
-        <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+        <input type="number" if="{config.displayType === 'Number'}" id="form-{config.name}-Number" class="form-control" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}">
 
         <div class="ui fluid selection dropdown" if="{config.displayType === 'DropDown'}" style="width: 100%">
             <input name="" type="hidden">
@@ -252,7 +252,7 @@
 <form-field-boolean class="inline fields">
     <label style="vertical-align: middle; margin-bottom: 12px;" class="two wide field">{config.displayName}</label>
     <div class="ui toggle checkbox">
-        <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit('value')}" disabled="{config.viewOnly}">
+        <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit.bind(this, 'value')}" disabled="{config.viewOnly}">
     </div>
     <script>
         var me = this;
@@ -281,7 +281,7 @@
         <div class="ui calendar fourteen wide field" ref="validFromCalendar" style="padding:0">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit('value')}" readonly="{config.viewOnly}">
+                <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}">
             </div>
         </div>
     </div>

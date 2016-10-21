@@ -40,19 +40,19 @@
             <div class="inline fields">
                 <label class="two wide field">Repository url (HTTPS)</label>
                 <div class="ui icon input fourteen wide field">
-                    <input type="url" id="form-repo-url" placeholder="Empty Github repository that ends with .git " oninput="{edit('repoUrl')}" value="{repoUrl}">
+                    <input type="url" id="form-repo-url" placeholder="Empty Github repository that ends with .git " oninput="{edit.bind(this, 'repoUrl')}" value="{repoUrl}">
                 </div>
             </div>
             <div class="inline fields">
                 <label class="two wide field">Username</label>
                 <div class="ui icon input fourteen wide field">
-                    <input type="text" id="form-username" placeholder="" oninput="{edit('username')}" value="{username}">
+                    <input type="text" id="form-username" placeholder="" oninput="{edit.bind(this, 'username')}" value="{username}">
                 </div>
             </div>
             <div class="inline fields">
                 <label class="two wide field">Password</label>
                 <div class="ui icon input fourteen wide field">
-                     <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit('password')}" value="{password}">
+                     <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit.bind(this, 'password')}" value="{password}">
                 </div>
             </div>
            <div class="actions">

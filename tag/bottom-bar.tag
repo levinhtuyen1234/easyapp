@@ -1,12 +1,12 @@
 <bottom-bar>
     <div class="ui attached tabular small menu">
-        <a class="active item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab('desktop')}">
+        <a class="active item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab.bind(this, 'desktop')}">
             <i class="desktop icon"></i>PC
         </a>
-        <a class="item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab('tablet')}">
+        <a class="item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab.bind(this, 'tablet')}">
             <i class="tablet icon"></i>Tablet
         </a>
-        <a class="item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab('mobile')}">
+        <a class="item" data-tab="webView" style="border-radius: 0 !important;" onclick="{showWebViewTab.bind(this, 'mobile')}">
             <i class="mobile icon"></i>Mobile
         </a>
         <a class="ui button disabled" id="openExternalBrowserBtn" data-tab="onBrowser" style="border-radius: 0 !important;" onclick="{openExternalBrowser}">Open on Browser</a>
@@ -82,6 +82,7 @@
                             console.log('found review url', reviewUrl[1]);
 //                            riot.event.trigger('watchSuccess', reviewUrl[1]);
                             me.iframeUrl = reviewUrl[1];
+                            me.webview.src = me.iframeUrl;
                             $(me.openExternalBrowserBtn).removeClass('disabled');
                             // TODO inject js detect is resizer already running
 //                            me.webview.executeJavaScript(resizerScript, false);
@@ -150,7 +151,6 @@
         };
 
         me.watch = function () {
-            if (watchProcess != null) return;
             me.webview.src = buildingDataUri;
             me.clearLog();
             me.closeWatchProcess();
@@ -161,7 +161,6 @@
         };
 
         me.watchDev = function () {
-            if (watchProcess != null) return;
             me.webview.src = buildingDataUri;
             me.clearLog();
             me.closeWatchProcess();
@@ -223,49 +222,47 @@
             scrollToBottom();
         };
 
-        me.showWebViewTab = function (deviceType) {
-            return function (e) {
-                window.wv = me.webview;
+        me.showWebViewTab = function (deviceType, e) {
+            window.wv = me.webview;
 //                console.log(me.webview.width, me.webview.height);
-                var aTag = $(e.srcElement).closest('a');
-                if (aTag.hasClass('active')) return;
-                aTag.siblings().removeClass('active');
-                aTag.addClass('active');
+            var aTag = $(e.srcElement).closest('a');
+            if (aTag.hasClass('active')) return;
+            aTag.siblings().removeClass('active');
+            aTag.addClass('active');
 
-                tab.tab('change tab', 'webview');
-                var contents = me.webview.getWebContents();
-                switch (deviceType) {
-                    case 'desktop':
-                        contents.enableDeviceEmulation({
-                            screenPosition: 'desktop'
-                        });
-                        break;
-                        content.disableDeviceEmulation();
-                        break;
-                    case 'tablet':
-                        contents.enableDeviceEmulation({
-                            screenPosition:    'mobile',
-                            screenSize:        {width: 768, height: 1024},
-                            deviceScaleFactor: 0,
-                            viewPosition:      {x: 0, y: 0},
-                            viewSize:          {width: 768, height: 1024},
-                            fitToView:         false,
-                            offset:            {x: 0, y: 0}
-                        });
-                        break;
-                    case 'mobile':
-                        contents.enableDeviceEmulation({
-                            screenPosition:    'mobile',
-                            screenSize:        {width: 414, height: 736},
-                            deviceScaleFactor: 0,
-                            viewPosition:      {x: 0, y: 0},
-                            viewSize:          {width: 414, height: 736},
-                            fitToView:         true,
-                            offset:            {x: 0, y: 0}
-                        });
-                        break;
-                }
-            };
+            tab.tab('change tab', 'webview');
+            var contents = me.webview.getWebContents();
+            switch (deviceType) {
+                case 'desktop':
+                    contents.enableDeviceEmulation({
+                        screenPosition: 'desktop'
+                    });
+                    break;
+                    content.disableDeviceEmulation();
+                    break;
+                case 'tablet':
+                    contents.enableDeviceEmulation({
+                        screenPosition:    'mobile',
+                        screenSize:        {width: 768, height: 1024},
+                        deviceScaleFactor: 0,
+                        viewPosition:      {x: 0, y: 0},
+                        viewSize:          {width: 768, height: 1024},
+                        fitToView:         false,
+                        offset:            {x: 0, y: 0}
+                    });
+                    break;
+                case 'mobile':
+                    contents.enableDeviceEmulation({
+                        screenPosition:    'mobile',
+                        screenSize:        {width: 414, height: 736},
+                        deviceScaleFactor: 0,
+                        viewPosition:      {x: 0, y: 0},
+                        viewSize:          {width: 414, height: 736},
+                        fitToView:         true,
+                        offset:            {x: 0, y: 0}
+                    });
+                    break;
+            }
         }
     </script>
 </bottom-bar>

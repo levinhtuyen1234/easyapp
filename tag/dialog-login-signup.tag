@@ -15,19 +15,19 @@
             <div class="required field">
                 <div class="ui left icon input">
                     <i class="user icon"></i>
-                    <input name="usernameField" type="text" placeholder="Username" onkeyup="{edit('username')}">
+                    <input name="usernameField" type="text" placeholder="Username" onkeyup="{edit.bind(this, 'username')}">
                 </div>
             </div>
             <div class="required field">
                 <div class="ui left icon input">
                     <i class="lock icon"></i>
-                    <input name="passwordField" type="password" placeholder="Password" onkeyup="{edit('password')}">
+                    <input name="passwordField" type="password" placeholder="Password" onkeyup="{edit.bind(this, 'password')}">
                 </div>
             </div>
             <div show="{!isLogin}" class="required field" id="confirmPasswordField">
                 <div class="ui left icon input">
                     <i class="lock icon"></i>
-                    <input name="confirmPasswordField" type="password" placeholder="Confirm Password" onkeyup="{edit('confirmPassword')}">
+                    <input name="confirmPasswordField" type="password" placeholder="Confirm Password" onkeyup="{edit.bind(this, 'confirmPassword')}">
                 </div>
             </div>
             <div show="{errorMsg != ''}" class="ui error message">

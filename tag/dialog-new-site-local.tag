@@ -4,27 +4,27 @@
     <div class="content">
         <!--<h3>List of EasyWebHub website template:</h3>-->
         <!--<div class="ui grid">-->
-            <!--<div class="three wide column" each="{template in templateList}">-->
-                <!--<div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">-->
-                    <!--<div class="content">-->
-                        <!--<i class="add big link icon"></i>-->
-                        <!--<h4 class="header">{template.name}</h4>-->
-                    <!--</div>-->
-                <!--</div>-->
-            <!--</div>-->
+        <!--<div class="three wide column" each="{template in templateList}">-->
+        <!--<div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">-->
+        <!--<div class="content">-->
+        <!--<i class="add big link icon"></i>-->
+        <!--<h4 class="header">{template.name}</h4>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
         <!--</div>-->
         <!--<br>-->
         <div class="ui form">
             <div class="field">
                 <label>Website Name (Tên Thư mục chứa website)</label>
-                <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{siteNameChange}" disabled="{cloning}">
+                <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
             </div>
         </div>
 
     </div>
     <div class="actions">
         <div class="ui deny button">Cancel</div>
-        <div class="ui positive right labeled icon button {cloning ? 'loading' : ''}" disabled="{siteName==='' || template==null || cloning}" onclick="{createSite(siteName)}">Create
+        <div class="ui positive right labeled icon button {cloning ? 'loading' : ''}" disabled="{siteName==='' || template==null || cloning}" onclick="{createSite.bind(this, siteName)}">Create
             <i class="add icon"></i>
         </div>
     </div>
@@ -43,7 +43,7 @@
         }
         me.siteName = '';
         me.errMsg = '';
-//        me.template = me.opts.template;
+        //        me.template = me.opts.template;
         me.cloning = false;
 
         me.show = function (template) {
@@ -58,40 +58,49 @@
 //            }, 1);
 
             me.update();
-            $(root).modal('show');
+            $(root).modal({closable: false}).modal('show');
         };
 
-//        me.selectSkeleton = function (template) {
-//            return function (e) {
-//                me.template = template;
-//                console.log('selected template', template);
-//                $(me.root.querySelectorAll('.ui.card')).removeClass('blue');
-//                $(e.currentTarget).addClass('blue');
-//            }
-//        };
+        //        me.selectSkeleton = function (template) {
+        //            return function (e) {
+        //                me.template = template;
+        //                console.log('selected template', template);
+        //                $(me.root.querySelectorAll('.ui.card')).removeClass('blue');
+        //                $(e.currentTarget).addClass('blue');
+        //            }
+        //        };
 
         me.siteNameChange = function (e) {
-            me.siteName = e.target.value;
+            if (e.keyCode == 13) { // ENTER key
+                me.createSite(me.siteName);
+            } else {
+                me.siteName = e.target.value;
+            }
+        };
+
+        me.hide = function () {
+            $(root).modal('hide');
         };
 
         me.createSite = function (siteName) {
-            return function (e) {
-                me.cloning = 1;
-                me.errMsg = '';
+            me.cloning = 1;
+            me.errMsg = '';
+            me.update();
+            return me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (ret) {
+                // TODO stop loading animation
+                me.cloning = 0;
                 me.update();
-                me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (ret) {
-                    // TODO stop loading animation
-                    me.cloning = 0;
-                    me.update();
-                    $(root).modal('hide'); // close modal
-                    parent.openSite(siteName);
-                }).catch(function (err) {
-                    // stop loading animation
-                    me.cloning = 0;
-                    me.errMsg = err.message;
-                    me.update();
+                me.hide();
+                console.log('start open site', siteName);
+                return me.parent.openSite({
+                    name: siteName
                 });
-            }
+            }).catch(function (err) {
+                // stop loading animation
+                me.cloning = 0;
+                me.errMsg = err.message;
+                me.update();
+            });
         };
 
         me.showSelectDirDialog = function () {

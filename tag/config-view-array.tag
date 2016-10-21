@@ -7,13 +7,13 @@
     <!-- This field is required -->
     <div class="inline field ui checkbox">
         <label class="title">Is required</label>
-        <input type="checkbox" onchange="{edit('config.required')}" checked="{config.required}">
+        <input type="checkbox" onchange="{edit.bind(this,'config.required')}" checked="{config.required}">
     </div>
     <br>
     <!-- View Only Field -->
     <div class="inline field ui checkbox">
         <label class="label">Only View</label>
-        <input type="checkbox" onchange="{edit('config.viewOnly')}" checked="{config.viewOnly}">
+        <input type="checkbox" onchange="{edit.bind(this,'config.viewOnly')}" checked="{config.viewOnly}">
     </div>
 
     <!-- TODO model for children object -->

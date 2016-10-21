@@ -5,11 +5,11 @@
                 <div class="two fields">
                     <div class="inline field">
                         <label class="" for="fieldPredefinedName">Name</label>
-                        <input style="width: calc(100% - 70px);" type="text" class="form-control" id="fieldPredefinedName" placeholder="Name" onkeyup="{edit( 'predefinedName')}" value="{predefinedName}">
+                        <input style="width: calc(100% - 70px);" type="text" class="form-control" id="fieldPredefinedName" placeholder="Name" onkeyup="{edit.bind(this,  'predefinedName')}" value="{predefinedName}">
                     </div>
                     <div class="inline field">
                         <label class="" for="fieldPredefinedValue">Value</label>
-                        <input style="width: calc(100% - 50px);" type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit( 'predefinedValue')}" value={predefinedValue}>
+                        <input style="width: calc(100% - 50px);" type="{type}" class="form-control" id="fieldPredefinedValue" placeholder="Value" onkeyup="{edit.bind(this,  'predefinedValue')}" value={predefinedValue}>
                     </div>
                 </div>
             </div>
@@ -21,7 +21,7 @@
         <div class="ui middle aligned divided list">
             <div class="item" each="{data, index in parent.config.predefinedData}">
                 <div class="right floated content">
-                    <div class="ui tiny button " onclick="{removePredefined(index)}"><i class="fa fa-close"></i></div>
+                    <div class="ui tiny button " onclick="{removePredefined.bind(this, index)}"><i class="fa fa-close"></i></div>
                 </div>
                 <div class="content">
                     {data.name} - {data.value}
@@ -68,10 +68,8 @@
         };
 
         me.removePredefined = function (index) {
-            return function (e) {
-                me.parent.config.predefinedData.splice(index, 1);
-                me.update();
-            };
+            me.parent.config.predefinedData.splice(index, 1);
+            me.update();
         };
     </script>
 </config-view-prop-predefined-value>

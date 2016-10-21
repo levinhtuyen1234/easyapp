@@ -46,7 +46,7 @@
                 </h2>
 
                 <div class="ui four stackable doubling cards">
-                    <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite(site)}">
+                    <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite.bind(this, site)}">
                         <div class="image">
                             <img src="{marketPlaceTemplateImageList[index % 4]}">
                         </div>
@@ -252,6 +252,10 @@
                 }
             };
 
+            me.on('unmount', function () {
+                me.tags['dialog-new-site-local'].hide();
+            });
+
             me.on('mount', function () {
                 var sites = BackEnd.getSiteList();
 
@@ -290,16 +294,15 @@
                 me.update();
             });
 
-            me.openSite = function (site) {
-                return function (e) {
-                    if (site.remote && !site.url) {
-                        alert('Remote repository not exists in site data');
-                        return;
-                    }
-                    var siteName = site.name;
-                    me.unmount(true);
-                    window.curPage = riot.mount('home', {siteName: siteName})[0];
+            me.openSite = function (site, e) {
+                console.log('register openSite', site);
+                if (site.remote && !site.url) {
+                    alert('Remote repository not exists in site data');
+                    return;
                 }
+                var siteName = site.name;
+                me.unmount(true);
+                window.curPage = riot.mount('home', {siteName: siteName})[0];
             };
 
             me.createSite = function (name, repoUrl, branch) {
@@ -313,7 +316,7 @@
 //                console.log('e', e);
 //                return function (e) {
 //                    console.log('showCreateSite', me.tags['dialog-new-site-local']);
-                    me.tags['dialog-new-site-local'].show(template);
+                me.tags['dialog-new-site-local'].show(template);
 //                }
             };
 

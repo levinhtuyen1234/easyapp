@@ -4,27 +4,27 @@
             <form class="ui form">
                 <div class="field">
                     <label for="inputHost" class="">Ftp host</label>
-                    <input type="text" class="form-control" id="inputHost" placeholder="" onkeyup="{edit( 'host')}">
+                    <input type="text" class="form-control" id="inputHost" placeholder="" onkeyup="{edit.bind(this,  'host')}">
                 </div>
 
                 <div class="field">
                     <label for="inputPort" class="">Port</label>
-                    <input type="number" class="form-control" id="inputPort" placeholder="" onkeyup="{edit( 'port')}">
+                    <input type="number" class="form-control" id="inputPort" placeholder="" onkeyup="{edit.bind(this,  'port')}">
                 </div>
 
                 <div class="field">
                     <label for="inputRemotePath" class="">Remote path</label>
-                    <input type="text" class="form-control" id="inputRemotePath" placeholder="" onkeyup="{edit( 'remotePath')}">
+                    <input type="text" class="form-control" id="inputRemotePath" placeholder="" onkeyup="{edit.bind(this,  'remotePath')}">
                 </div>
 
                 <div class="field">
                     <label for="inputUsername" class="">Username</label>
-                    <input type="text" class="form-control" id="inputUsername" placeholder="" onkeyup="{edit( 'username')}">
+                    <input type="text" class="form-control" id="inputUsername" placeholder="" onkeyup="{edit.bind(this,  'username')}">
                 </div>
 
                 <div class="field">
                     <label for="inputPassword" class="">Password</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder="" onkeyup="{edit( 'password')}">
+                    <input type="password" class="form-control" id="inputPassword" placeholder="" onkeyup="{edit.bind(this,  'password')}">
                 </div>
 
                 <pre style="height: 100px; max-height:100px; overflow: auto;">

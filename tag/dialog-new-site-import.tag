@@ -5,19 +5,19 @@
         <div class="ui form">
             <div class="field">
                 <label for="siteNameField" class="">Folder name</label>
-                <input type="text" class="form-control" id="siteNameField" placeholder="" oninput="{edit('siteName')}">
+                <input type="text" class="form-control" id="siteNameField" placeholder="" oninput="{edit.bind(this, 'siteName')}">
             </div>
             <div class="field">
                 <label for="repoUrlField" class="">Repository url (HTTPS)</label>
-                <input type="url" class="form-control" id="repoUrlField" placeholder="ends with .git" oninput="{editUrl('repoUrl')}">
+                <input type="url" class="form-control" id="repoUrlField" placeholder="ends with .git" oninput="{editUrl.bind(this, 'repoUrl')}">
             </div>
             <div class="field">
                 <label for="usernameField" class="">Username</label>
-                <input type="text" class="form-control" id="usernameField" placeholder="" oninput="{edit('username')}">
+                <input type="text" class="form-control" id="usernameField" placeholder="" oninput="{edit.bind(this, 'username')}">
             </div>
             <div class="field">
                 <label for="passwordField" class="">Password</label>
-                <input type="password" class="form-control" id="passwordField" placeholder="" oninput="{edit('password')}">
+                <input type="password" class="form-control" id="passwordField" placeholder="" oninput="{edit.bind(this, 'password')}">
             </div>
         </div>
     </div>
@@ -32,18 +32,16 @@
         var me = this;
         me.mixin('form');
 
-        me.editUrl = function (name) {
-            return function (e) {
-                switch (e.target.type) {
-                    case 'checkbox':
-                        me[name] = e.target.checked;
-                        break;
-                    default:
-                        me[name] = e.target.value;
-                }
-                me.urlValid = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i.test(me.repoUrl);
-                me.update();
-            };
+        me.editUrl = function (name, e) {
+            switch (e.target.type) {
+                case 'checkbox':
+                    me[name] = e.target.checked;
+                    break;
+                default:
+                    me[name] = e.target.value;
+            }
+            me.urlValid = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/i.test(me.repoUrl);
+            me.update();
         };
 
         me.event = riot.observable();
