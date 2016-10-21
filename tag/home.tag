@@ -61,11 +61,11 @@
             <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
                 <i class="fitted icon external"></i> Browser
             </a> -->
-            <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud">
+            <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud" show="{gitHubInited}">
                 <i class="fa fa-fw fa-github"></i> Sync
             </div>
-            <div class="item" onclick="{deployToGitHub}" title="Deploy website to live domain">Deploy</div>
-            <div class="ui dropdown right icon item">
+            <div class="item" onclick="{deployToGitHub}" title="Deploy website to live domain" show="{gitHubInited}">Deploy</div>
+            <div class="ui dropdown right icon item" show="{gitHubInited}">
                 <i class="dropdown icon fitted" style="margin: 0"></i>
                 <div class="menu">
                     <div class="item">
