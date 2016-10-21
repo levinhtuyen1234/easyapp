@@ -35,7 +35,7 @@
         <div class="ui grid container ">
             <div class="wide column">
                 <h1 class="ui header huge">Present your website, easily</h1>
-                <h3>An open framework lets you build awasome websites <br/> with only HTML, CSS skills</h3>
+                <h3>An open framework lets you build awesome websites with only HTML, CSS skills</h3>
                 <div><i class="angle down icon large"></i></div>
             </div>
         </div>
