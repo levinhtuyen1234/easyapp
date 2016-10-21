@@ -18,13 +18,10 @@
                     <i class="dropdown icon"></i>
 
                     <div class="menu">
-                        <a class="item" href="#link1"><i class="edit icon"></i> Edit profile</a>
-                        <a class="item" href="#link2"><i class="lock icon"></i> Change password</a>
-                        <a class="item disabled" data-value="changeUserData"><i class="edit icon"></i> Sửa thông tin</a>
-                        <a class="item disabled" data-value="changeUserPassword"><i class="lock icon"></i> Đổi mật khẩu</a>
+                        <a class="item disabled" data-value="changeUserData"><i class="edit icon"></i> Edit profile</a>
+                        <a class="item disabled" data-value="changeUserPassword"><i class="lock icon"></i> Change password</a>
                         <div class="divider"></div>
-                        <a class="item" href="#link3"><i class="sign out icon"></i> Log out</a>
-                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Đăng xuất</a>
+                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Log out<</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +39,7 @@
     <div class="marketplace">
         <div class="ui grid container ">
             <div class="sixteen wide column">
-               
+
                 <h1 class="ui header weight-300 orange">Website Marketplace</h1>
                 <!--<h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>-->
 
@@ -97,7 +94,7 @@
     </div>
 
 
-  
+
 
 
     <!--<div class="ui hidden section divider"></div>-->
