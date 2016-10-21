@@ -8,7 +8,7 @@
         <div class="ui grid container ">
             <div class="eight wide column">
 			
-				<a href="http://easywebhub.com/" target="_blank" >
+				<a href="http://easywebhub.com" target="_blank" >
 			
                 <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="150" alt="">
 				</a>
