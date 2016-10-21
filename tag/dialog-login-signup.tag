@@ -117,7 +117,13 @@
                     username:    me.username,
                     password:    me.password,
                     accountType: 'user',
-                    websites:    []
+                    status:      'verified',
+                    info:        {
+                        name:    '',
+                        sex:     '',
+                        address: '',
+                        age:     0
+                    },
                 };
 
                 API.register(data).then(function () {

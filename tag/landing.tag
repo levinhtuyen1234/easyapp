@@ -14,14 +14,14 @@
                 <div class="ui dropdown top right pointing">
                     <input type="hidden" name="gender">
                     <img class="ui avatar image" src="http://semantic-ui.com/images/avatar/small/jenny.jpg">
-                    <span>Username</span>
+                    <span>{username}</span>
                     <i class="dropdown icon"></i>
 
                     <div class="menu">
-                        <a class="item" href="#link1"><i class="edit icon"></i> Sửa thông tin</a>
-                        <a class="item" href="#link2"><i class="lock icon"></i> Đổi mật khẩu</a>
+                        <a class="item disabled" data-value="changeUserData"><i class="edit icon"></i> Sửa thông tin</a>
+                        <a class="item disabled" data-value="changeUserPassword"><i class="lock icon"></i> Đổi mật khẩu</a>
                         <div class="divider"></div>
-                        <a class="item" href="#link3"><i class="sign out icon"></i> Đăng xuất</a>
+                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Đăng xuất</a>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="ui four stackable doubling cards">
                     <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite.bind(this, site)}">
                         <div class="image">
-                            <img src="{marketPlaceTemplateImageList[index % 4]}">
+                            <img src="{marketPlaceTemplateImageList[(index + 1) % 4]}">
                         </div>
                         <div class="content">
                             <div class="header">{site.name}</div>
@@ -80,7 +80,7 @@
                 <div class="ui three stackable doubling cards">
                     <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
                         <div class="image">
-                            <img src="{marketPlaceTemplateImageList[(index + 3) %4]}">
+                            <img src="{marketPlaceTemplateImageList[index %4]}">
                         </div>
                         <div class="content">
                             <div class="header">{template.name}</div>
@@ -223,8 +223,8 @@
     <script>
         var me = this;
         var root = me.root;
-
         var dialog = require('electron').remote.dialog;
+        me.username = '';
 
         me.marketPlaceTemplateImageList = [
             'https://cdn1.vienthonga.vn/image/2016/10/4/100000_01-preview-oneui-large-preview.jpg',
@@ -257,13 +257,11 @@
             me.tags['dialog-new-site-local'].hide();
         });
 
-        me.on('mount', function () {
-            $(me.root).find('.ui.dropdown').dropdown();
-
+        me.mergeLocalRemoteSites = function() {
             var sites = BackEnd.getSiteList();
-
-            var remoteSites = Object.assign(User.sites || [], {});
-            console.log('remoteSites', remoteSites);
+//            console.log('User.sites', User.sites)
+            var remoteSites = Object.assign(User.data.sites || [], {});
+//            console.log('remoteSites', remoteSites);
             // merge with remote site
 
             // set local, remote status for local sites
@@ -286,7 +284,7 @@
                     return site.name === remoteSite.name;
                 });
                 if (!exists) {
-                    console.log('not exists site', remoteSite);
+//                    console.log('not exists site', remoteSite);
                     remoteSite.local = false;
                     remoteSite.remote = true;
                     sites.push(remoteSite);
@@ -295,11 +293,32 @@
 
             me.sites = sites;
             me.update();
+        };
+
+        me.on('mount', function () {
+            me.username = User.data.username;
+            $(me.root).find('.ui.dropdown').dropdown({
+                onChange: function (value) {
+                    switch (value) {
+                        case 'signOut':
+                            console.log('signOut');
+                                riot.event.trigger('logout');
+                            break;
+                        case 'changeUserPassword':
+                            console.log('changeUserPassword');
+                            break;
+                        case 'changeUserData':
+                            console.log('changeUserData');
+                            break;
+                    }
+                }
+            });
+            me.mergeLocalRemoteSites();
         });
 
         me.openSite = function (site, e) {
             console.log('register openSite', site);
-            if (site.remote && !site.url) {
+            if (site.local == false && site.remote && !site.url) {
                 alert('Remote repository not exists in site data');
                 return;
             }
@@ -308,9 +327,24 @@
             window.curPage = riot.mount('home', {siteName: siteName})[0];
         };
 
-        me.createSite = function (name, repoUrl, branch) {
-            return riot.event.createSite(name, repoUrl, branch).then(function () {
-                me.unmount(true);
+        me.createSite = function (displayName, repoUrl, branch) {
+//            var localPath = Path.join(__dirname, 'sites', name);
+            var name = displayName.toLowerCase()
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036F]/g, '')
+                    .replace(/đ/g, 'd')
+                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/\s+/g, '-')
+                    .trim();
+            return User.addSite(name, displayName).then(function (resp) {
+                return BackEnd.createSiteFolder(name).then(function (sitePath) {
+                    return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
+                        console.log('git checkout done', name);
+//                    if (window.curPage) window.curPage.unmount(true);
+//                    window.curPage = riot.mount('home', {siteName: name})[0];
+                        return name;
+                    })
+                });
             });
         };
 

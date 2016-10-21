@@ -14,10 +14,13 @@
         <!--</div>-->
         <!--</div>-->
         <!--<br>-->
-        <div class="ui form">
+        <div class="ui form error">
             <div class="field">
                 <label>Website Name (Tên Thư mục chứa website)</label>
                 <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
+            </div>
+            <div show="{errorMsg != ''}" class="ui error message">
+                <p>{errorMsg}</p>
             </div>
         </div>
 
@@ -42,13 +45,13 @@
             console.log(ex);
         }
         me.siteName = '';
-        me.errMsg = '';
+        me.errorMsg = '';
         //        me.template = me.opts.template;
         me.cloning = false;
 
         me.show = function (template) {
             console.log('show', template);
-            me.errMsg = '';
+            me.errorMsg = '';
             me.siteName = '';
             me.template = template;
             me.cloning = false;
@@ -84,21 +87,22 @@
 
         me.createSite = function (siteName) {
             me.cloning = 1;
-            me.errMsg = '';
+            me.errorMsg = '';
             me.update();
-            return me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (ret) {
-                // TODO stop loading animation
+            return me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (siteFolderName) {
                 me.cloning = 0;
                 me.update();
                 me.hide();
-                console.log('start open site', siteName);
+                console.log('start open site', siteFolderName);
+                // open site using site folder name in disk not displayName
                 return me.parent.openSite({
-                    name: siteName
+                    name: siteFolderName
                 });
             }).catch(function (err) {
+                console.log('dialog-new-site-local createSite failed', err);
                 // stop loading animation
                 me.cloning = 0;
-                me.errMsg = err.message;
+                me.errorMsg = err.message;
                 me.update();
             });
         };

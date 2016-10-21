@@ -167,33 +167,25 @@
             console.log('index.html openSite', sitePath);
             landing.unmount(true);
             window.curPage = riot.mount('home', {sitePath: sitePath})[0];
-        },
-
-        createSite: function (name, repoUrl, branch) {
-//            var localPath = Path.join(__dirname, 'sites', name);
-            name = name.toLowerCase()
-                    .normalize('NFKD')
-                    .replace(/[\u0300-\u036F]/g, '')
-                    .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
-                    .trim();
-            return BackEnd.createSiteFolder(name).then(function (sitePath) {
-                return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
-                    console.log('git checkout done', name);
-//                    if (window.curPage) window.curPage.unmount(true);
-//                    window.curPage = riot.mount('home', {siteName: name})[0];
-                }).catch(function (ex) {
-                    console.log(ex.message);
-                });
-            });
         }
     });
 
     function CheckAccountAndGoToLanding() {
         if (window.curPage) window.curPage.unmount(true);
         DB.get('account').then(function (account) {
-            window.User = account;
+            console.log('CheckAccountAndGoToLanding account', account);
+            window.User = new AppUser(account);
+            var curSites = User.data.sites;
+            User.getSites().then(function (remoteSites) {
+                User.data.sites = remoteSites;
+                if (curSites.length !== remoteSites.length && curPage.root.tagName === 'LANDING') {
+                    window.curPage.mergeLocalRemoteSites();
+                    DB.upsert(User.data);
+                }
+            }).catch(function (ex) {
+                console.log('get remote sites failed', ex);
+            });
+
             console.log('TODO server only accept accountType "user"');
             account.accountType = 'dev';
             console.log('account on disk', account);
@@ -211,8 +203,8 @@
 //        window.curPage = riot.mount('home', {siteName: 'retest'})[0];
 //        window.curPage = riot.mount('home', {siteName: 'tmp'})[0];
         // uncomment to enable login
-//        CheckAccountAndGoToLanding();
-        window.curPage = riot.mount('landing')[0];
+        CheckAccountAndGoToLanding();
+//        window.curPage = riot.mount('landing')[0];
     });
 
     riot.event.on('loginSuccess', function (account) {

@@ -421,6 +421,10 @@ function saveRawContentFile(siteName, filePath, content) {
     Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
 }
 
+function isObjectEqual(lhs, rhs) {
+    return JSON.stringify(lhs) === JSON.stringify(rhs);
+}
+
 var mergeConfig = function (existsConfigs, newGenConfigs) {
     // find new config object
     var newConfigObjects = _.differenceBy(newGenConfigs, existsConfigs, 'name');
@@ -460,6 +464,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     if (fileExists(contentConfigFullPath)) {
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
         var newConfig = mergeConfig(existsConfig, contentConfig);
+
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
         return newConfig;
     } else {
@@ -629,11 +634,11 @@ function SpawnShell(command, args, opts) {
         });
 
         newProcess.on('exit', (code) => {
-            console.log(`Child exited with code ${code}`);
+            console.log(`Child exited with code ${code} output ${out}`);
             if (code === 0)
                 resolve(out);
             else
-                reject(code);
+                reject({code: code, message: out});
         });
     });
 }
