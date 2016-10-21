@@ -6,7 +6,7 @@
     <div class="ui header" style="">
         <i class="{isLogin ? 'sign in' : 'signup'} icon" style=""></i>
         <div class="content" style="text-align: left">
-            {isLogin ? 'Login' : 'Register'}
+            {isLogin ? 'Login to EasyWeb' : 'Register EasyWeb account'}
             <!--<div class="sub header">Manage your account settings and set e-mail preferences.</div>-->
         </div>
     </div>
@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div show="{errorMsg != ''}" class="ui error message">
-                <!--<div class="header">{isLogin ? 'Login' : 'Sign Up'} Error</div>-->
+                <!--<div class="header">{isLogin ? 'Login to EasyWeb' : 'Sign Up EasyWeb account'} Error</div>-->
                 <p>{errorMsg}</p>
             </div>
             <div class="ui fluid button blue" onclick="{submit}">{isLogin ? 'Sign In' : 'Sign Up'}</div>
