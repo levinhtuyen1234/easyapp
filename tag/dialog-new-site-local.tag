@@ -1,6 +1,6 @@
 <dialog-new-site-local class="ui modal" tabindex="-1">
     <i class="close icon" show="{!cloning}"></i>
-    <div class="header">Create new website from EasyWebHub source</div>
+    <div class="header">Create new website</div>
     <div class="content">
         <!--<h3>List of EasyWebHub website template:</h3>-->
         <!--<div class="ui grid">-->
@@ -16,7 +16,7 @@
         <!--<br>-->
         <div class="ui form">
             <div class="field">
-                <label>Website Name (Tên Thư mục chứa website)</label>
+                <label>Choose name for your website</label>
                 <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
             </div>
         </div>

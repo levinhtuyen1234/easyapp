@@ -13,7 +13,7 @@
             <div class="eight wide column" style="text-align: right">
                 <div class="ui dropdown top right pointing">
                     <input type="hidden" name="gender">
-                    <img class="ui avatar image" src="http://semantic-ui.com/images/avatar/small/jenny.jpg">
+                    <img class="ui avatar image" src="./assets/easyweb-image/jenny-user.jpg">
                     <span>Username</span>
                     <i class="dropdown icon"></i>
 
@@ -31,18 +31,44 @@
         <div class="ui grid container ">
             <div class="wide column">
                 <h1 class="ui header huge">Present your website, easily</h1>
-                <p>An open framework lets you build up websites <br/> with only HTML, CSS, JS skills</p>
-                <br/>
+                <h3>An open framework lets you build awasome websites <br/> with only HTML, CSS skills</h3>
                 <div><i class="angle down icon large"></i></div>
+            </div>
+        </div>
+    </div>
+    <div class="marketplace">
+        <div class="ui grid container ">
+            <div class="sixteen wide column">
+               
+                <h1 class="ui header weight-300 orange">Website Marketplace</h1>
+                <!--<h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>-->
+
+                <div class="ui three stackable doubling cards">
+                    <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
+                        <div class="image">
+                            <img src="{marketPlaceTemplateImageList[(index + 3) %4]}">
+                        </div>
+                        <div class="content">
+                            <div class="header">{template.name}</div>
+                            <div class="description">
+                                <p>Landing page for your company</p>
+                            </div>
+                        </div>
+
+                        <div class="extra content">
+                            <i>by</i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
     </div>
     <div class="user-project">
         <div class="ui grid container ">
             <div class="sixteen wide column">
-                <h2 class="ui header weight-300">
+                <h2 class="ui header blue weight-300">
                     Your websites:
-                    <div class="sub header">Choose a website to continue your work</div>
+                    <!--<div class="sub header">Choose a website to continue your work</div>-->
                 </h2>
 
                 <div class="ui four stackable doubling cards">
@@ -68,33 +94,7 @@
     </div>
 
 
-    <div class="marketplace">
-        <div class="ui grid container ">
-            <div class="sixteen wide column">
-               
-                <h1 class="ui header weight-300 orange" style="margin: 20px 0 15px; font-size: 3em">Website Marketplace</h1>
-                <!--<h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>-->
-
-                <div class="ui three stackable doubling cards">
-                    <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
-                        <div class="image">
-                            <img src="{marketPlaceTemplateImageList[(index + 3) %4]}">
-                        </div>
-                        <div class="content">
-                            <div class="header">{template.name}</div>
-                            <div class="description">
-                                <p>Landing page for your company</p>
-                            </div>
-                        </div>
-
-                        <div class="extra content">
-                            <i>by</i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+  
 
 
     <!--<div class="ui hidden section divider"></div>-->
