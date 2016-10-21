@@ -7,7 +7,11 @@
 
         <div class="ui grid container ">
             <div class="eight wide column">
-                <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="200" alt="">
+			
+				<a href="http://easywebhub.com/" target="_blank" >
+			
+                <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="150" alt="">
+				</a>
             </div>
 
             <div class="eight wide column" style="text-align: right">
