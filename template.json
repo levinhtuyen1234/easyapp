@@ -1,5 +1,5 @@
 {
-    "version": 5,
+    "version": 6,
     "templates": [
         {
             "name": "category",
@@ -15,7 +15,7 @@
         },
         {
             "name": "pillar",
-            "url": "https://github.com/easywebhub/thinh.pillar.git",
+            "url": "https://github.com/easywebhub/pillar.git",
             "branch": "master",
             "type": "website",
             "tags": [
@@ -56,17 +56,6 @@
                 "Personal Blog"
             ],
             "themeUrl": "http://globalportfolio.easywebhub.com",
-            "price": "Free"
-        },
-        {
-            "name": "New Providence",
-            "url": "https://github.com/easywebhub/NewProvidence.git",
-            "branch": "master",
-            "type": "website",
-            "tags": [
-                "Personal Blog"
-            ],
-            "themeUrl": "http://newprovidence.easywebhub.com",
             "price": "Free"
         },
         {
