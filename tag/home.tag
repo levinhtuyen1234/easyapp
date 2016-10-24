@@ -813,14 +813,14 @@
         riot.event.on('addTag', onAddTag);
 
         me.deployToGitHub = function () {
-            me.tags['progress-dialog'].show('Deploy to GitHub');
+            me.tags['progress-dialog'].show('Deploy to EasyWeb hosting');
             BackEnd.gitPushGhPages(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
                 var text = me.tags['progress-dialog'].getText();
                 var matches = text.split(/https:\/\/github\.com\/([^\/]+)\/(.+)/);
                 if (matches.length > 1) {
                     var ghPageUrl = 'https://' + matches[1] + '.github.io/' + matches[2] + '/';
-                    var msg = 'GitHub page url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
+                    var msg = 'Deployed Url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
                     me.tags['progress-dialog'].showMessage(msg);
                 }
             }).catch(function (err) {
@@ -838,7 +838,7 @@
 //                if (stat.isDirectory())
 //            } catch(ex) {}
 
-            me.tags['progress-dialog'].show('Sync to GitHub');
+            me.tags['progress-dialog'].show('Sync to EasyWeb');
             BackEnd.gitPushGitHub(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
                 // refresh current file to load new changes
