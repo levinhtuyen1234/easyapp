@@ -6,126 +6,126 @@
     <progress-dialog site-name={opts.siteName}></progress-dialog>
     <github-init-dialog site-name={opts.siteName}></github-init-dialog>
     <deploy-ftp-dialog site-name={opts.siteName}></deploy-ftp-dialog>
-    <nav class="navbar navbar-default navbar-fixed-top" style="padding-top: 5px; height: 38px; min-height: 38px;">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-6 pull-left">
-                    <a href="#goto-home" onclick="{goToLandingPage}" class="btn btn-default btn-sm" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-fw fa-home"></i>Home
-                    </a>
-                    <a href="#add-page" onclick="{newContent}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new page using existing layout">
-                        <i class="fa fa-fw fa-plus"></i> Page
-                    </a>
-                    <a href="#add-category" onclick="{newCategory}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new category" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Category
-                    </a>
-                    <a href="#add-tag" onclick="{newTag}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new tag" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Tag
-                    </a>
-                    <a href="#add-layout" onclick="{newLayout}" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Create new layout that using for a page" hide="{User.accountType == 'user'}">
-                        <i class="fa fa-fw fa-plus"></i> Layout
-                    </a>
-                </div>
-                <div class="pull-right">
-                    <div class="btn-group" data-toggle="buttons">
-                        <a class="btn btn-default btn-sm" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
-                            <i class="fa fa-fw fa-eye"></i> Build
-                        </a>
 
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li hide="{User.accountType == 'user'}"><a href="#" onclick="{openWatchView.bind(this, 'dev')}" title="Build this website on local PC to preview (Dev mode)"><i class="fa fa-fw fa-cubes"></i> Build Dev</a></li>
-                                <li><a href="#" onclick="{refreshWatchView}" title="restart to refresh preview website"><i class="fa fa-fw fa-refresh"></i> Refresh</a></li>
-                            </ul>
-                        </div>
-                        <button class="btn btn-default btn-sm" data-toggle="tab" id="openExternalReviewBtn" role="tab" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
-                            <i class="fa fa-fw fa-external-link"></i> On Browser
-                        </button>
-                    </div>
-                    <div class="btn-group" data-toggle="buttons">
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{syncToGitHub}" title="Synchronize to Cloud">
-                            <i class="fa fa-fw fa-github"></i> Sync
-                        </a>
-                        <a href="#" class="btn btn-default navbar-btn btn-sm" onclick="{deployToGitHub}" title="Deploy website to live domain">
-                            Deploy
-                        </a>
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu pull-right">
-                                <li><a href="#" onclick="{showFtpDialog}" title="Upload to Ftp server">To FTP server</a></li>
-                                <li><a href="#" onclick="{showSetDomainDialog}" title="Set domain for website"><i class="fa fa-fw fa-globe"></i> Set Domain</a></li>
-                            </ul>
-                        </div>
-                        <a class="btn btn-default navbar-btn btn-sm dropdown-toggle" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">
-                            Init
-                        </a>
-                    </div>
-                </div>
+    <div class="ui fluid tiny inverted menu" style="margin-top: 0; border-radius: 0;">
+        <div class="item">
+            <a href="#goto-home" onclick="{goToLandingPage}" class="ui primary button">
+                <i class="ui icon home" style="margin: 0"></i>
+            </a>
+        </div>
+        <div class="item">
+            <div href="#add-page" onclick="{newContent}" class="ui button" data-position="bottom left" data-tooltip="Create new page using existing layout">
+                <i class="add icon"></i>Page
             </div>
         </div>
-    </nav>
+        <div class="item">
+            <a href="#add-category" onclick="{newCategory}" class="ui button" data-position="bottom left" data-tooltip="Create new category" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Category
+            </a>
+        </div>
 
-    <div class="container-fluid" style="padding-top: 40px;">
-        <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-3 col-lg-3" style="height: calc(100vh - 700px)">
-                <side-bar site-name={opts.siteName}></side-bar>
-            </div>
+        <div class="item">
+            <a href="#add-tag" onclick="{newTag}" class="ui  button" data-position="bottom left" data-tooltip="Create new tag" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Tag
+            </a>
+        </div>
 
-            <div class="tab-content col-xs-8 col-sm-8 col-md-9 col-lg-9">
-                <watch-view id="watch-view" site-name="{siteName}" style="display:none;"></watch-view>
-                <div class="tab-pane" id="editor-view" role="tabpanel" style="height: {getFormEditorHeight()}; overflow: auto;">
-                    <div class="btn-group" data-toggle="buttons">
-                        <a class=" btn btn-default navbar-btn btn-sm" href="#content-view" data-toggle="tab" role="tab" onclick="{openContentTab}" show="{
-                            curTab == 'content-view' ||
-                            ((curTab == 'code-view' || curTab == 'config-view') && currentFilePath.endsWith('.md'))
-                            }">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Content
-                        </a>
-                        <a class=" btn btn-default navbar-btn btn-sm" show="{isShowMetaTab()}" href="#meta-view" data-toggle="tab" role="tab" onclick="{openMetaTab}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-newspaper-o"></i> Meta
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#code-view" data-toggle="tab" role="tab" onclick="{openRawContentTab}" show="{User.accountType == 'dev'}">
-                            <input type="radio" name="options">Raw
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#layout-view" data-toggle="tab" role="tab" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-code"></i> Layout
-                        </a>
-                        <a class="btn btn-default navbar-btn btn-sm" href="#config-view" data-toggle="tab" role="tab" onclick="{openConfigTab}" show="{isShowConfigTab()}">
-                            <input type="radio" name="options"><i class="fa fa-fw fa-cog"></i> Config
-                        </a>
+        <div class="item">
+            <a href="#add-layout" onclick="{newLayout}" class="ui  button" data-position="bottom left" data-tooltip="Create new layout that using for a page" hide="{User.accountType == 'user'}">
+                <i class="add icon"></i>Layout
+            </a>
+        </div>
+
+
+        <div class="right menu">
+            <a class="item" href="#build" id="openWatchViewBtn" onclick="{openWatchView.bind(this, 'user')}" title="Build this website on local PC to preview">
+                <i class="fitted icon eye"></i> Build
+            </a>
+
+            <div class="ui dropdown icon item">
+                <i class="dropdown icon fitted" style="margin: 0"></i>
+                <div class="menu">
+                    <div class="item" hide="{User.accountType == 'user'}" data-value="watchDev" onclick="{openWatchView.bind(this, 'dev')}">
+                        <i class="fitted icon cubes"></i>
+                        <span title="Build this website on local PC to preview (Dev mode)">Build Dev</span>
                     </div>
-                    <div class="pull-right">
-                        <div class="btn-group" data-toggle="buttons">
-                            <a class="btn btn-danger navbar-btn btn-sm" href="#" onclick="{deleteFile}" hide="{
-                            curTab === 'meta-view' && User.accountType == 'user'
-                            }">
-                                <i class="fa fa-fw fa-remove"></i>Delete
-                            </a>
-                            <a class="btn btn-primary navbar-btn btn-sm" onclick="{save}"><i class="fa fa-save"></i> Save</a>
-                        </div>
-                    </div>
-                    <!-- EDITOR PANEL -->
-                    <div class="panel panel-default">
-                        <div class="panel-heading panel-heading-sm">
-                            <breadcrumb site_name="{opts.siteName}"></breadcrumb>
-                        </div>
-                        <div class="panel-body">
-                            <div class="tab-content">
-                                <content-view site-name="{siteName}" id="content-view" role="tabpanel" class="tab-pane"></content-view>
-                                <meta-view site-name="{siteName}" id="meta-view" role="tabpanel" class="tab-pane"></meta-view>
-                                <code-editor site-name="{siteName}" id="code-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <code-editor site-name="{siteName}" id="layout-view" role="tabpanel" class="tab-pane"></code-editor>
-                                <config-view site-name="{siteName}" id="config-view" role="tabpanel" class="tab-pane"></config-view>
-                            </div>
-                        </div>
+                    <div class="item" data-value="refreshWatch" onclick="{refreshWatchView}">
+                        <i class="fitted icon refresh"></i>
+                        <span title="restart to refresh preview website">Refresh</span>
                     </div>
                 </div>
+            </div>
+            <a class="item" data-toggle="tab" title="Show Preview" disabled onclick="{toggleReview}">
+                <i class="fitted icon external"></i>Preview
+            </a>
+            <!--  <a class="item" data-toggle="tab" ref="openExternalReviewBtn" title="Open on browser (IE, Firefox, Chrome,...) to Preview" onclick="{openExternalReview}" disabled>
+                <i class="fitted icon external"></i> Browser
+            </a> -->
+            <div class="item" onclick="{syncToGitHub}" title="Synchronize to Cloud" show="{gitHubInited}">
+                <i class="fa fa-fw fa-github"></i> Sync
+            </div>
+            <div class="item" onclick="{deployToGitHub}" title="Deploy website to live domain" show="{gitHubInited}">Deploy</div>
+            <div class="ui dropdown right icon item" show="{gitHubInited}">
+                <i class="dropdown icon fitted" style="margin: 0"></i>
+                <div class="menu">
+                    <div class="item">
+                        <span onclick="{showFtpDialog}" title="Upload to Ftp server">To FTP server</span>
+                    </div>
+                    <div class="item">
+                        <i class="fitted icon globe"></i>
+                        <span onclick="{showSetDomainDialog}" title="Set domain for website">Set Domain</span>
+                    </div>
+                </div>
+            </div>
+            <a class="item" href="#" onclick="{showGitHubSetting}" title="Init Cloud using github account" hide="{gitHubInited}">Request</a>
+        </div>
+    </div>
 
+    <div class="ui one column grid" style="height: calc(100vh - 45px)">
+        <div class="stretched row" style="padding-bottom: 0; padding-top: 0;">
+            <div class="column" id="outer-layout" style="padding-right: 0">
+                <div id="inner-center" class="ui-layout-center">
+                    <div class="ui-layout-west" style="overflow: hidden;">
+                        <side-bar site-name={opts.siteName} style="overflow-y: hidden"></side-bar>
+                    </div>
+                    <div class="ui-layout-center" style="overflow-y: hidden">
+                        <div class="ui pointing secondary menu">
+                            <a class="item active" data-tab="content-view" onclick="{openContentTab}" show="{isShowContentTab()}">Form</a>
+                            <a class="item" data-tab="meta-view" onclick="{openMetaTab}" show="{isShowMetaTab()}">Form</a>
+                            <a class="item" data-tab="code-view" onclick="{openRawContentTab}" show="{isShowRawTab()}">Raw</a>
+                            <a class="item" data-tab="layout-view" onclick="{openLayoutTab}" show="{isShowLayoutTab()}">Layout</a>
+                            <a class="item" data-tab="config-view" onclick="{openConfigTab}" show="{isShowConfigTab()}">Config</a>
+                            <div class="ui mini right menu" style="border: none">
+                                <div style="padding: 4px 16px 3px 0">
+                                    <div class="ui mini buttons" style="border: none">
+                                        <div class="ui red icon button" onclick="{deleteFile}" hide="{curTab === 'meta-view'}">
+                                            <i class="delete icon"></i>
+                                            Delete
+                                        </div>
+                                        <div class="ui blue icon button" data-tooltip="'Ctrl+S' to save" data-position="bottom right" onclick="{save}">
+                                            <i class="save icon"></i>
+                                            Save (Ctrl+S)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <breadcrumb site_name="{opts.siteName}"></breadcrumb>
+
+                        <!--<div style="height: calc(100vh - 40px)">-->
+                        <content-view site-name="{siteName}" data-tab="content-view"></content-view>
+                        <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
+                        <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
+                        <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
+                        <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
+                    </div>
+
+                </div>
+
+                <div class="ui-layout-north">
+                    <bottom-bar site-name={opts.siteName}></bottom-bar>
+                </div>
             </div>
         </div>
     </div>
@@ -135,6 +135,7 @@
         var dialog = require('electron').remote.dialog;
         var Path = require('path');
         me.test = true;
+        me.tabBar;
         me.contentView = null;
         me.configView = null;
         me.layoutView = null;
@@ -147,17 +148,25 @@
         me.gitHubInited = true;
         me.siteName = me.opts.siteName;
 
+        var outerLayout, innerLayout;
+
         // handler onSave content config view
         var onSaveContentConfigView, onSaveMetaConfigView;
 
-        me.getFormEditorHeight = function () {
-            // TODO handle case console build success and failure
-            // show both watch and editor
-            if ($(me.openWatchViewBtn).hasClass('active') && me.curFilePath != '') {
-                return 'calc(50vh - 30px); margin-top: 20px; padding: 0;';
-            } else {
-                return 'calc(100vh - 60px)';
-            }
+        me.toggleReview = function () {
+            console.log('toggleReview');
+            outerLayout.toggle('north');
+        };
+
+        me.openReview = function () {
+            outerLayout.open('north');
+        };
+
+        me.isShowContentTab = function () {
+//            console.log('isShowContentTab me.curTab', me.curTab);
+            return me.curTab == 'content-view' ||
+                    ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
+
         };
 
         me.isShowMetaTab = function () {
@@ -170,15 +179,30 @@
 
         };
 
-        me.isShowLayoutTab = function () {
+        me.isShowRawTab = function () {
+//            console.log('isShowLayoutTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
-                    ( me.curTab == 'content-view' ||
+                    (
+                            me.curTab == 'code-view' ||
+                            me.curTab == 'config-view' ||
+                            me.curTab == 'content-view' ||
+                            me.curTab == 'meta-view'
+                    )
+        };
+
+        me.isShowLayoutTab = function () {
+//            console.log('isShowLayoutTab me.curTab', me.curTab);
+            return User.accountType == 'dev' &&
+                    (
+                            me.curTab == 'content-view' ||
+                            me.curTab == 'layout-view' ||
                             ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
                             ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.md') )
                     )
         };
 
         me.isShowConfigTab = function () {
+//            console.log('isShowConfigTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
                     (
                             me.curTab == 'meta-view' ||
@@ -210,8 +234,6 @@
 
         me.on('unmount', function () {
             console.trace('unmount home tag');
-            riot.event.off('watchSuccess', onWatchSuccess);
-            riot.event.off('watchFailed', onWatchFailed);
             riot.event.off('chooseMediaFile', onChooseMediaFile);
             riot.event.off('addLayout', onAddLayout);
             riot.event.off('addContent', onAddContent);
@@ -224,7 +246,65 @@
 
         me.on('mount', function () {
             console.trace('mount home tag');
+            me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
+                onLoad: function (tabPath) {
+//                    console.log('tab onload', tabPath);
+//                    if (tabPath == 'config-view') {
+//                        me.openConfigTab();
+//                    }
+                }
+            });
             me.checkGhPageStatus();
+
+            $(me.root.querySelectorAll('.ui.dropdown')).dropdown({
+                onChange: function (value, text) {
+                    if (value == '') return;
+                    $(this).dropdown('clear');
+                }
+            }); // init dropdown
+
+            outerLayout = $('#outer-layout').layout({
+                center: {
+                    size: '60%'
+                },
+                north:  {
+                    size:           '40%',
+                    spacing_open:   1,
+                    spacing_closed: 10,
+                    initClosed:     true
+                }
+            });
+
+            innerLayout = $('#inner-center').layout({
+                west:   {
+                    size:           '35%',
+                    spacing_open:   1,
+                    spacing_closed: 10
+                },
+                center: {}
+            });
+
+
+            // create 1px resizer + large click area
+            var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west')).css({overflow: "visible"});
+            $("<div></div>").css({
+//                background: "#F00",
+                width:      "100%",
+                height:     "100%",
+                padding:    "0 5px",
+                marginLeft: "0px",
+                opacity:    .20
+            }).prependTo(resizer);
+
+            resizer = $(me.root.querySelectorAll('.ui-layout-resizer-north')).css({overflow: "visible"});
+            $("<div></div>").css({
+//                background: "#F00",
+                width:      "100%",
+                height:     "100%",
+                padding:    "5px 0",
+                marginLeft: "0px",
+                opacity:    .20
+            }).prependTo(resizer);
 
             riot.event.on('codeEditor.save', me.saveByKeyboard);
             riot.event.on('watchFailed', me.deactiveWatchBtn);
@@ -246,16 +326,18 @@
 //            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
 
-            me.tags['config-view'].event.off('saveConfig', onSaveContentConfigView);
-            me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
+            me.tags['config-view'].off('saveConfig', onSaveContentConfigView);
+            me.tags['config-view'].off('saveConfig', onSaveMetaConfigView);
         }
 
         function ShowTab(name) {
+//            console.log('ShowTab', name);
             me.curTab = name;
-            var elm = $(me.root).find('a[href="#' + name + '"]');
+            me.tabBar.tab('change tab', name);
+//            var elm = $(me.root).find('a[href="#' + name + '"]');
 //            console.trace('ShowTab', elm);
-            elm.tab('show');
-            elm.addClass('active');
+//            elm.tab('show');
+//            elm.addClass('active');
         }
 
         function UnmountAll() {
@@ -277,10 +359,9 @@
                 if (domain == null) return;
                 var isDomainValid = /^((?:(?:(?:\w[.\-+]?)*)\w)+)((?:(?:(?:\w[.\-+]?){0,62})\w)+)\.(\w{2,6})$/.test(domain);
                 if (!isDomainValid) {
-                    bootbox.alert('Invalid domain', function () {
-                        setTimeout(function () {
-                            $('.bootbox-input.bootbox-input-text.form-control').focus();
-                        }, 1);
+                    bootbox.alert({
+                        title:   'Alert',
+                        message: 'Invalid domain'
                     });
                     return false;
                 }
@@ -288,18 +369,25 @@
             });
         };
 
-        me.refreshWatchView = function () {
+        me.refreshWatchView = function (e) {
             me.openWatchView();
+            console.log('refreshWatchView');
             riot.event.trigger('refreshWatch');
+            setTimeout(function () {
+                $(e.srcElement).closest('.item').removeClass('active');
+            }, 1);
         };
 
         me.openLayoutTab = function () {
+            console.log('onopenLayoutTab');
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.update();
 
             me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
-            me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + me.currentLayout);
+//            console.log('fileContent', fileContent);
+            me.tags['side-bar'].activeFile('layout', 'layout/' + me.currentLayout);
+//            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
             me.tags['code-editor'][1].value(fileContent);
             me.tags['code-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
@@ -314,16 +402,18 @@
             }
             console.log('watch view', mode);
             $(me.openWatchViewBtn).addClass('active');
-            $(me.root.querySelector('#watch-view')).show();
-            setTimeout(function () {
-                $(me.root.querySelector('#editor-view')).show(); // fix
-            }, 1);
+//            me.tabBar.tab('change tab', 'bottom-bar');
+//            $(me.root.querySelector('#watch-view')).show();
+//            setTimeout(function () {
+//                $(me.root.querySelector('#editor-view')).show(); // fix
+//            }, 1);
 
 //            ShowTab('watch-view');
+            me.openReview();
             if (mode === 'user')
-                me.tags['watch-view'].watch();
+                me.tags['bottom-bar'].watch();
             else if (mode === 'dev')
-                me.tags['watch-view'].watchDev();
+                me.tags['bottom-bar'].watchDev();
         };
 
         me.deactiveWatchBtn = function () {
@@ -348,7 +438,7 @@
         me.openContentTab = function () {
             try {
                 HideAllTab();
-                me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+                me.tags['side-bar'].activeFile('content', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
                 me.update();
 
@@ -379,7 +469,7 @@
             try {
                 HideAllTab();
 
-                me.tags['side-bar'].activeFile('metadata-file-list', me.currentFilePath);
+                me.tags['side-bar'].activeFile('meta', me.currentFilePath);
                 me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
                 me.update();
 
@@ -419,24 +509,13 @@
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
-            onSaveMetaConfigView = function (configFieldName, newConfig) {
+            onSaveMetaConfigView = function (newConfig) {
                 console.log('save meta config');
-                me.tags['config-view'].event.off('saveConfig', onSaveMetaConfigView);
-
-                newConfig.name = configFieldName;
-                // ghi de` new setting vo contentConfig
-                for (var i = 0; i < contentConfig.length; i++) {
-                    if (contentConfig[i].name === configFieldName) {
-                        contentConfig[i] = newConfig;
-                        break;
-                    }
-                }
-                BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
-                // refresh config view
-                me.openMetaConfigTab();
+                BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(newConfig, null, 4));
             };
 
-            me.tags['config-view'].event.on('saveConfig', onSaveMetaConfigView);
+            me.tags['config-view'].off('saveConfig');
+            me.tags['config-view'].on('saveConfig', onSaveMetaConfigView);
         };
 
         me.openConfigTab = function () {
@@ -464,26 +543,16 @@
             me.tags['config-view'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
-            onSaveContentConfigView = function (configFieldName, newConfig) {
+            onSaveContentConfigView = function (newConfig) {
                 console.log('save content config');
-                var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
-                newConfig.name = configFieldName;
-                // ghi de` new setting vo contentConfig
-                for (var i = 0; i < contentConfig.length; i++) {
-                    if (contentConfig[i].name === configFieldName) {
-                        contentConfig[i] = newConfig;
-                        break;
-                    }
-                }
-                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(contentConfig, null, 4));
-                me.openContentConfigTab(); // refresh view
+                BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(newConfig, null, 4));
             };
-
-            me.tags['config-view'].event.on('saveConfig', onSaveContentConfigView);
+            me.tags['config-view'].off('saveConfig');
+            me.tags['config-view'].on('saveConfig', onSaveContentConfigView);
         };
 
         me.openRawContentTab = function (options) {
-//            me.tags['side-bar'].activeFile('content-file-list', me.currentFilePath);
+//            me.tags['side-bar'].activeFile('content', me.currentFilePath);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.tags['breadcrumb'].setPath(me.currentFilePath);
             options = options || {};
@@ -491,7 +560,7 @@
 
             var rawStr = BackEnd.getRawContentFile(me.opts.siteName, me.currentFilePath);
             // CHEAT fix front matter codemirror error
-            if(rawStr.endsWith('---')) {
+            if (rawStr.endsWith('---')) {
                 rawStr += '\n';
             }
             var contentCodeEditor = me.tags['code-editor'][0];
@@ -507,7 +576,8 @@
         };
 
         me.openFile = function (filePath) {
-            $(me.root.querySelector('#editor-view')).show();
+//            $(me.root.querySelector('#editor-view')).show();
+            me.tabBar.tab('change tab', 'editor-view', 'home openFile', filePath);
             //$(me.root.querySelector('#watch-view')).hide();
             if (me.tags['breadcrumb'] == null) {
                 console.log('breadcrumb', me.tags);
@@ -519,6 +589,7 @@
 
 
             if (filePath.endsWith('.md')) {
+//                console.log('openContentTab');
                 me.openContentTab();
 //            } else if (filePath.endsWith('.config.json')) {
 //                me.openConfigTab();
@@ -529,13 +600,13 @@
                 me.openLayoutTab();
             } else if (filePath.endsWith('.json')) {
 //                console.log('filePath', filePath);
-                if (filePath.startsWith('content/metadata/category') || filePath.startsWith('content/metadata/tag')) {
+//                if (filePath.startsWith('content/metadata/category') || filePath.startsWith('content/metadata/tag')) {
 //                    console.log('open category config file');
-                    me.openRawContentTab();
-                } else if (filePath.startsWith('content/metadata')) {
+//                    me.openRawContentTab();
+//                } else if (filePath.startsWith('content/metadata')) {
 //                    console.log('openMetaTab');
-                    me.openMetaTab();
-                }
+                me.openMetaTab();
+//                }
                 // openMetaConfigTab
 //                me.openRawContentTab();
             }
@@ -615,11 +686,11 @@
                         buttons:  {
                             'cancel':  {
                                 label:     'Cancel',
-                                className: 'btn-default'
+                                className: 'ui button default'
                             },
                             'confirm': {
                                 label:     'Delete',
-                                className: 'btn-danger'
+                                className: 'ui button red'
                             }
                         },
                         callback: function (result) {
@@ -668,8 +739,8 @@
                 BackEnd.gitAdd(me.siteName, newFile.path);
                 riot.event.trigger('closeNewLayoutDialog');
                 setTimeout(function () {
-                    me.tags['side-bar'].activeFile('layout-file-list', 'layout/' + layoutFileName);
-                }, 100);
+                    me.tags['side-bar'].activeFile('layout', 'layout/' + layoutFileName);
+                }, 300);
             } catch (ex) {
                 console.log('addLayout', ex);
                 bootbox.alert('create layout failed, error ' + ex.message);
@@ -684,7 +755,7 @@
                 riot.event.trigger('addContentFile', newContentFilePath);
                 riot.event.trigger('closeNewContentDialog');
                 me.openFile(newContentFilePath);
-                me.tags['side-bar'].activeFile('content-file-list', newContentFilePath);
+                me.tags['side-bar'].activeFile('content', newContentFilePath);
                 // run git add
                 BackEnd.gitAdd(me.siteName, newContentFilePath);
             } catch (ex) {
@@ -715,15 +786,6 @@
             }
         };
 
-        var onWatchSuccess = function () {
-            me.openExternalReviewBtn.disabled = false;
-        };
-
-        var onWatchFailed = function () {
-            me.openExternalReviewBtn.disabled = true;
-//            $(openWdatchViewBtn).removeClass('active');
-        };
-
         var onChooseMediaFile = function (cb) {
             dialog.showOpenDialog({
                 properties: ['openFile'],
@@ -731,9 +793,10 @@
                     {name: 'All Media Files', extensions: ['*']}
                 ]
             }, function (filePaths) {
+                console.log('onChooseMediaFile callback');
                 if (!filePaths || filePaths.length != 1) return;
                 var filePath = filePaths[0];
-                BackEnd.addMediaFile(me.siteName, filePaths[0], function (error, relativePath) {
+                BackEnd.addMediaFile(me.siteName, filePath, function (error, relativePath) {
                     if (error) {
                         console.log('addMediaFile', error);
                     } else {
@@ -743,8 +806,6 @@
             });
         };
 
-        riot.event.on('watchSuccess', onWatchSuccess);
-        riot.event.on('watchFailed', onWatchFailed);
         riot.event.on('chooseMediaFile', onChooseMediaFile);
         riot.event.on('addLayout', onAddLayout);
         riot.event.on('addContent', onAddContent);
@@ -752,14 +813,14 @@
         riot.event.on('addTag', onAddTag);
 
         me.deployToGitHub = function () {
-            me.tags['progress-dialog'].show('Deploy to GitHub');
+            me.tags['progress-dialog'].show('Deploy to EasyWeb hosting');
             BackEnd.gitPushGhPages(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
                 var text = me.tags['progress-dialog'].getText();
                 var matches = text.split(/https:\/\/github\.com\/([^\/]+)\/(.+)/);
                 if (matches.length > 1) {
                     var ghPageUrl = 'https://' + matches[1] + '.github.io/' + matches[2] + '/';
-                    var msg = 'GitHub page url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
+                    var msg = 'Deployed Url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
                     me.tags['progress-dialog'].showMessage(msg);
                 }
             }).catch(function (err) {
@@ -777,7 +838,7 @@
 //                if (stat.isDirectory())
 //            } catch(ex) {}
 
-            me.tags['progress-dialog'].show('Sync to GitHub');
+            me.tags['progress-dialog'].show('Sync to EasyWeb');
             BackEnd.gitPushGitHub(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
                 // refresh current file to load new changes
@@ -813,10 +874,6 @@
                     me.tags['progress-dialog'].enableClose();
                 });
             });
-        };
-
-        me.openExternalReview = function () {
-            me.tags['watch-view'].openExternalBrowser();
         };
 
         me.showFtpDialog = function () {

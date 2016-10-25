@@ -1,16 +1,57 @@
 <file-list-flat>
-    <div class="input-group">
-        <span class="input-group-addon" style="border-bottom-left-radius: 0;"><i class="fa fa-fw fa-filter"></i></span>
-        <input type="text" class="form-control" style="border-bottom-right-radius: 0;" placeholder="Enter keywords to search" onkeyup="{onFilterInput}">
+    <div class="ui search fluid" style="padding-top: 6px;">
+        <div class="ui icon input fluid">
+            <input class="prompt" placeholder="enter keywords" type="text" onkeyup="{onFilterInput}">
+            <i class="search icon"></i>
+        </div>
     </div>
-    <div class="list-group" style="overflow: auto; padding: 0; margin: 0; height: calc(100vh - 130px)">
-        <a href="#" each="{filteredFiles}" class="list-group-item truncate" title="{hideExt(name)}" data-path="{path}" onclick="{openFile}" style="{}">
-            <span style="margin-right: 10px; margin-left: -5px;" class={getFileIcon(name, path)}></span> {getContentType(path)}{hideExt(name)}
-        </a>
+    <!--
+    <div class="ui left icon fluid input">
+        <input placeholder="" type="text" style="border: none" onkeyup="{onFilterInput}">
+        <i class="filter icon"></i>
     </div>
+    -->
+    <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
+        <div class="ui celled list">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}">
+                <i class="{getFileIcon(name, path)}"></i>
+                <div class="content">
+                    <a class="truncate">{getContentType(path)}{hideExt(name)}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style scoped>
+        .ui.celled.list > .item.active {
+            background-color: #2185D0;
+        }
+
+        .ui.celled.list > .item.active > .content > a {
+            color: white;
+        }
+
+        .octicon {
+            display: table-cell;
+            padding-right: 6px;
+        }
+
+        .octicon + div.content {
+            display: table-cell;
+        }
+
+        .item {
+            cursor: pointer;
+        }
+
+        .item:hover {
+            background: #F9FAFB;
+        }
+
+    </style>
+
     <script>
         var me = this;
-        me.event = riot.observable();
         me.files = [];
         me.filteredFiles = [];
 
@@ -20,6 +61,20 @@
         me.isPartial = function (path) {
             return path.indexOf('layout/partial/') != -1;
         };
+
+        me.on('mount', function () {
+            $(me.root.querySelector('.simplebar')).simplebar();
+            $(me.root).find('.item').popup({
+                position:   'right center',
+                variation:  'inverted wide',
+                lastResort: true,
+                preserve:   false,
+                delay:      {
+                    show: 200,
+                    hide: 0
+                }
+            });
+        });
 
         me.getContentType = function (path) {
             if (path.indexOf('layout/partial/') != -1)
@@ -66,6 +121,7 @@
             }
             outer: for (var i = 0, j = 0; i < nLen; i++) {
                 var nch = needle.charCodeAt(i);
+                if (nch === 32) continue;
                 while (j < hLen) {
                     if (haystack.charCodeAt(j++) === nch) {
                         continue outer;
@@ -169,7 +225,7 @@
             me.clear();
             if (me.opts.type == 'layout') {
                 files = sortLayoutFiles(files);
-            } else if (me.opts.type == 'metadata') {
+            } else if (me.opts.type == 'meta') {
                 files = sortContentFiles(files);
             } else {
                 files = files.sort(sortByName);
@@ -181,27 +237,33 @@
         };
 
         me.openFile = function (e) {
-            var filePath = e.target.dataset.path;
+            var filePath = e.item.path;
+//            console.log('item', e.item);
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
-            $root.find('.list-group-item').removeClass('active');
-            $(e.currentTarget).addClass('active');
-//            console.log('TRIGGER fileActivated', filePath);
+            $root.find('.item').removeClass('active');
+//            console.log('e', e);
+//            console.log("$(e.srcElement).closest('.item')", $(e.srcElement).closest('.item'));
+            $(e.srcElement).closest('.item').addClass('active');
+
             riot.event.trigger('fileActivated', me.opts.type, filePath);
-            me.event.trigger('openFile', filePath);
+//            console.log('fileListFlat open file', filePath);
+            me.trigger('openFile', filePath);
         };
 
         me.activeFile = function (filePath) {
 //            console.log("filePath", filePath);
 //            console.log("query '[data-path=\"' + filePath + '\"]'");
             var elm = $root.find('[data-path="' + filePath + '"]');
-            $root.find('.list-group-item').removeClass('active');
+            $root.find('.item').removeClass('active');
 //            console.log('elm', elm);
             $(elm).addClass('active');
         };
 
         me.clearActive = function () {
-            $root.find('.list-group-item').removeClass('active');
+//            $root.find('.ui.celled.list>.item').removeClass('active');
+//            console.log('clearActive', $root.find('.item').removeClass('active'));
+            $root.find('.item').removeClass('active');
             me.curFilePath = '';
         };
 

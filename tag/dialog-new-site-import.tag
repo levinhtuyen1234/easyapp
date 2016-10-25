@@ -1,52 +1,38 @@
-<dialog-new-site-import class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Import site</h4>
+<dialog-new-site-import class="ui modal" tabindex="-1">
+    <i class="close icon"></i>
+    <div class="header">Import site</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="field">
+                <label for="siteNameField" class="">Folder name</label>
+                <input type="text" class="form-control" id="siteNameField" placeholder="" oninput="{edit.bind(this, 'siteName')}">
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group is-empty">
-                        <label for="form-repo-url" class="control-label col-sm-4">Folder name</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} oninput="{edit.bind(this,'siteName')}">
-                            <span class="material-input"></span>
-                        </div>
-                    </div>
-                    <div class="form-group is-empty">
-                        <label for="form-repo-url" class="control-label col-sm-4">Repository url (HTTPS)</label>
-                        <div class="col-sm-8">
-                            <input type="url" class="form-control" id="form-repo-url" placeholder="ends with .git" oninput="{edit.bind(this,'repoUrl')}" value="{repoUrl}">
-                            <span class="material-input"></span>
-                        </div>
-                    </div>
-                    <div class="form-group is-empty">
-                        <label for="form-username" class="control-label col-sm-4">Username</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="form-username" placeholder="" oninput="{edit.bind(this,'username')}" value="{username}">
-                        </div>
-                    </div>
-                    <div class="form-group is-empty">
-                        <label for="form-password" class="control-label col-sm-4">Password</label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" id="form-password" placeholder="" oninput="{edit.bind(this,'password')}" value="{password}">
-                            <span class="material-input"></span>
-                        </div>
-                    </div>
-                </form>
+            <div class="field">
+                <label for="repoUrlField" class="">Repository url (HTTPS)</label>
+                <input type="url" class="form-control" id="repoUrlField" placeholder="ends with .git" oninput="{editUrl.bind(this, 'repoUrl')}">
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary disabled={siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{create}">Create</button>
+            <div class="field">
+                <label for="usernameField" class="">Username</label>
+                <input type="text" class="form-control" id="usernameField" placeholder="" oninput="{edit.bind(this, 'username')}">
             </div>
+            <div class="field">
+                <label for="passwordField" class="">Password</label>
+                <input type="password" class="form-control" id="passwordField" placeholder="" oninput="{edit.bind(this, 'password')}">
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui deny button">Cancel</div>
+        <div class="ui positive right labeled icon button" disabled="{siteName=='' || repoUrl=='' || username=='' || password=='' || !urlValid}" onclick="{create}">Import
+            <i class="add icon"></i>
         </div>
     </div>
 
     <script>
         var me = this;
+        me.mixin('form');
 
-        me.edit = function (name, e) {
+        me.editUrl = function (name, e) {
             switch (e.target.type) {
                 case 'checkbox':
                     me[name] = e.target.checked;
@@ -67,9 +53,15 @@
         me.urlValid = false;
 
         me.show = function () {
+            me.siteName = '';
             me.repoUrl = '';
             me.username = '';
             me.password = '';
+
+            me.siteNameField.value = me.siteName;
+            me.repoUrlField.value = me.repoUrl;
+            me.usernameField.value = me.username;
+            me.passwordField.value = me.password;
 
             // debug
 //            me.siteName = 'bb';
@@ -77,6 +69,7 @@
 //            me.username = 'nemesisqp';
 //            me.password = '8394fca387b64f36ab8c95bfbd99abec90bcc7xx';
 //            me.urlValid = true;
+
 
             me.update();
             $(me.root).modal('show');
@@ -87,6 +80,7 @@
         };
 
         me.create = function () {
+//            console.log(me.siteName, me.repoUrl, me.username, me.password);
             me.event.trigger('create', {
                 siteName: me.siteName,
                 url:      me.repoUrl,

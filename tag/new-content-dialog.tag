@@ -1,76 +1,71 @@
-<new-content-dialog class="modal fade" tabindex="-1" role="dialog" data-backdrop="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h2 class="modal-title">Create new page</h2>
+<new-content-dialog class="ui modal" tabindex="-1">
+    <i class="close icon"></i>
+    <div class="header">Create new page</div>
+    <div class="content">
+        <form class="ui form">
+            <div class="inline fields">
+                <label class="two wide field">Page Title</label>
+                <div class="ui icon input fourteen wide field">
+                    <input type="text" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}">
+                </div>
             </div>
-            <div class="modal-body">
-                <form class="form-horizontal">
-                    <div class="form-group">
-                        <label for="contentLayoutElm" class="col-sm-2 control-label">Layout</label>
-                        <div class="col-sm-10">
-                            <select id="contentLayoutElm" class="selectpicker" onchange="{edit.bind(this,'contentLayout')}">
-                                <option value=""></option>
-                                <option each="{value in layoutList}" value="{value}">{hideExt(value)}</option>
-                            </select>
+            <div class="inline fields">
+                <label class="two wide field">Layout</label>
+                <div class="ui fourteen wide field">
+                    <div class="ui selection dropdown" id="layoutDropDown" style="width: 100%">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Layout</div>
+                        <div class="menu">
+                            <div class="item" each="{value in layoutList}" data-value="{value}">{hideExt(value)}</div>
                         </div>
                     </div>
-                    <!--<div class="form-group">-->
-                        <!--<div class="col-sm-offset-2 col-sm-10">-->
-                            <!--<label for="isFrontPageElm">-->
-                                <!--<input type="checkbox" id="isFrontPageElm" onchange="{updateFileName}"> To create a single Page, check here-->
-                            <!--</label>-->
-                            <!--<label class="text-info">Hãy check nếu đây là trang duy nhất như Home, Contact, AboutUs,... </label>-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <div class="form-group">
-                        <label for="contentTitleElm" class="col-sm-2 control-label">Page Title</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="contentTitleElm" placeholder="Title" oninput="{updateFileName}" style="width: 498px;">
-                        </div>
-                    </div>
-                    <!--<div class="form-group">-->
-                    <!--<label for="contentTitleElm" class="col-sm-2 control-label">Category</label>-->
-                    <!--<div class="col-sm-10">-->
-                    <!--<input type="text" class="form-control" placeholder="Category" style="width: 498px;" onchange="{edit.bind(this,'contentCategory')}">-->
-                    <!--</div>-->
-                    <!--</div>-->
-
-                    <div class="form-group">
-                        <label for="categoryListElm" class="col-sm-2 control-label">Category</label>
-                        <div class="col-sm-10">
-                            <select id="categoryListElm" class="selectpicker" onchange="{edit.bind(this,'contentCategory')}">
-                                <option value=""></option>
-                                <option each="{category in categoryList}" value="{category.value}">{category.name}</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="tagListElm" class="col-sm-2 control-label">Tag</label>
-                        <div class="col-sm-10">
-                            <select id="tagListElm" class="selectpicker" onchange="{editTag}" multiple>
-                                <option each="{tag in tagList}" value="{tag.value}">{tag.name}</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="contentFilenameElm" class="col-sm-2 control-label">File Name</label>
-                        <div class="col-sm-10">
-                            <div class="input-group">
-                                <input type="text" class="form-control" id="contentFilenameElm" placeholder="FileName" disabled value="{contentFileName}">
-                                <span class="input-group-addon">.md</span>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" disabled="{canAdd()}" onclick="{add}">Add</button>
+            <div class="inline fields">
+                <label class="two wide field">Category</label>
+                <div class="ui fourteen wide field">
+                    <div class="ui fluid selection dropdown" id="categoryDropDown" style="width: 100%">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Category</div>
+                        <div class="menu">
+                            <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <div class="inline fields">
+                <label class="two wide field">Tags</label>
+                <div class="ui fourteen wide field">
+                    <div class="ui fluid dropdown multiple selection" id="tagDropDown" style="width: 100%">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Choose Tag</div>
+                        <div class="menu">
+                            <div class="item" each="{tag in tagList}" data-value="{tag.value}">{tag.name}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inline fields">
+                <label class="two wide field">Filename</label>
+                <div class="fourteen wide field">
+                    <div class="ui fluid right labeled icon input">
+                        <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
+                        <div class="ui label">.md</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <div class="ui button cancel">Cancel</div>
+        <div class="ui button positive icon" disabled="{canAdd()}" onclick="{add}">
+            <i class="add icon"></i>
+            Add
         </div>
     </div>
     <script>
@@ -101,7 +96,7 @@
             me.updateFileName();
         };
 
-        me.editTag = function(e) {
+        me.editTag = function (e) {
             var selectedTags = $(e.srcElement).val();
             if (selectedTags == null)
                 me.contentTag = '[]';
@@ -120,10 +115,17 @@
 //            console.log(me.contentTag);
 //            riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, me.isFrontPageElm.checked);
             riot.event.trigger('addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
+//            console.log('me.add', 'addContent', me.contentLayout, me.contentTitle, me.contentFileName + '.md', me.contentCategory, me.contentTag, true);
         };
 
-        riot.event.on('unmount', function () {
+        me.on('unmount', function () {
             riot.event.off('closeNewContentDialog');
+        });
+
+        me.on('mount', function () {
+            riot.event.on('closeNewContentDialog', function () {
+                $(me.root).modal('hide');
+            });
         });
 
         me.updateLayoutList = function (layoutList) {
@@ -146,12 +148,12 @@
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
-                    .replace(/[?,!\/\-"*:;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
                     .replace(/[.’']/g, ' ')
                     .replace(/\s+/g, '-')
                     .trim();
 //            if (me.isFrontPageElm.checked) {
-                me.contentFileName = title;
+            me.contentFileName = title;
 //            } else {
 //                var contentLayoutBase = me.contentLayout.split('.');
 //                contentLayoutBase.pop();
@@ -177,16 +179,34 @@
                 tag.name = tag.name.split('.').join(' / ');
             });
 
-            me.update();
+            var categoryDropDown = $(me.categoryDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentCategory = categoryDropDown.dropdown('get value');
+                }
+            });
 
+            var layoutDropDown = $(me.layoutDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentLayout = layoutDropDown.dropdown('get value');
+                }
+            });
+
+            var tagDropDown = $(me.tagDropDown).dropdown({
+                onChange: function (value, text) {
+                    me.contentTag = tagDropDown.dropdown('get value');
+                }
+            });
+
+            categoryDropDown.dropdown('clear');
+            layoutDropDown.dropdown('clear');
+            tagDropDown.dropdown('clear');
 
             $(me.root).modal('show');
-            $(me.contentLayoutElm).selectpicker('refresh');
-            $(me.categoryListElm).selectpicker('refresh');
-            $(me.tagListElm).selectpicker('refresh');
-            riot.event.one('closeNewContentDialog', function () {
-                $(me.root).modal('hide');
-            });
+//            $(me.contentLayoutElm).selectpicker('refresh');
+//            $(me.categoryListElm).selectpicker('refresh');
+//            $(me.tagListElm).selectpicker('refresh');
+
+            me.update();
         }
     </script>
 </new-content-dialog>

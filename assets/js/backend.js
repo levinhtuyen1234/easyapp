@@ -6,6 +6,7 @@ const ChildProcess = require('child_process');
 const Remote = require('electron').remote;
 const Shell = Remote.shell;
 
+const _ = require('lodash');
 const BlueBird = require('bluebird');
 const Mkdir = BlueBird.promisify(Fs.mkdir);
 const RimRaf = BlueBird.promisify(require('rimraf'));
@@ -169,68 +170,176 @@ function fileExists(filePath) {
     }
 }
 
-function genSimpleContentConfigFile(metaData) {
-    var contentConfig = [];
+function getDefaultContentConfig(key, valueType) {
+    valueType = valueType.toLowerCase();
+    console.log('getDefaultContentConfig valueType', valueType);
+    switch (valueType) {
+        case 'string':
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'Text',
+                displayType:  'ShortText',
+                defaultValue: '',
+                validations:  [],
+                viewOnly:     false,
+                required:     false
+            };
+        case 'media':
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'Media',
+                displayType:  '',
+                defaultValue: '',
+                validations:  [],
+                required:     false
+            };
+        case 'datatime':
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'DateTime',
+                displayType:  'DateTime',
+                defaultValue: '',
+                validations:  [],
+                required:     false
+            };
+        case 'number':
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'Number',
+                displayType:  'Number',
+                defaultValue: 0,
+                validations:  [],
+                required:     false
+            };
+        case 'boolean':
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'Boolean',
+                defaultValue: false,
+                validations:  [],
+                required:     false
+            };
+        case 'array':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Array',
+                validations: [],
+                required:    false,
+                children:    []
+            };
+        case 'object':
+            return {
+                name:        key,
+                displayName: key,
+                type:        'Object',
+                validations: [],
+                required:    false,
+                children:    []
+            };
+        default:
+            return {
+                name:         key,
+                displayName:  key,
+                type:         'Text',
+                displayType:  'ShortText',
+                defaultValue: '',
+                validations:  [],
+                viewOnly:     false,
+                required:     false
+            };
+    }
+}
 
+var DefaultFixedFieldNames = ['slug', 'layout', 'category', 'tag'];
+
+function genSimpleContentConfig(metaData, fixedFieldNames) {
     var fixedFields = [];
     var tmpFields = [];
+    var fixedField = false;
 
     for (var key in metaData) {
-        var fields = (key === 'slug' || key === 'layout' || key === 'category' || key === 'tag') ? fixedFields : tmpFields;
-        if (!metaData.hasOwnProperty(key)) continue;
-        var value = metaData[key];
+        var fields = tmpFields;
+        if (fixedFieldNames && fixedFieldNames.indexOf(key) != -1) {
+            fields = fixedFields;
+            fixedField = true;
+        }
 
-        switch (typeof value) {
+        if (!metaData.hasOwnProperty(key)) {
+            console.log('NOT HAS OWN PROPERTY');
+            continue;
+        }
+        var value = metaData[key];
+        var valueType = typeof value;
+        switch (valueType) {
             case 'string':
                 switch (key) {
                     case 'date':
                         fields.push({
-                            name:        key,
-                            displayName: key,
-                            displayType: 'DateTime',
-                            type:        'DateTime',
-                            validations: [],
-                            viewOnly:    key === 'layout',
-                            required:    false
+                            name:         key,
+                            displayName:  key,
+                            displayType:  'DateTime',
+                            type:         'DateTime',
+                            defaultValue: '',
+                            validations:  [],
+                            viewOnly:     (fixedField && key === 'layout'),
+                            required:     false
                         });
                         break;
                     default:
                         fields.push({
-                            name:        key,
-                            displayName: key,
-                            type:        'Text',
-                            validations: [],
-                            viewOnly:    key === 'layout' || key === 'slug',
-                            required:    false
+                            name:         key,
+                            displayName:  key,
+                            type:         'Text',
+                            displayType:  'ShortText',
+                            defaultValue: '',
+                            validations:  [],
+                            viewOnly:     (fixedField && (key === 'layout' || key === 'slug')),
+                            required:     false
                         });
                 }
                 break;
             case 'number':
                 fields.push({
-                    name:        key,
-                    displayName: key,
-                    type:        'Number',
-                    validations: [],
-                    required:    false
+                    name:         key,
+                    displayName:  key,
+                    type:         'Number',
+                    displayType:  'Number',
+                    defaultValue: 0,
+                    validations:  [],
+                    required:     false
                 });
                 break;
             case 'boolean':
                 fields.push({
-                    name:        key,
-                    displayName: key,
-                    type:        'Boolean',
-                    validations: [],
-                    required:    false
+                    name:         key,
+                    displayName:  key,
+                    type:         'Boolean',
+                    defaultValue: false,
+                    validations:  [],
+                    required:     false
                 });
                 break;
             case 'object':
                 if (Array.isArray(value)) {
+                    // use first object in array value to gen model
+                    var children = [];
+                    // chi? tao model khi value[0] type la object
+                    if (value.length >= 1 && typeof(value[0]) === 'object') {
+                        children = genSimpleContentConfig(value[0]);
+                    }
                     fields.push({
                         name:        key,
                         displayName: key,
                         type:        'Array',
                         validations: [],
-                        required:    false
+                        required:    false,
+                        children:    children
                     });
                 } else {
                     fields.push({
@@ -238,11 +347,33 @@ function genSimpleContentConfigFile(metaData) {
                         displayName: key,
                         type:        'Object',
                         validations: [],
-                        required:    false
+                        required:    false,
+                        children:    genSimpleContentConfig(value)
                     });
                 }
+                break;
         }
     }
+
+    // add _config to fixed fields if not exists
+    if (fixedField) {
+        var contentField = _.find(fixedFields, {name: '__content__'});
+        if (!contentField) {
+            fixedFields.push({
+                name:         '__content__',
+                displayName:  '[Content]',
+                type:         'Text',
+                displayType:  'MarkDown',
+                defaultValue: '',
+                validations:  [],
+                hidden:       false,
+                viewOnly:     false,
+                required:     false
+            })
+        }
+    }
+
+
     return fixedFields.concat(tmpFields);
 }
 
@@ -290,6 +421,38 @@ function saveRawContentFile(siteName, filePath, content) {
     Fs.writeFileSync(Path.join(sitesRoot, siteName, filePath), content);
 }
 
+function isObjectEqual(lhs, rhs) {
+    return JSON.stringify(lhs) === JSON.stringify(rhs);
+}
+
+var mergeConfig = function (existsConfigs, newGenConfigs) {
+    // find new config object
+    var newConfigObjects = _.differenceBy(newGenConfigs, existsConfigs, 'name');
+
+    // merge children
+    for (var i = 0; i < existsConfigs.length; i++) {
+        var existsConfig = existsConfigs[i];
+        var newConfig = _.find(newGenConfigs, {name: existsConfig.name});
+        if (!newConfig) continue;
+
+        // merge field exists in newConfig and not in existsConfig
+        for (var key in newConfig) {
+            if (!newConfig.hasOwnProperty(key)) continue;
+            if (key === 'children') continue;
+            if (existsConfig[key]) continue;
+            existsConfig[key] = newConfig[key];
+        }
+
+        if (!existsConfig.children && newConfig.children) {
+            existsConfig.children = newConfig.children;
+        } else if (existsConfig.children && newConfig.children) {
+            existsConfig.children = mergeConfig(existsConfig.children, newConfig.children);
+        }
+    }
+
+    return existsConfigs.concat(newConfigObjects);
+};
+
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
@@ -297,24 +460,13 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     // doc file content lay metaData
     var content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
-    var contentConfig = genSimpleContentConfigFile(content.metaData);
-
+    var contentConfig = genSimpleContentConfig(content.metaData, DefaultFixedFieldNames);
     if (fileExists(contentConfigFullPath)) {
-        // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
-        // merge property from contentConfig -> existsConfig
-        var fieldsOnlyInCurContentFile = contentConfig.filter(function (cur) {
-            return existsConfig.filter(function (curB) {
-                    return cur.name === curB.name;
-                }).length === 0;
-        });
+        var newConfig = mergeConfig(existsConfig, contentConfig);
 
-        // update config file neu co field mới
-        if (fieldsOnlyInCurContentFile.length > 0) {
-            existsConfig = existsConfig.concat(fieldsOnlyInCurContentFile);
-            Fs.writeFileSync(contentConfigFullPath, JSON.stringify(existsConfig, null, 4));
-        }
-        return existsConfig;
+        Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
+        return newConfig;
     } else {
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
         return contentConfig;
@@ -324,7 +476,6 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
 function readFile(site, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, site, filePath)).toString();
 }
-
 
 function getSiteList() {
     var ret = Fs.readdirSync(sitesRoot);
@@ -483,11 +634,11 @@ function SpawnShell(command, args, opts) {
         });
 
         newProcess.on('exit', (code) => {
-            console.log(`Child exited with code ${code}`);
+            console.log(`Child exited with code ${code} output ${out}`);
             if (code === 0)
                 resolve(out);
             else
-                reject(code);
+                reject({code: code, message: out});
         });
     });
 }
@@ -568,13 +719,13 @@ function gitCommit(siteName, message, onProgress) {
 
 function gitGenMessage(siteName) {
     const workingDirectory = Path.resolve(getSitePath(siteName));
-    return new BlueBird((resolve, reject)=> {
+    return new BlueBird((resolve, reject) => {
         var output = '';
         return spawnGitCmd('git', ['status'], workingDirectory, function (data) {
             output += data + '\r\n';
         }).catch(ex => {
             reject(ex);
-        }).then(()=> {
+        }).then(() => {
             console.log('output', output);
             var match = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g);
             if (match == null) {
@@ -638,29 +789,30 @@ function getMetaFile(siteName, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, siteName, filePath)).toString();
 }
 
+/*
+ * 'content/metadata/category/document.json' ->  category.document.meta.json
+ * 'content/metadata/footer.json' -> footer.meta.json
+ * */
+function genMetaConfigFileName(contentMetaDataPath) {
+    var parts = contentMetaDataPath.split('/');
+    parts.shift(); // remove 'content'
+    parts.shift(); // remove 'metadata'
+    return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta.json';
+}
+
 function getMetaConfigFile(siteName, metaFilePath) {
+    console.log('getMetaConfigFile', metaFilePath);
     var metaFileContent = readFile(siteName, metaFilePath);
     var metaData = JSON.parse(metaFileContent);
-    var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
-    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
-    var metaConfig = genSimpleContentConfigFile(metaData);
+    var name = genMetaConfigFileName(metaFilePath);
+    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
+    var metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
-        // read and return config file
         var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
-        // merge property from metaConfig -> existsConfig
-        var fieldsOnlyInCurMetaFile = metaConfig.filter(function (cur) {
-            return existsConfig.filter(function (curB) {
-                    return cur.name === curB.name;
-                }).length === 0;
-        });
-
-        // update config file neu co field mới
-        if (fieldsOnlyInCurMetaFile.length > 0) {
-            existsConfig = existsConfig.concat(fieldsOnlyInCurMetaFile);
-            Fs.writeFileSync(configFullPath, JSON.stringify(existsConfig, null, 4));
-        }
-        return existsConfig;
+        var newConfig = mergeConfig(existsConfig, metaConfig);
+        Fs.writeFileSync(configFullPath, JSON.stringify(newConfig, null, 4));
+        return newConfig;
     } else {
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
         return metaConfig;
@@ -814,48 +966,50 @@ function showItemInFolder(siteName, filePath) {
 }
 
 module.exports = {
-    showItemInFolder:       showItemInFolder,
-    fileExists:             fileExists,
-    newCategory:            newCategory,
-    getCategoryLayoutList:  getCategoryLayoutList,
-    getCategoryList:        getCategoryList,
-    purgeCategoryListCache: purgeCategoryListCache,
-    newTag:                 newTag,
-    getTagList:             getTagList,
-    getMetaFile:            getMetaFile,
-    getSiteMetadataFiles:   getSiteMetadataFiles,
-    getMetaConfigFile:      getMetaConfigFile,
-    saveMetaFile:           saveMetaFile,
-    saveMetaConfigFile:     saveMetaConfigFile,
-    createSiteFolder:       createSiteFolder,
-    getSiteList:            getSiteList,
-    getConfigFile:          getConfigFile,
-    saveConfigFile:         saveConfigFile,
-    getRawContentFile:      getRawContentFile,
-    getContentFile:         getContentFile,
-    saveContentFile:        saveContentFile,
-    saveRawContentFile:     saveRawContentFile,
-    getLayoutFile:          getLayoutFile,
-    saveLayoutFile:         saveLayoutFile,
-    deleteLayoutFile:       deleteLayoutFile,
-    deleteContentFile:      deleteContentFile,
-    getLayoutList:          getLayoutList,
-    getRootLayoutList:      getRootLayoutList,
-    newLayoutFile:          newLayoutFile,
-    gitAdd:                 gitAdd,
-    newContentFile:         newContentFile,
-    gitCheckout:            gitCheckout,
-    gitInitSite:            gitInitSite,
-    gitGenMessage:          gitGenMessage,
-    gitImportGitHub:        gitImportGitHub,
-    gitCommit:              gitCommit,
-    gitPushGhPages:         gitPushGhPages,
-    gitPushGitHub:          gitPushGitHub,
-    getSiteLayoutFiles:     getSiteLayoutFiles,
-    getSiteAssetFiles:      getSiteAssetFiles,
-    getSiteContentFiles:    getSiteContentFiles,
-    readFile:               readFile,
-    addMediaFile:           addMediaFile,
-    isGhPageInitialized:    isGhPageInitialized,
-    setDomain:              setDomain
+    genSimpleContentConfig:  genSimpleContentConfig,
+    getDefaultContentConfig: getDefaultContentConfig,
+    showItemInFolder:        showItemInFolder,
+    fileExists:              fileExists,
+    newCategory:             newCategory,
+    getCategoryLayoutList:   getCategoryLayoutList,
+    getCategoryList:         getCategoryList,
+    purgeCategoryListCache:  purgeCategoryListCache,
+    newTag:                  newTag,
+    getTagList:              getTagList,
+    getMetaFile:             getMetaFile,
+    getSiteMetadataFiles:    getSiteMetadataFiles,
+    getMetaConfigFile:       getMetaConfigFile,
+    saveMetaFile:            saveMetaFile,
+    saveMetaConfigFile:      saveMetaConfigFile,
+    createSiteFolder:        createSiteFolder,
+    getSiteList:             getSiteList,
+    getConfigFile:           getConfigFile,
+    saveConfigFile:          saveConfigFile,
+    getRawContentFile:       getRawContentFile,
+    getContentFile:          getContentFile,
+    saveContentFile:         saveContentFile,
+    saveRawContentFile:      saveRawContentFile,
+    getLayoutFile:           getLayoutFile,
+    saveLayoutFile:          saveLayoutFile,
+    deleteLayoutFile:        deleteLayoutFile,
+    deleteContentFile:       deleteContentFile,
+    getLayoutList:           getLayoutList,
+    getRootLayoutList:       getRootLayoutList,
+    newLayoutFile:           newLayoutFile,
+    gitAdd:                  gitAdd,
+    newContentFile:          newContentFile,
+    gitCheckout:             gitCheckout,
+    gitInitSite:             gitInitSite,
+    gitGenMessage:           gitGenMessage,
+    gitImportGitHub:         gitImportGitHub,
+    gitCommit:               gitCommit,
+    gitPushGhPages:          gitPushGhPages,
+    gitPushGitHub:           gitPushGitHub,
+    getSiteLayoutFiles:      getSiteLayoutFiles,
+    getSiteAssetFiles:       getSiteAssetFiles,
+    getSiteContentFiles:     getSiteContentFiles,
+    readFile:                readFile,
+    addMediaFile:            addMediaFile,
+    isGhPageInitialized:     isGhPageInitialized,
+    setDomain:               setDomain
 };

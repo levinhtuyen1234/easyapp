@@ -1,30 +1,28 @@
 <config-view-array>
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Display name:</label>
-        <div class="col-sm-10">
-            <input type="text" class="form-control" id="textDisplayName" value="{config.displayName}" onkeyup="{edit.bind(this,'config.displayName')}">
-        </div>
+    <div class="field">
+        <label>Display name:</label>
+        <input type="text" class="" id="textDisplayName" value="{config.displayName}" onkeyup="{bind('config.displayName')}">
     </div>
+
     <!-- This field is required -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Is required</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.required')}" checked="{config.required}">
-        </div>
+    <div class="inline field ui checkbox">
+        <label class="title">Is required</label>
+        <input type="checkbox" onchange="{edit.bind(this,'config.required')}" checked="{config.required}">
     </div>
+    <br>
     <!-- View Only Field -->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Only View</label>
-        <div class="col-sm-10">
-            <input type="checkbox" onchange="{edit.bind(this, 'config.viewOnly')}" checked="{config.viewOnly}">
-        </div>
+    <div class="inline field ui checkbox">
+        <label class="label">Only View</label>
+        <input type="checkbox" onchange="{edit.bind(this,'config.viewOnly')}" checked="{config.viewOnly}">
     </div>
+
+    <!-- TODO model for children object -->
 
     <script>
         var me = this;
         me.mixin('form');
 
-        me.config = { type: 'Array' };
+        me.config = {type: 'Array'};
 
         me.clear = function () {
             me.config = {
@@ -37,7 +35,7 @@
             return me.config;
         };
 
-        me.loadConfig = function(config) {
+        me.loadConfig = function (config) {
             console.log('config', config);
             me.config = Object.assign({}, config);
             me.update();

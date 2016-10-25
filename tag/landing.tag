@@ -1,107 +1,269 @@
 <landing>
-    <section class="featurette pb-0 pt-6">
-        <div class="container-responsive">
-            <div class="row">
-                <dialog-new-site-local></dialog-new-site-local>
-                <dialog-new-site-import></dialog-new-site-import>
-                <progress-dialog></progress-dialog>
-                <div class="col-xs-5 col-sm-4 col-md-3">
-                    <div class="pricing-card pricing-card-horizontal">
-                        <div class="pricing-card-cta">
-                            <div class="caption">
-                                <div style="text-align: center"><i class="fa fa-plus fa-4x"></i></div>
-                                <div>
-                                    <a href="#" class="btn btn-block btn-theme-green btn-jumbotron" role="button" onclick={showCreateSite}>Create new site</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-xs-1 col-sm-1 col-md-1" style="text-align: center;">
-                    <h1 class="text-thin" style="padding-top: 100%">OR</h1>
-                </div>
-                <div class="col-xs-5 col-sm-4 col-md-3">
-                    <div class="pricing-card pricing-card-horizontal">
-                        <div class="pricing-card-cta">
-                            <div class="caption">
-                                <div style="text-align: center"><i class="fa fa-github fa-4x"></i></div>
-                                <div>
-                                    <a href="#" class="btn btn-block btn-theme-green btn-jumbotron" role="button" onclick={showImportGithub}>Import GitHub repository</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <section class="featurette pb-0 pt-6 shade-gray border-top">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">List of your websites</h2>
-            <div class="row">
-                <div class="col-sm-3 col-md-3" each="{site in sites}">
-                    <div onclick={openSite.bind(this,site)}>
-                        <div class="pricing-card pricing-card-horizontal">
-                            <div class="pricing-card-cta">
-                                <div class="caption" style="text-align: center">
-                                    <div style="text-align: center">
-                                        <i class="{getSiteIcon(site)}"></i>
-                                    </div>
-                                    <!--<img src={imgSrc} class="siteThumbnailImg" alt="Site Thumbnail">-->
-                                    <h1>{site.name}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    <dialog-new-site-local></dialog-new-site-local>
+    <dialog-new-site-import></dialog-new-site-import>
+    <progress-dialog></progress-dialog>
 
-    <section class="featurette pb-0 pt-6 border-top">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">How to build website?</h2>
-            <div class="pricing-card pricing-card-horizontal">
-                <div class="pricing-card-cta">
-                    <a class="btn btn-block btn-theme-green btn-jumbotron" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a></div>
-                <div class="pricing-card-text display-heading-3 mb-0 text-thin">EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.</div>
+    <div class="des-hero">
+
+        <div class="ui grid container ">
+            <div class="eight wide column">
+			
+				<a href="http://easywebhub.com" target="_blank" >
+			
+                <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="150" alt="">
+				</a>
+            </div>
+
+            <div class="eight wide column" style="text-align: right">
+                <div class="ui dropdown top right pointing">
+                    <input type="hidden" name="gender">
+                    <img class="ui avatar image" src="./assets/easyweb-image/jenny-user.jpg">
+                    <span>{username}</span>
+                    <i class="dropdown icon"></i>
+
+                    <div class="menu">
+                        <a class="item disabled" data-value="changeUserData"><i class="edit icon"></i> Edit profile</a>
+                        <a class="item disabled" data-value="changeUserPassword"><i class="lock icon"></i> Change password</a>
+                        <div class="divider"></div>
+                        <a class="item" data-value="signOut"><i class="sign out icon"></i> Log out</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-    <section class="featurette shade-gradient pb-4">
-        <div class="container-responsive">
-            <h2 class="featurette-heading display-heading-2 mt-3">Build website faster, easier?</h2>
-            <div class="pricing-card pricing-card-horizontal">
-                <div class="pricing-card-cta">
-                    <a class="btn btn-block btn-theme-green btn-jumbotron" href="http://electron.atom.io/docs/api/menu/" target="_blank" rel="nofollow">Công cụ hỗ trợ</a></div>
-                <div class="pricing-card-text display-heading-3 mb-0 text-thin">GitHub fosters a fast, flexible, and collaborative development process that lets you work on your own or with others.</div>
+
+
+        <div class="ui grid container ">
+            <div class="wide column">
+                <h1 class="ui header huge">Present your website, easily</h1>
+                <h3>An open framework lets you build awesome websites with only HTML, CSS skills</h3>
+                <div><i class="angle down icon large"></i></div>
             </div>
         </div>
-    </section>
+    </div>
+    <div class="marketplace">
+        <div class="ui grid container ">
+            <div class="sixteen wide column">
+
+                <h1 class="ui header weight-300 orange">Website Marketplace</h1>
+                <!--<h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>-->
+
+                <div class="ui three stackable doubling cards">
+                    <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
+                        <div class="image">
+                            <img src="{marketPlaceTemplateImageList[(index + 3) %4]}">
+                        </div>
+                        <div class="content">
+                            <div class="header">{template.name}</div>
+                            <div class="description">
+                                <p>Landing page for your company</p>
+                            </div>
+                        </div>
+
+                        <div class="extra content">
+                            <i>by</i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="user-project">
+        <div class="ui grid container ">
+            <div class="sixteen wide column">
+                <h2 class="ui header blue weight-300">
+                    Your websites:
+                    <!--<div class="sub header">Choose a website to continue your work</div>-->
+                </h2>
+
+                <div class="ui four stackable doubling cards">
+                    <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite.bind(this, site)}">
+                        <div class="image">
+                            <img src="{marketPlaceTemplateImageList[index % 4]}">
+                        </div>
+                        <div class="content">
+                            <div class="header">{site.name}</div>
+                            <div class="description">
+                                <p>Landing page for your company</p>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <i class="edit icon"></i>
+                            {moment("2016-10-20T08:54:54.924Z").fromNow()}
+                        </div>
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!--<div class="ui hidden section divider"></div>-->
+    <!--<div class="ui one column centered grid container">-->
+    <!--<h2 class="ui horizontal divider header">-->
+    <!--<i class="bar chart icon"></i>-->
+    <!--Website Marketplace-->
+    <!--</h2>-->
+    <!--<div class="ui left aligned search">-->
+    <!--<div class="ui icon input">-->
+    <!--<input class="prompt" type="text" placeholder="Search websites...">-->
+    <!--<i class="search icon"></i>-->
+    <!--</div>-->
+    <!--<div class="results"></div>-->
+    <!--</div>-->
+    <!--<div class="ui two column stackable grid container">-->
+    <!--<div class="three wide column" each="{template in templateList}">-->
+    <!--<div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">-->
+    <!--<div class="content">-->
+    <!--<i class="add big link icon"></i>-->
+    <!--<div class="ui hidden divider"></div>-->
+    <!--<h4 class="header">{template.name}</h4>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ui hidden section divider"></div>-->
+    <!--<div class="ui horizontal list">-->
+    <!--<div class="item">-->
+    <!--<div class="ui card">-->
+    <!--<button class="ui primary huge icon button" onclick="{showCreateSite}">-->
+    <!--<i class="add icon"></i>-->
+    <!--Create new site-->
+    <!--</button>-->
+
+
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="item"><h1>OR</h1></div>-->
+    <!--<div class="item">-->
+    <!--<div class="ui card">-->
+    <!--<button class="ui primary huge icon button" onclick="{showImportGithub}">-->
+    <!--<i class="github icon left aligned"></i>-->
+    <!--Import repository-->
+    <!--</button>-->
+
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ui hidden section divider"></div>-->
+    <!--<div class="ui two column stackable grid container">-->
+    <!--<h2 class="ui horizontal divider header">-->
+    <!--<i class="bar chart icon"></i>-->
+    <!--List of your websites-->
+    <!--</h2>-->
+    <!--<div class="three wide column" each="{site in sites}">-->
+    <!--<div class="ui card site" onclick="{openSite(site)}">-->
+    <!--<div class="ui center aligned content">-->
+    <!--<i class="{getSiteIcon(site)} big link icon"></i>-->
+    <!--<div class="ui hidden divider"></div>-->
+    <!--<h2 class="header">{site.name}</h2>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+
+    <!--<div class="ui hidden section divider"></div>-->
+
+    <!--<div class="ui two column grid container">-->
+    <!--<div class="column">-->
+    <!--<div class="ui fluid card">-->
+    <!--<div class="content">-->
+    <!--<div class="header">How to build website?</div>-->
+    <!--<div class="description">-->
+    <!--EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="extra content">-->
+    <!--<div class="ui two buttons">-->
+    <!--<a class="ui basic green center button" href="#" onclick="{openTutorial}" rel="nofollow">Hướng dẫn sử dụng</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="column">-->
+    <!--<div class="ui fluid card">-->
+    <!--<div class="content">-->
+    <!--<div class="header">Build website faster, easier?</div>-->
+    <!--<div class="description">-->
+    <!--EasyWebHub cung cấp tất cả các thông tin bạn cần để xây dựng website, từ cơ bản như trang blog cá nhân tới phức tạp như website Ecommerce.-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="extra content">-->
+    <!--<div class="ui two buttons">-->
+    <!--<a class="ui basic green link button" href="http://electron.atom.io/docs/api/menu/" target="_blank" rel="nofollow">Công cụ hỗ trợ</a>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--</div>-->
+    <!--<div class="ui cards">-->
+
+    <!--</div>-->
+
+
+    <style scoped>
+        .site, .site > .content > .header {
+            cursor: pointer;
+            color: black !important;
+        }
+
+        .site:hover {
+            cursor: pointer;
+            color: #1e70bf !important;
+        }
+
+        .site > .content > .header:hover {
+            cursor: pointer;
+            color: #1e70bf !important;
+        }
+    </style>
+
     <script>
         var me = this;
         var root = me.root;
-
         var dialog = require('electron').remote.dialog;
+        me.username = '';
+
+        me.marketPlaceTemplateImageList = [
+            './assets/easyweb-image/100000_01-preview-oneui-large-preview.jpg',
+            './assets/easyweb-image/100000_01preview-main-large-preview.jpg',
+            './assets/easyweb-image/100000_01-homepage-edit10-large-preview.jpg',
+            './assets/easyweb-image/100000_01-preview-large-preview.jpg'
+        ];
+
+        me.templateList = [];
+        try {
+            me.templateList = JSON.parse(require('fs').readFileSync('template.json').toString()).templates;
+        } catch (ex) {
+            console.log(ex);
+        }
 
         var newSite;
         me.sites = [];
 
         me.getSiteIcon = function (site) {
             if (site.remote && site.local) {
-                return 'fa fa-4x fa-cloud';
+                return 'cloud';
             } else if (site.remote) {
-                return 'fa fa-4x fa-cloud-download';
+                return 'cloud download';
             } else if (site.local) {
-                return 'fa fa-4x fa-folder-o';
+                return 'folder outline';
             }
         };
 
-        me.on('mount', function () {
-            var sites = BackEnd.getSiteList();
+        me.on('unmount', function () {
+            me.tags['dialog-new-site-local'].hide();
+        });
 
-            var remoteSites = Object.assign(User.sites || [], {});
-            console.log('remoteSites', remoteSites);
+        me.mergeLocalRemoteSites = function() {
+            var sites = BackEnd.getSiteList();
+//            console.log('User.sites', User.sites)
+            var remoteSites = Object.assign(User.data.sites || [], {});
+//            console.log('remoteSites', remoteSites);
             // merge with remote site
 
             // set local, remote status for local sites
@@ -124,7 +286,7 @@
                     return site.name === remoteSite.name;
                 });
                 if (!exists) {
-                    console.log('not exists site', remoteSite);
+//                    console.log('not exists site', remoteSite);
                     remoteSite.local = false;
                     remoteSite.remote = true;
                     sites.push(remoteSite);
@@ -133,10 +295,32 @@
 
             me.sites = sites;
             me.update();
+        };
+
+        me.on('mount', function () {
+            me.username = User.data.username;
+            $(me.root).find('.ui.dropdown').dropdown({
+                onChange: function (value) {
+                    switch (value) {
+                        case 'signOut':
+                            console.log('signOut');
+                                riot.event.trigger('logout');
+                            break;
+                        case 'changeUserPassword':
+                            console.log('changeUserPassword');
+                            break;
+                        case 'changeUserData':
+                            console.log('changeUserData');
+                            break;
+                    }
+                }
+            });
+            me.mergeLocalRemoteSites();
         });
 
-        me.openSite = function (site) {
-            if (site.remote && !site.url) {
+        me.openSite = function (site, e) {
+            console.log('register openSite', site);
+            if (site.local == false && site.remote && !site.url) {
                 alert('Remote repository not exists in site data');
                 return;
             }
@@ -145,14 +329,34 @@
             window.curPage = riot.mount('home', {siteName: siteName})[0];
         };
 
-        me.createSite = function (name, repoUrl, branch) {
-            return riot.event.createSite(name, repoUrl, branch).then(function () {
-                me.unmount(true);
+        me.createSite = function (displayName, repoUrl, branch) {
+//            var localPath = Path.join(__dirname, 'sites', name);
+            var name = displayName.toLowerCase()
+                    .normalize('NFKD')
+                    .replace(/[\u0300-\u036F]/g, '')
+                    .replace(/đ/g, 'd')
+                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
+                    .replace(/\s+/g, '-')
+                    .trim();
+            return User.addSite(name, displayName).then(function (resp) {
+                return BackEnd.createSiteFolder(name).then(function (sitePath) {
+                    return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
+                        console.log('git checkout done', name);
+//                    if (window.curPage) window.curPage.unmount(true);
+//                    window.curPage = riot.mount('home', {siteName: name})[0];
+                        return name;
+                    })
+                });
             });
         };
 
-        me.showCreateSite = function () {
-            me.tags['dialog-new-site-local'].show();
+        me.showCreateSite = function (template, e) {
+//                console.log('show binding showCreateSite', template);
+//                console.log('e', e);
+//                return function (e) {
+//                    console.log('showCreateSite', me.tags['dialog-new-site-local']);
+            me.tags['dialog-new-site-local'].show(template);
+//                }
         };
 
         //            me.openSite = function () {
@@ -190,7 +394,7 @@
                 BackEnd.gitImportGitHub(info.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();
                     me.tags['progress-dialog'].hide();
-                    me.openSite(info.siteName);
+                    me.openSite(info.siteName)();
                 }).catch(function (err) {
                     console.log(err);
                     me.tags['progress-dialog'].enableClose();
@@ -198,5 +402,4 @@
             });
         };
     </script>
-
 </landing>

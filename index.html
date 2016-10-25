@@ -4,19 +4,23 @@
     <meta charset="utf-8">
     <title>EasyWeb Builder</title>
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
     <link rel="stylesheet" href="assets/css/jquery.jspanel.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
     <link rel="stylesheet" href="assets/css/editormd.min.css">
     <link rel="stylesheet" href="assets/css/github.min.css">
-    <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
-    <link rel="stylesheet" href="assets/css/bootstrap-select.min.css">
+    <!--<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">-->
     <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="assets/css/calendar.css">
+    <link rel="stylesheet" href="assets/css/semantic.min.css">
+    <link rel="stylesheet" href="assets/css/layout-default.css">
+    <link rel="stylesheet" href="assets/css/simplebar.css">
 
-    <link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">
-    <link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">
+    <link rel="stylesheet" href="assets/css/codemirror.min.css">
+    <!--<link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">-->
+    <!--<link rel="stylesheet" href="assets/css/site-429acc2fc05149afec2a05196b3100560f117f753931d0afca46da6e1eeafe39.css">-->
 
     <link rel="stylesheet" href="assets/css/style.css">
     <!-- <link crossorigin="anonymous" href="/assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css" media="all" rel="stylesheet" /> -->
@@ -65,6 +69,7 @@
 <script src="tag/dialog-new-site-import.tag" type="riot/tag"></script>
 <script src="tag/deploy-ftp-dialog.tag" type="riot/tag"></script>
 <script src="tag/dialog-login-signup.tag" type="riot/tag"></script>
+<script src="tag/bottom-bar.tag" type="riot/tag"></script>
 
 <script src="tag/window-login.tag" type="riot/tag"></script>
 <script src="tag/window-public.tag" type="riot/tag"></script>
@@ -75,8 +80,9 @@
 <script src="assets/js/jquery-ui.min.js"></script>
 <script src="assets/js/pouchdb.min.js"></script>
 <script src="assets/js/moment.min.js"></script>
-<script src="assets/js/bootbox.min.js"></script>
-<script src="assets/js/bootstrap.min.js"></script>
+<!--<script src="assets/js/bootbox.min.js"></script>-->
+<script src="assets/js/bootbox-semantic-ui.js"></script>
+<!--<script src="assets/js/bootstrap.min.js"></script>-->
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
@@ -91,6 +97,10 @@
 <script src="assets/js/bootstrap-select.min.js"></script>
 <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
 <script src="assets/js/riot+compiler.min.js"></script>
+<script src="assets/js/semantic.min.js"></script>
+<script src="assets/js/calendar.js"></script>
+<script src="assets/js/jquery.layout.js"></script>
+<script src="assets/js/simplebar.js"></script>
 <script>module = saveModule;</script>
 
 <script>
@@ -121,6 +131,7 @@
     window.curPage = null;
     var formMixin = {
         edit: function (keyPath, e) {
+            e.stopPropagation();
             var value;
             switch (e.target.type) {
                 case 'checkbox':
@@ -134,6 +145,8 @@
             }
 
             var schema = this;
+//                console.log('schema', schema);
+//                console.log('keyPath', keyPath);
             var pList = keyPath.split('.');
             var len = pList.length;
             for (var i = 0; i < len - 1; i++) {
@@ -150,37 +163,29 @@
     riot.event = riot.observable();
     Object.assign(riot.event, {
         openSite: function (sitePath) {
-            if(window.curPage) window.curPage.unmount(true);
+            if (window.curPage) window.curPage.unmount(true);
             console.log('index.html openSite', sitePath);
             landing.unmount(true);
             window.curPage = riot.mount('home', {sitePath: sitePath})[0];
-        },
-
-        createSite: function (name, repoUrl, branch) {
-//            var localPath = Path.join(__dirname, 'sites', name);
-            name = name.toLowerCase()
-                    .normalize('NFKD')
-                    .replace(/[\u0300-\u036F]/g, '')
-                    .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
-                    .trim();
-            return BackEnd.createSiteFolder(name).then(function (sitePath) {
-                return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
-                    console.log('git checkout done', name);
-                    if (window.curPage) window.curPage.unmount(true);
-                    window.curPage = riot.mount('home', {siteName: name})[0];
-                }).catch(function (ex) {
-                    console.log(ex.message);
-                });
-            });
         }
     });
 
     function CheckAccountAndGoToLanding() {
         if (window.curPage) window.curPage.unmount(true);
         DB.get('account').then(function (account) {
-            window.User = account;
+            console.log('CheckAccountAndGoToLanding account', account);
+            window.User = new AppUser(account);
+            var curSites = User.data.sites;
+            User.getSites().then(function (remoteSites) {
+                User.data.sites = remoteSites;
+                if (curSites.length !== remoteSites.length && curPage.root.tagName === 'LANDING') {
+                    window.curPage.mergeLocalRemoteSites();
+                    DB.upsert(User.data);
+                }
+            }).catch(function (ex) {
+                console.log('get remote sites failed', ex);
+            });
+
             console.log('TODO server only accept accountType "user"');
             account.accountType = 'dev';
             console.log('account on disk', account);
@@ -195,10 +200,11 @@
     riot.compile(function () {
         console.log('check account on disk and go to landing');
 //        curPage = riot.mount('window-login')[0];
-//        curPage = riot.mount('home', {siteName: 'test1'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'retest'})[0];
+//        window.curPage = riot.mount('home', {siteName: 'tmp'})[0];
         // uncomment to enable login
-//        CheckAccountAndGoToLanding();
-        window.curPage = riot.mount('landing')[0];
+        CheckAccountAndGoToLanding();
+//        window.curPage = riot.mount('landing')[0];
     });
 
     riot.event.on('loginSuccess', function (account) {
@@ -212,7 +218,7 @@
     });
 
     riot.event.on('logout', function (account) {
-        DB.get('account').then(doc => {
+        DB.get('account').then(function (doc) {
             DB.remove(doc).then(function () {
                 CheckAccountAndGoToLanding();
             });
@@ -260,6 +266,7 @@
     checkRemoteTemplate();
 
 </script>
+
 
 <!--<div class="container site-footer-container" style="padding: 0;">-->
 <!--<div class="site-footer" role="contentinfo" style="padding-bottom: 0; padding-top: 5px;">-->
