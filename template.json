@@ -59,8 +59,8 @@
             "price": "Free"
         },
         {
-            "name": "Bootstrap Agency",
-            "url": "https://github.com/easywebhub/StartBootstrapAgency.git",
+            "name": "lurn-serach",
+            "url": "https://github.com/nemesisqp/lurn-search.git",
             "branch": "master",
             "type": "website",
             "tags": [
