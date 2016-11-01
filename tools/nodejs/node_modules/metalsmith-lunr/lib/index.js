@@ -4,8 +4,10 @@ module.exports = plugin;
 
 function plugin(options) {
   options = options || [];
+  if (typeof options === 'object' && !Array.isArray(options)) {
+    options = [options];
+  }
   return function (files, metalsmith, done) {
-
     options.forEach(function (opts) {
       opts = setDefaultOptions(opts);
       var index = setIndexOptions(opts);
@@ -74,7 +76,7 @@ function createDocumentIndex(opts, file, path) {
 
 //Adds the search index JSON file to Metalsmith metadata for build
 function addJSONtoMetalsmith(index, files, opts) {
-  var contents = new Buffer(JSON.stringify(index, null, 4));
+  var contents = new Buffer(JSON.stringify(index));
   files[opts.indexPath] = { contents: contents };
 }
 
