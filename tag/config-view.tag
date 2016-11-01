@@ -180,7 +180,7 @@
 
     <script>
         var me = this;
-        var modal;
+        var modal, fieldTypeDropDown;
 
         me.curFieldType = '';
 
@@ -243,6 +243,9 @@
         };
 
         me.on('mount', function () {
+            fieldTypeDropDown = $(me.root.querySelector('.ui.dropdown'));
+            fieldTypeDropDown.dropdown();
+
             modal = $(me.root).modal({
                 autofocus:      false,
                 observeChanges: true
@@ -250,18 +253,22 @@
         });
 
         me.ShowFieldConfig = function (e) {
-            console.log('ShowFieldConfig', e.target.value);
+            if (e.target.value == '') return;
+//            console.debug('ShowFieldConfig', e.target.value);
             me.curFieldType = e.target.value;
             // set displayName khi chuyen sang Content type khac
             if (me.curFieldType !== me.originalFieldType) {
                 var configFieldTag = 'config-view-' + me.curFieldType.toLowerCase();
-                me.tags[configFieldTag].loadConfig({
-                    name:         me.curConfig.name,
-                    displayName:  me.curConfig.displayName,
-                    defaultValue: me.curConfig.defaultValue
-                });
+                console.debug('configFieldTag', configFieldTag);
+                if (me.tags[configFieldTag]) {
+                    me.tags[configFieldTag].loadConfig({
+                        name:         me.curConfig.name,
+                        displayName:  me.curConfig.displayName,
+                        defaultValue: me.curConfig.defaultValue
+                    });
+                }
             }
-            me.update();
+//            me.update();
         };
 
         me.hideFieldTypes = function (hiddenFields) {
@@ -276,7 +283,6 @@
         };
 
         me.show = function (config) {
-//            console.log('config', config);
             me.curConfig = config;
 
             var fieldName = config.name;
@@ -288,15 +294,14 @@
             me.curConfig = config;
             me.originalFieldType = fieldType;
 
-            modal.modal('show');
+            console.log('set selected', fieldType);
+            fieldTypeDropDown.dropdown('set selected', fieldType);
 
-//            console.log(me.fieldTypeDropDown);
-            $(me.fieldTypeDropDown).dropdown().dropdown('set selected', fieldType);
-//            console.log('set selected', fieldType);
-//            console.log('fieldType', fieldType, 'formTags', formTags);
             formTags[fieldType].clear(); // clear form setting
             formTags[fieldType].loadConfig(config);
+
             me.update();
+            modal.modal('show');
         };
 
         me.hide = function () {
@@ -494,7 +499,7 @@
             var parentConfig = getParentConfig(fieldIndex);
             var config = getConfig(fieldIndex);
             // if parent type is Array hide Array and Object field type
-//            console.log('showFieldSettingDialog parentConfig', parentConfig);
+//            console.log('showFieldSettingDialog config', config);
             if (parentConfig.type === 'Array') {
 //                console.log('showFieldSettingDialog hide FIELDS');
                 me.tags['field-setting-dialog'].hideFieldTypes(['Array', 'Object']);
