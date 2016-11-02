@@ -18,6 +18,7 @@ const defaultOptions = {
 function writeIndexes(files, options) {
   if (!options.ref)
     options.ref = 'filePath';
+  if (!options.indexPath) return;
   let stream = fs.createWriteStream(options.indexPath, {
     flags: 'w+',
     defaultEncoding: 'utf8',
@@ -65,7 +66,7 @@ function writeIndexes(files, options) {
       stream.write(`"${filePath.replace('.html', '')}": `);
     } else {
       stream.write(`"${content[options.ref]}": `);
-    }    
+    }
 
     let indexContent = propProcessor(content);
     // console.log('write value')
