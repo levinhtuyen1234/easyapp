@@ -31,14 +31,14 @@ function writeIndexes(files, options) {
   if (options.fields === '*') {
     propProcessor = function (obj) {
       let props = Object.assign({}, obj);
-      delete props['contents'];
+      //delete props['contents'];
       delete props['stats'];
       delete props['mode'];
       return props;
     }
   } else if (Array.isArray(options.fields)) {
-    // remove fields contents, stats, mode from options.fields
-    if (options.fields.indexOf('contents') != -1) options.fields.splice(options.fields.indexOf('contents'), 1);
+    // remove fields stats, mode from options.fields
+    //if (options.fields.indexOf('contents') != -1) options.fields.splice(options.fields.indexOf('contents'), 1);
     if (options.fields.indexOf('stats') != -1) options.fields.splice(options.fields.indexOf('stats'), 1);
     if (options.fields.indexOf('mode') != -1) options.fields.splice(options.fields.indexOf('mode'), 1);
     propProcessor = function (obj) {
