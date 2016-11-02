@@ -8,9 +8,9 @@ var ERROR_MSG = {
 };
 
 var thinAdapter = {
-    loginUrl:    'http://api.easywebhub.com/api-user/Logon',
-    registerUrl: 'http://api.easywebhub.com/api-user/InsertUser',
-    addSiteUrl:  'http://api.easywebhub.com/api-user/CreateWebsite',
+    loginUrl:    'http://api.easywebhub.com/auth/signin',
+    registerUrl: 'http://api.easywebhub.com/auth/signup',
+    addSiteUrl:  'http://api.easywebhub.com/website/addnew',
 
     accountObjectTransformer: function (account) {
         return {
@@ -35,32 +35,21 @@ var thinAdapter = {
 
     loginResponse: function (data) {
         try {
-            if (!data['Data']) {
-                return {
-                    error: {
-                        code:    -1,
-                        message: 'Account not found'
-                    }
-                }
-            }
-
             if (data['Result'] === true) {
                 return {
                     result: {
                         id:          data['Data']['AccountId'],
                         username:    data['Data']['UserName'],
                         accountType: data['Data']['AccountType'],
+                        info:        data['Data']['Info'],
                         sites:       thinAdapter.sitesObjectTransformer(data['Data']['ListWebsite'] || [])
                     }
                 };
             } else {
-                var msg = ERROR_MSG[data['StatusCode'].toString()];
-                if (!msg)
-                    msg = data['Message'];
                 return {
                     error: {
                         code:    data['StatusCode'],
-                        message: msg
+                        message: data['Message']
                     }
                 }
             }
@@ -82,13 +71,10 @@ var thinAdapter = {
                     result: {}
                 };
             } else {
-                var msg = ERROR_MSG[data['StatusCode'].toString()];
-                if (!msg)
-                    msg = data['Message'];
                 return {
                     error: {
                         code:    data['StatusCode'],
-                        message: msg
+                        message: data['Message']
                     }
                 }
             }

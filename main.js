@@ -33,7 +33,6 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
     mainWindow = new browserWindow({
-
         minWidth: 1020,
         minHeight: 740,
         icon:      __dirname + path.sep +  '/favicon.png'

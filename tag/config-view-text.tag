@@ -51,7 +51,8 @@
         var dropdown;
 
         me.on('mount', function () {
-            dropdown = $(me.displayTypeDropDown).dropdown();
+            dropdown = $(me.root.querySelector('.ui.dropdown'));
+            dropdown.dropdown();
 //            console.log('displayTypeDropDown', dropdown);
             if (me.config.displayType) {
                 dropdown.dropdown('set selected', me.config.displayType);
