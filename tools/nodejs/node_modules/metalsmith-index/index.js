@@ -2,9 +2,8 @@ module.exports = plugin;
 
 const fs = require('fs');
 
-const outFilePath = 'contentIndex.json';
-
 const defaultOptions = {
+  ref: 'filePath',
   fields: '*'
 }
 
@@ -17,6 +16,8 @@ const defaultOptions = {
 */
 
 function writeIndexes(files, options) {
+  if (!options.ref)
+    options.ref = 'filePath';
   let stream = fs.createWriteStream(options.indexPath, {
     flags: 'w+',
     defaultEncoding: 'utf8',
@@ -60,7 +61,11 @@ function writeIndexes(files, options) {
 
     let content = files[filePath];
     // console.log('write key', filePath)
-    stream.write(`"${filePath.replace('.html', '.md')}": `);
+    if (options.ref === 'filePath') {
+      stream.write(`"${filePath.replace('.html', '')}": `);
+    } else {
+      stream.write(`"${content[options.ref]}": `);
+    }    
 
     let indexContent = propProcessor(content);
     // console.log('write value')

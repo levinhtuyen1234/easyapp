@@ -52,7 +52,7 @@ function indexDocs(index, files, opts) {
 function createDocumentIndex(opts, file, path) {
   var contents, index = {};
   if (opts.ref == 'filePath') {
-    index.filePath = path;
+    index.filePath = path.replace('.html', '');
   } else {
     index[opts.ref] = file[opts.ref];
   }

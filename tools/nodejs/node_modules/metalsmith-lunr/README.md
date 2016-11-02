@@ -1,4 +1,5 @@
 #### config sites.js array or object like bellow
+#### (note) root of indexPath is site's build folder
 
   - `fields`: {`contents`: `1`}
   - `ref`: `filePath`
