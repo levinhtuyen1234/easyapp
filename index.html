@@ -162,12 +162,12 @@
 
     riot.event = riot.observable();
     Object.assign(riot.event, {
-        openSite: function (sitePath) {
-            if (window.curPage) window.curPage.unmount(true);
-            console.log('index.html openSite', sitePath);
-            landing.unmount(true);
-            window.curPage = riot.mount('home', {sitePath: sitePath})[0];
-        }
+//        openSite: function (sitePath) {
+//            if (window.curPage) window.curPage.unmount(true);
+//            console.log('index.html openSite', sitePath);
+//            landing.unmount(true);
+//            window.curPage = riot.mount('home', {sitePath: sitePath})[0];
+//        }
     });
 
     function CheckAccountAndGoToLanding() {

@@ -7,11 +7,11 @@
 
         <div class="ui grid container ">
             <div class="eight wide column">
-			
-				<a href="http://easywebhub.com" target="_blank" >
-			
-                <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="150" alt="">
-				</a>
+
+                <a href="http://easywebhub.com" target="_blank">
+
+                    <img src="./assets/easyweb-image/logo-easyweb-white.png" class="ui image" width="150" alt="">
+                </a>
             </div>
 
             <div class="eight wide column" style="text-align: right">
@@ -96,9 +96,6 @@
             </div>
         </div>
     </div>
-
-
-
 
 
     <!--<div class="ui hidden section divider"></div>-->
@@ -259,7 +256,7 @@
             me.tags['dialog-new-site-local'].hide();
         });
 
-        me.mergeLocalRemoteSites = function() {
+        me.mergeLocalRemoteSites = function () {
             var sites = BackEnd.getSiteList();
 //            console.log('User.sites', User.sites)
             var remoteSites = Object.assign(User.data.sites || [], {});
@@ -304,7 +301,7 @@
                     switch (value) {
                         case 'signOut':
                             console.log('signOut');
-                                riot.event.trigger('logout');
+                            riot.event.trigger('logout');
                             break;
                         case 'changeUserPassword':
                             console.log('changeUserPassword');
@@ -326,7 +323,15 @@
             }
             var siteName = site.name;
             me.unmount(true);
-            window.curPage = riot.mount('home', {siteName: siteName})[0];
+
+            // TODO cache site content indexes, sync cache
+            BackEnd.createSiteIndex(siteName).then(function (siteContentIndexes) {
+                window.siteContentIndexes = siteContentIndexes;
+//                console.log('siteContentIndexes', siteContentIndexes);
+                window.curPage = riot.mount('home', {siteName: siteName})[0];
+            }).catch(function (ex) {
+                alert('create site content index failed, ' + ex.message);
+            });
         };
 
         me.createSite = function (displayName, repoUrl, branch) {

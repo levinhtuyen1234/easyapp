@@ -79,8 +79,6 @@
         me.contentCategory = '';
         me.contentTag = '[]';
 
-        console.log('SITE NAME', me.opts.siteName);
-
         me.canAdd = function () {
             return me.contentLayout == '' || me.contentTitle == '' || me.contentTitle == '.md';
         };

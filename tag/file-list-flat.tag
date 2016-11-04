@@ -186,6 +186,17 @@
             return partials.concat(categories, tags, others);
         };
 
+        var filterDeletedContent = function (files) {
+            return files.filter(function (file) {
+                var metaData = window.siteContentIndexes[file.name];
+                // TODO when support recursive use file.path as key to lookup metadata
+                if (metaData.layout && metaData.layout === 'delete.html') {
+                    return false;
+                }
+                return true;
+            });
+        };
+
         var sortContentFiles = function (files) {
             var categories = [];
             var tags = [];
@@ -225,6 +236,9 @@
             me.clear();
             if (me.opts.type == 'layout') {
                 files = sortLayoutFiles(files);
+            } else if (me.opts.type == 'content') {
+                files = filterDeletedContent(files);
+                files = sortContentFiles(files);
             } else if (me.opts.type == 'meta') {
                 files = sortContentFiles(files);
             } else {

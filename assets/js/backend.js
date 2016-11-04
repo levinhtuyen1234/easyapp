@@ -8,6 +8,7 @@ const Shell = Remote.shell;
 
 const _ = require('lodash');
 const BlueBird = require('bluebird');
+const Pfs = BlueBird.promisifyAll(Fs);
 const Mkdir = BlueBird.promisify(Fs.mkdir);
 const RimRaf = BlueBird.promisify(require('rimraf'));
 
@@ -547,6 +548,20 @@ function deleteContentFile(siteName, filePath) {
     return deleteFile(siteName, 'content', filePath);
 }
 
+function softDeleteContentFile(siteName, filePath) {
+    var contentFilePath = Path.join('content', filePath);
+    // read content file
+    var content = getContentFile(siteName, contentFilePath);
+    // set layout -> delete.html
+    content.metaData['layout'] = 'delete.html';
+    // save file
+    saveContentFile(siteName, contentFilePath, content.metaData, content.markDownData);
+    // update memory index
+    var metaData = siteContentIndexes[filePath];
+    if (metaData instanceof Object)
+        metaData['layout'] = 'delete.html';
+}
+
 function newLayoutFile(siteName, layoutFileName) {
     var defaultLayoutContent = ``;
     var fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
@@ -1000,7 +1015,33 @@ function showItemInFolder(siteName, filePath) {
     Shell.showItemInFolder(Path.join(sitesRoot, siteName, filePath));
 }
 
+var createSiteIndex = BlueBird.coroutine(function*(siteName) {
+    var siteContentPath = Path.join(sitesRoot, siteName, 'content');
+    var contents = {};
+
+    var readContentFiles = BlueBird.coroutine(function*(dir) {
+        var files = yield Fs.readdirAsync(dir);
+        yield BlueBird.map(files, BlueBird.coroutine(function *(file) {
+            var filePath = Path.join(sitesRoot, siteName, 'content', file);
+            var stat = yield Pfs.statAsync(filePath);
+            if (stat.isFile()) {
+                var content = (yield Pfs.readFileAsync(filePath)).toString();
+                content = SplitContentFile(content);
+                contents[file] = content.metaData;
+            } else if (stat.isDirectory()) {
+                // TODO support recursive content
+            }
+        }), {concurrency: 3});
+    });
+
+    yield readContentFiles(siteContentPath);
+    return contents;
+});
+
+createSiteIndex('pillar');
+
 module.exports = {
+    createSiteIndex:         createSiteIndex,
     genSimpleContentConfig:  genSimpleContentConfig,
     getDefaultContentConfig: getDefaultContentConfig,
     showItemInFolder:        showItemInFolder,
@@ -1028,6 +1069,7 @@ module.exports = {
     saveLayoutFile:          saveLayoutFile,
     deleteLayoutFile:        deleteLayoutFile,
     deleteContentFile:       deleteContentFile,
+    softDeleteContentFile:   softDeleteContentFile,
     getLayoutList:           getLayoutList,
     getRootLayoutList:       getRootLayoutList,
     newLayoutFile:           newLayoutFile,

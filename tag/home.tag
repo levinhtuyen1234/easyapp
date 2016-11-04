@@ -695,12 +695,14 @@
                         },
                         callback: function (result) {
                             if (result) {
-                                BackEnd.deleteContentFile(me.opts.siteName, contentFilePath);
+                                BackEnd.softDeleteContentFile(me.opts.siteName, contentFilePath);
+
                                 riot.event.trigger('removeFile');
-                                // hide rightCol
                                 me.curTab = '';
                                 me.tags['breadcrumb'].setPath('');
                                 me.update();
+                                me.tags['content-view'].reset();
+                                me.currentFilePath = '';
                             }
                         }
                     });
