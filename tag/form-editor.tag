@@ -250,7 +250,7 @@
 </form-field-number>
 
 <form-field-boolean class="inline fields">
-    <label style="vertical-align: middle; margin-bottom: 12px;" class="two wide field">{config.displayName}</label>
+    <label style="vertical-align: middle; margin-bottom: 12px; padding-top: 12px;" class="two wide field">{config.displayName}</label>
     <div class="ui toggle checkbox">
         <input id="form-{config.name}" class="hidden" tabindex="0" type="checkbox" checked="{value}" onchange="{edit.bind(this, 'value')}" disabled="{config.viewOnly}">
     </div>
@@ -258,7 +258,7 @@
         var me = this;
         me.mixin('form');
         me.config = opts.config || {};
-        me.value = opts.value || '';
+        me.value = opts.value || false;
 
         me.on('mount', function () {
             $(me.root.querySelector('.ui.checkbox')).checkbox();
@@ -281,7 +281,7 @@
         <div class="ui calendar fourteen wide field" ref="validFromCalendar" style="padding:0">
             <div class="ui input left icon">
                 <i class="calendar icon"></i>
-                <input type="text" placeholder="" id="form-{config.name}" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}">
+                <input type="text" placeholder="" onkeyup="{edit.bind(this, 'value')}" readonly="{config.viewOnly}">
             </div>
         </div>
     </div>
@@ -293,9 +293,9 @@
         me.value = opts.value || '';
 
         me.on('mount', function () {
-            me['form-' + me.config.name].value = me.value;
-            var elm = me.root.querySelector('input');
-            var config = {};
+            var input = me.root.querySelector('input');
+            input.value = me.value;
+
             me.config.displayType = me.config.displayType || 'DateTime';
             var format, calendarType;
             if (me.config.displayType === 'Date') {
@@ -309,16 +309,17 @@
                 calendarType = 'datetime';
             }
 
-//            console.log('calendarType', calendarType);
-
             $(me.root.querySelector('.ui.calendar')).calendar({
                 type:     calendarType,
                 onChange: function (date, text) {
-                    console.log('date', date);
-                    console.log('text', text);
-                    console.log('formated', moment(date).format(format));
-                    me.value = moment(date).format(format);
-                    me['form-' + me.config.name].value = me.value;
+                    if (text === '') {
+                        me.value = '';
+                        input.value = '';
+                    } else {
+                        var time = moment(date);
+                        me.value = time.toISOString();
+                        input.value = time.format(format);
+                    }
                 }
             });
         });

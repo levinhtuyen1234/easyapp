@@ -172,7 +172,7 @@ function fileExists(filePath) {
 
 function getDefaultContentConfig(key, valueType) {
     valueType = valueType.toLowerCase();
-    console.log('getDefaultContentConfig valueType', valueType);
+    // console.log('getDefaultContentConfig valueType', valueType);
     switch (valueType) {
         case 'string':
             return {
@@ -256,7 +256,7 @@ function getDefaultContentConfig(key, valueType) {
     }
 }
 
-var DefaultFixedFieldNames = ['slug', 'layout', 'category', 'tag'];
+var DefaultFixedFieldNames = ['slug', 'layout', 'category', 'tag', 'publishDate', 'draft'];
 
 function genSimpleContentConfig(metaData, fixedFieldNames) {
     var fixedFields = [];
@@ -264,16 +264,17 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
     var fixedField = false;
 
     for (var key in metaData) {
+        if (!metaData.hasOwnProperty(key)) {
+            continue;
+        }
+
         var fields = tmpFields;
         if (fixedFieldNames && fixedFieldNames.indexOf(key) != -1) {
             fields = fixedFields;
             fixedField = true;
         }
 
-        if (!metaData.hasOwnProperty(key)) {
-            console.log('NOT HAS OWN PROPERTY');
-            continue;
-        }
+
         var value = metaData[key];
         var valueType = typeof value;
         switch (valueType) {
@@ -356,7 +357,7 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
     }
 
     // add _config to fixed fields if not exists
-    if (fixedField) {
+    if (fixedFields.length > 0) {
         var contentField = _.find(fixedFields, {name: '__content__'});
         if (!contentField) {
             fixedFields.push({
@@ -368,13 +369,41 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
                 validations:  [],
                 hidden:       false,
                 viewOnly:     false,
-                required:     false
-            })
+                required:     true
+            });
+        }
+
+        contentField = _.find(fixedFields, {name: 'publishDate'});
+        if (!contentField) {
+            fixedFields.push({
+                name:         'publishDate',
+                displayName:  'Publish Date',
+                type:         'DateTime',
+                displayType:  'DateTime',
+                defaultValue: '',
+                validations:  [],
+                hidden:       false,
+                viewOnly:     false,
+                required:     true
+            });
+        }
+
+        contentField = _.find(fixedFields, {name: 'draft'});
+        if (!contentField) {
+            fixedFields.push({
+                name:         'draft',
+                displayName:  'Draft',
+                type:         'Boolean',
+                displayType:  '',
+                defaultValue: false,
+                validations:  [],
+                hidden:       false,
+                viewOnly:     false,
+                required:     true
+            });
         }
     }
-
-
-    return fixedFields.concat(tmpFields);
+    return tmpFields.concat(fixedFields);
 }
 
 String.prototype.regexIndexOf = function (regex, startpos) {
@@ -464,7 +493,7 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     if (fileExists(contentConfigFullPath)) {
         var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
         var newConfig = mergeConfig(existsConfig, contentConfig);
-
+        console.log('write config file');
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
         return newConfig;
     } else {
@@ -537,10 +566,12 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     "title": "${contentTitle}",
     "slug": "${slug}",
     "description": "",
+    "draft": false,
+    "publishDate": "",
     "category": "${category}",
     "tag": ${tag},
     "layout": "${layoutFileName}",
-    "date": "${getLocalDate()}"
+    "date": "${getCurrentISODate()}"
 }
 ---
 `;
@@ -746,6 +777,10 @@ function gitAdd(siteName, filePath, onProgress) {
 
 function getLocalDate() {
     return moment().format('DD-MM-YYYY HH:mm:ss');
+}
+
+function getCurrentISODate() {
+    return (new Date()).toISOString();
 }
 
 function addMediaFile(siteName, filePath, cb) {

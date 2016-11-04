@@ -402,6 +402,14 @@
               if (event.keyCode === 27 || event.keyCode === 9) {
                 //esc || tab
                 module.popup('hide');
+                return;
+              }
+              
+              if (event.keyCode === 8 || event.keyCode === 32) {
+				// backspace || space
+				module.selectDate('');
+				module.popup('hide');
+				return;
               }
 
               if (module.popup('is visible')) {
