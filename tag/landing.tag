@@ -45,7 +45,8 @@
             <div class="sixteen wide column">
 
                 <h1 class="ui header weight-300 orange">Website Marketplace</h1>
-                <!--<h2 class="ui header weight-300" style="margin: 0px 0 30px;"> Lorem ipslum dollar isset </h2>-->
+
+                <h3 class="ui header weight-300" style="margin: 0px 0 30px;"> Searching for a Template</h3>
 
                 <div class="ui three stackable doubling cards">
                     <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
@@ -55,7 +56,7 @@
                         <div class="content">
                             <div class="header">{template.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                <p>{template.themeType}</p>
                             </div>
                         </div>
 
@@ -67,6 +68,7 @@
             </div>
         </div>
     </div>
+
     <div class="user-project">
         <div class="ui grid container ">
             <div class="sixteen wide column">
@@ -75,15 +77,16 @@
                     <!--<div class="sub header">Choose a website to continue your work</div>-->
                 </h2>
 
+
                 <div class="ui four stackable doubling cards">
                     <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite.bind(this, site)}">
                         <div class="image">
-                            <img src="{marketPlaceTemplateImageList[index % 4]}">
+                            <img src="{marketPlaceTemplateImageList[index]}">
                         </div>
                         <div class="content">
                             <div class="header">{site.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                 <p>{site.themeType}</p>
                             </div>
                         </div>
                         <div class="extra content">
@@ -229,9 +232,8 @@
         me.username = '';
 
         me.marketPlaceTemplateImageList = [
-            './assets/easyweb-image/100000_01-preview-oneui-large-preview.jpg',
-            './assets/easyweb-image/100000_01preview-main-large-preview.jpg',
-            './assets/easyweb-image/100000_01-homepage-edit10-large-preview.jpg',
+            './assets/easyweb-image/screenshot-pillar.png',
+            './assets/easyweb-image/screenshot-sumo.png',
             './assets/easyweb-image/screenshot-draco.png',
             './assets/easyweb-image/screenshot-global.png',
             './assets/easyweb-image/screenshot-newprovince.png',

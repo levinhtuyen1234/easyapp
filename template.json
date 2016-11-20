@@ -1,49 +1,40 @@
 {
-    "version": 6,
+    "version": 5,
     "templates": [
         {
-            "name": "EasyWeb",
-            "url": "https://github.com/easywebhub/easy-websites.git",
-            "branch": "easywebhub-category",
-            "type": "code base",
-            "tags": [
-                "Bootstrap 3.x",
-                "website"
-            ],
-            "themeUrl": "",
-            "price": "Free"
-        },
-        {
-            "name": "pillar",
-            "url": "https://github.com/easywebhub/pillar.git",
+            "name": "Pillar",
+            "url": "https://github.com/easywebhub/thinh.pillar.git",
             "branch": "master",
             "type": "website",
             "tags": [
                 "Bootstrap 3.x",
                 "multi-purpose"
             ],
+            "themeType" : "Multipurpose page",
             "themeUrl": "http://pillar.mediumra.re/",
             "price": "19$"
         },
         {
-            "name": "sumoLanding",
+            "name": "Sumo Landing",
             "url": "https://github.com/easywebhub/sumolanding.git",
             "branch": "master",
             "type": "website",
             "tags": [
                 "blog"
             ],
+            "themeType" : "Landing page",
             "themeUrl": "",
             "price": "Free"
         },
         {
-            "name": "draco",
+            "name": "Draco Resume",
             "url": "https://github.com/easywebhub/draco.git",
             "branch": "master",
             "type": "website",
             "tags": [
                 "blog"
             ],
+            "themeType" : "Resume template",
             "themeUrl": "http://draco.easywebhub.com",
             "price": "Free"
         },
@@ -55,17 +46,21 @@
             "tags": [
                 "Personal Blog"
             ],
+            "themeType" : "One page portfolio",
             "themeUrl": "http://globalportfolio.easywebhub.com",
             "price": "Free"
         },
         {
-          "name"    : "New Providence",
-          "url"     : "https://github.com/easywebhub/NewProvidence.git",
-          "branch"  : "master",
-          "type"    : "website",
-          "tags"    : ["Personal Blog"],
-          "themeUrl": "http://newprovidence.easywebhub.com",
-          "price"   : "Free"
+            "name": "New Providence",
+            "url": "https://github.com/easywebhub/NewProvidence.git",
+            "branch": "master",
+            "type": "website",
+            "tags": [
+                "Personal Blog"
+            ],
+            "themeType" : "Landing page",
+            "themeUrl": "http://newprovidence.easywebhub.com",
+            "price": "Free"
         },
         {
             "name": "Bootstrap Agency",
@@ -75,6 +70,7 @@
             "tags": [
                 "blog"
             ],
+            "themeType" : "Landing page",
             "themeUrl": "http://startbootstrapagency.easywebhub.com",
             "price": "Free"
         }
