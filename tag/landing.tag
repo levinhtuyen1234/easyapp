@@ -50,7 +50,7 @@
                 <div class="ui three stackable doubling cards">
                     <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
                         <div class="image">
-                            <img src="{marketPlaceTemplateImageList[(index + 3) %4]}">
+                            <img src="{marketPlaceTemplateImageList[index]}">
                         </div>
                         <div class="content">
                             <div class="header">{template.name}</div>
@@ -232,7 +232,10 @@
             './assets/easyweb-image/100000_01-preview-oneui-large-preview.jpg',
             './assets/easyweb-image/100000_01preview-main-large-preview.jpg',
             './assets/easyweb-image/100000_01-homepage-edit10-large-preview.jpg',
-            './assets/easyweb-image/100000_01-preview-large-preview.jpg'
+            './assets/easyweb-image/screenshot-draco.png',
+            './assets/easyweb-image/screenshot-global.png',
+            './assets/easyweb-image/screenshot-newprovince.png',
+            './assets/easyweb-image/screenshot-agency.png'
         ];
 
         me.templateList = [];

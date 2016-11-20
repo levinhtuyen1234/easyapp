@@ -59,6 +59,15 @@
             "price": "Free"
         },
         {
+          "name"    : "New Providence",
+          "url"     : "https://github.com/easywebhub/NewProvidence.git",
+          "branch"  : "master",
+          "type"    : "website",
+          "tags"    : ["Personal Blog"],
+          "themeUrl": "http://newprovidence.easywebhub.com",
+          "price"   : "Free"
+        },
+        {
             "name": "Bootstrap Agency",
             "url": "https://github.com/easywebhub/StartBootstrapAgency.git",
             "branch": "master",
