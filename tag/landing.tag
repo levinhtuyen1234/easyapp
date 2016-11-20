@@ -46,7 +46,18 @@
 
                 <h1 class="ui header weight-300 orange">Website Marketplace</h1>
 
-                <h3 class="ui header weight-300" style="margin: 0px 0 30px;"> Searching for a Template</h3>
+                <!--<h3 class="ui header weight-300" style="margin: 0px 0 30px;"> Searching for a Template</h3>-->
+
+                <div class="ui category search">
+                <div class="ui icon input">
+                <input class="prompt" type="text" placeholder="Searching for a Template">
+                <i class="search icon"></i>
+                </div>
+                <div class="results"></div>
+                </div>
+
+                <br>
+
 
                 <div class="ui three stackable doubling cards">
                     <a each="{template, index in templateList}" class="ui card" href="" onclick="{showCreateSite.bind(this, template)}">
