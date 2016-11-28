@@ -239,6 +239,7 @@
             } else if (me.opts.type == 'content') {
                 files = filterDeletedContent(files);
                 files = sortContentFiles(files);
+//                console.log('window.siteContentIndexes', window.siteContentIndexes);
             } else if (me.opts.type == 'meta') {
                 files = sortContentFiles(files);
             } else {
@@ -247,6 +248,7 @@
 
             me.files = files;
             me.filteredFiles = files;
+//            console.log('FILES', me.files);
             me.update();
         };
 
@@ -294,9 +296,86 @@
             me.update();
         };
 
+        const filterByMap = {
+            category: /category:(\w+)/giu
+        };
+
+        me.filterEx = function (e) {
+            var needle = e.target.value;
+            var filterByList = [];
+            var filename;
+
+            // extract filterBy neu co
+            for (var filterBy in filterByMap) {
+                if (!filterByMap.hasOwnProperty(filterBy)) continue;
+                var regex = filterByMap[filterBy];
+                var matches = needle.match(regex);
+                if (matches && matches.length > 0) {
+                    matches.forEach(match => {
+                        needle = needle.replace(match, ''); // remove from needed
+                        filterByList.push({
+                            key:   filterBy,
+                            value: match.split(':').pop()
+                        });
+                    });
+                }
+            }
+
+            var filtered = [];
+            var hayStack = {};
+
+            // filter by file name first
+            needle = needle.trim();
+            if (needle !== '') {
+                for (filename in window.siteContentIndexes) {
+                    if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
+                    if (fuzzySearch(needle, filename)) {
+                        hayStack[filename] = window.siteContentIndexes[filename];
+                    }
+                }
+            } else {
+                // had to copy
+                for (filename in window.siteContentIndexes) {
+                    if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
+                    hayStack[filename] = window.siteContentIndexes[filename];
+                }
+            }
+//            console.log('hayStack normal filter', hayStack);
+
+            // filter by metadata
+            filterByList.forEach(filterBy => {
+                for (filename in hayStack) {
+                    if (!hayStack.hasOwnProperty(filename)) continue;
+                    var lhs = filterBy.value;
+                    var rhs = hayStack[filename][filterBy.key];
+                    if (!rhs || typeof(rhs) !== 'string' || rhs === '') continue;
+//                    console.log('lhs', lhs, 'rhs', rhs);
+                    if (fuzzySearch(lhs, rhs) === false) {
+                        delete hayStack[filename];
+                    }
+                }
+            });
+
+//            console.log('hayStack meta filter', hayStack);
+
+            // convert hayStack to array of object name-path
+            for (var file of me.files) {
+                if (hayStack[file.name]) {
+                    filtered.push(file);
+                }
+            }
+
+            me.filteredFiles = filtered;
+            me.update();
+        };
+
         me.onFilterInput = function (e) {
             delay(function () {
-                me.filter(e)
+                if (me.opts.type == 'content') {
+                    me.filterEx(e)
+                } else {
+                    me.filter(e)
+                }
             }, 100);
         };
 
