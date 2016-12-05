@@ -89,22 +89,23 @@
             me.cloning = 1;
             me.errorMsg = '';
             me.update();
-            return me.parent.createSite(siteName, me.template.url, me.template.branch).then(function (siteFolderName) {
-                me.cloning = 0;
-                me.update();
-                me.hide();
-                console.log('start open site', siteFolderName);
-                // open site using site folder name in disk not displayName
-                return me.parent.openSite({
-                    name: siteFolderName
+            return me.parent.createSite(siteName, me.template.url, me.template.branch)
+                .then(function (siteFolderName) {
+                    me.cloning = 0;
+                    me.update();
+                    me.hide();
+                    console.log('start open site', siteFolderName);
+                    // open site using site folder name in disk not displayName
+                    return me.parent.openSite({
+                        name: siteFolderName
+                    });
+                }).catch(function (err) {
+                    console.log('dialog-new-site-local createSite failed', err);
+                    // stop loading animation
+                    me.cloning = 0;
+                    me.errorMsg = err.message;
+                    me.update();
                 });
-            }).catch(function (err) {
-                console.log('dialog-new-site-local createSite failed', err);
-                // stop loading animation
-                me.cloning = 0;
-                me.errorMsg = err.message;
-                me.update();
-            });
         };
 
         me.showSelectDirDialog = function () {

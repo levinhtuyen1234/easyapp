@@ -313,6 +313,7 @@
                 }
             });
             me.mergeLocalRemoteSites();
+            console.log('me.sites', me.sites);
         });
 
         me.openSite = function (site, e) {
@@ -337,19 +338,33 @@
         me.createSite = function (displayName, repoUrl, branch) {
 //            var localPath = Path.join(__dirname, 'sites', name);
             var name = displayName.toLowerCase()
-                    .normalize('NFKD')
-                    .replace(/[\u0300-\u036F]/g, '')
-                    .replace(/đ/g, 'd')
-                    .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/\s+/g, '-')
-                    .trim();
+                .normalize('NFKD')
+                .replace(/[\u0300-\u036F]/g, '')
+                .replace(/đ/g, 'd')
+                .replace(/[?,!\/'":;#$@\\()\[\]{}^~]*/g, '')
+                .replace(/\s+/g, '-')
+                .trim();
+
+            var nameExists = (me.sites.filter(function (site) {
+                    return name === site.name;
+                })).length > 0;
+            console.log('nameExists', nameExists);
+
+            if (nameExists) {
+                bootbox.alert({title: 'Error', message: 'Site name already exists'});
+                throw new Error('Site name already exists');
+            }
+
             return User.addSite(name, displayName).then(function (resp) {
                 return BackEnd.createSiteFolder(name).then(function (sitePath) {
-                    return BackEnd.gitCheckout(repoUrl, branch, sitePath).then(function () {
-                        console.log('git checkout done', name);
-//                    if (window.curPage) window.curPage.unmount(true);
-//                    window.curPage = riot.mount('home', {siteName: name})[0];
-                        return name;
+                    // checkout source from template
+                    return BackEnd.gitCheckOutSkeleton(repoUrl, branch, sitePath).then(function () {
+                        console.log('git checkout done', name, 'start init remote repository url', resp.url, 'sitePath', sitePath);
+                        return BackEnd.initNewSiteRootFolder(resp.url, sitePath).then(function () {
+                            return BackEnd.initNewSiteBuildFolder(resp.url, sitePath).then(function () {
+                                return name;
+                            });
+                        });
                     })
                 });
             });

@@ -3,11 +3,13 @@
 let Promise = require('bluebird');
 let _ = require('lodash');
 
-var ERROR_MSG = {
+const GOGS_SERVER_URL = 'http://212.47.253.180:7000'; // TODO TEMP SERVER
+
+const ERROR_MSG = {
     '444': 'user not exists'
 };
 
-var thinAdapter = {
+const thinAdapter = {
     loginUrl:    'http://api.easywebhub.com/auth/signin',
     registerUrl: 'http://api.easywebhub.com/auth/signup',
     addSiteUrl:  'http://api.easywebhub.com/website/addnew',
@@ -91,6 +93,7 @@ var thinAdapter = {
 
     addSiteResponse: function (data) {
         try {
+            // TODO get more website info
             if (data['Result'] === true && data['Data'] === true) {
                 return {
                     result: true
@@ -156,12 +159,42 @@ function register(data) {
         data:        JSON.stringify(data)
     }).then(function (resp) {
         resp = adapter.registerResponse(resp);
-        return new Promise((resolve, reject)=> {
+        return new Promise((resolve, reject) => {
             if (resp.error)
                 return reject(resp.error);
             return resolve('');
         });
     }));
+}
+
+function CreateGogsRepo(username, repositoryName) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            method:      'POST',
+            dataType:    'json',
+            contentType: 'application/json',
+            url:         `${GOGS_SERVER_URL}/repos`,
+            data:        JSON.stringify({
+                username:       username,
+                repositoryName: repositoryName
+            })
+        }).then(function (data, textStatus, jqXHR) {
+            resolve(data);
+        }, function (jqXHR, textStatus, errorThrown) {
+            console.log(jqXHR, textStatus, errorThrown);
+            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message)
+                reject(new Error(jqXHR.responseJSON.message));
+            else
+                reject(new Error(textStatus));
+        });
+    });
+}
+
+function updateSiteData() {
+    // TODO wait API
+    return new Promise((resolve, reject) => {
+        resolve();
+    });
 }
 
 class AppUser {
@@ -184,20 +217,52 @@ class AppUser {
             "Name":        name,
             "DisplayName": displayName
         };
-        return Promise.resolve($.ajax({
-            method:      'POST',
-            dataType:    'json',
-            contentType: 'application/json',
-            url:         adapter.addSiteUrl,
-            data:        JSON.stringify(postData)
-        }).then(function (resp) {
-            resp = adapter.addSiteResponse(resp);
-            return new Promise((resolve, reject)=> {
+
+        // console.log('addSite postData', postData);
+        // console.log('addSite this.data', this.data);
+
+        var username = this.data.username;
+        return new Promise(function (resolve, reject) {
+            $.ajax({
+                method:      'POST',
+                dataType:    'json',
+                contentType: 'application/json',
+                url:         adapter.addSiteUrl,
+                data:        JSON.stringify(postData)
+            }).then(function (resp, textStatus, jqXHR) {
+                console.log('addSite resp', resp);
+                resp = adapter.addSiteResponse(resp);
                 if (resp.error)
                     return reject(resp.error);
-                return resolve(resp.result);
+
+                console.log('username', username);
+                // TODO THIS IS TEMP CODE
+                return CreateGogsRepo(username, name).then(function (data) {
+                    console.log('CreateGogsRepo resp', data);
+                    localStorage.setItem(`${username}-${name}`, data.url);
+                    return updateSiteData().then(function () {
+                        resolve({
+                            url: data.url
+                        });
+                    });
+                }).catch(function (error) {
+                    console.log('ERRRORRRR', error.message);
+                    if (error.message.startsWith('repository already exists')) {
+                        var repoUrl = localStorage.getItem(`${username}-${name}`);
+                        if (!repoUrl)
+                            reject(new Error('Failed to get repository url'));
+                        return resolve({
+                            url: repoUrl
+                        });
+                    } else {
+                        reject(new Error('create gogs reposiory failed, ' + error.message));
+                    }
+                });
+            }, function (jqXHR, textStatus, errorThrown) {
+                console.log('call addSite failed', jqXHR);
+                reject(new Error(textStatus));
             });
-        }));
+        });
     }
 
     getSites() {

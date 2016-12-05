@@ -1,16 +1,15 @@
 'use strict';
 
-const Fs = require('fs');
+const Promise = require('bluebird');
 const Path = require('path');
 const ChildProcess = require('child_process');
 const Remote = require('electron').remote;
 const Shell = Remote.shell;
 
 const _ = require('lodash');
-const BlueBird = require('bluebird');
-const Pfs = BlueBird.promisifyAll(Fs);
-const Mkdir = BlueBird.promisify(Fs.mkdir);
-const RimRaf = BlueBird.promisify(require('rimraf'));
+const Fs = Promise.promisifyAll(require('fs'));
+const Fse = Promise.promisifyAll(require('fs-extra'));
+const Mkdir = Promise.promisify(Fs.mkdir);
 
 const IGNORE_NAMES = ['.gitignore', '.gitkeep'];
 const IGNORE_FOLDERS = ['.git', '__PUBLIC'];
@@ -653,7 +652,7 @@ function MkdirpSync(p, opts, made) {
 
 function SpawnShell(command, args, opts) {
     opts = opts || {};
-    return new BlueBird((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         let out = '';
         let newProcess = ChildProcess.spawn(command, args, {
             env:   opts.env ? opts.env : {},
@@ -753,8 +752,18 @@ function gitImportGitHub(siteName, repositoryUrl, onProgress) {
 }
 
 function gitCheckout(repositoryUrl, branch, targetDir, onProgress) {
-    return spawnGitCmd('git', ['clone', '-b', branch, '--single-branch', '--depth', '1', repositoryUrl, targetDir], sitesRoot, onProgress).then(function () {
-        return RimRaf(Path.join(targetDir, '.git'));
+    return spawnGitCmd('git', ['clone', '-b', branch, '--single-branch', '--depth', '1', repositoryUrl, targetDir], '', onProgress).then(function () {
+        return Fse.removeAsync(Path.join(targetDir, '.git'));
+    });
+}
+
+function gitInitNewSiteRepository(targetDir, repositoryUrl) {
+    return spawnGitCmd('git', ['init', '.'], targetDir).then(function () {
+        return spawnGitCmd('git', ['remote', 'add', 'origin', repositoryUrl], targetDir).then(function () {
+            return spawnGitCmd('git', ['add', '-A'], targetDir).then(function () {
+                return spawnGitCmd('git', ['commit', '-m', '"init repository"'], targetDir);
+            });
+        });
     });
 }
 
@@ -765,7 +774,7 @@ function gitCommit(siteName, message, onProgress) {
 
 function gitGenMessage(siteName) {
     const workingDirectory = Path.resolve(getSitePath(siteName));
-    return new BlueBird((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         var output = '';
         return spawnGitCmd('git', ['status'], workingDirectory, function (data) {
             output += data + '\r\n';
@@ -1015,17 +1024,17 @@ function showItemInFolder(siteName, filePath) {
     Shell.showItemInFolder(Path.join(sitesRoot, siteName, filePath));
 }
 
-var createSiteIndex = BlueBird.coroutine(function*(siteName) {
+var createSiteIndex = Promise.coroutine(function*(siteName) {
     var siteContentPath = Path.join(sitesRoot, siteName, 'content');
     var contents = {};
 
-    var readContentFiles = BlueBird.coroutine(function*(dir) {
+    var readContentFiles = Promise.coroutine(function*(dir) {
         var files = yield Fs.readdirAsync(dir);
-        yield BlueBird.map(files, BlueBird.coroutine(function *(file) {
+        yield Promise.map(files, Promise.coroutine(function *(file) {
             var filePath = Path.join(sitesRoot, siteName, 'content', file);
-            var stat = yield Pfs.statAsync(filePath);
+            var stat = yield Fs.statAsync(filePath);
             if (stat.isFile()) {
-                var content = (yield Pfs.readFileAsync(filePath)).toString();
+                var content = (yield Fs.readFileAsync(filePath)).toString();
                 content = SplitContentFile(content);
                 contents[file] = content.metaData;
             } else if (stat.isDirectory()) {
@@ -1038,55 +1047,138 @@ var createSiteIndex = BlueBird.coroutine(function*(siteName) {
     return contents;
 });
 
-createSiteIndex('pillar');
+const deleteAllExcept = Promise.coroutine(function*(targetDir, excepts) {
+    let names = yield Fse.readdirAsync(targetDir);
+    if (typeof(excepts) === 'string') excepts = [excepts];
+    names.forEach(Promise.coroutine(function*(name) {
+        // delete if not in excepts list
+        if (excepts.indexOf(name) === -1) {
+            console.log('deleteAllExcept remove', Path.join(targetDir, name));
+            yield Fse.removeAsync(Path.join(targetDir, name));
+        }
+    }))
+});
+
+function gitCheckOutSkeleton(repositoryUrl, branch, targetDir, onProgress) {
+    // clone project skeleton
+    return spawnGitCmd('git', ['clone', '-b', branch, '--single-branch', '--depth', '1', repositoryUrl, targetDir], '', onProgress).then(function () {
+        // delete .git
+        return Fse.removeAsync(Path.join(targetDir, '.git'));
+    });
+}
+
+const initNewSiteRootFolder = Promise.coroutine(function*(repositoryUrl, targetDir) {
+    // init repos
+    yield spawnGitCmd('git', ['init', '.'], targetDir);
+    // add .gitignore (ingore build + node_modules)
+    yield Fs.writeFileAsync(Path.join(targetDir, '.gitignore'), `build/\r\nnode_modules/\r\n`);
+
+    yield spawnGitCmd('git', ['add', '.gitignore'], targetDir);
+    // set remote gogs repo
+    yield spawnGitCmd('git', ['remote', 'add', 'origin', repositoryUrl], targetDir);
+    // commit
+    yield spawnGitCmd('git', ['commit', '-m"init root"'], targetDir);
+    // push
+    yield spawnGitCmd('git', ['push', 'origin', 'master'], targetDir);
+});
+
+const initNewSiteBuildFolder = Promise.coroutine(function*(repositoryUrl, targetDir) {
+    let buildFolderPath = Path.join(targetDir, 'build');
+
+    // remove build dir if exsits
+    try {
+        yield Fse.removeAsync(buildFolderPath);
+    } catch (ex) {
+        console.log('remove build folder failed', ex);
+    }
+
+    try {
+        // create build folder
+        yield Fse.mkdirAsync(buildFolderPath);
+
+        // git clone gogs repo
+        yield spawnGitCmd('git', ['clone', repositoryUrl, buildFolderPath]);
+
+        // in build folder delete all except .git folder
+        yield deleteAllExcept(buildFolderPath, '.git');
+
+        // git checkout --orphan gh-pages
+        yield spawnGitCmd('git', ['checkout', '--orphan', 'gh-pages'], buildFolderPath);
+
+        console.log('create empty index.html');
+        yield Fse.writeFileAsync(Path.join(buildFolderPath, 'index.html'), '');
+
+        console.log('add index.html to git');
+        yield spawnGitCmd('git', ['add', 'index.html'], buildFolderPath);
+
+        console.log('commit');
+        yield spawnGitCmd('git', ['commit', '-m"init build"'], buildFolderPath);
+
+        // git push --set-upstream origin gh-pages
+        yield spawnGitCmd('git', ['push', '--set-upstream', 'origin', 'gh-pages'], buildFolderPath);
+
+        // delete master branch
+        yield spawnGitCmd('git', ['branch', '-d', 'master'], buildFolderPath);
+        console.log('DONE');
+        // push
+        // yield spawnGitCmd('git', ['push', 'origin', 'gh-pages'], targetDir);
+    } catch (ex) {
+        console.log('AAAAAAAAA', ex);
+    }
+});
+
 
 module.exports = {
-    createSiteIndex:         createSiteIndex,
-    genSimpleContentConfig:  genSimpleContentConfig,
-    getDefaultContentConfig: getDefaultContentConfig,
-    showItemInFolder:        showItemInFolder,
-    fileExists:              fileExists,
-    newCategory:             newCategory,
-    getCategoryLayoutList:   getCategoryLayoutList,
-    getCategoryList:         getCategoryList,
-    purgeCategoryListCache:  purgeCategoryListCache,
-    newTag:                  newTag,
-    getTagList:              getTagList,
-    getMetaFile:             getMetaFile,
-    getSiteMetadataFiles:    getSiteMetadataFiles,
-    getMetaConfigFile:       getMetaConfigFile,
-    saveMetaFile:            saveMetaFile,
-    saveMetaConfigFile:      saveMetaConfigFile,
-    createSiteFolder:        createSiteFolder,
-    getSiteList:             getSiteList,
-    getConfigFile:           getConfigFile,
-    saveConfigFile:          saveConfigFile,
-    getRawContentFile:       getRawContentFile,
-    getContentFile:          getContentFile,
-    saveContentFile:         saveContentFile,
-    saveRawContentFile:      saveRawContentFile,
-    getLayoutFile:           getLayoutFile,
-    saveLayoutFile:          saveLayoutFile,
-    deleteLayoutFile:        deleteLayoutFile,
-    deleteContentFile:       deleteContentFile,
-    softDeleteContentFile:   softDeleteContentFile,
-    getLayoutList:           getLayoutList,
-    getRootLayoutList:       getRootLayoutList,
-    newLayoutFile:           newLayoutFile,
-    gitAdd:                  gitAdd,
-    newContentFile:          newContentFile,
-    gitCheckout:             gitCheckout,
-    gitInitSite:             gitInitSite,
-    gitGenMessage:           gitGenMessage,
-    gitImportGitHub:         gitImportGitHub,
-    gitCommit:               gitCommit,
-    gitPushGhPages:          gitPushGhPages,
-    gitPushGitHub:           gitPushGitHub,
-    getSiteLayoutFiles:      getSiteLayoutFiles,
-    getSiteAssetFiles:       getSiteAssetFiles,
-    getSiteContentFiles:     getSiteContentFiles,
-    readFile:                readFile,
-    addMediaFile:            addMediaFile,
-    isGhPageInitialized:     isGhPageInitialized,
-    setDomain:               setDomain
+    gitCheckOutSkeleton:      gitCheckOutSkeleton,
+    initNewSiteRootFolder:    initNewSiteRootFolder,
+    initNewSiteBuildFolder:   initNewSiteBuildFolder,
+    createSiteIndex:          createSiteIndex,
+    genSimpleContentConfig:   genSimpleContentConfig,
+    getDefaultContentConfig:  getDefaultContentConfig,
+    showItemInFolder:         showItemInFolder,
+    fileExists:               fileExists,
+    newCategory:              newCategory,
+    getCategoryLayoutList:    getCategoryLayoutList,
+    getCategoryList:          getCategoryList,
+    purgeCategoryListCache:   purgeCategoryListCache,
+    newTag:                   newTag,
+    getTagList:               getTagList,
+    getMetaFile:              getMetaFile,
+    getSiteMetadataFiles:     getSiteMetadataFiles,
+    getMetaConfigFile:        getMetaConfigFile,
+    saveMetaFile:             saveMetaFile,
+    saveMetaConfigFile:       saveMetaConfigFile,
+    createSiteFolder:         createSiteFolder,
+    getSiteList:              getSiteList,
+    getConfigFile:            getConfigFile,
+    saveConfigFile:           saveConfigFile,
+    getRawContentFile:        getRawContentFile,
+    getContentFile:           getContentFile,
+    saveContentFile:          saveContentFile,
+    saveRawContentFile:       saveRawContentFile,
+    getLayoutFile:            getLayoutFile,
+    saveLayoutFile:           saveLayoutFile,
+    deleteLayoutFile:         deleteLayoutFile,
+    deleteContentFile:        deleteContentFile,
+    softDeleteContentFile:    softDeleteContentFile,
+    getLayoutList:            getLayoutList,
+    getRootLayoutList:        getRootLayoutList,
+    newLayoutFile:            newLayoutFile,
+    gitAdd:                   gitAdd,
+    newContentFile:           newContentFile,
+    gitCheckout:              gitCheckout,
+    gitInitSite:              gitInitSite,
+    gitGenMessage:            gitGenMessage,
+    gitImportGitHub:          gitImportGitHub,
+    gitInitNewSiteRepository: gitInitNewSiteRepository,
+    gitCommit:                gitCommit,
+    gitPushGhPages:           gitPushGhPages,
+    gitPushGitHub:            gitPushGitHub,
+    getSiteLayoutFiles:       getSiteLayoutFiles,
+    getSiteAssetFiles:        getSiteAssetFiles,
+    getSiteContentFiles:      getSiteContentFiles,
+    readFile:                 readFile,
+    addMediaFile:             addMediaFile,
+    isGhPageInitialized:      isGhPageInitialized,
+    setDomain:                setDomain
 };
