@@ -331,6 +331,7 @@
 //                console.log('siteContentIndexes', siteContentIndexes);
                 window.curPage = riot.mount('home', {siteName: siteName})[0];
             }).catch(function (ex) {
+                console.log(ex);
                 alert('create site content index failed, ' + ex.message);
             });
         };

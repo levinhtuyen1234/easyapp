@@ -13,10 +13,13 @@
     -->
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}">
+            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}" data-html="{genContentTooltip(path)}">
+                <div class="right floated content">
+                    <label class="header">{getContentCategory(path)}</label>
+                </div>
                 <i class="{getFileIcon(name, path)}"></i>
                 <div class="content">
-                    <a class="truncate">{getContentType(path)}{hideExt(name)}</a>
+                    <a class="truncate">{genDisplayName(name, path)}</a>
                 </div>
             </div>
         </div>
@@ -75,6 +78,32 @@
                 }
             });
         });
+
+        me.genContentTooltip = function(contentPath) {
+            if (me.opts.type !== 'content')
+                return '';
+            contentPath = contentPath.startsWith('content/') ? contentPath.slice(8) : contentPath;
+            var metaData = window.siteContentIndexes[contentPath];
+            if (!metaData || !metaData.category)
+                return '';
+
+            return `<div class='ui list'><div class='item'><div class='header'>${metaData.title}</div>${contentPath}<br>${metaData.category.split('.').join(' >> ')}</div></div>`;
+        };
+
+        me.getContentCategory = function(contentPath) {
+            if (me.opts.type !== 'content')
+                return '';
+
+            contentPath = contentPath.startsWith('content/') ? contentPath.slice(8) : contentPath;
+            var metaData = window.siteContentIndexes[contentPath];
+            if (!metaData || !metaData.category)
+                return '';
+            return metaData.category.split('.').pop();
+        };
+
+        me.genDisplayName = function(name, path) {
+            return me.getContentType(path) + me.hideExt(name);
+        };
 
         me.getContentType = function (path) {
             if (path.indexOf('layout/partial/') != -1)
@@ -188,9 +217,10 @@
 
         var filterDeletedContent = function (files) {
             return files.filter(function (file) {
+                console.log('file.name', file.name);
                 var metaData = window.siteContentIndexes[file.name];
                 // TODO when support recursive use file.path as key to lookup metadata
-                if (metaData.layout && metaData.layout === 'delete.html') {
+                if (metaData && metaData.layout && metaData.layout === 'delete.html') {
                     return false;
                 }
                 return true;
@@ -239,7 +269,6 @@
             } else if (me.opts.type == 'content') {
                 files = filterDeletedContent(files);
                 files = sortContentFiles(files);
-//                console.log('window.siteContentIndexes', window.siteContentIndexes);
             } else if (me.opts.type == 'meta') {
                 files = sortContentFiles(files);
             } else {
@@ -248,37 +277,27 @@
 
             me.files = files;
             me.filteredFiles = files;
-//            console.log('FILES', me.files);
             me.update();
         };
 
         me.openFile = function (e) {
             var filePath = e.item.path;
-//            console.log('item', e.item);
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.item').removeClass('active');
-//            console.log('e', e);
-//            console.log("$(e.srcElement).closest('.item')", $(e.srcElement).closest('.item'));
             $(e.srcElement).closest('.item').addClass('active');
 
             riot.event.trigger('fileActivated', me.opts.type, filePath);
-//            console.log('fileListFlat open file', filePath);
             me.trigger('openFile', filePath);
         };
 
         me.activeFile = function (filePath) {
-//            console.log("filePath", filePath);
-//            console.log("query '[data-path=\"' + filePath + '\"]'");
             var elm = $root.find('[data-path="' + filePath + '"]');
             $root.find('.item').removeClass('active');
-//            console.log('elm', elm);
             $(elm).addClass('active');
         };
 
         me.clearActive = function () {
-//            $root.find('.ui.celled.list>.item').removeClass('active');
-//            console.log('clearActive', $root.find('.item').removeClass('active'));
             $root.find('.item').removeClass('active');
             me.curFilePath = '';
         };

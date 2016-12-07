@@ -1028,22 +1028,26 @@ var createSiteIndex = Promise.coroutine(function*(siteName) {
     var siteContentPath = Path.join(sitesRoot, siteName, 'content');
     var contents = {};
 
-    var readContentFiles = Promise.coroutine(function*(dir) {
-        var files = yield Fs.readdirAsync(dir);
+    var readContentFiles = Promise.coroutine(function*(root, dir) {
+        var searchPath = Path.join(root, dir);
+        var files = yield Fs.readdirAsync(searchPath);
         yield Promise.map(files, Promise.coroutine(function *(file) {
-            var filePath = Path.join(sitesRoot, siteName, 'content', file);
+            var filePath = Path.join(root, dir, file);
+            console.log('filePath', filePath);
             var stat = yield Fs.statAsync(filePath);
             if (stat.isFile()) {
+                if (!file.endsWith('.md')) return;
                 var content = (yield Fs.readFileAsync(filePath)).toString();
                 content = SplitContentFile(content);
-                contents[file] = content.metaData;
+                contents[dir === '' ? file : `${dir}/${file}`] = content.metaData;
             } else if (stat.isDirectory()) {
-                // TODO support recursive content
+                // support recursive content
+                yield readContentFiles(siteContentPath, dir === '' ? file : `${dir}/${file}`);
             }
         }), {concurrency: 3});
     });
 
-    yield readContentFiles(siteContentPath);
+    yield readContentFiles(siteContentPath, '');
     return contents;
 });
 
