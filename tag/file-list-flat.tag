@@ -101,8 +101,16 @@
             return metaData.category.split('.').pop();
         };
 
+        // TODO gen whole file block html thay vi` copy paste trung cac doan xu ly
         me.genDisplayName = function(name, path) {
-            return me.getContentType(path) + me.hideExt(name);
+            if (me.opts.type !== 'content')
+                return me.getContentType(path) + me.hideExt(name);
+
+            path = path.startsWith('content/') ? path.slice(8) : path;
+            var metaData = window.siteContentIndexes[path];
+            if (!metaData || !metaData.title)
+                return '';
+            return metaData.title;
         };
 
         me.getContentType = function (path) {
@@ -148,6 +156,10 @@
             if (nLen === hLen) {
                 return needle === haystack;
             }
+
+            needle = needle.toLowerCase();
+            haystack = haystack.toLowerCase();
+
             outer: for (var i = 0, j = 0; i < nLen; i++) {
                 var nch = needle.charCodeAt(i);
                 if (nch === 32) continue;
@@ -217,7 +229,7 @@
 
         var filterDeletedContent = function (files) {
             return files.filter(function (file) {
-                console.log('file.name', file.name);
+//                console.log('file.name', file.name);
                 var metaData = window.siteContentIndexes[file.name];
                 // TODO when support recursive use file.path as key to lookup metadata
                 if (metaData && metaData.layout && metaData.layout === 'delete.html') {
@@ -315,27 +327,24 @@
             me.update();
         };
 
-        const filterByMap = {
-            category: /category:(\w+)/giu
-        };
-
         me.filterEx = function (e) {
             var needle = e.target.value;
             var filterByList = [];
             var filename;
 
             // extract filterBy neu co
-            for (var filterBy in filterByMap) {
-                if (!filterByMap.hasOwnProperty(filterBy)) continue;
-                var regex = filterByMap[filterBy];
-                var matches = needle.match(regex);
-                if (matches && matches.length > 0) {
-                    matches.forEach(match => {
-                        needle = needle.replace(match, ''); // remove from needed
-                        filterByList.push({
-                            key:   filterBy,
-                            value: match.split(':').pop()
-                        });
+            const metaFilterRegex = /:([^:\s]+)\s+([^\t\s]+)/gmu;
+            var matches;
+            while ((matches = metaFilterRegex.exec(needle)) !== null) {
+                // This is necessary to avoid infinite loops with zero-width matches
+                if (matches.index === metaFilterRegex.lastIndex) {
+                    metaFilterRegex.lastIndex++;
+                }
+                if (matches.length === 3) {
+                    needle = needle.replace(matches[0], ''); // remove from needed
+                    filterByList.push({
+                        key:   matches[1].trim(),
+                        value: matches[2].trim()
                     });
                 }
             }

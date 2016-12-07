@@ -1033,7 +1033,7 @@ var createSiteIndex = Promise.coroutine(function*(siteName) {
         var files = yield Fs.readdirAsync(searchPath);
         yield Promise.map(files, Promise.coroutine(function *(file) {
             var filePath = Path.join(root, dir, file);
-            console.log('filePath', filePath);
+            // console.log('filePath', filePath);
             var stat = yield Fs.statAsync(filePath);
             if (stat.isFile()) {
                 if (!file.endsWith('.md')) return;
