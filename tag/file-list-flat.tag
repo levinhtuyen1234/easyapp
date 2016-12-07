@@ -150,9 +150,11 @@
         var fuzzySearch = function (needle, haystack) {
             var hLen = haystack.length;
             var nLen = needle.length;
-            if (nLen > hLen) {
+            if (nLen > hLen || haystack === '') {
                 return false;
             }
+
+
             if (nLen === hLen) {
                 return needle === haystack;
             }
@@ -354,21 +356,28 @@
 
             // filter by file name first
             needle = needle.trim();
+
+            // CHEAT for default search title
             if (needle !== '') {
-                for (filename in window.siteContentIndexes) {
-                    if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
-                    if (fuzzySearch(needle, filename)) {
-                        hayStack[filename] = window.siteContentIndexes[filename];
-                    }
-                }
-            } else {
+                filterByList.push({
+                    key:   'title',
+                    value: needle
+                });
+            }
+//            if (needle !== '') {
+//                for (filename in window.siteContentIndexes) {
+//                    if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
+//                    if (fuzzySearch(needle, filename)) {
+//                        hayStack[filename] = window.siteContentIndexes[filename];
+//                    }
+//                }
+//            } else {
                 // had to copy
                 for (filename in window.siteContentIndexes) {
                     if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
                     hayStack[filename] = window.siteContentIndexes[filename];
                 }
-            }
-//            console.log('hayStack normal filter', hayStack);
+//            }
 
             // filter by metadata
             filterByList.forEach(filterBy => {
@@ -376,19 +385,20 @@
                     if (!hayStack.hasOwnProperty(filename)) continue;
                     var lhs = filterBy.value;
                     var rhs = hayStack[filename][filterBy.key];
-                    if (!rhs || typeof(rhs) !== 'string' || rhs === '') continue;
-//                    console.log('lhs', lhs, 'rhs', rhs);
-                    if (fuzzySearch(lhs, rhs) === false) {
+                    if (rhs === undefined || rhs === null || typeof(rhs) !== 'string') continue;
+
+                    var ret = fuzzySearch(lhs, rhs);
+                    if (ret === false) {
                         delete hayStack[filename];
                     }
                 }
             });
 
-//            console.log('hayStack meta filter', hayStack);
 
             // convert hayStack to array of object name-path
             for (var file of me.files) {
-                if (hayStack[file.name]) {
+                var contentPath = file.path.startsWith('content/') ? file.path.slice(8) : file.path;
+                if (hayStack[contentPath]) {
                     filtered.push(file);
                 }
             }
