@@ -1,5 +1,6 @@
-<content-view class="ui tab segment active simplebar" style="height: calc(100% - 88px); padding-left: 10px; padding-right: 20px; padding-top: 5px; overflow-y: scroll">
-    <form-editor site-name="{siteName}"></form-editor>
+<content-view class="ui tab segment active simplebar" style="height: calc(100% - 95px); padding-left: 10px; padding-right: 20px; padding-top: 5px; overflow-y: hidden">
+    <!--<form-editor site-name="{siteName}"></form-editor>-->
+    <json-schema-form-editor site-name="{siteName}"></json-schema-form-editor>
 
     <div class="ui form" style="padding-top: 10px;">
         <div class="field" id="contentMarkDownEditorField">
@@ -29,19 +30,25 @@
         });
 
         me.setContent = function (content, contentConfig) {
+            console.log('me.tags', me.tags);
             // gen content form
-            var contentFieldConfig = contentConfig.filter(function (config) {
-                return config.name === '__content__'
-            })[0];
-            me.tags['form-editor'].genForm(content.metaData, contentConfig);
+//            var contentFieldConfig = contentConfig.properties.filter(function (config) {
+//                return config.name === '__content__'
+//            })[0];
+
+
+//            me.tags['form-editor'].genForm(content.metaData, contentConfig);
+            me.tags['json-schema-form-editor'].genForm(content.metaData, contentConfig);
+
+
             // set markdown editor content
-            if (contentFieldConfig.hidden) {
+//            if (contentFieldConfig.hidden) {
 //                console.log('HIDE contentMarkDownEditorField');
-                $(contentMarkDownEditorField).hide();
-            } else {
+//                $(contentMarkDownEditorField).hide();
+//            } else {
 //                console.log('SHOW contentMarkDownEditorField');
-                $(contentMarkDownEditorField).show();
-            }
+//                $(contentMarkDownEditorField).show();
+//            }
             me.tags['markdown-editor'].setValue(content.markDownData);
         };
 
@@ -52,7 +59,8 @@
 
         me.getContent = function () {
             return {
-                metaData:     me.tags['form-editor'].getForm(),
+//                metaData:     me.tags['form-editor'].getForm(),
+                metaData:     me.tags['json-schema-form-editor'].getForm(),
                 markdownData: me.tags['markdown-editor'].getValue()
             };
         }
