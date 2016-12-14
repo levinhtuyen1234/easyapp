@@ -20,6 +20,7 @@
                 iconlib: 'fontawesome4'
 //                theme: 'semanticui'
             });
+            editor.setValue(metaData);
         }
     </script>
 </json-schema-form-editor>
