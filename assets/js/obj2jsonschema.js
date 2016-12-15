@@ -214,9 +214,7 @@ class SchemaFactory {
                         obj[k] = val;
 
                         if (!this.userDefinedOptions.arraysVerbose) {
-
                             // if (!UserDefinedOptions.arraysVerbose) {
-
                             if (!val) {
                                 delete obj[k];
                             }
