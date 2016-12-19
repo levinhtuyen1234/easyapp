@@ -88,7 +88,7 @@
 <script src="assets/js/jsoneditor.js"></script>
 <!--<script src="assets/js/bootbox.min.js"></script>-->
 <script src="assets/js/bootbox-semantic-ui.js"></script>
-<!--<script src="assets/js/bootstrap.min.js"></script>-->
+<script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
@@ -115,24 +115,6 @@
     var BackEnd = require(__dirname + '/assets/js/backend.js');
     var API = require(__dirname + '/assets/js/remote-api.js');
     var ToJsonSchema = require(__dirname + '/assets/js/obj2jsonschema.js');
-
-    console.log('ToJsonSchema', ToJsonSchema(`
-{
-  "address": {
-    "streetAddress": "21 2nd Street",
-    "city": "New York"
-  },
-  "phoneNumber": [
-    {
-      "location": "home",
-      "code": {
-        "key1": "value1",
-        "key2": 2
-      }
-    }
-  ]
-}
-`));
 
     window.DB = new PouchDB({name: 'DB', size: 1000, revs_limit: 8, adapter: 'websql'});
     DB.upsert = function (doc) {
@@ -204,6 +186,7 @@
             window.User = new AppUser(account);
             var curSites = User.data.sites;
             User.getSites().then(function (remoteSites) {
+                console.log('getSites resp', typeof(remoteSites), remoteSites);
                 User.data.sites = remoteSites;
                 if (curSites.length !== remoteSites.length && curPage.root.tagName === 'LANDING') {
                     window.curPage.mergeLocalRemoteSites();
