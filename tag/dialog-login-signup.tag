@@ -92,7 +92,7 @@
                 validateLoginForm();
 
                 API.login(me.username, me.password).then(function (result) {
-                    console.log('login success, trigger loginSuccess');
+                    console.log('login success, trigger loginSuccess, result', result);
                     me.isRequesting = false;
                     me.unmount(true);
                     riot.event.trigger('loginSuccess', result);
@@ -107,6 +107,7 @@
             }
         };
 
+
         me.register = function () {
             console.log('REGISTER');
             me.isRequesting = true;
@@ -114,21 +115,20 @@
             try {
                 validateRegisterForm();
                 var data = {
-                    username:    me.username,
-                    password:    me.password,
-                    accountType: 'user',
-                    status:      'verified',
-                    info:        {
-                        name:    '',
-                        sex:     '',
-                        address: '',
-                        age:     0
-                    },
+                    Username:    me.username,
+                    Password:    me.password,
+                    AccountType: 'user',
+                    Status:      'verified',
+                    Info:        {
+                        Name:    '',
+                        Sex:     '',
+                        Address: '',
+                        Age:     ''
+                    }
                 };
 
                 API.register(data).then(function () {
-                    console.log('register success, call login', data.username, data.password);
-                    return me.login(null, data.username, data.password);
+                    return me.login();
                 }).catch(function (err) {
 //                alert(err.message, 'Register failed');
                     me.errorMsg = err.message;

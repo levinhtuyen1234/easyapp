@@ -6,15 +6,30 @@ let _ = require('lodash');
 const GOGS_SERVER_URL = 'http://212.47.253.180:7000'; // TODO TEMP SERVER
 
 const ERROR_MSG = {
-    '444': 'user not exists'
+    '444':           'user not exists',
+    'AlreadyExists': 'Username already exists'
 };
 
-const thinAdapter = {
+const Ajax = Promise.coroutine(function*(opts) {
+    return new Promise((resolve, reject) => {
+        $.ajax(opts).then(function (resp) {
+            return resolve(resp);
+        }, function (xhr, textStatus, errorThrown) {
+            if (xhr.responseJSON.Message)
+                reject(new Error(xhr.responseJSON.Message));
+            else
+                reject(new Error(errorThrown));
+        });
+    });
+});
+
+const restAdapter = {
     loginUrl:    'http://api.easywebhub.com/auth/signin',
-    registerUrl: 'http://api.easywebhub.com/auth/signup',
-    addSiteUrl:  'http://api.easywebhub.com/website/addnew',
+    registerUrl: 'http://api.easywebhub.com/users',
+    addSiteUrl:  'http://api.easywebhub.com/websites',
 
     accountObjectTransformer: function (account) {
+        console.log('accountObjectTransformer', account);
         return {
             id:          account['AccountId'],
             accessLevel: account['AccessLevel']
@@ -22,136 +37,172 @@ const thinAdapter = {
     },
 
     sitesObjectTransformer: function (sites) {
-        // console.log('sites', sites);
+        // console.log('sitesObjectTransformer', sites);
         var ret = [];
         sites.forEach(function (site) {
             ret.push({
                 displayName: site['DisplayName'],
                 name:        site['Name'],
-                id:          site['id'],
-                accounts:    _.map(site['accounts'], thinAdapter.accountObjectTransformer)
+                url:         site['Url'],
+                id:          site['WebsiteId']
             })
         });
+        // console.log('sitesObjectTransformer after', ret);
         return ret;
     },
 
-    loginResponse: function (data) {
-        try {
-            if (data['Result'] === true) {
-                return {
-                    result: {
-                        id:          data['Data']['AccountId'],
-                        username:    data['Data']['UserName'],
-                        accountType: data['Data']['AccountType'],
-                        info:        data['Data']['Info'],
-                        sites:       thinAdapter.sitesObjectTransformer(data['Data']['ListWebsite'] || [])
-                    }
-                };
-            } else {
-                return {
-                    error: {
-                        code:    data['StatusCode'],
-                        message: data['Message']
-                    }
-                }
-            }
-        } catch (err) {
-            console.log('thinAdapter loginResponse error', err);
-            return {
-                error: {
-                    code:    -1,
-                    message: `invalid response ${err.message}`
-                }
-            };
-        }
-    },
-
     registerResponse: function (data) {
-        try {
-            if (data['Result'] === true) {
-                return {
-                    result: {}
-                };
-            } else {
-                return {
-                    error: {
-                        code:    data['StatusCode'],
-                        message: data['Message']
-                    }
-                }
-            }
-        } catch (ex) {
-            console.log('thinAdapter registerResponse error', ex);
-            return {
-                error: {
-                    code:    -1,
-                    message: `invalid response ${ex.message}`
-                }
-            };
-        }
+        console.log('registerResponse', data);
     },
 
     addSiteResponse: function (data) {
-        try {
-            // TODO get more website info
-            if (data['Result'] === true && data['Data'] === true) {
-                return {
-                    result: true
-                }
-            } else {
-                return {
-                    result: false
-                }
-            }
-        } catch (ex) {
-            return {
-                error: {
-                    code:    -1,
-                    message: `invalid response ${ex.message}`
-                }
-            };
-        }
+        console.log('addSiteResponse', data);
     }
 };
 
-var resolveAdapter = function () {
-    return thinAdapter;
-};
+// const thinAdapter = {
+//     loginUrl:    'http://api.easywebhub.com/auth/signin',
+//     registerUrl: 'http://api.easywebhub.com/auth/signup',
+//     addSiteUrl:  'http://api.easywebhub.com/website/addnew',
+//
+//     accountObjectTransformer: function (account) {
+//         return {
+//             id:          account['AccountId'],
+//             accessLevel: account['AccessLevel']
+//         }
+//     },
+//
+//     sitesObjectTransformer: function (sites) {
+//         // console.log('sites', sites);
+//         var ret = [];
+//         sites.forEach(function (site) {
+//             ret.push({
+//                 displayName: site['DisplayName'],
+//                 name:        site['Name'],
+//                 id:          site['id'],
+//                 accounts:    _.map(site['accounts'], thinAdapter.accountObjectTransformer)
+//             })
+//         });
+//         return ret;
+//     },
+//
+//     loginResponse: function (data) {
+//         try {
+//             if (data['Result'] === true) {
+//                 return {
+//                     result: {
+//                         id:          data['Data']['AccountId'],
+//                         username:    data['Data']['UserName'],
+//                         accountType: data['Data']['AccountType'],
+//                         info:        data['Data']['Info'],
+//                         sites:       thinAdapter.sitesObjectTransformer(data['Data']['ListWebsite'] || [])
+//                     }
+//                 };
+//             } else {
+//                 return {
+//                     error: {
+//                         code:    data['StatusCode'],
+//                         message: data['Message']
+//                     }
+//                 }
+//             }
+//         } catch (err) {
+//             console.log('thinAdapter loginResponse error', err);
+//             return {
+//                 error: {
+//                     code:    -1,
+//                     message: `invalid response ${err.message}`
+//                 }
+//             };
+//         }
+//     },
+//
+//     registerResponse: function (data) {
+//         try {
+//             if (data['Result'] === true) {
+//                 return {
+//                     result: {}
+//                 };
+//             } else {
+//                 return {
+//                     error: {
+//                         code:    data['StatusCode'],
+//                         message: data['Message']
+//                     }
+//                 }
+//             }
+//         } catch (ex) {
+//             console.log('thinAdapter registerResponse error', ex);
+//             return {
+//                 error: {
+//                     code:    -1,
+//                     message: `invalid response ${ex.message}`
+//                 }
+//             };
+//         }
+//     },
+//
+//     addSiteResponse: function (data) {
+//         try {
+//             // TODO get more website info
+//             if (data['Result'] === true && data['Data'] === true) {
+//                 return {
+//                     result: true
+//                 }
+//             } else {
+//                 return {
+//                     result: false
+//                 }
+//             }
+//         } catch (ex) {
+//             return {
+//                 error: {
+//                     code:    -1,
+//                     message: `invalid response ${ex.message}`
+//                 }
+//             };
+//         }
+//     }
+// };
 
-var adapter = resolveAdapter();
+var adapter = restAdapter;
 
 function login(username, password) {
     var data = {
-        username: username,
-        password: password
+        Username: username,
+        Password: password
     };
 
-    return Promise.resolve($.ajax({
+    return Ajax({
         method:      'POST',
         dataType:    'json',
         contentType: 'application/json',
         url:         adapter.loginUrl,
         data:        JSON.stringify(data)
     }).then(function (resp) {
-        resp = adapter.loginResponse(resp);
-        return new Promise((resolve, reject) => {
-            // console.log('LOGIN resp', resp);
-            if (resp.error) {
-                return reject(resp.error);
+        var ret = {
+            id:          resp.AccountId,
+            accountType: resp.AccountType,
+            username:    resp.UserName,
+            status:      resp.Status,
+            info:        {
+                address: resp.Info.Address,
+                age:     resp.Info.Age,
+                name:    resp.Info.Name,
+                sex:     resp.Info.Sex
             }
+        };
 
-            // TODO add password to data because no api to get user's site list yet (get through login)
-            resp.result.password = password;
-            resp.result.username = username; // TODO server always return null username too
-
-            return resolve(resp.result);
+        return getSites(resp.AccountId, null).then(function (sites) {
+            ret.sites = sites;
+            return ret;
         });
-    }));
+    });
 }
 
 function register(data) {
     data = data || {};
-    return Promise.resolve($.ajax({
+    return Ajax({
         method:      'POST',
         dataType:    'json',
         contentType: 'application/json',
@@ -159,12 +210,8 @@ function register(data) {
         data:        JSON.stringify(data)
     }).then(function (resp) {
         resp = adapter.registerResponse(resp);
-        return new Promise((resolve, reject) => {
-            if (resp.error)
-                return reject(resp.error);
-            return resolve('');
-        });
-    }));
+        return resp;
+    });
 }
 
 function CreateGogsRepo(username, repositoryName) {
@@ -190,10 +237,14 @@ function CreateGogsRepo(username, repositoryName) {
     });
 }
 
-function updateSiteData() {
-    // TODO wait API
-    return new Promise((resolve, reject) => {
-        resolve();
+function getSites(userId, token) {
+    return Ajax({
+        method:      'GET',
+        dataType:    'json',
+        contentType: 'application/json',
+        url:         `http://api.easywebhub.com/users/${userId}/websites`,
+    }).then(function (resp, textStatus, jqXHR) {
+        return resp;
     });
 }
 
@@ -207,68 +258,64 @@ class AppUser {
     }
 
     addSite(name, displayName) {
-        var postData = {
-            "Accounts":    [
-                {
-                    "AccountId":   this.data.id,
-                    "AccessLevel": ['dev']
-                }
-            ],
-            "Name":        name,
-            "DisplayName": displayName
-        };
-
-        // console.log('addSite postData', postData);
-        // console.log('addSite this.data', this.data);
-
         var username = this.data.username;
-        return new Promise(function (resolve, reject) {
-            $.ajax({
+        var id = this.data.id;
+        // tao remote git repo
+        // TODO THIS IS TEMP CODE tạo repo phai o tren server
+        return CreateGogsRepo(username, name).then(function (data) {
+            console.log('CreateGogsRepo resp', data);
+            localStorage.setItem(`${username}-${name}`, data.url);
+
+            // call add site (goi. sau khi goi. gogs vi` khong co API update website)
+            var postData = {
+                "Accounts":    [
+                    {
+                        "AccountId":   id,
+                        "AccessLevel": ['dev']
+                    }
+                ],
+                "Name":        name,
+                "DisplayName": displayName,
+                "Url":         data.url
+            };
+
+            return Ajax({
                 method:      'POST',
                 dataType:    'json',
                 contentType: 'application/json',
                 url:         adapter.addSiteUrl,
                 data:        JSON.stringify(postData)
-            }).then(function (resp, textStatus, jqXHR) {
+            }).then(function (resp) {
                 console.log('addSite resp', resp);
                 resp = adapter.addSiteResponse(resp);
-                if (resp.error)
-                    return reject(resp.error);
 
                 console.log('username', username);
-                // TODO THIS IS TEMP CODE
-                return CreateGogsRepo(username, name).then(function (data) {
-                    console.log('CreateGogsRepo resp', data);
-                    localStorage.setItem(`${username}-${name}`, data.url);
-                    return updateSiteData().then(function () {
-                        resolve({
-                            url: data.url
-                        });
-                    });
-                }).catch(function (error) {
-                    console.log('ERRRORRRR', error.message);
-                    if (error.message.startsWith('repository already exists')) {
-                        var repoUrl = localStorage.getItem(`${username}-${name}`);
-                        if (!repoUrl)
-                            reject(new Error('Failed to get repository url'));
-                        return resolve({
-                            url: repoUrl
-                        });
-                    } else {
-                        reject(new Error('create gogs reposiory failed, ' + error.message));
-                    }
-                });
-            }, function (jqXHR, textStatus, errorThrown) {
-                console.log('call addSite failed', jqXHR);
-                reject(new Error(textStatus));
+                return {
+                    url: data.url
+                };
             });
+        }).catch(function (error) {
+            console.log('ERRRORRRR', error.message);
+            if (error.message.startsWith('repository already exists')) {
+                var repoUrl = localStorage.getItem(`${username}-${name}`);
+                if (!repoUrl)
+                    reject(new Error('Failed to get repository url'));
+                return {
+                    url: repoUrl
+                };
+            } else {
+                reject(new Error('create gogs reposiory failed, ' + error.message));
+            }
         });
     }
 
     getSites() {
-        return login(this.data.username, this.data.password).then(function (resp) {
-            return resp.sites;
-        })
+        // return login(this.data.username, this.data.password).then(function (resp) {
+        //     return resp.sites;
+        // })
+        return getSites(this.data.id, null).then(function (sites) {
+            return adapter.sitesObjectTransformer(sites);
+        });
     }
 }
 
