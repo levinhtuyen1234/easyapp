@@ -189,6 +189,7 @@
             me.output = me.root.querySelector('pre');
             me.output.innerHTML = '';
             me.webview.src = ewhDataUri;
+            window.wv = me.webview;
         });
 
         me.clearLog = function () {

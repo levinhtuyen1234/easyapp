@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="assets/css/semantic.min.css">
     <link rel="stylesheet" href="assets/css/layout-default.css">
     <link rel="stylesheet" href="assets/css/simplebar.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
     <!--<link rel="stylesheet" href="assets/css/foundation.min.css">-->
 
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
@@ -105,6 +106,7 @@
 <script src="assets/js/riot+compiler.min.js"></script>
 <script src="assets/js/semantic.min.js"></script>
 <script src="assets/js/calendar.js"></script>
+<!--<script src="assets/js/select2.full.min.js"></script>-->
 <script src="assets/js/jquery.layout.js"></script>
 <script src="assets/js/simplebar.js"></script>
 <script src="assets/js/foundation.min.js"></script>
@@ -112,9 +114,11 @@
 
 <script>
     var fs = require('fs');
+    var _ = require('lodash');
     var BackEnd = require(__dirname + '/assets/js/backend.js');
     var API = require(__dirname + '/assets/js/remote-api.js');
     var ToJsonSchema = require(__dirname + '/assets/js/obj2jsonschema.js');
+    require(__dirname + '/assets/js/json-schema-editor.js');
 
     window.DB = new PouchDB({name: 'DB', size: 1000, revs_limit: 8, adapter: 'websql'});
     DB.upsert = function (doc) {

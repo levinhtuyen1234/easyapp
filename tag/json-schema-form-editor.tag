@@ -40,10 +40,12 @@
                 editor = null;
             }
             editor = new JSONEditor(me.editorElm, {
-                schema:  contentConfig,
-                theme:   'bootstrap3',
-                iconlib: 'fontawesome4'
-//                theme: 'semanticui'
+                schema:             contentConfig,
+                theme:              'bootstrap3',
+                iconlib:            'fontawesome4',
+                disable_edit_json:  true,
+                disable_properties: true,
+                disable_config:     true
             });
             editor.setValue(metaData);
         }
