@@ -247,16 +247,36 @@ var JsonSchemaEditor = function (schema) {
         })
     }
 
+    function mergeConfigArrayType(schema, configPath, configValue) {
+        var parts = configPath.split('.');
+        parts.shift(); // remove root
+        var ret = schema;
+
+        return parts.some(function (key, index) {
+            console.log('some', index, parts.length);
+            if (index === parts.length - 1) {
+                console.log('set items', configValue);
+                ret.items = configValue;
+                return true;
+            } else {
+                ret = ret.properties[key];
+            }
+            return typeof(ret) !== 'object';
+        })
+    }
+
     function getConfig(schema, configPath) {
         var parts = configPath.split('.');
         parts.shift(); // remove root
         var ret = schema;
 
-        if (parts.some(function (key) {
-                if (!ret.properties) return false;
-                ret = ret.properties[key];
-                return typeof(config) !== 'object';
-            })) {
+        let isFound = parts.some(function (key) {
+            if (!ret.properties) return true;
+            ret = ret.properties[key];
+            return false;
+        });
+
+        if (isFound) {
             return ret;
         }
         return null;
@@ -266,9 +286,9 @@ var JsonSchemaEditor = function (schema) {
 
     me.showConfigDialog = function (fieldType, configPath, callback) {
         console.log('showConfigDialog', configPath);
-        console.log('config', getConfig(me.schema, configPath));
         var fieldName = configPath.split('.').pop();
         var config = getConfig(me.schema, configPath);
+        console.log('config', config);
 
         if (me.modal) {
             me.modal.remove();
@@ -288,9 +308,14 @@ var JsonSchemaEditor = function (schema) {
             if (fieldType === 'string') {
                 newValue.properties = null;
             }
-            console.log('before clean up', newValue);
+            console.log('before clean up', config, newValue);
             newValue = cleanUpProperties(fieldType, newValue);
-            mergeConfig(me.schema, configPath, newValue);
+            if (config.type === 'array') {
+                mergeConfigArrayType(me.schema, configPath, newValue);
+            } else {
+                mergeConfig(me.schema, configPath, newValue);
+            }
+
 
             console.log('new schema', me.schema);
             console.log('TEST validation', me.editor.validate());

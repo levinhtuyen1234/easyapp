@@ -3977,7 +3977,9 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
             }
             self.onChange(true);
         });
-        self.controls.appendChild(this.delete_last_row_button);
+        // if (!this.options.disable_config) {
+        //     self.controls.appendChild(this.delete_last_row_button);
+        // }
 
         this.remove_all_rows_button = this.getButton(this.translate('button_delete_all'), 'delete', this.translate('button_delete_all_title'));
         this.remove_all_rows_button.addEventListener('click', function (e) {
@@ -3987,11 +3989,9 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
             self.onChange(true);
         });
 
-        if (!this.options.disable_config) {
-            self.controls.appendChild(this.remove_all_rows_button);
-        } else {
-
-        }
+        // if (!this.options.disable_config) {
+        //     self.controls.appendChild(this.remove_all_rows_button);
+        // }
 
 
         if (self.tabs) {
