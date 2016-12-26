@@ -24,9 +24,9 @@ const Ajax = Promise.coroutine(function*(opts) {
 });
 
 const restAdapter = {
-    loginUrl:    'http://api.easywebhub.com/auth/signin',
-    registerUrl: 'http://api.easywebhub.com/users',
-    addSiteUrl:  'http://api.easywebhub.com/websites',
+    loginUrl:    'https://api.easywebhub.com/auth/signin',
+    registerUrl: 'https://api.easywebhub.com/users',
+    addSiteUrl:  'https://api.easywebhub.com/websites',
 
     accountObjectTransformer: function (account) {
         console.log('accountObjectTransformer', account);
