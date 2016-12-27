@@ -120,6 +120,9 @@
     var ToJsonSchema = require(__dirname + '/assets/js/obj2jsonschema.js');
     require(__dirname + '/assets/js/json-schema-editor.js');
 
+//    console.log('TEST', ToJsonSchema(JSON.stringify({
+//        'aaa': ['1', '2']
+//    })));
     window.DB = new PouchDB({name: 'DB', size: 1000, revs_limit: 8, adapter: 'websql'});
     DB.upsert = function (doc) {
         return DB.get(doc).then(function (existsDoc) {

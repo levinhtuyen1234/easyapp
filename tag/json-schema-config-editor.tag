@@ -82,6 +82,60 @@
             return false;
         };
 
+        // insert maxItem config = 1 to every field with type == array
+        const schemaLimitMaxItem = function (obj, max) {
+            if (!typeof(obj) === 'object') return;
+            if (obj && obj.type && obj.type === 'array') {
+                obj.maxItems = max;
+            }
+
+            if (obj.properties) {
+                _.forOwn(obj.properties, prop => {
+                    schemaLimitMaxItem(prop, max);
+                })
+            }
+
+            if (obj.items && obj.items.properties) {
+                _.forOwn(obj.items.properties, prop => {
+                    schemaLimitMaxItem(prop, max);
+                });
+            }
+        };
+
+        // gen default value for schema to keep array editor show
+        const getFieldDefaultValue = function (fieldSchema) {
+            fieldSchema.type = fieldSchema.type || 'string';
+            switch (fieldSchema.type) {
+                case 'string':
+                    return '';
+                case 'boolean':
+                    return '';
+                case 'number':
+                case 'integer':
+                    return 0;
+            }
+        };
+
+        const getDefaultSchemaValue = function (schema, ret) {
+            if (schema.properties) {
+                _.forOwn(schema.properties, (prop, propKey) => {
+                    ret[propKey] = getDefaultSchemaValue(prop, {});
+                });
+                return ret;
+            } else if (schema.items) {
+                if (schema.items.properties) {
+                    _.forOwn(schema.items.properties, (prop, propKey) => {
+                        ret[propKey] = getDefaultSchemaValue(prop, {});
+                    });
+                    return [ret];
+                } else {
+                    return [getFieldDefaultValue(schema.items)];
+                }
+            } else {
+                return getFieldDefaultValue(schema);
+            }
+        };
+
         me.loadContentConfig = function (contentConfig) {
             curContentConfig = contentConfig;
             console.log('json-schema-config-editor loadContentConfig');
@@ -93,6 +147,8 @@
 
             fieldSchemaEditor = new JsonSchemaEditor(curContentConfig);
 
+            schemaLimitMaxItem(curContentConfig, 1);
+//            console.log('DEFAULT VALUE', getDefaultSchemaValue(curContentConfig, {}));
             editor = new JSONEditor(me.editorElm, {
                 schema:            curContentConfig,
                 theme:             'bootstrap3',
@@ -100,6 +156,8 @@
                 disable_config:    false,
                 disable_edit_json: true,
             });
+
+            editor.setValue(getDefaultSchemaValue(curContentConfig, {}));
         };
 
         me.getContentConfig = function () {

@@ -515,6 +515,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
             type:          'array',
             uniqueItems:   true,
             propertyOrder: 100,
+            format:        'tabs',
             items:         {
                 type: 'string'
             },
@@ -530,7 +531,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
                 hidden: false
             }
         },
-        content_:        {
+        content_:    {
             type:          'boolean',
             format:        'checkbox',
             propertyOrder: 100,
@@ -692,7 +693,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
 `;
     let layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
     let newContentFilePath = isFrontPage ? Path.join('content', contentBaseName) + '.md' :
-    Path.join('content', layoutFolder, contentBaseName) + '.md';
+        Path.join('content', layoutFolder, contentBaseName) + '.md';
     let fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
 
     // create folder for new content if not exists
