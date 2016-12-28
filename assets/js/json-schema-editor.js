@@ -230,7 +230,7 @@ var JsonSchemaEditor = function (schema) {
         var ret = schema;
 
         return parts.some(function (key, index) {
-            if (!ret.properties) return false;
+            if (!ret.properties && !ret.items) return true;
             if (index === parts.length - 1) {
                 // // merge value from object configValue to ret.properties[key]
                 // for (var configKey in configValue) {
@@ -241,9 +241,16 @@ var JsonSchemaEditor = function (schema) {
                 ret.properties[key] = configValue;
                 return true;
             } else {
-                ret = ret.properties[key];
+                if (key == '0'){
+                    ret = ret.items;
+                    return false;
+                } else if(ret.properties[key]) {
+                    ret = ret.properties[key];
+                    return false;
+                } else {
+                    return true;
+                }
             }
-            return typeof(ret) !== 'object';
         })
     }
 
@@ -270,15 +277,27 @@ var JsonSchemaEditor = function (schema) {
         parts.shift(); // remove root
         var ret = schema;
 
-        let isFound = parts.some(function (key) {
-            if (!ret.properties) return true;
-            ret = ret.properties[key];
-            return false;
-        });
-
-        if (isFound) {
+        if (parts.some(function (key) {
+                if (!ret.properties && !ret.items) {
+                    console.log('quit here');
+                    return true;
+                }
+                console.log('key', key);
+                if (key === '0') {
+                    ret = ret.items;
+                    console.log('00000', !ret.properties && !ret.items, ret);
+                    return false;
+                } else if(ret.properties[key]){
+                    ret = ret.properties[key];
+                    return false;
+                } else {
+                    return true;
+                }
+            }) == false) {
+            console.log('found', ret);
             return ret;
         }
+        console.log('not found', ret);
         return null;
     }
 
@@ -310,11 +329,11 @@ var JsonSchemaEditor = function (schema) {
             }
             console.log('before clean up', config, newValue);
             newValue = cleanUpProperties(fieldType, newValue);
-            if (config.type === 'array') {
-                mergeConfigArrayType(me.schema, configPath, newValue);
-            } else {
+            // if (config.type === 'array') {
+            //     mergeConfigArrayType(me.schema, configPath, newValue);
+            // } else {
                 mergeConfig(me.schema, configPath, newValue);
-            }
+            // }
 
 
             console.log('new schema', me.schema);
@@ -328,8 +347,8 @@ var JsonSchemaEditor = function (schema) {
         var modalContent = me.modal.find('.content');
         var editorSchema = schemas[fieldType];
 
-        var disableProperty = false;
-        if (fieldType === 'string') disableProperty = true;
+        var disableProperty = true;
+        // if (fieldType === 'string') disableProperty = true;
 
         me.editor = new JSONEditor(modalContent[0], {
             schema:                editorSchema,
