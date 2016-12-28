@@ -14,6 +14,7 @@ var schemas = {
             },
             "options":       {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
@@ -42,6 +43,7 @@ var schemas = {
             },
             "options":       {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
@@ -97,6 +99,7 @@ var schemas = {
             },
             "options":       {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
@@ -138,8 +141,9 @@ var schemas = {
                 "type":    "integer",
                 "default": "1000"
             },
-            "options":       {
+            "options":          {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
@@ -180,8 +184,9 @@ var schemas = {
                 "type":    "integer",
                 "default": "1000"
             },
-            "options":       {
+            "options":          {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
@@ -225,6 +230,7 @@ var schemas = {
             },
             "options":       {
                 "type":       "object",
+                "required":   ["hidden"],
                 "properties": {
                     "hidden": {
                         "type":    "boolean",

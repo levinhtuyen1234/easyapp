@@ -121,7 +121,7 @@
                 case 'string':
                     return '';
                 case 'boolean':
-                    return '';
+                    return 'true';
                 case 'number':
                 case 'integer':
                     return 0;
@@ -160,7 +160,6 @@
             fieldSchemaEditor = new JsonSchemaEditor(curContentConfig);
 
             schemaLimitMaxItem(curContentConfig, 1);
-            console.log('DEFAULT VALUE', getDefaultSchemaValue(curContentConfig, {}));
             editor = new JSONEditor(me.editorElm, {
                 schema:            curContentConfig,
                 theme:             'bootstrap3',
@@ -169,8 +168,17 @@
                 disable_edit_json: true,
                 disable_hidden:    true,
             });
+            let defaultValue = getDefaultSchemaValue(curContentConfig, {});
+            console.log('DEFAULT VALUE', defaultValue);
+//            for (let key in config) {
+//                console.log('key', key);
+//                if (!config.hasOwnProperty(key)) continue;
+//                if (config[key] != undefined) {
+//                    defaultValue[key] = config[key];
+//                }
+//            }
 
-            editor.setValue(getDefaultSchemaValue(curContentConfig, {}));
+            editor.setValue(defaultValue);
         };
 
         me.getContentConfig = function () {
