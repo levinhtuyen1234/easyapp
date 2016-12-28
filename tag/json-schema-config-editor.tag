@@ -11,25 +11,23 @@
 
             if (parts.some(function (key) {
                     if (!ret.properties && !ret.items) {
-                        console.log('quit here');
                         return true;
                     }
-                    console.log('key', key);
+//                    console.log('key', key);
                     if (key === '0') {
                         ret = ret.items;
-                        console.log('00000', !ret.properties && !ret.items, ret);
                         return false;
-                    } else if(ret.properties[key]){
+                    } else if (ret.properties[key]) {
                         ret = ret.properties[key];
                         return false;
                     } else {
                         return true;
                     }
                 }) == false) {
-                console.log('found', ret);
+//                console.log('found', ret);
                 return ret;
             }
-            console.log('not found', ret);
+//            console.log('not found', ret);
             return null;
         }
 
@@ -169,6 +167,7 @@
                 iconlib:           'fontawesome4',
                 disable_config:    false,
                 disable_edit_json: true,
+                disable_hidden:    true,
             });
 
             editor.setValue(getDefaultSchemaValue(curContentConfig, {}));

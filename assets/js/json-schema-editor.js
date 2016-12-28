@@ -11,6 +11,43 @@ var schemas = {
             "propertyOrder": {
                 "type":    "integer",
                 "default": "1000"
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
+            }
+        },
+        "required":   ["options.hidden"]
+    },
+    boolean: {
+        "$schema":    "http://json-schema.org/draft-04/schema#",
+        "type":       "boolean",
+        "properties": {
+            "description":   {
+                "type":    "string",
+                "default": ""
+            },
+            "default":       {
+                "type":    "boolean",
+                "default": "false"
+            },
+            "propertyOrder": {
+                "type":    "integer",
+                "default": "1000"
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
             }
         }
     },
@@ -57,6 +94,15 @@ var schemas = {
             "maxLength":     {
                 "type":    "integer",
                 "default": ""
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
             }
         },
         "required":   ["required", "readOnly", "format", "propertyOrder"]
@@ -91,6 +137,15 @@ var schemas = {
             "propertyOrder":    {
                 "type":    "integer",
                 "default": "1000"
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
             }
         }
     },
@@ -124,6 +179,15 @@ var schemas = {
             "propertyOrder":    {
                 "type":    "integer",
                 "default": "1000"
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
             }
         }
     },
@@ -158,12 +222,22 @@ var schemas = {
             "propertyOrder": {
                 "type":    "integer",
                 "default": "1000"
+            },
+            "options":       {
+                "type":       "object",
+                "properties": {
+                    "hidden": {
+                        "type":    "boolean",
+                        "default": "false"
+                    }
+                }
             }
         }
     }
 };
 
 function getDefaultValueFromSchema(schema) {
+    console.log('getDefaultValueFromSchema', schema);
     let ret = {};
     if (!schema.properties) return ret;
     for (var prop in schema.properties) {
@@ -241,10 +315,10 @@ var JsonSchemaEditor = function (schema) {
                 ret.properties[key] = configValue;
                 return true;
             } else {
-                if (key == '0'){
+                if (key == '0') {
                     ret = ret.items;
                     return false;
-                } else if(ret.properties[key]) {
+                } else if (ret.properties[key]) {
                     ret = ret.properties[key];
                     return false;
                 } else {
@@ -287,7 +361,7 @@ var JsonSchemaEditor = function (schema) {
                     ret = ret.items;
                     console.log('00000', !ret.properties && !ret.items, ret);
                     return false;
-                } else if(ret.properties[key]){
+                } else if (ret.properties[key]) {
                     ret = ret.properties[key];
                     return false;
                 } else {
@@ -332,7 +406,7 @@ var JsonSchemaEditor = function (schema) {
             // if (config.type === 'array') {
             //     mergeConfigArrayType(me.schema, configPath, newValue);
             // } else {
-                mergeConfig(me.schema, configPath, newValue);
+            mergeConfig(me.schema, configPath, newValue);
             // }
 
 
@@ -368,14 +442,17 @@ var JsonSchemaEditor = function (schema) {
         me.modal.modal('show');
 
         var defaultValue = getDefaultValueFromSchema(editorSchema);
+        console.log('defaultValue', defaultValue);
         // defaultValue.name = fieldName;
         // chi merge cac config key có trong defaultValue va exists config
         for (var key in config) {
+            console.log('key', key);
             if (!config.hasOwnProperty(key)) continue;
-            if (config[key] != undefined && defaultValue[key]) {
+            if (config[key] != undefined) {
                 defaultValue[key] = config[key];
             }
         }
+        console.log('defaultValue after merge', defaultValue);
         me.editor.setValue(defaultValue);
     };
 

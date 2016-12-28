@@ -499,7 +499,10 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
     let defaultProperties = {
         title:       {
             type:          'string',
-            propertyOrder: 100
+            propertyOrder: 100,
+            options:       {
+                hidden: false
+            }
         },
         slug:        {
             type:          'string',
@@ -542,9 +545,9 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
                 hidden: false
             }
         },
-        content_:    {
-            type:          'boolean',
-            format:        'checkbox',
+        __content__:    {
+            type:          'string',
+            format:        'text',
             propertyOrder: 100,
             options:       {
                 hidden: true

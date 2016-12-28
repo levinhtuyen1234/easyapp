@@ -43,6 +43,7 @@
                 schema:             contentConfig,
                 theme:              'bootstrap3',
                 iconlib:            'fontawesome4',
+                disable_hidden:     false,
                 disable_edit_json:  true,
                 disable_properties: true,
                 disable_config:     true
