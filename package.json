@@ -29,6 +29,7 @@
     "electron": "^1.4.4",
     "electron-shortcut-normalizer": "^1.0.0",
     "fs-extra": "^1.0.0",
+    "gray-matter": "^2.1.0",
     "jsftp": "^1.5.4",
     "lodash": "^4.16.4",
     "moment": "^2.15.2",

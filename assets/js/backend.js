@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const Path = require('path');
 const ChildProcess = require('child_process');
+const Matter = require('gray-matter');
 const Remote = require('electron').remote;
 const Shell = Remote.shell;
 
@@ -411,22 +412,32 @@ String.prototype.regexIndexOf = function (regex, startpos) {
     return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
 };
 
-let FORM_START = /^---json/;
-let FORM_END_1 = /---$/;
-let FORM_END_2 = /---[\r\n]/;
-function SplitContentFile(fileContent) {
-    let start = fileContent.regexIndexOf(FORM_START);
-    if (start == -1) return null;
-    start += 7;
+// let FORM_START = /^---json/;
+// let FORM_END_1 = /---$/;
+// let FORM_END_2 = /---[\r\n]/;
+// function SplitContentFile(fileContent) {
+//     let start = fileContent.regexIndexOf(FORM_START);
+//     if (start == -1) return null;
+//     start += 7;
+//
+//     let end = fileContent.regexIndexOf(FORM_END_1, start);
+//     if (end == -1)
+//         end = fileContent.regexIndexOf(FORM_END_2, start);
+//     if (end == -1) return null;
+//     return {
+//         metaData:     JSON.parse(fileContent.substr(start, end - start).trim()),
+//         markDownData: fileContent.substr(end + 3).trim()
+//     }
+// }
 
-    let end = fileContent.regexIndexOf(FORM_END_1, start);
-    if (end == -1)
-        end = fileContent.regexIndexOf(FORM_END_2, start);
-    if (end == -1) return null;
-    return {
-        metaData:     JSON.parse(fileContent.substr(start, end - start).trim()),
-        markDownData: fileContent.substr(end + 3).trim()
-    }
+function SplitContentFile(fileContent) {
+    let parsed = Matter(fileContent);
+    let ret = {
+        metaData: parsed.data,
+        markDownData: parsed.content
+    };
+    ret['__content__'] = parsed.content;
+    return ret;
 }
 
 function getContentFile(siteName, contentFilePath) {
@@ -577,7 +588,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
 
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     let name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
-    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
+    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
 
     // doc file content lay metaData
     let content = getContentFile(siteName, contentFilePath);
@@ -623,7 +634,7 @@ function getSiteList() {
 
 function saveConfigFile(siteName, layoutPath, contentConfig) {
     let name = Path.basename(layoutPath, Path.extname(layoutPath));
-    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
+    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
     Fs.writeFileSync(contentConfigFullPath, contentConfig);
 }
 

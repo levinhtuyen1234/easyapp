@@ -10,12 +10,26 @@
             var ret = schema;
 
             if (parts.some(function (key) {
-                    if (!ret.properties) return false;
-                    ret = ret.properties[key];
-                    return typeof(config) !== 'object';
-                })) {
+                    if (!ret.properties && !ret.items) {
+                        console.log('quit here');
+                        return true;
+                    }
+                    console.log('key', key);
+                    if (key === '0') {
+                        ret = ret.items;
+                        console.log('00000', !ret.properties && !ret.items, ret);
+                        return false;
+                    } else if(ret.properties[key]){
+                        ret = ret.properties[key];
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }) == false) {
+                console.log('found', ret);
                 return ret;
             }
+            console.log('not found', ret);
             return null;
         }
 
@@ -50,7 +64,7 @@
             window.jsonSchemaOnHideAddProperty = function (configPath) {
                 // apply change to schema
                 var fieldSchema = getConfig(curContentConfig, configPath);
-                console.log('jsonSchemaOnHideAddProperty fieldSchema', fieldSchema);
+                console.log('jsonSchemaOnHideAddProperty fieldSchema', configPath, fieldSchema);
                 removedProperties.forEach(function (name) {
                     console.log('remove', name);
                     delete fieldSchema.properties[name];
@@ -148,7 +162,7 @@
             fieldSchemaEditor = new JsonSchemaEditor(curContentConfig);
 
             schemaLimitMaxItem(curContentConfig, 1);
-//            console.log('DEFAULT VALUE', getDefaultSchemaValue(curContentConfig, {}));
+            console.log('DEFAULT VALUE', getDefaultSchemaValue(curContentConfig, {}));
             editor = new JSONEditor(me.editorElm, {
                 schema:            curContentConfig,
                 theme:             'bootstrap3',

@@ -594,7 +594,7 @@
             if (filePath.endsWith('.md')) {
 //                console.log('openContentTab');
                 me.openContentTab();
-//            } else if (filePath.endsWith('.config.json')) {
+//            } else if (filePath.endsWith('.schema.json')) {
 //                me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
                 me.currentLayout = me.currentFilePath.split(/[/\\]/);
@@ -659,7 +659,7 @@
                         BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
                     } else if (me.currentFilePath.endsWith('.md')) {
                         console.log('save content config');
-                        filePath += '.config.json';
+                        filePath += '.schema.json';
                         BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
                     }
                     break;
