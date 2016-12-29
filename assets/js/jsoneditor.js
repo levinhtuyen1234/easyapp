@@ -3762,9 +3762,10 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
                     controls_needed = true;
                 }
             }
-
             // If there are maxItems in the array, hide the add button beneath the rows
-            if ((this.getMax() && this.getMax() <= this.rows.length) || this.hide_add_button) {
+            if ((this.getMax() && this.getMax() <= this.rows.length) || this.hide_add_button ||
+                (this.jsoneditor.options.disable_add_more_than_one && this.rows.length >= 1))
+            {
                 this.add_row_button.style.display = 'none';
             }
             else {

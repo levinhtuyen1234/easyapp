@@ -40,6 +40,7 @@
                 fieldSchemaEditor.showConfigDialog(fieldType, options.path, function (newSchema) {
                     console.log('TODO reload schema gen new form');
                     curContentConfig = newSchema;
+                    schemaSetArrayFormat(curContentConfig, 'table');
                     me.loadContentConfig(curContentConfig);
                 });
             };
@@ -74,6 +75,7 @@
                         fieldSchema.properties[name] = {type: 'string', default: ''};
                 });
 
+                schemaSetArrayFormat(curContentConfig, 'table');
                 // refresh editor
                 me.loadContentConfig(curContentConfig);
             };
@@ -110,6 +112,25 @@
             if (obj.items && obj.items.properties) {
                 _.forOwn(obj.items.properties, prop => {
                     schemaLimitMaxItem(prop, max);
+                });
+            }
+        };
+
+        const schemaSetArrayFormat = function (obj, type) {
+            if (!typeof(obj) === 'object') return;
+            if (obj && obj.type && obj.type === 'array') {
+                obj.format = type;
+            }
+
+            if (obj.properties) {
+                _.forOwn(obj.properties, prop => {
+                    schemaSetArrayFormat(prop, type);
+                })
+            }
+
+            if (obj.items && obj.items.properties) {
+                _.forOwn(obj.items.properties, prop => {
+                    schemaSetArrayFormat(prop, type);
                 });
             }
         };
@@ -159,14 +180,17 @@
 
             fieldSchemaEditor = new JsonSchemaEditor(curContentConfig);
 
-            schemaLimitMaxItem(curContentConfig, 1);
+            schemaSetArrayFormat(curContentConfig, 'tabs');
+
             editor = new JSONEditor(me.editorElm, {
-                schema:            curContentConfig,
-                theme:             'bootstrap3',
-                iconlib:           'fontawesome4',
-                disable_config:    false,
-                disable_edit_json: true,
-                disable_hidden:    true,
+                schema:                    curContentConfig,
+                theme:                     'bootstrap3',
+                iconlib:                   'fontawesome4',
+                disable_config:            false,
+                disable_edit_json:         true,
+                disable_hidden:            true,
+                disable_add_more_than_one: true
+
             });
             let defaultValue = getDefaultSchemaValue(curContentConfig, {});
             console.log('DEFAULT VALUE', defaultValue);

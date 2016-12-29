@@ -13,6 +13,40 @@
 
         });
 
+        // gen default value for schema to keep array editor show
+        const getFieldDefaultValue = function (fieldSchema) {
+            fieldSchema.type = fieldSchema.type || 'string';
+            switch (fieldSchema.type) {
+                case 'string':
+                    return '';
+                case 'boolean':
+                    return 'true';
+                case 'number':
+                case 'integer':
+                    return 0;
+            }
+        };
+
+        const getDefaultSchemaValue = function (schema, ret) {
+            if (schema.properties) {
+                _.forOwn(schema.properties, (prop, propKey) => {
+                    ret[propKey] = getDefaultSchemaValue(prop, {});
+                });
+                return ret;
+            } else if (schema.items) {
+                if (schema.items.properties) {
+                    _.forOwn(schema.items.properties, (prop, propKey) => {
+                        ret[propKey] = getDefaultSchemaValue(prop, {});
+                    });
+                    return [ret];
+                } else {
+                    return [getFieldDefaultValue(schema.items)];
+                }
+            } else {
+                return getFieldDefaultValue(schema);
+            }
+        };
+
         me.checkSave = function (e) {
             // check ctrl + S -> save
             if (!(e.which == 115 && e.ctrlKey) && !(e.which == 19)) return true;
@@ -34,7 +68,7 @@
         };
 
         me.genForm = function (metaData, contentConfig) {
-            console.log('GENFORM');
+            console.log('GENFORM, metaData', metaData);
             if (editor) {
                 editor.destroy();
                 editor = null;
@@ -48,7 +82,12 @@
                 disable_properties: true,
                 disable_config:     true
             });
-            editor.setValue(metaData);
+
+            let defaultValue = getDefaultSchemaValue(contentConfig, {});
+            let mergedMetaData = _.merge(defaultValue, metaData);
+            console.log('mergedMetaData',mergedMetaData);
+
+            editor.setValue(mergedMetaData);
         }
     </script>
 </json-schema-form-editor>
