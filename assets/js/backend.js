@@ -433,7 +433,7 @@ String.prototype.regexIndexOf = function (regex, startpos) {
 function SplitContentFile(fileContent) {
     let parsed = Matter(fileContent);
     let ret = {
-        metaData: parsed.data,
+        metaData:     parsed.data,
         markDownData: parsed.content
     };
     ret['__content__'] = parsed.content;
@@ -529,7 +529,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
             type:          'array',
             uniqueItems:   true,
             propertyOrder: 100,
-            format:        'tabs',
+            format:        'table',
             items:         {
                 type: 'string'
             },
@@ -545,7 +545,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
                 hidden: false
             }
         },
-        __content__:    {
+        __content__: {
             type:          'string',
             format:        'text',
             propertyOrder: 100,
