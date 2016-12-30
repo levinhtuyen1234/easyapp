@@ -22,6 +22,8 @@
         me.markdownEditor = null;
         me.siteName = me.opts.siteName;
 
+        let contentFieldConfig;
+
         me.on('mount', function () {
             $(me.root).simplebar();
             $(me.root.querySelector('.simplebar-scroll-content'))
@@ -32,23 +34,21 @@
         me.setContent = function (content, contentConfig) {
             console.log('me.tags', me.tags);
             // gen content form
-//            var contentFieldConfig = contentConfig.properties.filter(function (config) {
-//                return config.name === '__content__'
-//            })[0];
-
+            contentFieldConfig = contentConfig.properties['__content__'];
+            console.log('contentFieldConfig', contentFieldConfig);
 
 //            me.tags['form-editor'].genForm(content.metaData, contentConfig);
+            // remove __content__ in metadata
+            delete content.metaData['__content__'];
+            delete contentConfig.properties['__content__'];
             me.tags['json-schema-form-editor'].genForm(content.metaData, contentConfig);
 
+            if (contentFieldConfig.options && contentFieldConfig.options.hidden) {
+                $(contentMarkDownEditorField).hide();
+            } else {
+                $(contentMarkDownEditorField).show();
+            }
 
-            // set markdown editor content
-//            if (contentFieldConfig.hidden) {
-//                console.log('HIDE contentMarkDownEditorField');
-//                $(contentMarkDownEditorField).hide();
-//            } else {
-//                console.log('SHOW contentMarkDownEditorField');
-//                $(contentMarkDownEditorField).show();
-//            }
             me.tags['markdown-editor'].setValue(content.markDownData);
         };
 
@@ -58,10 +58,13 @@
         };
 
         me.getContent = function () {
+            let contentMarkdownData = me.tags['markdown-editor'].getValue();
+            let metaData = me.tags['json-schema-form-editor'].getForm();
+            metaData['__content__'] = contentMarkdownData;
             return {
 //                metaData:     me.tags['form-editor'].getForm(),
-                metaData:     me.tags['json-schema-form-editor'].getForm(),
-                markdownData: me.tags['markdown-editor'].getValue()
+                metaData:     metaData,
+                markdownData: contentMarkdownData
             };
         }
     </script>

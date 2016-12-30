@@ -1907,7 +1907,7 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         $(this.label).after(div);
         $(div).find('.currentFormat').text(me.options.schema.type);
         $(div).find('li>a').on('click', function (e) {
-            if(window.showJsonSchemaConfigDialog)
+            if (window.showJsonSchemaConfigDialog)
                 window.showJsonSchemaConfigDialog(e.target.innerText, me.options);
         });
     },
@@ -2062,6 +2062,7 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
 
                 this.input = this.theme.getTextareaInput();
             }
+
             // HTML5 Input type
             else {
                 this.input_type = this.format;
@@ -2190,6 +2191,35 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
     },
     afterInputReady:      function () {
         var self = this, options;
+
+        // console.log('STRING this.options', this.options);
+        // datetime
+        var onDateChange = function (value) {
+            // van hien thi value theo format tren form
+            // self.input.value = value.date.toISOString();
+            // value luu file la iso format string
+            self.value = value.date.toISOString();
+            self.is_dirty = true;
+            self.onChange(true);
+        };
+
+        if (this.format === 'datetime') {
+            console.log('INIT DATETIME INPUT');
+            $(self.input).datetimepicker({
+                format: 'DD-MM-YYYY HH:mm:ss',
+                // calendarType: 'datetime'
+            }).on('dp.change', onDateChange);
+        } else if (this.format === 'time') {
+            $(self.input).datetimepicker({
+                format: 'HH:mm:ss',
+                // calendarType: 'time'
+            }).on('dp.change', onDateChange);
+        } else if (this.format === 'date') {
+            $(self.input).datetimepicker({
+                format: 'DD-MM-YYYY',
+                // calendarType: 'date'
+            }).on('dp.change', onDateChange);
+        }
 
         // Code editor
         if (this.source_code) {
@@ -3369,6 +3399,7 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
         }
         this._super();
     },
+
     preBuild:             function () {
         this._super();
 
@@ -3376,8 +3407,12 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
         this.row_cache = [];
 
         this.hide_delete_buttons = this.options.disable_array_delete || this.jsoneditor.options.disable_array_delete;
-        this.hide_delete_all_rows_buttons = this.hide_delete_buttons || this.options.disable_array_delete_all_rows || this.jsoneditor.options.disable_array_delete_all_rows;
-        this.hide_delete_last_row_buttons = this.hide_delete_buttons || this.options.disable_array_delete_last_row || this.jsoneditor.options.disable_array_delete_last_row;
+        // this.hide_delete_all_rows_buttons = this.hide_delete_buttons || this.options.disable_array_delete_all_rows || this.jsoneditor.options.disable_array_delete_all_rows;
+        // this.hide_delete_last_row_buttons = this.hide_delete_buttons || this.options.disable_array_delete_last_row || this.jsoneditor.options.disable_array_delete_last_row;
+
+        this.hide_delete_all_rows_buttons = true;
+        this.hide_delete_last_row_buttons = true;
+
         this.hide_move_buttons = this.options.disable_array_reorder || this.jsoneditor.options.disable_array_reorder;
         this.hide_add_button = this.options.disable_array_add || this.jsoneditor.options.disable_array_add;
     },
