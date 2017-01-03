@@ -117,7 +117,7 @@
         };
 
         const schemaSetArrayFormat = function (obj, type) {
-            if (!typeof(obj) === 'object') return;
+            if (typeof(obj) !== 'object') return;
             if (obj && obj.type && obj.type === 'array') {
                 obj.format = type;
             }
@@ -207,6 +207,7 @@
 
         me.getContentConfig = function () {
             console.log('TODO json-schema-config-editor getContentConfig');
+            schemaSetArrayFormat(curContentConfig, 'table');
             return curContentConfig;
         };
 

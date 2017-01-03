@@ -459,7 +459,7 @@
                 ShowTab('content-view');
             } catch (ex) {
                 console.log(ex);
-                bootbox.alert('Open content failed, error ' + ex.message, function () {
+                bootbox.alert('Open content failed, error ' + ex.message || ex, function () {
                 });
                 me.openRawContentTab({
                     readOnly: false,

@@ -493,9 +493,28 @@ let mergeConfig = function (existsConfigs, newGenConfigs) {
     return existsConfigs.concat(newConfigObjects);
 };
 
+const schemaSetArrayFormat = function (obj, type) {
+    if (typeof(obj) !== 'object') return;
+    if (obj && obj.type && obj.type === 'array') {
+        obj.format = type;
+    }
+
+    if (obj.properties) {
+        _.forOwn(obj.properties, prop => {
+            schemaSetArrayFormat(prop, type);
+        })
+    }
+
+    if (obj.items && obj.items.properties) {
+        _.forOwn(obj.items.properties, prop => {
+            schemaSetArrayFormat(prop, type);
+        });
+    }
+};
+
 function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
     let schema = JSON.parse(window.ToJsonSchema(JSON.stringify(metaData)));
-
+    schemaSetArrayFormat(schema, 'table');
     let defaultProperties = {
         title:       {
             type:          'string',
@@ -507,6 +526,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
         slug:        {
             type:          'string',
             propertyOrder: 100,
+            readOnly:      true,
             options:       {
                 hidden: false
             }

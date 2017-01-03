@@ -18,7 +18,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -35,7 +35,11 @@ var schemas = {
             },
             "default":       {
                 "type":    "boolean",
-                "default": "false"
+                "default": false
+            },
+            "readOnly":       {
+                "type":    "boolean",
+                "default": false
             },
             "propertyOrder": {
                 "type":    "integer",
@@ -47,7 +51,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -103,7 +107,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -121,14 +125,20 @@ var schemas = {
                 ],
                 "default": "text"
             },
+            "readOnly":       {
+                "type":    "boolean",
+                "default": false
+            },
             "multipleOf":       {
                 "type": "integer"
             },
             "maximum":          {
-                "type": "integer"
+                "type": "integer",
+                "default": ""
             },
             "minimum":          {
-                "type": "integer"
+                "type": "integer",
+                "default": ""
             },
             "exclusiveMaximum": {
                 "type":        "boolean",
@@ -147,7 +157,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -164,6 +174,10 @@ var schemas = {
                 ],
                 "default": "text"
             },
+            "readOnly":       {
+                "type":    "boolean",
+                "default": false
+            },
             "multipleOf":       {
                 "type": "integer"
             },
@@ -190,7 +204,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -234,7 +248,7 @@ var schemas = {
                 "properties": {
                     "hidden": {
                         "type":    "boolean",
-                        "default": "false"
+                        "default": false
                     }
                 }
             }
@@ -258,6 +272,17 @@ function getDefaultValueFromSchema(schema) {
 
 // chinh sua lai property cho phu hop voi tung type
 function cleanUpProperties(configType, configValue) {
+    console.log('cleanUpProperties', configType, configValue);
+    // remove tat ca key ngoai allowed
+    var allowedKeys = _.keys(schemas[configType].properties);
+    _.forOwn(configValue, (value, key) => {
+        if(allowedKeys.indexOf(key) === -1) {
+            console.log('delete', key);
+            delete configValue[key];
+        }
+    });
+
+    // old cleanup code
     configValue.type = configType;
     switch (configType) {
         case 'string':
@@ -266,7 +291,7 @@ function cleanUpProperties(configType, configValue) {
         case 'number':
             delete configValue.properties;
             break;
-        case 'interger':
+        case 'integer':
             delete configValue.properties;
             break;
         case 'object':
@@ -311,6 +336,7 @@ var JsonSchemaEditor = function (schema) {
 
         return parts.some(function (key, index) {
             if (!ret.properties && !ret.items) return true;
+            console.log('key', key, 'index', index, parts.length - 1);
             if (index === parts.length - 1) {
                 // // merge value from object configValue to ret.properties[key]
                 // for (var configKey in configValue) {
@@ -318,7 +344,12 @@ var JsonSchemaEditor = function (schema) {
                 //     ret.properties[key][configKey] = configValue[configKey];
                 // }
                 // simple replace
-                ret.properties[key] = configValue;
+                if (key == '0') {
+                    // edit type of item in array
+                    ret.items = configValue;
+                } else {
+                    ret.properties[key] = configValue;
+                }
                 return true;
             } else {
                 if (key == '0') {
@@ -359,13 +390,10 @@ var JsonSchemaEditor = function (schema) {
 
         if (parts.some(function (key) {
                 if (!ret.properties && !ret.items) {
-                    console.log('quit here');
                     return true;
                 }
-                console.log('key', key);
                 if (key === '0') {
                     ret = ret.items;
-                    console.log('00000', !ret.properties && !ret.items, ret);
                     return false;
                 } else if (ret.properties[key]) {
                     ret = ret.properties[key];
@@ -374,10 +402,8 @@ var JsonSchemaEditor = function (schema) {
                     return true;
                 }
             }) == false) {
-            console.log('found', ret);
             return ret;
         }
-        console.log('not found', ret);
         return null;
     }
 
@@ -458,6 +484,8 @@ var JsonSchemaEditor = function (schema) {
                 defaultValue[key] = config[key];
             }
         }
+        // remove cac config khac type
+        cleanUpProperties(fieldType, defaultValue);
         console.log('defaultValue after merge', defaultValue);
         me.editor.setValue(defaultValue);
     };
