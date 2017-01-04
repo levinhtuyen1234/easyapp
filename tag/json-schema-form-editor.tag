@@ -4,6 +4,7 @@
     <script>
         var me = this;
         var editor;
+        me.siteName = me.opts.siteName;
 
         me.on('mount', function () {
 
@@ -80,8 +81,23 @@
                 disable_hidden:     false,
                 disable_edit_json:  true,
                 disable_properties: true,
-                disable_config:     true
+                disable_config:     true,
+                upload:                    function (filePath, file, callback) {
+//                    console.log('start upload', filePath, file);
+//                    if (!filePaths || filePaths.length != 1) return;
+//                    var filePath = filePaths[0];
+                    console.log('me.siteName', me.siteName, 'filePath', filePath, 'file', file);
+                    BackEnd.addMediaFile(me.siteName, file.path, function (error, relativePath) {
+                        if (error) {
+                            console.log('addMediaFile', error);
+                        } else {
+                            callback.success(relativePath);
+                        }
+                    });
+                }
             });
+
+            window.myeditor = editor;
 
             let defaultValue = getDefaultSchemaValue(contentConfig, {});
             let mergedMetaData = _.merge(defaultValue, metaData);

@@ -5987,8 +5987,15 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         this.title = this.header = this.label = this.theme.getFormInputLabel(this.getTitle());
 
         // Input that holds the base64 string
-        this.input = this.theme.getFormInputField('hidden');
-        this.container.appendChild(this.input);
+        this.input = this.theme.getFormInputField('text');
+        // this.input.readOnly = true;
+
+        this.input.addEventListener('keyup', function (e) {
+            // self.value = self.input.value;
+            self.setValue(self.input.value);
+            if (self.parent) self.parent.onChildEditorChange(self);
+            else self.jsoneditor.onChange();
+        });
 
         // Don't show uploader if this is readonly
         if (!this.schema.readOnly && !this.schema.readonly) {
@@ -5997,6 +6004,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
             // File uploader
             this.uploader = this.theme.getFormInputField('file');
+            this.uploader.style.display = 'none';
 
             this.uploader.addEventListener('change', function (e) {
                 e.preventDefault();
@@ -6019,12 +6027,44 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         if (!description) description = '';
 
         this.preview = this.theme.getFormInputDescription(description);
-        this.container.appendChild(this.preview);
+        // this.container.appendChild(this.preview);
 
-        this.control = this.theme.getFormControl(this.label, this.uploader || this.input, this.preview);
+        // TEMPLATE
+        // <div class="input-group">
+        //     <input type="text" class="form-control" readonly>
+        //     <label class="input-group-btn">
+        //         <span class="btn btn-primary">
+        //             Browse&hellip; <input type="file" style="display: none;" multiple>
+        //         </span>
+        //     </label>
+        // </div>
+
+
+        // custom upload layout
+        var inputGroup = document.createElement('div');
+        inputGroup.className += 'input-group';
+
+        var inputGroupBtn = document.createElement('label');
+        inputGroupBtn.className += 'input-group-btn';
+        var browseSpan = document.createElement('span');
+        browseSpan.className += 'btn btn-primary';
+
+        inputGroup.appendChild(this.input);
+        inputGroup.appendChild(inputGroupBtn);
+        inputGroupBtn.appendChild(browseSpan);
+        browseSpan.appendChild(document.createTextNode('Browse…'));
+        browseSpan.appendChild(this.uploader);
+
+        if (!this.schema.readOnly && !this.schema.readonly) {
+            browseSpan.disabled = true;
+        }
+
+        // this.control = this.theme.getFormControl(this.label, this.uploader || this.input, this.preview);
+        this.control = this.theme.getFormControl(this.label, inputGroup, this.preview);
         this.container.appendChild(this.control);
     },
     refreshPreview: function () {
+        this.preview.style.display = 'inherit';
         if (this.last_preview === this.preview_value) return;
         this.last_preview = this.preview_value;
 
@@ -6073,6 +6113,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
 
                     if (self.progressBar) self.preview.removeChild(self.progressBar);
                     uploadButton.removeAttribute("disabled");
+                    self.preview.style.display = 'none';
                 },
                 failure:        function (error) {
                     self.theme.addInputError(self.uploader, error);
@@ -6843,8 +6884,13 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
         var el = this._super(type);
         if (type !== 'checkbox') {
             el.className += 'form-control';
-            el.style = 'margin-top: 8px';
+            // el.style = 'margin-top: 8px';
         }
+        return el;
+    },
+    getFormInputLabel: function(text){
+        var el = document.createElement('label');
+        el.appendChild(document.createTextNode(text));
         return el;
     },
     getFormControl:          function (label, input, description) {

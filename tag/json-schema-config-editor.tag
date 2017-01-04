@@ -190,7 +190,6 @@
                 disable_edit_json:         true,
                 disable_hidden:            true,
                 disable_add_more_than_one: true
-
             });
             let defaultValue = getDefaultSchemaValue(curContentConfig, {});
             console.log('DEFAULT VALUE', defaultValue);
