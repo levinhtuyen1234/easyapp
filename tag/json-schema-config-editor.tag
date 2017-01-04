@@ -1,5 +1,5 @@
 <json-schema-config-editor style="height: calc(100% - 88px); overflow-y: auto;" onkeypress="{checkSave}">
-    <div name="editorElm" class="bootstrap-iso" onkeypress="{checkSave}"></div>
+    <div name="editorElm" class="ui form" onkeypress="{checkSave}"></div>
     <script>
         var me = this;
         var editor, fieldSchemaEditor, curContentConfig;

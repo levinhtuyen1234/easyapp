@@ -1,5 +1,5 @@
 <json-schema-form-editor>
-    <div name="editorElm" class="bootstrap-iso" onkeypress="{checkSave}"></div>
+    <div name="editorElm" class="ui form" onkeypress="{checkSave}"></div>
 
     <script>
         var me = this;
