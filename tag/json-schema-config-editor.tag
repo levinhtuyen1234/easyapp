@@ -37,12 +37,12 @@
 
             window.showJsonSchemaConfigDialog = function (fieldType, options) {
                 console.log('showJsonSchemaConfigDialog', 'fieldType', fieldType, 'options', options);
-                fieldSchemaEditor.showConfigDialog(fieldType, options.path, function (newSchema) {
-                    console.log('TODO reload schema gen new form');
-                    curContentConfig = newSchema;
-                    schemaSetArrayFormat(curContentConfig, 'table');
-                    me.loadContentConfig(curContentConfig);
-                });
+//                fieldSchemaEditor.showConfigDialog(fieldType, options.path, function (newSchema) {
+//                    console.log('TODO reload schema gen new form');
+//                    curContentConfig = newSchema;
+//                    schemaSetArrayFormat(curContentConfig, 'table');
+//                    me.loadContentConfig(curContentConfig);
+//                });
             };
 
             window.jsonSchemaOnAddProperty = function (name) {
