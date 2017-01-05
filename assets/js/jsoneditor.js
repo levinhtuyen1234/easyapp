@@ -6000,7 +6000,7 @@ JSONEditor.defaults.editors.upload = JSONEditor.AbstractEditor.extend({
         // Don't show uploader if this is readonly
         if (!this.schema.readOnly && !this.schema.readonly) {
 
-            if (!this.jsoneditor.options.upload) throw "Upload handler required for upload editor";
+            // if (!this.jsoneditor.options.upload) throw "Upload handler required for upload editor";
 
             // File uploader
             this.uploader = this.theme.getFormInputField('file');
@@ -8341,7 +8341,7 @@ JSONEditor.defaults.resolvers.unshift(function(schema) {
 });
 // Editor for uploading files
 JSONEditor.defaults.resolvers.unshift(function(schema) {
-  if(schema.type === "string" && schema.format === "url" && schema.options && schema.options.upload === true) {
+  if(schema.type === "string" && schema.format === "upload") {
     if(window.FileReader) return "upload";
   }
 });

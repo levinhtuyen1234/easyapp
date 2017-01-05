@@ -97,8 +97,6 @@
                 }
             });
 
-            window.myeditor = editor;
-
             let defaultValue = getDefaultSchemaValue(contentConfig, {});
             let mergedMetaData = _.merge(defaultValue, metaData);
             console.log('mergedMetaData',mergedMetaData);
