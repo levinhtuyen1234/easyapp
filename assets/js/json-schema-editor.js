@@ -21,13 +21,19 @@ var schemas = {
                         "default": false
                     }
                 }
+            },
+            "type":          {
+                "type":    "string",
+                "default": "object",
+                "options": {
+                    "hidden": true
+                }
             }
-        },
-        "required":   ["options.hidden"]
+        }
     },
     boolean: {
         "$schema":    "http://json-schema.org/draft-04/schema#",
-        "type":       "boolean",
+        "type":       "object",
         "properties": {
             "description":   {
                 "type":    "string",
@@ -37,7 +43,7 @@ var schemas = {
                 "type":    "boolean",
                 "default": false
             },
-            "readOnly":       {
+            "readOnly":      {
                 "type":    "boolean",
                 "default": false
             },
@@ -53,6 +59,13 @@ var schemas = {
                         "type":    "boolean",
                         "default": false
                     }
+                }
+            },
+            "type":          {
+                "type":    "string",
+                "default": "boolean",
+                "options": {
+                    "hidden": true
                 }
             }
         }
@@ -72,7 +85,7 @@ var schemas = {
             "format":        {
                 "type":    "string",
                 "enum":    [
-                   "upload", "color", "date", "datetime", "datetime-local", "email", "month", "number", "range", "tel", "text", "textarea", "time", "url", "week"
+                    "upload", "color", "date", "datetime", "datetime-local", "email", "month", "number", "range", "tel", "text", "textarea", "time", "url", "week"
                 ],
                 "default": "text"
             },
@@ -110,6 +123,13 @@ var schemas = {
                         "default": false
                     }
                 }
+            },
+            "type":          {
+                "type":    "string",
+                "default": "string",
+                "options": {
+                    "hidden": true
+                }
             }
         },
         "required":   ["required", "readOnly", "format", "propertyOrder"]
@@ -125,7 +145,7 @@ var schemas = {
                 ],
                 "default": "text"
             },
-            "readOnly":       {
+            "readOnly":         {
                 "type":    "boolean",
                 "default": false
             },
@@ -133,11 +153,11 @@ var schemas = {
                 "type": "integer"
             },
             "maximum":          {
-                "type": "integer",
+                "type":    "integer",
                 "default": ""
             },
             "minimum":          {
-                "type": "integer",
+                "type":    "integer",
                 "default": ""
             },
             "exclusiveMaximum": {
@@ -159,6 +179,13 @@ var schemas = {
                         "type":    "boolean",
                         "default": false
                     }
+                }
+            },
+            "type":             {
+                "type":    "string",
+                "default": "number",
+                "options": {
+                    "hidden": true
                 }
             }
         }
@@ -174,7 +201,7 @@ var schemas = {
                 ],
                 "default": "text"
             },
-            "readOnly":       {
+            "readOnly":         {
                 "type":    "boolean",
                 "default": false
             },
@@ -207,6 +234,13 @@ var schemas = {
                         "default": false
                     }
                 }
+            },
+            "type":             {
+                "type":    "string",
+                "default": "integer",
+                "options": {
+                    "hidden": true
+                }
             }
         }
     },
@@ -220,7 +254,7 @@ var schemas = {
             },
             "items":         {
                 "type":       "object",
-                // "default":    {type: '', properties: {}},
+                "required":   ["type"],
                 "properties": {
                     "title":      {
                         "type":    "string",
@@ -236,6 +270,9 @@ var schemas = {
                     "properties": {
                         "type": "object"
                     }
+                },
+                "options":    {
+                    "hidden": true
                 }
             },
             "propertyOrder": {
@@ -250,6 +287,13 @@ var schemas = {
                         "type":    "boolean",
                         "default": false
                     }
+                }
+            },
+            "type":          {
+                "type":    "string",
+                "default": "array",
+                "options": {
+                    "hidden": true
                 }
             }
         }
@@ -276,7 +320,7 @@ function cleanUpProperties(configType, configValue) {
     // remove tat ca key ngoai allowed
     var allowedKeys = _.keys(schemas[configType].properties);
     _.forOwn(configValue, (value, key) => {
-        if(allowedKeys.indexOf(key) === -1) {
+        if (allowedKeys.indexOf(key) === -1) {
             console.log('delete', key);
             delete configValue[key];
         }
@@ -408,55 +452,19 @@ var JsonSchemaEditor = function (schema) {
     }
 
     me.schema = schema;
+    me.fieldType;
 
-    me.showConfigDialog = function (fieldType, configPath, callback) {
-        console.log('showConfigDialog', configPath);
-        var fieldName = configPath.split('.').pop();
+    me.loadSchema = function (editorElm, fieldType, configPath) {
+        console.log('fieldType, configPath', fieldType, configPath);
+        me.configPath = configPath;
+        me.fieldType = fieldType;
         var config = getConfig(me.schema, configPath);
-        console.log('config', config);
-
-        if (me.modal) {
-            me.modal.remove();
-            me.modal = null;
-            if (me.editor && me.editor.destroy) {
-                me.editor.destroy();
-                me.editor = null;
-            }
-        }
-
-        me.modal = $(modalTemplate);
-        me.modal.find('.fieldName').html(fieldName);
-        me.modal.find('.saveBtn').click(function () {
-            console.log('save schema', me.editor.getValue());
-            var newValue = me.editor.getValue();
-            newValue.type = fieldType;
-            if (fieldType === 'string') {
-                newValue.properties = null;
-            }
-            console.log('before clean up', config, newValue);
-            newValue = cleanUpProperties(fieldType, newValue);
-            // if (config.type === 'array') {
-            //     mergeConfigArrayType(me.schema, configPath, newValue);
-            // } else {
-            mergeConfig(me.schema, configPath, newValue);
-            // }
-
-
-            console.log('new schema', me.schema);
-            console.log('TEST validation', me.editor.validate());
-            if (callback) {
-                callback(me.schema);
-            }
-            me.modal.modal('hide');
-        });
-
-        var modalContent = me.modal.find('.content');
         var editorSchema = schemas[fieldType];
 
         var disableProperty = true;
         // if (fieldType === 'string') disableProperty = true;
 
-        me.editor = new JSONEditor(modalContent[0], {
+        me.editor = new JSONEditor(editorElm, {
             schema:                editorSchema,
             theme:                 'bootstrap3',
             iconlib:               'fontawesome4',
@@ -470,8 +478,6 @@ var JsonSchemaEditor = function (schema) {
             disable_config:        true
         });
 
-        me.modal.appendTo('body');
-        me.modal.modal('show');
 
         var defaultValue = getDefaultValueFromSchema(editorSchema);
         console.log('defaultValue', defaultValue);
@@ -488,6 +494,53 @@ var JsonSchemaEditor = function (schema) {
         cleanUpProperties(fieldType, defaultValue);
         console.log('defaultValue after merge', defaultValue);
         me.editor.setValue(defaultValue);
+    };
+
+    me.getValue = function () {
+        var newValue = me.editor.getValue();
+        newValue.type = me.fieldType;
+
+        // console.log('before clean up', config, newValue);
+        newValue = cleanUpProperties(me.fieldType, newValue);
+        // if (config.type === 'array') {
+        //     mergeConfigArrayType(me.schema, configPath, newValue);
+        // } else {
+        mergeConfig(me.schema, me.configPath, newValue);
+        // }
+
+        // console.log('new schema', me.schema);
+        // console.log('TEST validation', me.editor.validate());
+        return me.schema;
+    };
+
+    me.showConfigDialog = function (fieldType, configPath, callback) {
+        console.log('showConfigDialog', configPath);
+        var fieldName = configPath.split('.').pop();
+
+        if (me.modal) {
+            me.modal.remove();
+            me.modal = null;
+            if (me.editor && me.editor.destroy) {
+                me.editor.destroy();
+                me.editor = null;
+            }
+        }
+
+        me.modal = $(modalTemplate);
+        me.modal.find('.fieldName').html(fieldName);
+        me.modal.find('.saveBtn').click(function () {
+            var newSchema = me.getValue();
+            if (callback) {
+                callback(newSchema);
+            }
+            me.modal.modal('hide');
+        });
+
+        me.modal.appendTo('body');
+
+        me.loadSchema(me.modal.find('.content'), fieldType, configPath);
+
+        me.modal.modal('show');
     };
 
     me.getSchema = function () {

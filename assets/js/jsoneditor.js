@@ -1469,7 +1469,8 @@ JSONEditor.AbstractEditor = Class.extend({
             this.input.style.display = 'none';
         }
 
-        if (this.label) {
+        if (this.label || this.title) {
+            var fieldTitleElm = this.label || this.title;
             var div = $(document.createElement('div'));
             div.addClass('btn-group');
             div.css({display: 'inline-block'});
@@ -1478,7 +1479,7 @@ JSONEditor.AbstractEditor = Class.extend({
                 <i class="fa fa-gear">&nbsp;</i><span class="currentFormat" style="font-weight: 700;">Format</span>
             </button>`);
 
-            $(this.label).after(div);
+            $(fieldTitleElm).after(div);
             $(div).find('.currentFormat').text(self.options.schema.type);
             $(div).find('.btn-setting').on('click', function (e) {
                 if (window.showJsonSchemaConfigDialog)
@@ -2907,31 +2908,11 @@ JSONEditor.defaults.editors.object = JSONEditor.AbstractEditor.extend({
     },
     postBuild:                               function () {
         var me = this;
+        if (!me.options.schema._$schema)
+            this._super();
+
         if (this.options.disable_config || (this.options.disable_config !== false && this.jsoneditor.options.disable_config))
             return;
-
-        // skip root
-        if (me.options.schema._$schema) return;
-        // add setting button
-        var div = $(document.createElement('div'));
-        div.addClass('dropdown');
-        div.css({
-            display: 'inline-block'
-        });
-
-        div.html(`&nbsp;&nbsp;
-            <button class="btn btn-default btn-setting" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span class="currentFormat">Format</span>
-                &nbsp;<span class="fa fa-gear"></span>
-            </button>
-            `);
-
-        $(this.label).after(div);
-        $(div).find('.currentFormat').text(me.options.schema.type);
-        $(div).find('.btn-setting').on('click', function (e) {
-            if (window.showJsonSchemaConfigDialog)
-                window.showJsonSchemaConfigDialog(me.options);
-        });
     },
     showEditJSON:                            function () {
         if (!this.editjson_holder) return;
@@ -3472,28 +3453,10 @@ JSONEditor.defaults.editors.array = JSONEditor.AbstractEditor.extend({
     },
     postBuild:            function () {
         var me = this;
+        this._super();
         if (this.options.disable_config || (this.options.disable_config !== false && this.jsoneditor.options.disable_config))
             return;
-        // add setting button
-        var div = $(document.createElement('div'));
-        div.addClass('dropdown');
-        div.css({
-            display: 'inline-block'
-        });
 
-        div.html(`&nbsp;&nbsp;
-            <button class="btn btn-default btn-setting" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span class="currentFormat">Format</span>
-                &nbsp;<span class="fa fa-gear"></span>
-            </button>
-            `);
-
-        $(this.label).after(div);
-        $(div).find('.currentFormat').text(me.options.schema.type);
-        $(div).find('.btn-setting').on('click', function (e) {
-            if (window.showJsonSchemaConfigDialog)
-                window.showJsonSchemaConfigDialog(me.options);
-        });
     },
     onChildEditorChange:  function (editor) {
         this.refreshValue();

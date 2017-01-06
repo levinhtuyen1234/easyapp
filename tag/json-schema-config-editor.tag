@@ -1,8 +1,144 @@
-<json-schema-config-editor style="height: calc(100% - 88px); overflow-y: auto;" onkeypress="{checkSave}">
-    <div name="editorElm" class="ui form" onkeypress="{checkSave}"></div>
+<json-schema-field-config-dialog class="ui modal">
+    <div class="header">{modalTitle}</div>
+    <div class="content">
+        <div class="ui form">
+            <div class="inline field">
+                <label>Field type</label>
+                <select id="fieldTypeDropDown" class="ui dropdown" onchange="{ShowFieldConfig}">
+                    <option each="{field in fieldTypes}" value="{field.value}">{field.name}</option>
+                </select>
+            </div>
+            <div class="editor"></div>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui button deny">Close</div>
+        <div class="ui button positive icon" disabled="{layoutName==''}" onclick="{saveConfig}">Set</div>
+    </div>
+
     <script>
         var me = this;
-        var editor, fieldSchemaEditor, curContentConfig;
+        var modal, fieldTypeDropDown;
+        var editor;
+        me.curFieldType = '';
+
+        var AllFieldTypes = [
+            {name: 'String', value: 'string'},
+            {name: 'Integer', value: 'integer'},
+            {name: 'Number', value: 'number'},
+            {name: 'Boolean', value: 'boolean'},
+            {name: 'Object', value: 'object'},
+            {name: 'Array', value: 'array'}
+        ];
+
+        me.fieldTypes = AllFieldTypes;
+
+        me.saveConfig = function () {
+            console.log('SAVE CONFIGGGG', editor.getValue());
+            if (me.callback) {
+                me.callback(editor.getValue());
+            }
+            modal.modal('hide');
+//            var contentType = me.fieldTypeDropDown.value;
+//            var formTag = formTags[contentType];
+//            if (!formTag) return;
+//
+//            var newConfig = formTag.getConfig();
+//
+//            Object.assign(me.curConfig, newConfig);
+//
+//            me.parent.onFieldSettingChanged();
+//            modal.modal('hide');
+        };
+
+        me.on('mount', function () {
+            fieldTypeDropDown = $(me.root.querySelector('.ui.dropdown'));
+            fieldTypeDropDown.dropdown();
+//            editorElm = $(me.root).find('.editor');
+
+            modal = $(me.root).modal({
+                autofocus:      false,
+                observeChanges: true
+            });
+        });
+
+        me.ShowFieldConfig = function (e) {
+            if (e.target.value == '') return;
+//            console.debug('ShowFieldConfig', e.target.value);
+            me.curFieldType = e.target.value;
+            console.log('chosen field type', me.curFieldType, 'me.originalFieldType', me.originalFieldType);
+
+            // set displayName khi chuyen sang Content type khac
+            if (me.curFieldType !== me.originalFieldType) {
+                editor.destroy();
+                console.log('me.curContentConfig', me.curContentConfig);
+                editor = new JsonSchemaEditor(me.curContentConfig);
+                editor.loadSchema($(me.root).find('.editor')[0], me.curFieldType, me.configValue.path);
+//                var configFieldTag = 'config-view-' + me.curFieldType.toLowerCase();
+//                console.debug('configFieldTag', configFieldTag);
+//                if (me.tags[configFieldTag]) {
+//                    me.tags[configFieldTag].loadConfig({
+//                        name:         me.curConfig.name,
+//                        displayName:  me.curConfig.displayName,
+//                        defaultValue: me.curConfig.defaultValue
+//                    });
+//                }
+            }
+//            me.update();
+        };
+
+        me.show = function (curContentConfig, configValue, callback) {
+            console.log('curContentConfig', curContentConfig);
+            console.log('configValue', configValue);
+
+            me.curContentConfig = curContentConfig;
+            me.configValue = configValue;
+            me.callback = callback;
+
+            if (editor && editor.destroy) {
+                editor.destroy();
+                editor = null;
+            }
+
+
+
+//            me.curConfig = config;
+//
+            var fieldName = configValue.path;
+            var fieldType = configValue.schema.type;
+//            console.log('showFieldSettingDialog', fieldName, 'fieldType');
+            me.modalTitle = 'Configuration for ' + fieldName;
+            me.curFieldType = fieldType;
+            me.curConfigFieldName = fieldName;
+
+            me.originalFieldType = fieldType;
+
+//            console.log('set selected', fieldType);
+            fieldTypeDropDown.dropdown('set selected', fieldType);
+
+            // load schema and value to editor
+            editor = new JsonSchemaEditor(me.curContentConfig);
+            editor.loadSchema($(me.root).find('.editor')[0], fieldType, me.configValue.path);
+
+//            formTags[fieldType].clear(); // clear form setting
+//            formTags[fieldType].loadConfig(config);
+
+            me.update();
+            modal.modal('show');
+        };
+
+        me.hide = function () {
+            modal.modal('hide');
+        };
+    </script>
+</json-schema-field-config-dialog>
+
+<json-schema-config-editor style="height: calc(100% - 88px); overflow-y: auto;" onkeypress="{checkSave}">
+    <div name="editorElm" class="ui form" onkeypress="{checkSave}"></div>
+    <json-schema-field-config-dialog></json-schema-field-config-dialog>
+    <script>
+        var me = this;
+        var editor, curContentConfig;
 
         function getConfig(schema, configPath) {
             var parts = configPath.split('.');
@@ -35,14 +171,14 @@
             var addedProperties = [];
             var removedProperties = [];
 
-            window.showJsonSchemaConfigDialog = function (fieldType, options) {
-                console.log('showJsonSchemaConfigDialog', 'fieldType', fieldType, 'options', options);
-//                fieldSchemaEditor.showConfigDialog(fieldType, options.path, function (newSchema) {
+            window.showJsonSchemaConfigDialog = function (options) {
+                console.log('showJsonSchemaConfigDialog', 'options', options);
+                me.tags['json-schema-field-config-dialog'].show(curContentConfig, options, function (newSchema) {
 //                    console.log('TODO reload schema gen new form');
-//                    curContentConfig = newSchema;
-//                    schemaSetArrayFormat(curContentConfig, 'table');
-//                    me.loadContentConfig(curContentConfig);
-//                });
+                    curContentConfig = newSchema;
+                    schemaSetArrayFormat(curContentConfig, 'table');
+                    me.loadContentConfig(curContentConfig);
+                });
             };
 
             window.jsonSchemaOnAddProperty = function (name) {
@@ -175,10 +311,7 @@
             if (editor) {
                 editor.destroy();
                 editor = null;
-                if (fieldSchemaEditor) fieldSchemaEditor.destroy();
             }
-
-            fieldSchemaEditor = new JsonSchemaEditor(curContentConfig);
 
             schemaSetArrayFormat(curContentConfig, 'tabs');
 
