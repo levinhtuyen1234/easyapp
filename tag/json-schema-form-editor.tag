@@ -74,6 +74,17 @@
                 editor.destroy();
                 editor = null;
             }
+
+            // preload category and tag data modify schema category enum
+            let categories = BackEnd.getCategoryList(me.opts.siteName);
+            console.log('categories', categories);
+            contentConfig.properties.category.enum = _.map(categories, 'value');
+            contentConfig.properties.category.options = contentConfig.properties.category.options || {};
+            contentConfig.properties.category.options.enum_titles = _.map(categories, 'name');
+
+            // preload tag data to schema
+            let tags = BackEnd.getTagList(me.opts.siteName);
+
             editor = new JSONEditor(me.editorElm, {
                 schema:             contentConfig,
                 theme:              'bootstrap3',
@@ -82,7 +93,7 @@
                 disable_edit_json:  true,
                 disable_properties: true,
                 disable_config:     true,
-                upload:                    function (filePath, file, callback) {
+                upload:             function (filePath, file, callback) {
 //                    console.log('start upload', filePath, file);
 //                    if (!filePaths || filePaths.length != 1) return;
 //                    var filePath = filePaths[0];
@@ -99,7 +110,7 @@
 
             let defaultValue = getDefaultSchemaValue(contentConfig, {});
             let mergedMetaData = _.merge(defaultValue, metaData);
-            console.log('mergedMetaData',mergedMetaData);
+            console.log('mergedMetaData', mergedMetaData);
 
             editor.setValue(mergedMetaData);
         }

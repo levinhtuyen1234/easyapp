@@ -549,11 +549,12 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
             type:          'array',
             uniqueItems:   true,
             propertyOrder: 100,
-            format:        'table',
+            // format:        'table',
             items:         {
                 type: 'string'
             },
             options:       {
+                "type": "select",
                 hidden: false
             }
         },
