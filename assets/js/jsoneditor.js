@@ -1469,11 +1469,11 @@ JSONEditor.AbstractEditor = Class.extend({
             this.input.style.display = 'none';
         }
 
-        if (this.label || this.title) {
-            var fieldTitleElm = this.label || this.title;
+        if (this.label || this.title_controls) {
+            var fieldTitleElm = this.title_controls || this.label;
             var div = $(document.createElement('div'));
             div.addClass('btn-group');
-            div.css({display: 'inline-block'});
+            div.css({display: 'inline-block', 'margin-left': '10px'});
             div.html(`&nbsp;&nbsp;
             <button class="btn btn-default btn-setting" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                 <i class="fa fa-gear">&nbsp;</i><span class="currentFormat" style="font-weight: 700;">Format</span>
