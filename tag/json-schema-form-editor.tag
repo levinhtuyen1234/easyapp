@@ -84,6 +84,11 @@
 
             // preload tag data to schema
             let tags = BackEnd.getTagList(me.opts.siteName);
+            contentConfig.properties.tag.items.enum = _.map(tags, 'value');
+            contentConfig.properties.tag.items.options = contentConfig.properties.tag.items.options || {};
+            contentConfig.properties.tag.items.options.enum_titles = _.map(tags, 'name');
+//            console.log('tags', tags);
+//            contentConfig.properties.tag.items.enum =
 
             editor = new JSONEditor(me.editorElm, {
                 schema:             contentConfig,

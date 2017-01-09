@@ -546,16 +546,24 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
             }
         },
         tag:         {
+            // type:          'array',
+            // uniqueItems:   true,
+            // propertyOrder: 100,
+            // // format:        'table',
+            // items:         {
+            //     type: 'string'
+            // },
+            // options:       {
+            //     "type": "select",
+            //     hidden: false
+            // }
             type:          'array',
-            uniqueItems:   true,
+            format:        'checkbox',
             propertyOrder: 100,
-            // format:        'table',
+            uniqueItems:   true,
             items:         {
-                type: 'string'
-            },
-            options:       {
-                "type": "select",
-                hidden: false
+                type: 'string',
+                enum: []
             }
         },
         date:        {
