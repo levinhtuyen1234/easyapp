@@ -1461,8 +1461,10 @@ JSONEditor.AbstractEditor = Class.extend({
         this.register();
         this.onWatchedFieldChange();
 
-        if (this.options.disable_config || (this.options.disable_config !== false && this.jsoneditor.options.disable_config))
+        if (this.options.disable_config || (this.options.disable_config !== false && this.jsoneditor.options.disable_config)) {
             return;
+        }
+
 
         // hide input neu o che do config
         if (this.input) {
@@ -1485,6 +1487,54 @@ JSONEditor.AbstractEditor = Class.extend({
                 if (window.showJsonSchemaConfigDialog)
                     window.showJsonSchemaConfigDialog(self.options);
             });
+
+            // add up down button
+            var depth = this.path.split('.').length - 1;
+            // console.log('depth', depth);
+            // debugger;
+            // if (this.path === 'root.slug') {
+            //     debugger;
+            // }
+            // console.log('this.jsoneditor.root.property_order', this.jsoneditor.root.property_order);
+            if (depth == 1) {
+                var me = this;
+                var moveUpButton = this.getButton('', 'moveup', 'UP');
+                var moveDownButton = this.getButton('', 'movedown', 'DOWN');
+
+                moveUpButton.style.marginLeft = '10px';
+                moveDownButton.style.marginLeft = '10px';
+                $(div).after(moveUpButton);
+                $(moveUpButton).after(moveDownButton);
+
+                var curIndex = 0;
+
+                if (this.jsoneditor.root.property_order.length > 0) {
+                    var property = this.path.split('.')[1];
+
+                    for (var i = 0; i < this.jsoneditor.root.property_order.length; i++) {
+                        if (property === this.jsoneditor.root.property_order[i]) {
+                            curIndex = i;
+                            break;
+                        }
+                    }
+
+                    if (this.jsoneditor.root.property_order[0] === property)
+                        moveUpButton.style.display = 'none';
+
+                    if (this.jsoneditor.root.property_order[this.jsoneditor.root.property_order.length - 1] === property)
+                        moveDownButton.style.display = 'none';
+                }
+
+
+                moveUpButton.onclick = function (e) {
+                    if (window.jsonSchemaMovePropertyUp) window.jsonSchemaMovePropertyUp(me, curIndex);
+                };
+
+                moveDownButton.onclick = function (e) {
+                    if (window.jsonSchemaMovePropertyDown) window.jsonSchemaMovePropertyDown(me, curIndex);
+                };
+            }
+
         }
     },
 
@@ -6143,8 +6193,8 @@ JSONEditor.defaults.editors.checkbox = JSONEditor.AbstractEditor.extend({
     build:         function () {
         var self = this;
         if (!this.options.compact) {
-            // this.label = this.header = this.theme.getCheckboxLabel(this.getTitle());
-            this.label = this.header = this.theme.getFormInputLabel(this.getTitle());
+            this.label = this.header = this.theme.getCheckboxLabel(this.getTitle());
+            // this.label = this.header = this.theme.getFormInputLabel(this.getTitle());
         }
         if (this.schema.description) this.description = this.theme.getFormInputDescription(this.schema.description);
         if (this.options.compact) this.container.className += ' compact';
@@ -6867,15 +6917,15 @@ JSONEditor.defaults.themes.bootstrap3 = JSONEditor.AbstractTheme.extend({
         var group = document.createElement('div');
 
         if (label && input.type === 'checkbox') {
-            group.className += ' checkbox';
+            // group.className += ' checkbox';
+            group.className += ' control-label';
             label.appendChild(input);
             label.style.fontSize = '14px';
             group.style.marginTop = '0';
             group.appendChild(label);
             input.style.position = 'relative';
             input.style.cssFloat = 'left';
-        }
-        else {
+        } else {
             group.className += ' form-group';
             if (label) {
                 label.className += ' control-label';

@@ -181,6 +181,44 @@
                 });
             };
 
+            window.jsonSchemaMovePropertyUp = function(field, curIndex) {
+                console.log('jsonSchemaMovePropertyUp', field.path);
+                // set propertyOrder base on index in property_order
+                var propertyOrder = field.jsoneditor.root.property_order;
+                propertyOrder.forEach((propName, i) => {
+                    curContentConfig.properties[propName].propertyOrder = i;
+                });
+
+                // swap
+                var curPropName = propertyOrder[curIndex];
+                var targetPropName = propertyOrder[curIndex - 1];
+
+                var tmp = curContentConfig.properties[targetPropName].propertyOrder;
+                curContentConfig.properties[targetPropName].propertyOrder = curContentConfig.properties[curPropName].propertyOrder;
+                curContentConfig.properties[curPropName].propertyOrder = tmp;
+
+                me.loadContentConfig(curContentConfig);
+            };
+
+            window.jsonSchemaMovePropertyDown = function(field, curIndex) {
+                console.log('jsonSchemaMovePropertyDown', field.path);
+                // set propertyOrder base on index in property_order
+                var propertyOrder = field.jsoneditor.root.property_order;
+                propertyOrder.forEach((propName, i) => {
+                    curContentConfig.properties[propName].propertyOrder = i;
+                });
+
+                // swap
+                var curPropName = propertyOrder[curIndex];
+                var targetPropName = propertyOrder[curIndex + 1];
+
+                var tmp = curContentConfig.properties[targetPropName].propertyOrder;
+                curContentConfig.properties[targetPropName].propertyOrder = curContentConfig.properties[curPropName].propertyOrder;
+                curContentConfig.properties[curPropName].propertyOrder = tmp;
+
+                me.loadContentConfig(curContentConfig);
+            };
+
             window.jsonSchemaOnAddProperty = function (name) {
                 addedProperties.push(name);
                 _.pull(removedProperties, name);

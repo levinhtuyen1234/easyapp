@@ -91,14 +91,15 @@
 //            contentConfig.properties.tag.items.enum =
 
             editor = new JSONEditor(me.editorElm, {
-                schema:             contentConfig,
-                theme:              'bootstrap3',
-                iconlib:            'fontawesome4',
-                disable_hidden:     false,
-                disable_edit_json:  true,
-                disable_properties: true,
-                disable_config:     true,
-                upload:             function (filePath, file, callback) {
+                schema:                  contentConfig,
+                theme:                   'bootstrap3',
+                iconlib:                 'fontawesome4',
+                remove_empty_properties: false,
+                disable_hidden:          false,
+                disable_edit_json:       true,
+                disable_properties:      true,
+                disable_config:          true,
+                upload:                  function (filePath, file, callback) {
 //                    console.log('start upload', filePath, file);
 //                    if (!filePaths || filePaths.length != 1) return;
 //                    var filePath = filePaths[0];
