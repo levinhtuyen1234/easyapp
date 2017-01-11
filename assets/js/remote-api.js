@@ -15,10 +15,15 @@ const Ajax = Promise.coroutine(function*(opts) {
         $.ajax(opts).then(function (resp) {
             return resolve(resp);
         }, function (xhr, textStatus, errorThrown) {
-            if (xhr.responseJSON.Message)
-                reject(new Error(xhr.responseJSON.Message));
-            else
+            if (xhr.responseJSON.Message) {
+                let errMsg = xhr.responseJSON.Message;
+                if (xhr.responseJSON.ExceptionType) {
+                    errMsg = xhr.responseJSON.ExceptionType + ': ' + errMsg;
+                }
+                reject(new Error(errMsg));
+            } else {
                 reject(new Error(errorThrown));
+            }
         });
     });
 });
@@ -229,10 +234,11 @@ function CreateGogsRepo(username, repositoryName) {
             resolve(data);
         }, function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR, textStatus, errorThrown);
-            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message)
+            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message) {
                 reject(new Error(jqXHR.responseJSON.message));
-            else
-                reject(new Error(textStatus));
+            } else {
+                reject(errorThrown);
+            }
         });
     });
 }
@@ -295,16 +301,16 @@ class AppUser {
                 };
             });
         }).catch(function (error) {
-            console.log('ERRRORRRR', error.message);
+            console.log('CALL REMOTE GOT ERROR', error.message);
             if (error.message.startsWith('repository already exists')) {
                 var repoUrl = localStorage.getItem(`${username}-${name}`);
                 if (!repoUrl)
-                    reject(new Error('Failed to get repository url'));
+                    throw new Error('Failed to get repository url');
                 return {
                     url: repoUrl
                 };
             } else {
-                reject(new Error('create gogs reposiory failed, ' + error.message));
+                throw new Error('create gogs reposiory failed, ' + error.message);
             }
         });
     }

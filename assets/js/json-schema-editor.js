@@ -4,6 +4,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "description":   {
                 "type":    "string",
                 "default": ""
@@ -35,6 +39,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "description":   {
                 "type":    "string",
                 "default": ""
@@ -74,6 +82,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "description":   {
                 "type":    "string",
                 "default": ""
@@ -138,6 +150,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "format":           {
                 "type":    "string",
                 "enum":    [
@@ -194,6 +210,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "format":           {
                 "type":    "string",
                 "enum":    [
@@ -248,6 +268,10 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
+            "title":      {
+                "type":    "string",
+                "default": ""
+            },
             "uniqueItems":   {
                 "type":    "boolean",
                 "default": false

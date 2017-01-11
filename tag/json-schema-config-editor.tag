@@ -69,7 +69,7 @@
             console.log('chosen field type', me.curFieldType, 'me.originalFieldType', me.originalFieldType);
 
             // set displayName khi chuyen sang Content type khac
-            if (me.curFieldType !== me.originalFieldType) {
+//            if (me.curFieldType !== me.originalFieldType) {
                 editor.destroy();
                 console.log('me.curContentConfig', me.curContentConfig);
                 editor = new JsonSchemaEditor(me.curContentConfig);
@@ -83,7 +83,7 @@
 //                        defaultValue: me.curConfig.defaultValue
 //                    });
 //                }
-            }
+//            }
 //            me.update();
         };
 
