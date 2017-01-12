@@ -710,17 +710,16 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     let slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
     // let slug = contentBaseName;
     if (layoutFileName === '') layoutFileName = 'index.html';
-    debugger;
     let defaultMeta = {
-        "title": contentTitle,
-        "slug": slug,
+        "title":       contentTitle,
+        "slug":        slug,
         "description": "",
-        "draft": false,
+        "draft":       false,
         "publishDate": "",
-        "category": category,
-        "tag": tag,
-        "layout": layoutFileName,
-        "date": getCurrentISODate()
+        "category":    category,
+        "tag":         tag,
+        "layout":      layoutFileName,
+        "date":        getCurrentISODate()
     };
     let defaultLayoutContent = `---json
 ${JSON.stringify(defaultMeta, null, 4)}
@@ -737,7 +736,10 @@ ${JSON.stringify(defaultMeta, null, 4)}
     } catch (_) {
     }
     console.log('Add new meta to IndexFile', newContentFilePath);
-    siteContentIndexes[newContentFilePath.replace(/\\/g, '/')] = defaultMeta;
+
+    let key = newContentFilePath.replace(/\\/g, '/');
+    if (key.startsWith('content/')) key = key.slice(8);
+    siteContentIndexes[key] = defaultMeta;
     Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
     return {name: contentFileName, path: newContentFilePath.replace(/\\/g, '/')};
 }
