@@ -140,7 +140,6 @@
         me.value = opts.value || '';
         me.selectedName = '';
 
-
         me.on('mount', function () {
             setTimeout(function () {
                 me.setValue(me.value);

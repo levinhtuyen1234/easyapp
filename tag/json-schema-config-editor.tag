@@ -176,7 +176,7 @@
                 me.tags['json-schema-field-config-dialog'].show(curContentConfig, options, function (newSchema) {
 //                    console.log('TODO reload schema gen new form');
                     curContentConfig = newSchema;
-                    schemaSetArrayFormat(curContentConfig, 'table');
+                    schemaSetArrayFormat(curContentConfig, 'table', ['tag']);
                     me.loadContentConfig(curContentConfig);
                 });
             };
@@ -249,7 +249,7 @@
                         fieldSchema.properties[name] = {type: 'string', default: ''};
                 });
 
-                schemaSetArrayFormat(curContentConfig, 'table');
+                schemaSetArrayFormat(curContentConfig, 'table', ['tag']);
                 // refresh editor
                 me.loadContentConfig(curContentConfig);
             };
@@ -290,21 +290,24 @@
             }
         };
 
-        const schemaSetArrayFormat = function (obj, type) {
+        const schemaSetArrayFormat = function (obj, type, excludeNames, propName) {
+            excludeNames = excludeNames || [];
+
             if (typeof(obj) !== 'object') return;
             if (obj && obj.type && obj.type === 'array') {
-                obj.format = type;
+                if (propName && excludeNames.indexOf(propName) == -1)
+                    obj.format = type;
             }
 
             if (obj.properties) {
-                _.forOwn(obj.properties, prop => {
-                    schemaSetArrayFormat(prop, type);
+                _.forOwn(obj.properties, (prop, key) => {
+                    schemaSetArrayFormat(prop, type, excludeNames, key);
                 })
             }
 
             if (obj.items && obj.items.properties) {
-                _.forOwn(obj.items.properties, prop => {
-                    schemaSetArrayFormat(prop, type);
+                _.forOwn(obj.items.properties, (prop, key) => {
+                    schemaSetArrayFormat(prop, type, excludeNames, key);
                 });
             }
         };
@@ -351,7 +354,7 @@
                 editor = null;
             }
 
-            schemaSetArrayFormat(curContentConfig, 'tabs');
+            schemaSetArrayFormat(curContentConfig, 'tabs', ['tag']);
 
             editor = new JSONEditor(me.editorElm, {
                 schema:                    curContentConfig,
@@ -377,7 +380,7 @@
 
         me.getContentConfig = function () {
             console.log('TODO json-schema-config-editor getContentConfig');
-            schemaSetArrayFormat(curContentConfig, 'table');
+            schemaSetArrayFormat(curContentConfig, 'table', ['tag']);
             return curContentConfig;
         };
 

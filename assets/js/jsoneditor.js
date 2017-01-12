@@ -1525,7 +1525,6 @@ JSONEditor.AbstractEditor = Class.extend({
                         moveDownButton.style.display = 'none';
                 }
 
-
                 moveUpButton.onclick = function (e) {
                     if (window.jsonSchemaMovePropertyUp) window.jsonSchemaMovePropertyUp(me, curIndex);
                 };
