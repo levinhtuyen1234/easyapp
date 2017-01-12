@@ -77,7 +77,7 @@
         me.contentTitle = '';
         me.contentFileName = '';
         me.contentCategory = '';
-        me.contentTag = '[]';
+        me.contentTag = [];
 
         me.canAdd = function () {
             return me.contentLayout == '' || me.contentTitle == '' || me.contentTitle == '.md';

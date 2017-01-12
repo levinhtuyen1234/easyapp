@@ -546,17 +546,6 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
             }
         },
         tag:         {
-            // type:          'array',
-            // uniqueItems:   true,
-            // propertyOrder: 100,
-            // // format:        'table',
-            // items:         {
-            //     type: 'string'
-            // },
-            // options:       {
-            //     "type": "select",
-            //     hidden: false
-            // }
             type:          'array',
             format:        'checkbox',
             propertyOrder: 100,
@@ -720,18 +709,21 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     let layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
     let slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
     // let slug = contentBaseName;
+    if (layoutFileName === '') layoutFileName = 'index.html';
+    debugger;
+    let defaultMeta = {
+        "title": contentTitle,
+        "slug": slug,
+        "description": "",
+        "draft": false,
+        "publishDate": "",
+        "category": category,
+        "tag": tag,
+        "layout": layoutFileName,
+        "date": getCurrentISODate()
+    };
     let defaultLayoutContent = `---json
-{
-    "title": "${contentTitle}",
-    "slug": "${slug}",
-    "description": "",
-    "draft": false,
-    "publishDate": "",
-    "category": "${category}",
-    "tag": ${tag},
-    "layout": "${layoutFileName}",
-    "date": "${getCurrentISODate()}"
-}
+${JSON.stringify(defaultMeta, null, 4)}
 ---
 `;
     let layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
@@ -744,7 +736,8 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
         MkdirpSync(Path.join(sitesRoot, siteName, 'content', layoutFolder));
     } catch (_) {
     }
-
+    console.log('Add new meta to IndexFile', newContentFilePath);
+    siteContentIndexes[newContentFilePath.replace(/\\/g, '/')] = defaultMeta;
     Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
     return {name: contentFileName, path: newContentFilePath.replace(/\\/g, '/')};
 }

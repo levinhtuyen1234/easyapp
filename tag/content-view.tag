@@ -53,7 +53,7 @@
         };
 
         me.reset = function () {
-            me.tags['form-editor'].clear();
+            me.tags['json-schema-form-editor'].clear();
             me.tags['markdown-editor'].setValue('');
         };
 

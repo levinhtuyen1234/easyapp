@@ -291,6 +291,10 @@ var schemas = {
                         ],
                         "default": "string"
                     },
+                    "enum": {
+                        "type": "array",
+                        "format": "table"
+                    },
                     "properties": {
                         "type": "object"
                     }
@@ -523,13 +527,15 @@ var JsonSchemaEditor = function (schema) {
     me.getValue = function () {
         var newValue = me.editor.getValue();
         newValue.type = me.fieldType;
-
+        console.log('newValue', newValue);
         // console.log('before clean up', config, newValue);
         newValue = cleanUpProperties(me.fieldType, newValue);
+        console.log('newValue after clean', newValue);
         // if (config.type === 'array') {
         //     mergeConfigArrayType(me.schema, configPath, newValue);
         // } else {
         mergeConfig(me.schema, me.configPath, newValue);
+        console.log('newValue after merge', me.schema);
         // }
 
         // console.log('new schema', me.schema);
