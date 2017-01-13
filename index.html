@@ -197,7 +197,7 @@
             User.getSites().then(function (remoteSites) {
                 console.log('getSites resp', typeof(remoteSites), remoteSites);
                 User.data.sites = remoteSites;
-                if (curSites.length !== remoteSites.length && curPage.root.tagName === 'LANDING') {
+                if (curPage.root.tagName === 'LANDING') {
                     window.curPage.mergeLocalRemoteSites();
                     DB.upsert(User.data);
                 }
@@ -205,7 +205,7 @@
                 console.log('get remote sites failed', ex);
             });
 
-            console.log('TODO server only accept accountType "user"');
+//            console.log('TODO server only accept accountType "user"');
             account.accountType = 'dev';
             console.log('account on disk', account);
             window.curPage = riot.mount('landing')[0];
