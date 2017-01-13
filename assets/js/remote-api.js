@@ -36,8 +36,8 @@ const restAdapter = {
     accountObjectTransformer: function (account) {
         console.log('accountObjectTransformer', account);
         return {
-            id:          account['AccountId'],
-            accessLevel: account['AccessLevel']
+            id:           account['AccountId'],
+            accessLevels: account['AccessLevels']
         }
     },
 
@@ -265,7 +265,7 @@ class AppUser {
 
     addSite(name, displayName) {
         var username = this.data.username;
-        var id = this.data.id;
+        var accountId = this.data.id;
         // tao remote git repo
         // TODO THIS IS TEMP CODE tạo repo phai o tren server
         return CreateGogsRepo(username, name).then(function (data) {
@@ -274,12 +274,6 @@ class AppUser {
 
             // call add site (goi. sau khi goi. gogs vi` khong co API update website)
             var postData = {
-                "Accounts":    [
-                    {
-                        "AccountId":   id,
-                        "AccessLevel": ['dev']
-                    }
-                ],
                 "Name":        name,
                 "DisplayName": displayName,
                 "Url":         data.url
@@ -289,13 +283,13 @@ class AppUser {
                 method:      'POST',
                 dataType:    'json',
                 contentType: 'application/json',
-                url:         adapter.addSiteUrl,
+                url:         `https://api.easywebhub.com/users/${accountId}/websites`,
                 data:        JSON.stringify(postData)
             }).then(function (resp) {
                 console.log('addSite resp', resp);
                 resp = adapter.addSiteResponse(resp);
 
-                console.log('username', username);
+                // console.log('username', username);
                 return {
                     url: data.url
                 };
