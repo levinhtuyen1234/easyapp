@@ -1217,7 +1217,7 @@ const initNewSiteRootFolder = Promise.coroutine(function*(repositoryUrl, targetD
     // add .gitignore (ingore build + node_modules)
     yield Fs.writeFileAsync(Path.join(targetDir, '.gitignore'), `build/\r\nnode_modules/\r\n`);
 
-    yield spawnGitCmd('git', ['add', '.gitignore'], targetDir);
+    yield spawnGitCmd('git', ['add', '.'], targetDir);
     // set remote gogs repo
     yield spawnGitCmd('git', ['remote', 'add', 'origin', repositoryUrl], targetDir);
     // commit
