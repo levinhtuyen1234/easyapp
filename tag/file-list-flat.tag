@@ -13,13 +13,13 @@
     -->
     <div class="simplebar" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)">
         <div class="ui celled list">
-            <div class="item" each="{filteredFiles}" onclick="{openFile}" data-path="{path}" data-content="{hideExt(name)}" data-html="{genContentTooltip(path)}">
+            <div class="item" each="{item in filteredFiles}" onclick="{openFile}" data-path="{item.path}" data-content="{hideExt(item.name)}" data-html="{genContentTooltip(item.path)}">
                 <div class="right floated content">
-                    <label class="header">{getContentCategory(path)}</label>
+                    <label class="header">{getContentCategory(item.path)}</label>
                 </div>
-                <i class="{getFileIcon(name, path)}"></i>
+                <i class="{getFileIcon(item.name, item.path)}"></i>
                 <div class="content">
-                    <a class="truncate">{genDisplayName(name, path)}</a>
+                    <a class="truncate">{genDisplayName(item.name, item.path)}</a>
                 </div>
             </div>
         </div>
@@ -89,6 +89,21 @@
             riot.event.off('contentMetaDataUpdated', updateList);
         });
 
+        function getCategoryBreadcrumb(category) {
+            let parts = category.split('.');
+            let ret = [];
+            for (let i = 0; i < parts.length; i++) {
+                let categoryName = parts.slice(0, i + 1).join('.');
+                let meta = window.siteCategoryIndexes[categoryName];
+                if (meta && meta.displayName)
+                    ret.push(meta.displayName);
+                else
+                    ret.push(parts[i]);
+            }
+
+            return ret.join(' >> ');
+        }
+
         me.genContentTooltip = function (contentPath) {
             if (me.opts.type !== 'content')
                 return '';
@@ -97,7 +112,7 @@
             if (!metaData || !metaData.category)
                 return '';
 
-            return `<div class='ui list'><div class='item'><div class='header'>${metaData.title}</div>${contentPath}<br>${metaData.category.split('.').join(' >> ')}</div></div>`;
+            return `<div class='ui list'><div class='item'><div class='header'>${metaData.title}</div>${contentPath}<br>${getCategoryBreadcrumb(metaData.category)}</div></div>`;
         };
 
         me.getContentCategory = function (contentPath) {
