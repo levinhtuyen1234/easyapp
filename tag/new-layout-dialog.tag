@@ -11,7 +11,7 @@
                 <div class="ui fourteen wide field">
                     <div class="ui right labeled input" style="width: 100%;">
                         <div show="{prefix!=''}" class="ui label">{prefix}</div>
-                        <input type="text" placeholder="Filename" oninput="{updateFileName}">
+                        <input class="layoutName" type="text" placeholder="Filename" oninput="{updateFileName}">
                         <div class="ui label">{postfix}</div>
                     </div>
                 </div>
@@ -104,8 +104,9 @@
             me.layoutName = '';
             $(me.root).modal('show');
             $(me.root).find('.selectpicker').selectpicker();
-            var fieldFileName = $(me['layout-filename']);
+            var fieldFileName = $(me.root).find('.layoutName');
             fieldFileName.val('');
+            $(me.root).find('input[type="checkbox"]').attr('checked', false);
             setTimeout(function () {
                 fieldFileName.focus();
             }, 500);
