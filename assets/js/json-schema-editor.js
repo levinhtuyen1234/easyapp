@@ -124,7 +124,7 @@ var schemas = {
             },
             "maxLength":     {
                 "type":    "integer",
-                "default": ""
+                "default": 140
             },
             "options":       {
                 "type":       "object",
@@ -170,11 +170,11 @@ var schemas = {
             },
             "maximum":          {
                 "type":    "integer",
-                "default": ""
+                "default": 99999999
             },
             "minimum":          {
                 "type":    "integer",
-                "default": ""
+                "default": 0
             },
             "exclusiveMaximum": {
                 "type":        "boolean",
@@ -229,7 +229,8 @@ var schemas = {
                 "type": "integer"
             },
             "maximum":          {
-                "type": "integer"
+                "type": "integer",
+                "default" : "999999"
             },
             "minimum":          {
                 "type": "integer"
