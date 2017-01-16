@@ -118,7 +118,8 @@
                         <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
                         <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
                         <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
-                        <config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>
+                        <!--<config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>-->
+                        <json-schema-config-editor site-name="{siteName}" data-tab="config-view" class="ui tab segment"></json-schema-config-editor>
                     </div>
 
                 </div>
@@ -326,8 +327,10 @@
 //            console.trace('HideAllTab', $(me.root).find('a[role="tab"]'));
             $(me.root).find('a[role="tab"]').removeClass('active');
 
-            me.tags['config-view'].off('saveConfig', onSaveContentConfigView);
-            me.tags['config-view'].off('saveConfig', onSaveMetaConfigView);
+//            me.tags['config-view'].off('saveConfig', onSaveContentConfigView);
+//            me.tags['config-view'].off('saveConfig', onSaveMetaConfigView);
+            me.tags['json-schema-config-editor'].off('saveConfig', onSaveContentConfigView);
+            me.tags['json-schema-config-editor'].off('saveConfig', onSaveMetaConfigView);
         }
 
         function ShowTab(name) {
@@ -456,7 +459,7 @@
                 ShowTab('content-view');
             } catch (ex) {
                 console.log(ex);
-                bootbox.alert('Open content failed, error ' + ex.message, function () {
+                bootbox.alert('Open content failed, error ' + ex.message || ex, function () {
                 });
                 me.openRawContentTab({
                     readOnly: false,
@@ -506,7 +509,7 @@
 //            console.log('meta content', content);
             var contentConfig = BackEnd.getMetaConfigFile(me.opts.siteName, me.currentFilePath);
 
-            me.tags['config-view'].loadContentConfig(contentConfig);
+            me.tags['json-schema-config-editor'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
             onSaveMetaConfigView = function (newConfig) {
@@ -514,8 +517,8 @@
                 BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(newConfig, null, 4));
             };
 
-            me.tags['config-view'].off('saveConfig');
-            me.tags['config-view'].on('saveConfig', onSaveMetaConfigView);
+            me.tags['json-schema-config-editor'].off('saveConfig');
+            me.tags['json-schema-config-editor'].on('saveConfig', onSaveMetaConfigView);
         };
 
         me.openConfigTab = function () {
@@ -540,15 +543,15 @@
 
             var contentConfig = BackEnd.getConfigFile(me.opts.siteName, me.currentFilePath, content.metaData.layout);
 
-            me.tags['config-view'].loadContentConfig(contentConfig);
+            me.tags['json-schema-config-editor'].loadContentConfig(contentConfig);
             ShowTab('config-view');
 
             onSaveContentConfigView = function (newConfig) {
                 console.log('save content config');
                 BackEnd.saveConfigFile(me.opts.siteName, content.metaData.layout, JSON.stringify(newConfig, null, 4));
             };
-            me.tags['config-view'].off('saveConfig');
-            me.tags['config-view'].on('saveConfig', onSaveContentConfigView);
+            me.tags['json-schema-config-editor'].off('saveConfig');
+            me.tags['json-schema-config-editor'].on('saveConfig', onSaveContentConfigView);
         };
 
         me.openRawContentTab = function (options) {
@@ -591,7 +594,7 @@
             if (filePath.endsWith('.md')) {
 //                console.log('openContentTab');
                 me.openContentTab();
-//            } else if (filePath.endsWith('.config.json')) {
+//            } else if (filePath.endsWith('.schema.json')) {
 //                me.openConfigTab();
             } else if (filePath.endsWith('.html')) {
                 me.currentLayout = me.currentFilePath.split(/[/\\]/);
@@ -645,7 +648,7 @@
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;
                 case 'config-view':
-                    var contentConfig = me.tags['config-view'].getContentConfig();
+                    var contentConfig = me.tags['json-schema-config-editor'].getContentConfig();
                     filePath = me.currentFilePath;
                     filePath = me.currentFilePath.split('.');
                     filePath.pop();
@@ -656,7 +659,7 @@
                         BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
                     } else if (me.currentFilePath.endsWith('.md')) {
                         console.log('save content config');
-                        filePath += '.config.json';
+                        filePath += '.schema.json';
                         BackEnd.saveConfigFile(me.opts.siteName, me.currentLayout, JSON.stringify(contentConfig, null, 4));
                     }
                     break;

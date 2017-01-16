@@ -69,7 +69,7 @@
             me.tagFilenameElm.value = '';
 
             $(me.root).modal('show');
-            $(me.root).find('.selectpicker').selectpicker();
+//            $(me.root).find('.selectpicker').selectpicker();
             setTimeout(function () {
                 $(me.tagNameElm).focus();
             }, 500);

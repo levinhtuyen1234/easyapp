@@ -3,6 +3,7 @@
 const Promise = require('bluebird');
 const Path = require('path');
 const ChildProcess = require('child_process');
+const Matter = require('gray-matter');
 const Remote = require('electron').remote;
 const Shell = Remote.shell;
 
@@ -45,9 +46,9 @@ function filterContentFile(name, isDir) {
     if (name.endsWith('.md'))
         return true;
     return false;
-    // var ignoreExt = ['.json', '.html'];
+    // let ignoreExt = ['.json', '.html'];
     // if (IGNORE_NAMES.indexOf(name) != -1) return false;
-    // var ext = name.split('.').pop();
+    // let ext = name.split('.').pop();
     // if (ignoreExt.indexOf(ext) != -1)
     //     return false;
     // return true;
@@ -57,7 +58,7 @@ function filterOnlyLayoutFile(name, isDir) {
     if (isDir) {
         return true;
     } else {
-        var ext = name.split('.').pop();
+        let ext = name.split('.').pop();
         if (ext !== 'html') return false;
     }
     return true;
@@ -67,7 +68,7 @@ function filterOnlyRootLayoutFile(name, isDir) {
     if (isDir) {
         return false;
     } else {
-        var ext = name.split('.').pop();
+        let ext = name.split('.').pop();
         if (ext !== 'html') return false;
         if (name.endsWith('.category.html') || name.endsWith('.tag.html')) return false;
     }
@@ -79,7 +80,7 @@ function filterAssetFile(name, isDir) {
         if (IGNORE_FOLDERS.indexOf(name) != -1) return false;
     } else {
         if (IGNORE_NAMES.indexOf(name) != -1) return false;
-        var ext = name.split('.').pop();
+        let ext = name.split('.').pop();
         if (ASSET_EXTS.indexOf(ext) == -1) return false;
     }
     return true;
@@ -87,11 +88,11 @@ function filterAssetFile(name, isDir) {
 
 let ScanDir = function (siteRoot, dir, ret, filter) {
     try {
-        for (var name of Fs.readdirSync(dir)) {
-            var fullPath = Path.join(dir, name);
-            var stat = Fs.statSync(fullPath);
+        for (let name of Fs.readdirSync(dir)) {
+            let fullPath = Path.join(dir, name);
+            let stat = Fs.statSync(fullPath);
 
-            var isDir = stat.isDirectory();
+            let isDir = stat.isDirectory();
             if (filter && typeof(filter) === 'function')
                 if (filter(name, isDir) == false)
                     continue;
@@ -109,10 +110,10 @@ let ScanDir = function (siteRoot, dir, ret, filter) {
 };
 
 function getSiteContentFiles(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['content'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['content'];
+    let files = [];
+    for (let folder of folders) {
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterContentFile);
     }
     // console.log('getSiteContentFiles', files);
@@ -120,20 +121,20 @@ function getSiteContentFiles(siteName) {
 }
 
 function getSiteLayoutFiles(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['layout'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['layout'];
+    let files = [];
+    for (let folder of folders) {
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
     }
     return files;
 }
 
 function getSiteAssetFiles(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['asset'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['asset'];
+    let files = [];
+    for (let folder of folders) {
         // console.log('getSiteAssetFiles', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterAssetFile);
     }
@@ -141,10 +142,10 @@ function getSiteAssetFiles(siteName) {
 }
 
 function getLayoutList(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['layout'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['layout'];
+    let files = [];
+    for (let folder of folders) {
         // console.log('getLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyLayoutFile);
     }
@@ -152,10 +153,10 @@ function getLayoutList(siteName) {
 }
 
 function getRootLayoutList(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['layout'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['layout'];
+    let files = [];
+    for (let folder of folders) {
         // console.log('getRootLayoutList', Path.join(sitesRoot, siteName, folder));
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyRootLayoutFile);
     }
@@ -256,27 +257,27 @@ function getDefaultContentConfig(key, valueType) {
     }
 }
 
-var DefaultFixedFieldNames = ['slug', 'layout', 'category', 'tag', 'publishDate', 'draft'];
+let DefaultFixedFieldNames = ['title', 'slug', 'layout', 'category', 'tag', 'publishDate', 'draft'];
 
 function genSimpleContentConfig(metaData, fixedFieldNames) {
-    var fixedFields = [];
-    var tmpFields = [];
-    var fixedField = false;
+    let fixedFields = [];
+    let tmpFields = [];
+    let fixedField = false;
 
-    for (var key in metaData) {
+    for (let key in metaData) {
         if (!metaData.hasOwnProperty(key)) {
             continue;
         }
 
-        var fields = tmpFields;
+        let fields = tmpFields;
         if (fixedFieldNames && fixedFieldNames.indexOf(key) != -1) {
             fields = fixedFields;
             fixedField = true;
         }
 
 
-        var value = metaData[key];
-        var valueType = typeof value;
+        let value = metaData[key];
+        let valueType = typeof value;
         switch (valueType) {
             case 'string':
                 switch (key) {
@@ -329,7 +330,7 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
             case 'object':
                 if (Array.isArray(value)) {
                     // use first object in array value to gen model
-                    var children = [];
+                    let children = [];
                     // chi? tao model khi value[0] type la object
                     if (value.length >= 1 && typeof(value[0]) === 'object') {
                         children = genSimpleContentConfig(value[0]);
@@ -358,7 +359,7 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
 
     // add _config to fixed fields if not exists
     if (fixedFields.length > 0) {
-        var contentField = _.find(fixedFields, {name: '__content__'});
+        let contentField = _.find(fixedFields, {name: '__content__'});
         if (!contentField) {
             fixedFields.push({
                 name:         '__content__',
@@ -407,30 +408,40 @@ function genSimpleContentConfig(metaData, fixedFieldNames) {
 }
 
 String.prototype.regexIndexOf = function (regex, startpos) {
-    var indexOf = this.substring(startpos || 0).search(regex);
+    let indexOf = this.substring(startpos || 0).search(regex);
     return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
 };
 
-var FORM_START = /^---json/;
-var FORM_END_1 = /---$/;
-var FORM_END_2 = /---[\r\n]/;
-function SplitContentFile(fileContent) {
-    var start = fileContent.regexIndexOf(FORM_START);
-    if (start == -1) return null;
-    start += 7;
+// let FORM_START = /^---json/;
+// let FORM_END_1 = /---$/;
+// let FORM_END_2 = /---[\r\n]/;
+// function SplitContentFile(fileContent) {
+//     let start = fileContent.regexIndexOf(FORM_START);
+//     if (start == -1) return null;
+//     start += 7;
+//
+//     let end = fileContent.regexIndexOf(FORM_END_1, start);
+//     if (end == -1)
+//         end = fileContent.regexIndexOf(FORM_END_2, start);
+//     if (end == -1) return null;
+//     return {
+//         metaData:     JSON.parse(fileContent.substr(start, end - start).trim()),
+//         markDownData: fileContent.substr(end + 3).trim()
+//     }
+// }
 
-    var end = fileContent.regexIndexOf(FORM_END_1, start);
-    if (end == -1)
-        end = fileContent.regexIndexOf(FORM_END_2, start);
-    if (end == -1) return null;
-    return {
-        metaData:     JSON.parse(fileContent.substr(start, end - start).trim()),
-        markDownData: fileContent.substr(end + 3).trim()
-    }
+function SplitContentFile(fileContent) {
+    let parsed = Matter(fileContent);
+    let ret = {
+        metaData:     parsed.data,
+        markDownData: parsed.content
+    };
+    ret['__content__'] = parsed.content;
+    return ret;
 }
 
 function getContentFile(siteName, contentFilePath) {
-    var contentStr = readFile(siteName, contentFilePath).trim();
+    let contentStr = readFile(siteName, contentFilePath).trim();
     // split content thanh metaData va markdownData
     return SplitContentFile(contentStr);
 }
@@ -440,8 +451,8 @@ function getRawContentFile(siteName, contentFilePath) {
 }
 
 function saveContentFile(siteName, contentFilePath, metaData, markdownData) {
-    var fullPath = Path.join(sitesRoot, siteName, contentFilePath);
-    var content = `---json\r\n${JSON.stringify(metaData, null, 4)}\r\n---\r\n${markdownData}`;
+    let fullPath = Path.join(sitesRoot, siteName, contentFilePath);
+    let content = `---json\r\n${JSON.stringify(metaData, null, 4)}\r\n---\r\n${markdownData}`;
     Fs.writeFileSync(fullPath, content);
 }
 
@@ -454,18 +465,18 @@ function isObjectEqual(lhs, rhs) {
     return JSON.stringify(lhs) === JSON.stringify(rhs);
 }
 
-var mergeConfig = function (existsConfigs, newGenConfigs) {
+let mergeConfig = function (existsConfigs, newGenConfigs) {
     // find new config object
-    var newConfigObjects = _.differenceBy(newGenConfigs, existsConfigs, 'name');
+    let newConfigObjects = _.differenceBy(newGenConfigs, existsConfigs, 'name');
 
     // merge children
-    for (var i = 0; i < existsConfigs.length; i++) {
-        var existsConfig = existsConfigs[i];
-        var newConfig = _.find(newGenConfigs, {name: existsConfig.name});
+    for (let i = 0; i < existsConfigs.length; i++) {
+        let existsConfig = existsConfigs[i];
+        let newConfig = _.find(newGenConfigs, {name: existsConfig.name});
         if (!newConfig) continue;
 
         // merge field exists in newConfig and not in existsConfig
-        for (var key in newConfig) {
+        for (let key in newConfig) {
             if (!newConfig.hasOwnProperty(key)) continue;
             if (key === 'children') continue;
             if (existsConfig[key]) continue;
@@ -482,21 +493,144 @@ var mergeConfig = function (existsConfigs, newGenConfigs) {
     return existsConfigs.concat(newConfigObjects);
 };
 
+const schemaSetArrayFormat = function (obj, type) {
+    if (typeof(obj) !== 'object') return;
+    if (obj && obj.type && obj.type === 'array') {
+        obj.format = type;
+    }
+
+    if (obj.properties) {
+        _.forOwn(obj.properties, prop => {
+            schemaSetArrayFormat(prop, type);
+        })
+    }
+
+    if (obj.items && obj.items.properties) {
+        _.forOwn(obj.items.properties, prop => {
+            schemaSetArrayFormat(prop, type);
+        });
+    }
+};
+
+function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
+    let schema = JSON.parse(window.ToJsonSchema(JSON.stringify(metaData)));
+    schemaSetArrayFormat(schema, 'table');
+    let defaultProperties = {
+        title:       {
+            type:          'string',
+            propertyOrder: 100,
+            options:       {
+                hidden: false
+            }
+        },
+        slug:        {
+            type:          'string',
+            propertyOrder: 100,
+            readOnly:      true,
+            options:       {
+                hidden: false
+            }
+        },
+        layout:      {
+            type:          'string',
+            propertyOrder: 100,
+            options:       {
+                hidden: true
+            }
+        },
+        category:    {
+            type:          'string',
+            propertyOrder: 100,
+            options:       {
+                hidden: false
+            }
+        },
+        tag:         {
+            type:          'array',
+            format:        'checkbox',
+            propertyOrder: 100,
+            uniqueItems:   true,
+            items:         {
+                type: 'string',
+                enum: []
+            }
+        },
+        date:        {
+            type:          'string',
+            format:        'datetime',
+            propertyOrder: 100,
+            options:       {
+                hidden: false
+            }
+        },
+        __content__: {
+            type:          'string',
+            format:        'text',
+            propertyOrder: 100,
+            options:       {
+                hidden: true
+            }
+        },
+        publishDate: {
+            type:          'string',
+            format:        'datetime',
+            propertyOrder: 100,
+            options:       {
+                hidden: true
+            }
+        },
+        draft:       {
+            type:          'boolean',
+            format:        'checkbox',
+            propertyOrder: 100,
+            options:       {
+                hidden: true
+            }
+        }
+    };
+
+    // add propertyOrder to generated schema
+    // console.log('schema.properties', schema.properties);
+    for (let property in schema.properties) {
+        if (!schema.properties.hasOwnProperty(property)) continue;
+        schema.properties[property]['propertyOrder'] = 1000;
+    }
+
+    // merge default properties to
+    // console.log('defaultProperties', defaultProperties);
+    for (let property in defaultProperties) {
+        if (!defaultProperties.hasOwnProperty(property)) continue;
+
+        schema.properties[property] = defaultProperties[property];
+    }
+
+    return schema;
+}
+
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
-    var name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
-    var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
+    let name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
+    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
 
     // doc file content lay metaData
-    var content = getContentFile(siteName, contentFilePath);
+    let content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
-    var contentConfig = genSimpleContentConfig(content.metaData, DefaultFixedFieldNames);
+    // let contentConfig = genSimpleContentConfig(content.metaData, DefaultFixedFieldNames);
+
     if (fileExists(contentConfigFullPath)) {
-        var existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
-        var newConfig = mergeConfig(existsConfig, contentConfig);
-        console.log('write config file');
-        Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
-        return newConfig;
+        // doc va tra ve config, khong tu dong update merge
+        let existsConfig = JSON.parse(Fs.readFileSync(contentConfigFullPath).toString());
+        // code for old config type detect old config file by check _$schema key exists
+        if (!existsConfig['_$schema']) {
+            let contentConfig = genJsonSchemaContentConfig(content.metaData, DefaultFixedFieldNames);
+            Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
+            return contentConfig;
+        }
+        // let newConfig = mergeConfig(existsConfig, contentConfig);
+        // console.log('write config file');
+        // Fs.writeFileSync(contentConfigFullPath, JSON.stringify(newConfig, null, 4));
+        return existsConfig;
     } else {
+        let contentConfig = genJsonSchemaContentConfig(content.metaData, DefaultFixedFieldNames);
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
         return contentConfig;
     }
@@ -507,11 +641,11 @@ function readFile(site, filePath) {
 }
 
 function getSiteList() {
-    var ret = Fs.readdirSync(sitesRoot);
-    var sites = [];
-    for (var i = 0; i < ret.length; i++) {
-        var sitePath = Path.join(sitesRoot, ret[i]);
-        var stat = Fs.statSync(sitePath);
+    let ret = Fs.readdirSync(sitesRoot);
+    let sites = [];
+    for (let i = 0; i < ret.length; i++) {
+        let sitePath = Path.join(sitesRoot, ret[i]);
+        let stat = Fs.statSync(sitePath);
         if (stat.isDirectory()) {
             sites.push({name: ret[i]});
         }
@@ -520,8 +654,8 @@ function getSiteList() {
 }
 
 function saveConfigFile(siteName, layoutPath, contentConfig) {
-    var name = Path.basename(layoutPath, Path.extname(layoutPath));
-    var contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.config.json';
+    let name = Path.basename(layoutPath, Path.extname(layoutPath));
+    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
     Fs.writeFileSync(contentConfigFullPath, contentConfig);
 }
 
@@ -535,7 +669,7 @@ function saveLayoutFile(siteName, filePath, content) {
 
 function deleteFile(siteName, subFolder, filePath) {
     filePath = Path.normalize(filePath).replace(/^(\.\.[\/\\])+/, '');
-    var fullPath = Path.join(sitesRoot, siteName, subFolder, filePath);
+    let fullPath = Path.join(sitesRoot, siteName, subFolder, filePath);
     return Fs.unlinkSync(fullPath);
 }
 
@@ -548,70 +682,76 @@ function deleteContentFile(siteName, filePath) {
 }
 
 function softDeleteContentFile(siteName, filePath) {
-    var contentFilePath = Path.join('content', filePath);
+    let contentFilePath = Path.join('content', filePath);
     // read content file
-    var content = getContentFile(siteName, contentFilePath);
+    let content = getContentFile(siteName, contentFilePath);
     // set layout -> delete.html
     content.metaData['layout'] = 'delete.html';
     // save file
     saveContentFile(siteName, contentFilePath, content.metaData, content.markDownData);
     // update memory index
-    var metaData = siteContentIndexes[filePath];
+    let metaData = siteContentIndexes[filePath];
     if (metaData instanceof Object)
         metaData['layout'] = 'delete.html';
 }
 
 function newLayoutFile(siteName, layoutFileName) {
-    var defaultLayoutContent = ``;
-    var fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
+    let defaultLayoutContent = ``;
+    let fullPath = Path.join(sitesRoot, siteName, 'layout', layoutFileName);
     Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
-    var layoutFilePath = Path.join('layout', layoutFileName);
+    let layoutFilePath = Path.join('layout', layoutFileName);
     return {name: layoutFileName, path: layoutFilePath.replace(/\\/g, '/')};
 }
 
 function newContentFile(siteName, layoutFileName, contentTitle, contentFileName, category, tag, isFrontPage) {
     // console.log('newContentFile', siteName, layoutFileName, contentFileName);
-    var contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
-    var layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
-    var slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
-    // var slug = contentBaseName;
-    var defaultLayoutContent = `---json
-{
-    "title": "${contentTitle}",
-    "slug": "${slug}",
-    "description": "",
-    "draft": false,
-    "publishDate": "",
-    "category": "${category}",
-    "tag": ${tag},
-    "layout": "${layoutFileName}",
-    "date": "${getCurrentISODate()}"
-}
+    let contentBaseName = Path.basename(contentFileName, Path.extname(contentFileName));
+    let layoutBaseName = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    let slug = isFrontPage ? contentBaseName : layoutBaseName + '/' + contentBaseName;
+    // let slug = contentBaseName;
+    if (layoutFileName === '') layoutFileName = 'index.html';
+    let defaultMeta = {
+        "title":       contentTitle,
+        "slug":        slug,
+        "description": "",
+        "draft":       false,
+        "publishDate": "",
+        "category":    category,
+        "tag":         tag,
+        "layout":      layoutFileName,
+        "date":        getCurrentISODate()
+    };
+    let defaultLayoutContent = `---json
+${JSON.stringify(defaultMeta, null, 4)}
 ---
 `;
-    var layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
-    var newContentFilePath = isFrontPage ? Path.join('content', contentBaseName) + '.md' :
-    Path.join('content', layoutFolder, contentBaseName) + '.md';
-    var fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
+    let layoutFolder = Path.basename(layoutFileName, Path.extname(layoutFileName));
+    let newContentFilePath = isFrontPage ? Path.join('content', contentBaseName) + '.md' :
+        Path.join('content', layoutFolder, contentBaseName) + '.md';
+    let fullPath = Path.join(sitesRoot, siteName, newContentFilePath);
 
     // create folder for new content if not exists
     try {
         MkdirpSync(Path.join(sitesRoot, siteName, 'content', layoutFolder));
     } catch (_) {
     }
+    console.log('Add new meta to IndexFile', newContentFilePath);
 
+    let key = newContentFilePath.replace(/\\/g, '/');
+    if (key.startsWith('content/')) key = key.slice(8);
+    siteContentIndexes[key] = defaultMeta;
     Fs.writeFileSync(fullPath, defaultLayoutContent, {flag: 'wx+'});
     return {name: contentFileName, path: newContentFilePath.replace(/\\/g, '/')};
 }
 
 function MkdirpSync(p, opts, made) {
-    var _0777 = parseInt('0777', 8);
+    let _0777 = parseInt('0777', 8);
     if (!opts || typeof opts !== 'object') {
         opts = {mode: opts};
     }
 
-    var mode = opts.mode;
-    var xfs = opts.fs || Fs;
+    let mode = opts.mode;
+    let xfs = opts.fs || Fs;
 
     if (mode === undefined) {
         mode = _0777 & (~process.umask());
@@ -635,7 +775,7 @@ function MkdirpSync(p, opts, made) {
             // there already.  If so, then hooray!  If not, then something
             // is borked.
             default:
-                var stat;
+                let stat;
                 try {
                     stat = xfs.statSync(p);
                 }
@@ -775,14 +915,14 @@ function gitCommit(siteName, message, onProgress) {
 function gitGenMessage(siteName) {
     const workingDirectory = Path.resolve(getSitePath(siteName));
     return new Promise((resolve, reject) => {
-        var output = '';
+        let output = '';
         return spawnGitCmd('git', ['status'], workingDirectory, function (data) {
             output += data + '\r\n';
         }).catch(ex => {
             reject(ex);
         }).then(() => {
             console.log('output', output);
-            var match = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g);
+            let match = output.match(/((new file:)|(deleted:)|(modified:))[\s\t]+(.+)/g);
             if (match == null) {
                 output = new Date().toString();
             } else {
@@ -808,22 +948,22 @@ function getCurrentISODate() {
 }
 
 function addMediaFile(siteName, filePath, cb) {
-    var sitePath = getSitePath(siteName);
+    let sitePath = getSitePath(siteName);
     // check if file already in site's asset folder
-    var relativePath = Path.relative(sitePath, filePath);
+    let relativePath = Path.relative(sitePath, filePath);
     if (relativePath.startsWith('asset' + Path.sep)) {
         // file is in sites' asset folder
         relativePath = relativePath.substr(6); // remove "asset/"
         cb(null, relativePath.replace(/\\/g, '/'));
     } else {
         // copy file vo asset/img
-        var fileName = filePath.split(/[\\\/]/).pop();
-        var targetDir = Path.join(sitesRoot, siteName, 'asset', 'img');
-        var target = Path.join(targetDir, fileName);
+        let fileName = filePath.split(/[\\\/]/).pop();
+        let targetDir = Path.join(sitesRoot, siteName, 'asset', 'img');
+        let target = Path.join(targetDir, fileName);
         MkdirpSync(targetDir);
 
-        var cbCalled = false;
-        var done = function (err, filePath) {
+        let cbCalled = false;
+        let done = function (err, filePath) {
             if (!cbCalled) {
                 if (err) cb(err);
                 else cb(null, filePath);
@@ -831,10 +971,10 @@ function addMediaFile(siteName, filePath, cb) {
             }
         };
 
-        var rd = Fs.createReadStream(filePath);
+        let rd = Fs.createReadStream(filePath);
         rd.on('error', done);
 
-        var wr = Fs.createWriteStream(target);
+        let wr = Fs.createWriteStream(target);
         wr.on('error', done);
         wr.on('close', function (ex) {
             relativePath = Path.join('img', fileName);
@@ -853,7 +993,7 @@ function getMetaFile(siteName, filePath) {
  * 'content/metadata/footer.json' -> footer.meta.json
  * */
 function genMetaConfigFileName(contentMetaDataPath) {
-    var parts = contentMetaDataPath.split('/');
+    let parts = contentMetaDataPath.split('/');
     parts.shift(); // remove 'content'
     parts.shift(); // remove 'metadata'
     return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta.json';
@@ -861,15 +1001,15 @@ function genMetaConfigFileName(contentMetaDataPath) {
 
 function getMetaConfigFile(siteName, metaFilePath) {
     console.log('getMetaConfigFile', metaFilePath);
-    var metaFileContent = readFile(siteName, metaFilePath);
-    var metaData = JSON.parse(metaFileContent);
-    var name = genMetaConfigFileName(metaFilePath);
-    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
-    var metaConfig = genSimpleContentConfig(metaData);
+    let metaFileContent = readFile(siteName, metaFilePath);
+    let metaData = JSON.parse(metaFileContent);
+    let name = genMetaConfigFileName(metaFilePath);
+    let configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
+    let metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
-        var existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
-        var newConfig = mergeConfig(existsConfig, metaConfig);
+        let existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
+        let newConfig = mergeConfig(existsConfig, metaConfig);
         Fs.writeFileSync(configFullPath, JSON.stringify(newConfig, null, 4));
         return newConfig;
     } else {
@@ -879,13 +1019,13 @@ function getMetaConfigFile(siteName, metaFilePath) {
 }
 
 function saveMetaFile(siteName, contentFilePath, metaData) {
-    var fullPath = Path.join(sitesRoot, siteName, contentFilePath);
+    let fullPath = Path.join(sitesRoot, siteName, contentFilePath);
     Fs.writeFileSync(fullPath, JSON.stringify(metaData, null, 4));
 }
 
 function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
-    var name = Path.basename(metaFilePath, Path.extname(metaFilePath));
-    var configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
+    let name = Path.basename(metaFilePath, Path.extname(metaFilePath));
+    let configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
     Fs.writeFileSync(configFullPath, metaConfig);
 }
 
@@ -896,23 +1036,23 @@ function isGhPageInitialized(siteName) {
 }
 
 function setDomain(siteName, domain) {
-    var fullPath = Path.join(sitesRoot, siteName, 'asset', 'CNAME');
+    let fullPath = Path.join(sitesRoot, siteName, 'asset', 'CNAME');
     Fs.writeFileSync(fullPath, domain);
 }
 
 function getListConfig(dir) {
     try {
-        var filePathList = Fs.readdirSync(dir);
+        let filePathList = Fs.readdirSync(dir);
         // console.log('filePathList', filePathList);
         let ret = [];
         filePathList.forEach(function (filePath) {
             // console.log('filePath', filePath);
             filePath = Path.join(dir, filePath);
-            var stat = Fs.statSync(filePath);
+            let stat = Fs.statSync(filePath);
             if (!stat.isFile()) return;
-            var fileName = filePath.split(/[\\\/]/g).pop();
-            var categoryValue = fileName.substr(0, fileName.lastIndexOf('.'));
-            var config = JSON.parse(Fs.readFileSync(filePath));
+            let fileName = filePath.split(/[\\\/]/g).pop();
+            let categoryValue = fileName.substr(0, fileName.lastIndexOf('.'));
+            let config = JSON.parse(Fs.readFileSync(filePath));
             ret.push({
                 name:  config.displayName,
                 value: categoryValue
@@ -925,7 +1065,7 @@ function getListConfig(dir) {
     }
 }
 
-var categoryListCache;
+let categoryListCache;
 function getCategoryList(siteName) {
     // if (categoryListCache)
     //     return categoryListCache;
@@ -945,9 +1085,9 @@ function getTagList(siteName) {
 
 
 function getCategoryLayoutList(siteName) {
-    var ret = [];
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var filter = function (fileName, isDir) {
+    let ret = [];
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let filter = function (fileName, isDir) {
         if (isDir) return false; // no recursive
         if (fileName.endsWith('.category.html')) return false;
         if (fileName.endsWith('.tag.html')) return false;
@@ -957,7 +1097,7 @@ function getCategoryLayoutList(siteName) {
 }
 
 function newTag(siteName, tagName, tagFileName) {
-    var defaultTagConfig = JSON.stringify({
+    let defaultTagConfig = JSON.stringify({
         "sortBy":      "date",
         "reverse":     false,
         "metadata":    {},
@@ -972,14 +1112,14 @@ function newTag(siteName, tagName, tagFileName) {
         Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag'));
     } catch (_) {
     }
-    var fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag', tagFileName);
+    let fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag', tagFileName);
     Fs.writeFileSync(fullPath, defaultTagConfig, {flag: 'wx+'});
-    var categoryFilePath = Path.join('content', 'metadata', 'category', tagFileName);
+    let categoryFilePath = Path.join('content', 'metadata', 'category', tagFileName);
     return {name: tagName, path: categoryFilePath.replace(/\\/g, '/')};
 }
 
 function newCategory(siteName, categoryName, categoryFileName) {
-    var defaultCategoryConfig = JSON.stringify({
+    let defaultCategoryConfig = JSON.stringify({
         "sortBy":      "date",
         "reverse":     false,
         "metadata":    {},
@@ -994,9 +1134,9 @@ function newCategory(siteName, categoryName, categoryFileName) {
         Fs.mkdirSync(Path.join(sitesRoot, siteName, 'content', 'metadata', 'category'));
     } catch (_) {
     }
-    var fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'category', categoryFileName);
+    let fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'category', categoryFileName);
     Fs.writeFileSync(fullPath, defaultCategoryConfig, {flag: 'wx+'});
-    var categoryFilePath = Path.join('content', 'metadata', 'category', categoryFileName);
+    let categoryFilePath = Path.join('content', 'metadata', 'category', categoryFileName);
     return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/')};
 }
 
@@ -1004,17 +1144,17 @@ function filterOnlyMetadataFile(name, isDir) {
     if (isDir) {
         return true;
     } else {
-        var ext = name.split('.').pop();
+        let ext = name.split('.').pop();
         if (ext !== 'json') return false;
     }
     return true;
 }
 
 function getSiteMetadataFiles(siteName) {
-    var siteRoot = Path.join(sitesRoot, siteName);
-    var folders = ['content/metadata'];
-    var files = [];
-    for (var folder of folders) {
+    let siteRoot = Path.join(sitesRoot, siteName);
+    let folders = ['content/metadata'];
+    let files = [];
+    for (let folder of folders) {
         ScanDir(siteRoot, Path.join(sitesRoot, siteName, folder), files, filterOnlyMetadataFile);
     }
     return files;
@@ -1024,20 +1164,20 @@ function showItemInFolder(siteName, filePath) {
     Shell.showItemInFolder(Path.join(sitesRoot, siteName, filePath));
 }
 
-var createSiteIndex = Promise.coroutine(function*(siteName) {
-    var siteContentPath = Path.join(sitesRoot, siteName, 'content');
-    var contents = {};
+let createSiteIndex = Promise.coroutine(function*(siteName) {
+    let siteContentPath = Path.join(sitesRoot, siteName, 'content');
+    let contents = {};
 
-    var readContentFiles = Promise.coroutine(function*(root, dir) {
-        var searchPath = Path.join(root, dir);
-        var files = yield Fs.readdirAsync(searchPath);
+    let readContentFiles = Promise.coroutine(function*(root, dir) {
+        let searchPath = Path.join(root, dir);
+        let files = yield Fs.readdirAsync(searchPath);
         yield Promise.map(files, Promise.coroutine(function *(file) {
-            var filePath = Path.join(root, dir, file);
+            let filePath = Path.join(root, dir, file);
             // console.log('filePath', filePath);
-            var stat = yield Fs.statAsync(filePath);
+            let stat = yield Fs.statAsync(filePath);
             if (stat.isFile()) {
                 if (!file.endsWith('.md')) return;
-                var content = (yield Fs.readFileAsync(filePath)).toString();
+                let content = (yield Fs.readFileAsync(filePath)).toString();
                 content = SplitContentFile(content);
                 contents[dir === '' ? file : `${dir}/${file}`] = content.metaData;
             } else if (stat.isDirectory()) {
@@ -1077,7 +1217,7 @@ const initNewSiteRootFolder = Promise.coroutine(function*(repositoryUrl, targetD
     // add .gitignore (ingore build + node_modules)
     yield Fs.writeFileAsync(Path.join(targetDir, '.gitignore'), `build/\r\nnode_modules/\r\n`);
 
-    yield spawnGitCmd('git', ['add', '.gitignore'], targetDir);
+    yield spawnGitCmd('git', ['add', '.'], targetDir);
     // set remote gogs repo
     yield spawnGitCmd('git', ['remote', 'add', 'origin', repositoryUrl], targetDir);
     // commit

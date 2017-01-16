@@ -318,9 +318,27 @@
 
         me.openSite = function (site, e) {
             console.log('register openSite', site);
-            if (site.local == false && site.remote && !site.url) {
-                alert('Remote repository not exists in site data');
-                return;
+            if (site.local == false && site.remote) {
+                if (!site.url) {
+                    alert('Remote repository not exists in site data');
+                    return;
+                } else {
+                    // delete site local folder
+                    // git clone
+                    var repoUrl = site.url;
+                    console.log('repoUrl', site.url);
+                    me.tags['progress-dialog'].show('Import Project');
+                    BackEnd.gitImportGitHub(site.name, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
+                        me.tags['progress-dialog'].enableClose();
+                        me.tags['progress-dialog'].hide();
+                        site.local = true;
+                        me.openSite(site)();
+                    }).catch(function (err) {
+                        console.log(err);
+                        me.tags['progress-dialog'].enableClose();
+                    });
+                    return;
+                }
             }
             var siteName = site.name;
             me.unmount(true);

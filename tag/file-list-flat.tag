@@ -108,8 +108,11 @@
 
             path = path.startsWith('content/') ? path.slice(8) : path;
             var metaData = window.siteContentIndexes[path];
-            if (!metaData || !metaData.title)
+
+            if (!metaData || !metaData.title) {
                 return '';
+            }
+
             return metaData.title;
         };
 

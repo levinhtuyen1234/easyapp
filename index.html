@@ -3,8 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title>EasyWeb Builder</title>
+
     <link rel="stylesheet" href="assets/css/jquery-ui.min.css">
-    <!--<link rel="stylesheet" href="assets/css/bootstrap.min.css">-->
+    <!--<link rel="stylesheet" href="assets/css/bootstrap-iso.css">-->
     <link rel="stylesheet" href="assets/css/jquery.jspanel.min.css">
     <link rel="stylesheet" href="assets/css/font-awesome.min.css">
     <link rel="stylesheet" href="assets/css/octicons.min.css">
@@ -12,11 +13,14 @@
     <link rel="stylesheet" href="assets/css/github.min.css">
     <link rel="stylesheet" href="assets/css/simplemde.min.css">
     <!--<link rel="stylesheet" href="assets/css/bootstrap-select.min.css">-->
-    <!--<link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">-->
+    <link rel="stylesheet" href="assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="assets/css/calendar.css">
     <link rel="stylesheet" href="assets/css/semantic.min.css">
     <link rel="stylesheet" href="assets/css/layout-default.css">
     <link rel="stylesheet" href="assets/css/simplebar.css">
+    <link rel="stylesheet" href="assets/css/flatpickr.min.css">
+    <link rel="stylesheet" href="assets/css/select2.min.css">
+    <!--<link rel="stylesheet" href="assets/css/foundation.min.css">-->
 
     <link rel="stylesheet" href="assets/css/codemirror.min.css">
     <!--<link rel="stylesheet" href="assets/css/frameworks-355fc5f5dc43030d495ea75b6bc8366695646a7566c13dd6ba2c2d358e1b5383.css">-->
@@ -71,6 +75,9 @@
 <script src="tag/dialog-login-signup.tag" type="riot/tag"></script>
 <script src="tag/bottom-bar.tag" type="riot/tag"></script>
 
+<script src="tag/json-schema-config-editor.tag" type="riot/tag"></script>
+<script src="tag/json-schema-form-editor.tag" type="riot/tag"></script>
+
 <script src="tag/window-login.tag" type="riot/tag"></script>
 <script src="tag/window-public.tag" type="riot/tag"></script>
 <script src="tag/landing.tag" type="riot/tag"></script>
@@ -80,9 +87,10 @@
 <script src="assets/js/jquery-ui.min.js"></script>
 <script src="assets/js/pouchdb.min.js"></script>
 <script src="assets/js/moment.min.js"></script>
+<script src="assets/js/jsoneditor.js"></script>
 <!--<script src="assets/js/bootbox.min.js"></script>-->
 <script src="assets/js/bootbox-semantic-ui.js"></script>
-<!--<script src="assets/js/bootstrap.min.js"></script>-->
+<script src="assets/js/bootstrap.min.js"></script>
 <script src="assets/js/jquery.jspanel-compiled.min.js"></script>
 <script src="assets/js/highlight.min.js"></script>
 <script src="assets/js/jsonlint.min.js"></script>
@@ -99,14 +107,24 @@
 <script src="assets/js/riot+compiler.min.js"></script>
 <script src="assets/js/semantic.min.js"></script>
 <script src="assets/js/calendar.js"></script>
+<script src="assets/js/flatpickr.min.js"></script>
+<!--<script src="assets/js/select2.full.min.js"></script>-->
 <script src="assets/js/jquery.layout.js"></script>
 <script src="assets/js/simplebar.js"></script>
+<script src="assets/js/foundation.min.js"></script>
 <script>module = saveModule;</script>
 
 <script>
     var fs = require('fs');
+    var _ = require('lodash');
     var BackEnd = require(__dirname + '/assets/js/backend.js');
     var API = require(__dirname + '/assets/js/remote-api.js');
+    var ToJsonSchema = require(__dirname + '/assets/js/obj2jsonschema.js');
+    require(__dirname + '/assets/js/json-schema-editor.js');
+
+//    console.log('TEST', ToJsonSchema(JSON.stringify({
+//        'aaa': ['1', '2']
+//    })));
     window.DB = new PouchDB({name: 'DB', size: 1000, revs_limit: 8, adapter: 'websql'});
     DB.upsert = function (doc) {
         return DB.get(doc).then(function (existsDoc) {
@@ -177,8 +195,9 @@
             window.User = new AppUser(account);
             var curSites = User.data.sites;
             User.getSites().then(function (remoteSites) {
+                console.log('getSites resp', typeof(remoteSites), remoteSites);
                 User.data.sites = remoteSites;
-                if (curSites.length !== remoteSites.length && curPage.root.tagName === 'LANDING') {
+                if (curPage.root.tagName === 'LANDING') {
                     window.curPage.mergeLocalRemoteSites();
                     DB.upsert(User.data);
                 }
@@ -186,7 +205,7 @@
                 console.log('get remote sites failed', ex);
             });
 
-            console.log('TODO server only accept accountType "user"');
+//            console.log('TODO server only accept accountType "user"');
             account.accountType = 'dev';
             console.log('account on disk', account);
             window.curPage = riot.mount('landing')[0];

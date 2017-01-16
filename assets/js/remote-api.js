@@ -15,10 +15,15 @@ const Ajax = Promise.coroutine(function*(opts) {
         $.ajax(opts).then(function (resp) {
             return resolve(resp);
         }, function (xhr, textStatus, errorThrown) {
-            if (xhr.responseJSON.Message)
-                reject(new Error(xhr.responseJSON.Message));
-            else
+            if (xhr.responseJSON.Message) {
+                let errMsg = xhr.responseJSON.Message;
+                if (xhr.responseJSON.ExceptionType) {
+                    errMsg = xhr.responseJSON.ExceptionType + ': ' + errMsg;
+                }
+                reject(new Error(errMsg));
+            } else {
                 reject(new Error(errorThrown));
+            }
         });
     });
 });
@@ -31,8 +36,8 @@ const restAdapter = {
     accountObjectTransformer: function (account) {
         console.log('accountObjectTransformer', account);
         return {
-            id:          account['AccountId'],
-            accessLevel: account['AccessLevel']
+            id:           account['AccountId'],
+            accessLevels: account['AccessLevels']
         }
     },
 
@@ -229,10 +234,11 @@ function CreateGogsRepo(username, repositoryName) {
             resolve(data);
         }, function (jqXHR, textStatus, errorThrown) {
             console.log(jqXHR, textStatus, errorThrown);
-            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message)
+            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message) {
                 reject(new Error(jqXHR.responseJSON.message));
-            else
-                reject(new Error(textStatus));
+            } else {
+                reject(errorThrown);
+            }
         });
     });
 }
@@ -259,7 +265,7 @@ class AppUser {
 
     addSite(name, displayName) {
         var username = this.data.username;
-        var id = this.data.id;
+        var accountId = this.data.id;
         // tao remote git repo
         // TODO THIS IS TEMP CODE tạo repo phai o tren server
         return CreateGogsRepo(username, name).then(function (data) {
@@ -268,12 +274,6 @@ class AppUser {
 
             // call add site (goi. sau khi goi. gogs vi` khong co API update website)
             var postData = {
-                "Accounts":    [
-                    {
-                        "AccountId":   id,
-                        "AccessLevel": ['dev']
-                    }
-                ],
                 "Name":        name,
                 "DisplayName": displayName,
                 "Url":         data.url
@@ -283,28 +283,28 @@ class AppUser {
                 method:      'POST',
                 dataType:    'json',
                 contentType: 'application/json',
-                url:         adapter.addSiteUrl,
+                url:         `https://api.easywebhub.com/users/${accountId}/websites`,
                 data:        JSON.stringify(postData)
             }).then(function (resp) {
                 console.log('addSite resp', resp);
                 resp = adapter.addSiteResponse(resp);
 
-                console.log('username', username);
+                // console.log('username', username);
                 return {
                     url: data.url
                 };
             });
         }).catch(function (error) {
-            console.log('ERRRORRRR', error.message);
+            console.log('CALL REMOTE GOT ERROR', error.message);
             if (error.message.startsWith('repository already exists')) {
                 var repoUrl = localStorage.getItem(`${username}-${name}`);
                 if (!repoUrl)
-                    reject(new Error('Failed to get repository url'));
+                    throw new Error('Failed to get repository url');
                 return {
                     url: repoUrl
                 };
             } else {
-                reject(new Error('create gogs reposiory failed, ' + error.message));
+                throw new Error('create gogs reposiory failed, ' + error.message);
             }
         });
     }

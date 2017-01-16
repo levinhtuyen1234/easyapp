@@ -140,7 +140,6 @@
         me.value = opts.value || '';
         me.selectedName = '';
 
-
         me.on('mount', function () {
             setTimeout(function () {
                 me.setValue(me.value);
@@ -635,7 +634,7 @@
             if (contentConfig == undefined) {
                 console.log('BUG', contentConfig);
             }
-            // render all field excet __content__
+            // render all field except __content__
             for (var i = 0; i < contentConfig.length; i++) {
                 var fieldConfig = contentConfig[i];
                 if (fieldConfig.name === '__content__') continue;
