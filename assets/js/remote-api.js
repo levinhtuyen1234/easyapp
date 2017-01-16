@@ -10,12 +10,13 @@ const ERROR_MSG = {
     'AlreadyExists': 'Username already exists'
 };
 
-const Ajax = Promise.coroutine(function*(opts) {
+const Ajax = function (opts) {
     return new Promise((resolve, reject) => {
-        $.ajax(opts).then(function (resp) {
-            return resolve(resp);
+        return $.ajax(opts).then(function (resp, textStatus, jqXHR) {
+            resolve(resp);
         }, function (xhr, textStatus, errorThrown) {
-            if (xhr.responseJSON.Message) {
+            let errMsg = errorThrown;
+            if (xhr.responseJSON && xhr.responseJSON.Message) {
                 let errMsg = xhr.responseJSON.Message;
                 if (xhr.responseJSON.ExceptionType) {
                     errMsg = xhr.responseJSON.ExceptionType + ': ' + errMsg;
@@ -25,8 +26,8 @@ const Ajax = Promise.coroutine(function*(opts) {
                 reject(new Error(errorThrown));
             }
         });
-    });
-});
+    })
+};
 
 const restAdapter = {
     loginUrl:    'https://api.easywebhub.com/auth/signin',
@@ -220,26 +221,15 @@ function register(data) {
 }
 
 function CreateGogsRepo(username, repositoryName) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            method:      'POST',
-            dataType:    'json',
-            contentType: 'application/json',
-            url:         `${GOGS_SERVER_URL}/repos`,
-            data:        JSON.stringify({
-                username:       username,
-                repositoryName: repositoryName
-            })
-        }).then(function (data, textStatus, jqXHR) {
-            resolve(data);
-        }, function (jqXHR, textStatus, errorThrown) {
-            console.log(jqXHR, textStatus, errorThrown);
-            if (jqXHR && jqXHR.responseJSON && jqXHR.responseJSON.message) {
-                reject(new Error(jqXHR.responseJSON.message));
-            } else {
-                reject(errorThrown);
-            }
-        });
+    return Ajax({
+        method:      'POST',
+        dataType:    'json',
+        contentType: 'application/json',
+        url:         `${GOGS_SERVER_URL}/repos`,
+        data:        JSON.stringify({
+            username:       username,
+            repositoryName: repositoryName
+        })
     });
 }
 

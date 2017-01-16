@@ -27,7 +27,7 @@
     </div>
     <div class="actions">
         <div class="ui deny button">Cancel</div>
-        <div class="ui positive right labeled icon button {cloning ? 'loading' : ''} {disabled: (siteName==='' || template==null || cloning)}" onclick="{createSite.bind(this, siteName)}">Create
+        <div class="ui primary right labeled icon button {cloning ? 'loading' : ''} {disabled: (siteName==='' || template==null || cloning)}" onclick="{createSite.bind(this, siteName)}">Create
             <i class="add icon"></i>
         </div>
     </div>
