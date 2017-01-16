@@ -15,7 +15,7 @@
                 <label class="three wide field">Parent Category</label>
                 <div class="ui thirteen wide field">
                     <div class="ui fluid selection dropdown" style="width: 100%">
-                        <input name="category" type="hidden">
+                        <input class="parentCategory" type="hidden">
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Category</div>
                         <div class="menu">
@@ -75,21 +75,24 @@
         };
 
         me.updateCategoryName = function (e) {
-            me.categoryName = e.target.value.trim();
+            me.categoryName = e.target ? e.target.value.trim() : e;
             me.categoryFilenameElm.value = me.categoryName
-                    .toLowerCase()
-                    .normalize('NFKD')
-                    .replace(combining, '')
-                    .replace(/đ/g, 'd')
-                    .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
-                    .replace(/[.’']/g, ' ')
-                    .replace(/\s+/g, '-')
-                    .trim();
+                .toLowerCase()
+                .normalize('NFKD')
+                .replace(combining, '')
+                .replace(/đ/g, 'd')
+                .replace(/[?,!\/"*:;#$@\\()\[\]{}^~]*/g, '')
+                .replace(/[.’']/g, ' ')
+                .replace(/\s+/g, '-')
+                .trim();
+            let parentCategoryName = $(me.root).find('.parentCategory').val();
+            if (parentCategoryName)
+                me.categoryFilenameElm.value = parentCategoryName + '.' + me.categoryFilenameElm.value;
+
             me.update();
         };
 
         me.show = function () {
-
             me.categoryList = BackEnd.getCategoryList(me.opts.siteName);
             me.categoryList.forEach(function (category) {
                 category.name = category.name.split('.').join(' / ');
@@ -100,10 +103,15 @@
             me.categoryNameElm.value = '';
             me.categoryFilenameElm.value = '';
             $(me.root).modal('show');
-            $(me.root).find('.selectpicker').selectpicker();
             setTimeout(function () {
                 $(me.categoryNameElm).focus();
             }, 500);
+
+            $(me.root).find('.dropdown').dropdown({
+                onChange: function (value, text, $choice) {
+                    me.updateCategoryName(value);
+                }
+            });
 
             riot.event.one('closeNewCategoryDialog', function () {
                 console.log('closeNewLayoutDialog');
