@@ -421,7 +421,6 @@ display: inline-block;
     -webkit-box-direction: normal;
     -ms-flex-direction: row;
     flex-direction: row;
-    font-size: 0;
     vertical-align: baseline;
     margin: 0 .25em 0 0;
 }
@@ -465,9 +464,9 @@ display: inline-block;
 }
 
 
-/*******************************
-             Parts
-*******************************/
+/*!********************************/
+             /*Parts*/
+/********************************!*/
 
 
 /* Table Content */
