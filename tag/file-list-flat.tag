@@ -65,6 +65,10 @@
             return path.indexOf('layout/partial/') != -1;
         };
 
+        var updateList = function () {
+            me.update();
+        };
+
         me.on('mount', function () {
             $(me.root.querySelector('.simplebar')).simplebar();
             $(me.root).find('.item').popup({
@@ -77,9 +81,15 @@
                     hide: 0
                 }
             });
+
+            riot.event.on('contentMetaDataUpdated', updateList);
         });
 
-        me.genContentTooltip = function(contentPath) {
+        me.on('unmount', function () {
+            riot.event.off('contentMetaDataUpdated', updateList);
+        });
+
+        me.genContentTooltip = function (contentPath) {
             if (me.opts.type !== 'content')
                 return '';
             contentPath = contentPath.startsWith('content/') ? contentPath.slice(8) : contentPath;
@@ -90,7 +100,7 @@
             return `<div class='ui list'><div class='item'><div class='header'>${metaData.title}</div>${contentPath}<br>${metaData.category.split('.').join(' >> ')}</div></div>`;
         };
 
-        me.getContentCategory = function(contentPath) {
+        me.getContentCategory = function (contentPath) {
             if (me.opts.type !== 'content')
                 return '';
 
@@ -102,7 +112,7 @@
         };
 
         // TODO gen whole file block html thay vi` copy paste trung cac doan xu ly
-        me.genDisplayName = function(name, path) {
+        me.genDisplayName = function (name, path) {
             if (me.opts.type !== 'content')
                 return me.getContentType(path) + me.hideExt(name);
 
@@ -375,11 +385,11 @@
 //                    }
 //                }
 //            } else {
-                // had to copy
-                for (filename in window.siteContentIndexes) {
-                    if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
-                    hayStack[filename] = window.siteContentIndexes[filename];
-                }
+            // had to copy
+            for (filename in window.siteContentIndexes) {
+                if (!window.siteContentIndexes.hasOwnProperty(filename)) continue;
+                hayStack[filename] = window.siteContentIndexes[filename];
+            }
 //            }
 
             // filter by metadata

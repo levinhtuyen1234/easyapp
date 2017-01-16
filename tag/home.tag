@@ -629,6 +629,11 @@
                     var content = me.tags['content-view'].getContent();
                     filePath = me.currentFilePath;
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
+
+                    var parts = me.currentFilePath.split(/\//g); parts.shift(); // remove /content
+                    var key = parts.join('/');
+                    window.siteContentIndexes[key] = content.metaData;
+                    riot.event.trigger('contentMetaDataUpdated', key, content.metaData);
                     break;
                 case 'meta-view':
                     console.log('save meta data');
