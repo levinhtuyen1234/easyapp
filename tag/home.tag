@@ -622,27 +622,34 @@
 
         me.save = function () {
 //            var curTabHref = $(me.root).find('[role="presentation"].active>a').attr('href');
-            var filePath;
+            let filePath;
             switch (me.curTab) {
                 case 'content-view':
                     console.log('save content data');
-                    var content = me.tags['content-view'].getContent();
+                    let content = me.tags['content-view'].getContent();
                     filePath = me.currentFilePath;
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
 
-                    var parts = me.currentFilePath.split(/\//g); parts.shift(); // remove /content
-                    var key = parts.join('/');
+                    let parts = me.currentFilePath.split(/\//g); parts.shift(); // remove /content
+                    let key = parts.join('/');
                     window.siteContentIndexes[key] = content.metaData;
                     riot.event.trigger('contentMetaDataUpdated', key, content.metaData);
                     break;
                 case 'meta-view':
-                    console.log('save meta data');
+                    console.log('save meta data', me.currentFilePath);
                     var meta = me.tags['meta-view'].getContent();
                     filePath = me.currentFilePath;
                     BackEnd.saveMetaFile(me.opts.siteName, me.currentFilePath, meta);
+                    if (me.currentFilePath.startsWith('content/metadata/category/')) {
+                        // category udpated
+                        let fileName = me.currentFilePath.split(/\//g).pop();
+                        let parts = fileName.split('.'); parts.pop();
+                        let key = parts.join('.');
+                        window.siteCategoryIndexes[key] = meta;
+                    }
                     break;
                 case 'code-view':
-                    var rawContent = me.tags['code-editor'][0].value();
+                    let rawContent = me.tags['code-editor'][0].value();
                     filePath = me.currentFilePath;
                     // TODO this code view open not just only raw content file but also asset
                     BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);

@@ -108,7 +108,11 @@
             var metaData = window.siteContentIndexes[contentPath];
             if (!metaData || !metaData.category)
                 return '';
-            return metaData.category.split('.').pop();
+            var displayName = metaData.category.split('.').pop(); // last category name
+            let meta = window.siteCategoryIndexes[metaData.category];
+            if (meta && meta.displayName)
+                displayName = meta.displayName;
+            return displayName;
         };
 
         // TODO gen whole file block html thay vi` copy paste trung cac doan xu ly

@@ -1188,7 +1188,35 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
     });
 
     yield readContentFiles(siteContentPath, '');
-    return contents;
+
+    let metaCategory = {}; // { categoryFileName without .json : metadata }
+
+    let readMetaFile = Promise.coroutine(function*(searchPath, ret) {
+        try {
+            let files = yield Fs.readdirAsync(searchPath);
+            yield Promise.map(files, Promise.coroutine(function *(fileName) {
+
+                let filePath = Path.join(searchPath, fileName);
+                let stat = yield Fs.statAsync(filePath);
+                if (!stat.isFile()) return;
+                let content = (yield Fs.readFileAsync(filePath)).toString();
+                let meta = JSON.parse(content);
+                let parts = fileName.split('.');
+                parts.pop(); // remove .json
+                let key = parts.join('.');
+                ret[key] = meta;
+
+            }));
+        } catch (ex) {
+            console.log('read meta file for index error', ex);
+        }
+    });
+    yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'metadata', 'category'), metaCategory);
+
+    return {
+        contents: contents,
+        categories: metaCategory,
+    };
 });
 
 const deleteAllExcept = Promise.coroutine(function*(targetDir, excepts) {

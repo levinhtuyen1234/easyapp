@@ -344,8 +344,9 @@
             me.unmount(true);
 
             // TODO cache site content indexes, sync cache
-            BackEnd.createSiteIndex(siteName).then(function (siteContentIndexes) {
-                window.siteContentIndexes = siteContentIndexes;
+            BackEnd.createSiteIndex(siteName).then(function (ret) {
+                window.siteContentIndexes = ret.contents;
+                window.siteCategoryIndexes = ret.categories;
 //                console.log('siteContentIndexes', siteContentIndexes);
                 window.curPage = riot.mount('home', {siteName: siteName})[0];
             }).catch(function (ex) {
