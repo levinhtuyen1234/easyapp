@@ -327,7 +327,8 @@
         };
 
         me.openFile = function (e) {
-            var filePath = e.item.path;
+            // console.log('open file', e);
+            var filePath = e.item.item.path; // riot magic !
             if (filePath === me.curFilePath) return;
             me.curFilePath = filePath;
             $root.find('.item').removeClass('active');
