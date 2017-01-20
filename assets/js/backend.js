@@ -989,14 +989,14 @@ function getMetaFile(siteName, filePath) {
 }
 
 /*
- * 'content/metadata/category/document.json' ->  category.document.meta.json
- * 'content/metadata/footer.json' -> footer.meta.json
+ * 'content/metadata/category/document.json' ->  category.document.meta.schema.json
+ * 'content/metadata/footer.json' -> footer.meta.schema.json
  * */
 function genMetaConfigFileName(contentMetaDataPath) {
     let parts = contentMetaDataPath.split('/');
     parts.shift(); // remove 'content'
     parts.shift(); // remove 'metadata'
-    return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta.json';
+    return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta-schema.json';
 }
 
 function getMetaConfigFile(siteName, metaFilePath) {
@@ -1005,14 +1005,16 @@ function getMetaConfigFile(siteName, metaFilePath) {
     let metaData = JSON.parse(metaFileContent);
     let name = genMetaConfigFileName(metaFilePath);
     let configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
-    let metaConfig = genSimpleContentConfig(metaData);
+    // let metaConfig = genSimpleContentConfig(metaData);
 
     if (fileExists(configFullPath)) {
         let existsConfig = JSON.parse(Fs.readFileSync(configFullPath).toString());
-        let newConfig = mergeConfig(existsConfig, metaConfig);
-        Fs.writeFileSync(configFullPath, JSON.stringify(newConfig, null, 4));
-        return newConfig;
+        // let newConfig = mergeConfig(existsConfig, metaConfig);
+        // Fs.writeFileSync(configFullPath, JSON.stringify(newConfig, null, 4));
+        // return newConfig;
+        return existsConfig;
     } else {
+        let metaConfig = genJsonSchemaContentConfig(metaData);
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
         return metaConfig;
     }
@@ -1024,8 +1026,9 @@ function saveMetaFile(siteName, contentFilePath, metaData) {
 }
 
 function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
-    let name = Path.basename(metaFilePath, Path.extname(metaFilePath));
-    let configFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.meta.json';
+    // let name = Path.basename(metaFilePath, Path.extname(metaFilePath));
+    let name = genMetaConfigFileName(metaFilePath);
+    let configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
     Fs.writeFileSync(configFullPath, metaConfig);
 }
 
@@ -1067,6 +1070,7 @@ function getListConfig(dir) {
 
 let categoryListCache;
 function getCategoryList(siteName) {
+    console.log('getCategoryList', sitesRoot, siteName);
     // if (categoryListCache)
     //     return categoryListCache;
     // else

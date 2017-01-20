@@ -667,7 +667,7 @@
                     filePath.join('.');
                     if (me.currentFilePath.endsWith('.json')) {
                         console.log('save meta config');
-                        filePath += '.meta.json';
+                        filePath += '.meta-schema.json';
                         BackEnd.saveMetaConfigFile(me.opts.siteName, me.currentFilePath, JSON.stringify(contentConfig, null, 4));
                     } else if (me.currentFilePath.endsWith('.md')) {
                         console.log('save content config');
