@@ -4,7 +4,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":         {
                 "type":    "string",
                 "default": ""
             },
@@ -39,7 +39,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":         {
                 "type":    "string",
                 "default": ""
             },
@@ -82,7 +82,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":         {
                 "type":    "string",
                 "default": ""
             },
@@ -108,6 +108,13 @@ var schemas = {
             "readOnly":      {
                 "type":    "boolean",
                 "default": false
+            },
+            "enum":          {
+                "type":   "array",
+                "format": "table",
+                "items":  {
+                    "type": "string"
+                }
             },
             "pattern":       {
                 "type":    "string",
@@ -150,7 +157,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":            {
                 "type":    "string",
                 "default": ""
             },
@@ -175,6 +182,13 @@ var schemas = {
             "minimum":          {
                 "type":    "integer",
                 "default": 0
+            },
+            "enum":             {
+                "type":   "array",
+                "format": "table",
+                "items":  {
+                    "type": "number"
+                }
             },
             "exclusiveMaximum": {
                 "type":        "boolean",
@@ -210,7 +224,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":            {
                 "type":    "string",
                 "default": ""
             },
@@ -229,8 +243,15 @@ var schemas = {
                 "type": "integer"
             },
             "maximum":          {
-                "type": "integer",
-                "default" : "999999"
+                "type":    "integer",
+                "default": "999999"
+            },
+            "enum":             {
+                "type":   "array",
+                "format": "table",
+                "items":  {
+                    "type": "integer"
+                }
             },
             "minimum":          {
                 "type": "integer"
@@ -269,7 +290,7 @@ var schemas = {
         "$schema":    "http://json-schema.org/draft-04/schema#",
         "type":       "object",
         "properties": {
-            "title":      {
+            "title":         {
                 "type":    "string",
                 "default": ""
             },
@@ -292,8 +313,8 @@ var schemas = {
                         ],
                         "default": "string"
                     },
-                    "enum": {
-                        "type": "array",
+                    "enum":       {
+                        "type":   "array",
                         "format": "table"
                     },
                     "properties": {
@@ -500,9 +521,9 @@ var JsonSchemaEditor = function (schema) {
             startval:              '',
             disable_edit_json:     true,
             disable_properties:    disableProperty,
-            disable_array_add:     true,
-            disable_array_delete:  true,
-            disable_array_reorder: true,
+            disable_array_add:     false,
+            disable_array_delete:  false,
+            disable_array_reorder: false,
             disable_collapse:      true,
             disable_config:        true
         });

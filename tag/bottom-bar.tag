@@ -198,6 +198,7 @@
 
         me.append = function (text) {
             var span = document.createElement('span');
+            console.log('BUILD:', text);
             span.innerHTML = text;
             me.output.appendChild(span);
             scrollToBottom();
@@ -216,6 +217,7 @@
         };
 
         me.appendError = function (text) {
+            console.log('BUILD-ERROR:', text);
             var span = document.createElement('span');
             span.innerHTML = text;
             span.style.color = 'red';
