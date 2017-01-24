@@ -512,6 +512,12 @@ const schemaSetArrayFormat = function (obj, type) {
     }
 };
 
+function genJsonSchemaMetaConfig(metaData, DefaultFixedFieldNames) {
+    let schema = JSON.parse(window.ToJsonSchema(JSON.stringify(metaData)));
+    schemaSetArrayFormat(schema, 'table');
+    return schema;
+}
+
 function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
     let schema = JSON.parse(window.ToJsonSchema(JSON.stringify(metaData)));
     schemaSetArrayFormat(schema, 'table');
@@ -1014,7 +1020,7 @@ function getMetaConfigFile(siteName, metaFilePath) {
         // return newConfig;
         return existsConfig;
     } else {
-        let metaConfig = genJsonSchemaContentConfig(metaData);
+        let metaConfig = genJsonSchemaMetaConfig(metaData);
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
         return metaConfig;
     }
