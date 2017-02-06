@@ -116,8 +116,10 @@
                         <!--<div style="height: calc(100vh - 40px)">-->
                         <content-view site-name="{siteName}" data-tab="content-view"></content-view>
                         <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
-                        <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
-                        <code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>
+                        <!--<code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>-->
+                        <!--<code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>-->
+                        <monaco-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></monaco-editor>
+                        <monaco-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></monaco-editor>
                         <!--<config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>-->
                         <json-schema-config-editor site-name="{siteName}" data-tab="config-view" class="ui tab segment"></json-schema-config-editor>
                     </div>
@@ -246,6 +248,8 @@
         });
 
         me.on('mount', function () {
+            window.editor1 = me.tags['monaco-editor'][1];
+            window.editor2 = me.tags['monaco-editor'][1];
             console.trace('mount home tag');
             me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
                 onLoad: function (tabPath) {
@@ -390,9 +394,8 @@
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
 //            console.log('fileContent', fileContent);
             me.tags['side-bar'].activeFile('layout', 'layout/' + me.currentLayout);
-//            console.log('aaaaaaaaaa', me.tags['code-editor'][1]);
-            me.tags['code-editor'][1].value(fileContent);
-            me.tags['code-editor'][1].setOption('readOnly', false);
+            me.tags['monaco-editor'][1].value(fileContent, 'handlebars');
+            me.tags['monaco-editor'][1].setOption('readOnly', false);
             ShowTab('layout-view');
         };
 
@@ -566,8 +569,8 @@
             if (rawStr.endsWith('---')) {
                 rawStr += '\n';
             }
-            var contentCodeEditor = me.tags['code-editor'][0];
-            contentCodeEditor.value(rawStr);
+            var contentCodeEditor = me.tags['monaco-editor'][0];
+            contentCodeEditor.value(rawStr, 'frontmatter');
 
             // todo detect file type set mode
             contentCodeEditor.setOption('mode', 'json-frontmatter');
@@ -649,13 +652,13 @@
                     }
                     break;
                 case 'code-view':
-                    let rawContent = me.tags['code-editor'][0].value();
+                    let rawContent = me.tags['monaco-editor'][0].value();
                     filePath = me.currentFilePath;
                     // TODO this code view open not just only raw content file but also asset
                     BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);
                     break;
                 case 'layout-view':
-                    var layoutContent = me.tags['code-editor'][1].value();
+                    var layoutContent = me.tags['monaco-editor'][1].value();
                     filePath = me.currentLayout;
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;

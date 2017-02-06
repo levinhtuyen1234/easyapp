@@ -74,6 +74,7 @@
 <script src="tag/deploy-ftp-dialog.tag" type="riot/tag"></script>
 <script src="tag/dialog-login-signup.tag" type="riot/tag"></script>
 <script src="tag/bottom-bar.tag" type="riot/tag"></script>
+<script src="tag/monaco-editor.tag" type="riot/tag"></script>
 
 <script src="tag/json-schema-config-editor.tag" type="riot/tag"></script>
 <script src="tag/json-schema-form-editor.tag" type="riot/tag"></script>
@@ -111,8 +112,38 @@
 <!--<script src="assets/js/select2.full.min.js"></script>-->
 <script src="assets/js/jquery.layout.js"></script>
 <script src="assets/js/simplebar.js"></script>
-<script src="assets/js/foundation.min.js"></script>
+<!--<script src="assets/js/foundation.min.js"></script>-->
 <script>module = saveModule;</script>
+
+<!-- LOAD VS CODE -->
+<script>
+        var path = require('path');
+        var fs = require('fs');
+        var nodeRequire = global.require;
+</script>
+<script src="assets/vs/loader.js"></script>
+<script>
+        var amdRequire = global.require;
+        global.require = nodeRequire;
+
+        function uriFromPath(_path) {
+            var pathName = path.resolve(_path).replace(/\\/g, '/');
+            if (pathName.length > 0 && pathName.charAt(0) !== '/') {
+                pathName = '/' + pathName;
+            }
+            return encodeURI('file://' + pathName);
+        }
+        amdRequire.config({
+            baseUrl: uriFromPath(path.join(__dirname, 'assets'))
+        });
+
+        self.module = undefined; // workaround monaco-css not understanding the environment
+
+        self.process.browser = true; // workaround monaco-typescript not understanding the environment
+        amdRequire(['vs/editor/editor.main'], function() {
+            console.log('monaco editor loaded');
+        });
+</script>
 
 <script>
     var fs = require('fs');
