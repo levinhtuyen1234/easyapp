@@ -118,7 +118,7 @@
                         <meta-view site-name="{siteName}" data-tab="meta-view" class="ui tab segment"></meta-view>
                         <!--<code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>-->
                         <!--<code-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></code-editor>-->
-                        <monaco-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></monaco-editor>
+                        <code-editor site-name="{siteName}" data-tab="code-view" class="ui tab segment"></code-editor>
                         <monaco-editor site-name="{siteName}" data-tab="layout-view" class="ui tab segment"></monaco-editor>
                         <!--<config-view site-name="{siteName}" data-tab="config-view" class="ui tab segment"></config-view>-->
                         <json-schema-config-editor site-name="{siteName}" data-tab="config-view" class="ui tab segment"></json-schema-config-editor>
@@ -248,8 +248,7 @@
         });
 
         me.on('mount', function () {
-            window.editor1 = me.tags['monaco-editor'][1];
-            window.editor2 = me.tags['monaco-editor'][1];
+            window.editor1 = me.tags['monaco-editor'];
             console.trace('mount home tag');
             me.tabBar = $(me.root.querySelectorAll('.menu .item')).tab({
                 onLoad: function (tabPath) {
@@ -386,7 +385,7 @@
         };
 
         me.openLayoutTab = function () {
-            console.log('onopenLayoutTab');
+            console.log('onopenLayoutTab', me.currentLayout);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.update();
 
@@ -394,8 +393,8 @@
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
 //            console.log('fileContent', fileContent);
             me.tags['side-bar'].activeFile('layout', 'layout/' + me.currentLayout);
-            me.tags['monaco-editor'][1].value(fileContent, 'handlebars');
-            me.tags['monaco-editor'][1].setOption('readOnly', false);
+            me.tags['monaco-editor'].value(fileContent, 'handlebars', me.currentLayout);
+            me.tags['monaco-editor'].setOption('readOnly', false);
             ShowTab('layout-view');
         };
 
@@ -569,7 +568,7 @@
             if (rawStr.endsWith('---')) {
                 rawStr += '\n';
             }
-            var contentCodeEditor = me.tags['monaco-editor'][0];
+            var contentCodeEditor = me.tags['code-editor'];
             contentCodeEditor.value(rawStr, 'frontmatter');
 
             // todo detect file type set mode
@@ -652,13 +651,13 @@
                     }
                     break;
                 case 'code-view':
-                    let rawContent = me.tags['monaco-editor'][0].value();
+                    let rawContent = me.tags['code-editor'].value();
                     filePath = me.currentFilePath;
                     // TODO this code view open not just only raw content file but also asset
                     BackEnd.saveRawContentFile(me.opts.siteName, me.currentFilePath, rawContent);
                     break;
                 case 'layout-view':
-                    var layoutContent = me.tags['monaco-editor'][1].value();
+                    var layoutContent = me.tags['monaco-editor'].value();
                     filePath = me.currentLayout;
                     BackEnd.saveLayoutFile(me.opts.siteName, me.currentLayout, layoutContent);
                     break;
