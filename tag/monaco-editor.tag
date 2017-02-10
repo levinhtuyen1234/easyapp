@@ -20,7 +20,6 @@
                     flatten(source[key], flattened, getNextKey(key))
                 }
             } else {
-                console.log('keySoFar', keySoFar);
                 flattened[keySoFar] = source
             }
             return flattened

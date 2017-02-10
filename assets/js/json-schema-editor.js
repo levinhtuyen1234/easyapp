@@ -560,6 +560,15 @@ var JsonSchemaEditor = function (schema) {
         console.log('newValue after merge', me.schema);
         // }
 
+        // remove enum if empty value
+        console.log('getValue enum check', me.schema.enum, me.schema);
+        _.map(me.schema.properties, function(prop, key) {
+            console.log('check ', key, prop);
+            if (prop.enum && prop.enum.length != undefined && prop.enum.length == 0) {
+                delete prop.enum;
+            }
+        });
+
         // console.log('new schema', me.schema);
         // console.log('TEST validation', me.editor.validate());
         return me.schema;
