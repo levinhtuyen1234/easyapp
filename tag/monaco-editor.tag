@@ -6,20 +6,6 @@
         var layoutName = '';
         var actions = [];
 
-        //        editor.addAction({
-        //            id: 'my-unique-id',
-        //            label: '[DATA] Test Label',
-        //            keybindings: null,
-        //            keybindingContext: null,
-        //            contextMenuGroupId: null,
-        //            run: function(ed) {
-        //                console.log(ed.getSelection());
-        //                editor.executeEdits("", [
-        //                    { range: ed.getSelection(), text: "prepend" }
-        //                ]);
-        //                return null;
-        //            }
-        //        });
         const pathDelimiter = '.';
 
         function flatten(source, flattened = {}, keySoFar = '') {
@@ -28,11 +14,13 @@
             }
 
             if (typeof source === 'object') {
+                if (keySoFar) flattened[keySoFar] = source;
                 for (const key in source) {
                     if (!source.hasOwnProperty(key)) continue;
                     flatten(source[key], flattened, getNextKey(key))
                 }
             } else {
+                console.log('keySoFar', keySoFar);
                 flattened[keySoFar] = source
             }
             return flattened
@@ -51,6 +39,32 @@
         me.setOption = function (name, value) {
 //            me.editor.setOption(name, value);
         };
+
+        function getReplaceMent(key, value) {
+            if (typeof(value) === 'object') {
+                if (Array.isArray(value)) {
+                    // array
+                    let arrayItemKeys = [];
+                    if (value.length > 0)
+                        arrayItemKeys = Object.keys(value[0]);
+                    let childSnippet = arrayItemKeys.reduce(function(ret, key) {
+                        return ret + `    <div>{{${key}}}</div>\r\n`
+                    }, '');
+                    return `{{#each ${key}}}
+${childSnippet}{{/each}}`;
+                } else {
+                    // object
+                    let keys = Object.keys(value);
+                    let childSnippet = keys.reduce(function(ret, key) {
+                        return ret + `    <div>{{${key}}}</div>\r\n`
+                    }, '');
+                    return `{{#with ${key}}}
+${childSnippet}{{/with}}`;
+                }
+            } else {
+                return `{{${key}}}`;
+            }
+        }
 
         me.value = function (value, language, layout) {
             if (value === undefined) {
@@ -72,18 +86,52 @@
                         let flatContent = flatten(content);
                         _.assign(allContent, flatContent);
                     });
-                    // create action
+
+                    // create data action
                     _.forOwn(allContent, (value, key) => {
+                        var replacement = getReplaceMent(key, value);
                         actions.push(me.editor.addAction({
                                 id:                 key,
-                                label:              `[DATA] ${key}`,
+                                label:              `:DATA] ${key}`,
                                 keybindings:        null,
                                 keybindingContext:  null,
                                 contextMenuGroupId: null,
                                 run:                function (ed) {
-                                    me.editor.executeEdits("", [
-                                        {range: ed.getSelection(), text: `{{${key}}}`}
-                                    ]);
+                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
+                                    return null;
+                                }
+                            })
+                        );
+                    });
+
+                    // create partial action
+                    _.forOwn(sitePartialsIndexes, (value, key) => {
+                        actions.push(me.editor.addAction({
+                                id:                 key,
+                                label:              `:PARTIAL] ${key}`,
+                                keybindings:        null,
+                                keybindingContext:  null,
+                                contextMenuGroupId: null,
+                                run:                function (ed) {
+                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: `{{>  ${key}}`}]);
+                                    return null;
+                                }
+                            })
+                        );
+                    });
+
+                    // create meta global action
+                    var flattenMeta = flatten(siteGlobalMetaIndexes);
+                    _.forOwn(flattenMeta, (value, key) => {
+                        var replacement = getReplaceMent(key, value);
+                        actions.push(me.editor.addAction({
+                                id:                 key,
+                                label:              `:META] ${key}`,
+                                keybindings:        null,
+                                keybindingContext:  null,
+                                contextMenuGroupId: null,
+                                run:                function (ed) {
+                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
                                     return null;
                                 }
                             })
@@ -121,6 +169,10 @@
                 trimAutoWhitespace:   true,
                 readOnly:             false,
                 theme:                'vs-light'
+            });
+
+            me.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function () {
+                riot.event.trigger('codeEditor.save');
             });
 
             window.testEditor = me.editor;

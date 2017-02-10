@@ -9,6 +9,7 @@
     <file-list-flat class="ui bottom attached tab segment active" type="content" data-tab="content" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
     <file-list-flat class="ui bottom attached tab segment" type="layout" data-tab="layout" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
     <file-list-flat class="ui bottom attached tab segment" type="meta" data-tab="meta" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></file-list-flat>
+    <asset-sidebar class="ui bottom attached tab segment" type="asset" data-tab="asset" style="margin-bottom: 0;padding: 0 0 0 0;height: 100%;"></asset-sidebar>
 
     <!--<div class="btn-group" data-toggle="buttons">-->
     <!--<button class="ui button active" href="#content-file-list" data-toggle="tab" role="tab" onclick="{activeTab}">-->

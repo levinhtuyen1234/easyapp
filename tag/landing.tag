@@ -347,6 +347,12 @@
             BackEnd.createSiteIndex(siteName).then(function (ret) {
                 window.siteContentIndexes = ret.contents;
                 window.siteCategoryIndexes = ret.categories;
+                window.siteGlobalMetaIndexes = ret.global;
+                window.siteTagIndexes = ret.tags;
+                window.sitePartialsIndexes = ret.partials;
+                window.siteContentConfigIndexes = ret.contentConfig;
+                window.siteGlobalConfigIndexes = ret.globalConfig;
+                window.siteMetaConfigIndexes = ret.metaConfig;
 //                console.log('siteContentIndexes', siteContentIndexes);
                 window.curPage = riot.mount('home', {siteName: siteName})[0];
             }).catch(function (ex) {

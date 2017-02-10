@@ -1199,13 +1199,10 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
 
     yield readContentFiles(siteContentPath, '');
 
-    let metaCategory = {}; // { categoryFileName without .json : metadata }
-
     let readMetaFile = Promise.coroutine(function*(searchPath, ret) {
         try {
             let files = yield Fs.readdirAsync(searchPath);
             yield Promise.map(files, Promise.coroutine(function *(fileName) {
-
                 let filePath = Path.join(searchPath, fileName);
                 let stat = yield Fs.statAsync(filePath);
                 if (!stat.isFile()) return;
@@ -1221,11 +1218,88 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
             console.log('read meta file for index error', ex);
         }
     });
+
+    let readPartialFile = Promise.coroutine(function*(searchPath, ret) {
+        try {
+            let files = yield Fs.readdirAsync(searchPath);
+            yield Promise.map(files, Promise.coroutine(function *(fileName) {
+                let filePath = Path.join(searchPath, fileName);
+                let stat = yield Fs.statAsync(filePath);
+                if (!stat.isFile()) return;
+                let parts = fileName.split('.');
+                let ext = parts.pop(); // remove extension;
+                if (ext !== 'html') return;
+                ret[parts.join('.')] = true;
+            }));
+        } catch (ex) {
+            console.log('read meta file for index error', ex);
+        }
+    });
+
+    let readConfigFile = Promise.coroutine(function*(searchPath, contentConfig, globalConfig, metaConfig) {
+        try {
+            let files = yield Fs.readdirAsync(searchPath);
+
+            yield Promise.map(files, Promise.coroutine(function *(fileName) {
+                let filePath = Path.join(searchPath, fileName);
+                if (!fileName.endsWith('.json')) return;
+                let stat = yield Fs.statAsync(filePath);
+                if (!stat.isFile()) return;
+
+                let content = (yield Fs.readFileAsync(filePath)).toString();
+                let meta;
+                try {
+                    meta = JSON.parse(content);
+                } catch(ex) {
+                    console.log('parse config file json failed, file', filePath);
+                    return;
+                }
+
+                if (fileName.endsWith('.meta-schema.json')) {
+                    if (fileName.startsWith('category.') || fileName.startsWith('tag.')) {
+                        metaConfig[fileName] = meta;
+                    } else {
+                        globalConfig[fileName] = meta;
+                    }
+                } else if (fileName.endsWith('.schema.json')) {
+                    contentConfig[fileName] = meta;
+                }
+            }));
+        } catch (ex) {
+            console.log('read config file for index error', ex);
+        }
+    });
+
+    let metaCategory = {}; // { categoryFileName without .json : metadata }
     yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'metadata', 'category'), metaCategory);
 
+    let metaGlobal = {};
+    yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'metadata'), metaGlobal);
+
+    let metaTag = {};
+    yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'tag'), metaTag);
+
+    let partials = {};
+    yield readPartialFile(Path.join(sitesRoot, siteName, 'layout', 'partial'), partials);
+
+    // read meta config
+    // category meta config category.document.content.meta-schema.json
+    // global meta config menu.meta-schema.json
+    // content config Huong-Dan.schema.json
+    let contentConfig = {};
+    let globalConfig = {};
+    let metaConfig = {};
+    yield readConfigFile(Path.join(sitesRoot, siteName, 'layout'), contentConfig, globalConfig, metaConfig);
+    // debugger;
     return {
-        contents: contents,
-        categories: metaCategory,
+        contents:      contents,
+        categories:    metaCategory,
+        global:        metaGlobal,
+        tags:          metaTag,
+        partials:      partials,
+        contentConfig: contentConfig,
+        globalConfig:  globalConfig,
+        metaConfig:    metaConfig,
     };
 });
 
