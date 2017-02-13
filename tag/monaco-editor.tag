@@ -150,7 +150,7 @@ ${childSnippet}{{/with}}`;
                     var flattenMeta = flatten(siteGlobalMetaIndexes);
                     // TODO lookup config for displayName of global meta
                     _.forOwn(flattenMeta, (value, key) => {
-                        var replacement = getReplaceMent(key, value);
+                        var replacement = getReplacement(key, value);
                         actions.push(me.editor.addAction({
                                 id:                 key,
                                 label:              `:META] ${key}`,
