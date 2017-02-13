@@ -534,7 +534,6 @@ var JsonSchemaEditor = function (schema) {
         // defaultValue.name = fieldName;
         // chi merge cac config key có trong defaultValue va exists config
         for (var key in config) {
-            console.log('key', key);
             if (!config.hasOwnProperty(key)) continue;
             if (config[key] != undefined) {
                 defaultValue[key] = config[key];
@@ -561,9 +560,7 @@ var JsonSchemaEditor = function (schema) {
         // }
 
         // remove enum if empty value
-        console.log('getValue enum check', me.schema.enum, me.schema);
         _.map(me.schema.properties, function(prop, key) {
-            console.log('check ', key, prop);
             if (prop.enum && prop.enum.length != undefined && prop.enum.length == 0) {
                 delete prop.enum;
             }

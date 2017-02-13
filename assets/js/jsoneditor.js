@@ -2268,8 +2268,10 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         };
 
         if (this.format === 'datetime') {
+            if (this.schema.default === '$now' && this.value == '') {
+                this.value = this.input.value = (new Date()).toISOString();
+            }
             this.input_type = 'text';
-            console.log('INIT DATETIME INPUT');
             $(self.input).flatpickr({
                 format: 'DD-MM-YYYY HH:mm:ss',
                 enableTime: true,
