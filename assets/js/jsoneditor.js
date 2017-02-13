@@ -2278,6 +2278,9 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
                 onValueUpdate: onDateChange
             });
         } else if (this.format === 'time') {
+            if (this.schema.default === '$now' && this.value == '') {
+                this.value = this.input.value = (new Date()).toISOString();
+            }
             this.input_type = 'text';
             $(self.input).flatpickr({
                 format: 'HH:mm:ss',
@@ -2285,6 +2288,9 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
                 onValueUpdate: onDateChange
             }).on('dp.change', onDateChange);
         } else if (this.format === 'date') {
+            if (this.schema.default === '$now' && this.value == '') {
+                this.value = this.input.value = (new Date()).toISOString();
+            }
             this.input_type = 'text';
             $(self.input).flatpickr({
                 format: 'DD-MM-YYYY',

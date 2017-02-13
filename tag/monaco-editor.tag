@@ -25,6 +25,32 @@
             return flattened
         }
 
+        function lookupDisplayName(schema, configPath) {
+            var parts = configPath.split('.');
+            parts.shift(); // remove root
+            var ret = schema;
+
+            if (parts.some(function (key) {
+                    if (!ret.properties && !ret.items) {
+                        return true;
+                    }
+                    if (key === '0') {
+                        ret = ret.items;
+                        return false;
+                    } else if (ret.properties[key]) {
+                        ret = ret.properties[key];
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }) == false) {
+                if (ret.title == undefined || ret.title == '')
+                    return null;
+                return ret.title;
+            }
+            return null;
+        }
+
         me.refresh = function () {
 //            me.editor.refresh();
             console.log('monaco editor refresh');
@@ -39,7 +65,9 @@
 //            me.editor.setOption(name, value);
         };
 
-        function getReplaceMent(key, value) {
+        function getReplacement(key, value) {
+            let displayName = key;
+
             if (typeof(value) === 'object') {
                 if (Array.isArray(value)) {
                     // array
@@ -67,11 +95,8 @@ ${childSnippet}{{/with}}`;
 
         me.value = function (value, language, layout) {
             if (value === undefined) {
-//                console.log('monaco editor getValue');
                 return me.editor.getValue();
             } else {
-//                console.log('monaco editor setValue', value);
-                // TODO truong hop layout for category, tag ?
                 // reload actions for layout
                 if (layoutName == '' || layoutName != layout) {
                     me.removeAllActions();
@@ -87,8 +112,10 @@ ${childSnippet}{{/with}}`;
                     });
 
                     // create data action
+                    // TODO lookup config for displayName of global content
+
                     _.forOwn(allContent, (value, key) => {
-                        var replacement = getReplaceMent(key, value);
+                        var replacement = getReplacement(key, value);
                         actions.push(me.editor.addAction({
                                 id:                 key,
                                 label:              `:DATA] ${key}`,
@@ -121,6 +148,7 @@ ${childSnippet}{{/with}}`;
 
                     // create meta global action
                     var flattenMeta = flatten(siteGlobalMetaIndexes);
+                    // TODO lookup config for displayName of global meta
                     _.forOwn(flattenMeta, (value, key) => {
                         var replacement = getReplaceMent(key, value);
                         actions.push(me.editor.addAction({
