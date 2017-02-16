@@ -665,6 +665,11 @@ function saveConfigFile(siteName, layoutPath, contentConfig) {
     Fs.writeFileSync(contentConfigFullPath, contentConfig);
 }
 
+function savePartialFile(siteName, partialName, content) {
+    let partialFullPath = Path.join(sitesRoot, siteName, 'layout', 'partial', partialName) + '.html';
+    Fs.writeFileSync(partialFullPath, content);
+}
+
 function getLayoutFile(siteName, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, siteName, 'layout', filePath)).toString();
 }
@@ -1250,7 +1255,7 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
                 let meta;
                 try {
                     meta = JSON.parse(content);
-                } catch(ex) {
+                } catch (ex) {
                     console.log('parse config file json failed, file', filePath);
                     return;
                 }
@@ -1408,6 +1413,7 @@ module.exports = {
     getSiteList:              getSiteList,
     getConfigFile:            getConfigFile,
     saveConfigFile:           saveConfigFile,
+    savePartialFile:          savePartialFile,
     getRawContentFile:        getRawContentFile,
     getContentFile:           getContentFile,
     saveContentFile:          saveContentFile,

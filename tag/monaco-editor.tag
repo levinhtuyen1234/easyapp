@@ -224,6 +224,19 @@ ${childSnippet}{{/with}}`;
             me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
         };
 
+        let onCreateNewPartial = function() {
+            let curSelection = me.editor.getSelection();
+            let curSelectionText = me.editor.getModel().getValueInRange(curSelection);
+
+            if (curSelectionText == '') return;
+            bootbox.prompt("New partial name", function (newPartialName) {
+                if (newPartialName == null) return;
+                BackEnd.savePartialFile(me.opts.siteName, newPartialName, curSelectionText);
+                // update cache index
+                sitePartialsIndexes[newPartialName] = true;
+            });
+        };
+
         me.on('mount', function () {
             me.editor = monaco.editor.create(me.editorElm, {
                 value:    '',
@@ -243,10 +256,10 @@ ${childSnippet}{{/with}}`;
             });
 
             me.editor.addCommand(monaco.KeyCode.F2, function () {
-                // show tree-view-dialog
-
                 me.tags['tree-view-dialog'].show();
             });
+
+            me.editor.addCommand(monaco.KeyCode.F3, onCreateNewPartial);
 
             window.testEditor = me.editor;
 
