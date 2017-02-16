@@ -1,5 +1,6 @@
 <monaco-editor style="margin-bottom: 0; padding: 0; height: calc(100% - 86px);">
     <div name="editorElm" class="editor" style="margin-right: 14px;width: 100%; height: 100%; background-color: #ffffff"></div>
+    <tree-view-dialog></tree-view-dialog>
 
     <script>
         var me = this;
@@ -179,16 +180,55 @@ ${childSnippet}{{/with}}`;
                     me.refresh();
                 }, 10);
 
-//                setTimeout(function () {
-//                    me.editor.refresh();
-//                }, 10);
+                // set tree-view-dialog value
+                // lookup config in siteContentConfigIndexes of this layout
+                let configFileName = (()=> { let parts = layout.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
+                console.log('configFileName', configFileName);
+                let contentConfig = siteContentConfigIndexes[configFileName];
+                if (contentConfig)
+                    me.tags['tree-view-dialog'].value(contentConfig);
             }
+        };
+
+        me.focus = function() {
+            if (me.editor) {
+                me.editor.focus();
+            }
+        };
+
+        me.addContentField = function(fieldName, parentFieldConfig, updatedSchema, objectPath) {
+            let curSelection = me.editor.getSelection();
+
+            // lay selected text set as default value of fieldConfig
+            let selectedValue = me.editor.getModel().getValueInRange(curSelection);
+            if (!selectedValue) selectedValue = '';
+            if (parentFieldConfig.type === 'array') {
+                parentFieldConfig.items.properties[fieldName]['default'] = selectedValue;
+            } else {
+                parentFieldConfig.properties[fieldName]['default'] = selectedValue;
+            }
+
+            // luu schema vao dia
+            console.log('test saveConfigFile', me.opts.siteName, layoutName, updatedSchema);
+            BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
+
+            // update schema trong index
+            let configFileName = (()=> { let parts = layoutName.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
+            console.log('configFileName', configFileName);
+            siteContentConfigIndexes[configFileName] = updatedSchema;
+
+            // replace cur selected text bang snippet
+            // remove 'root' from objectPath
+            objectPath = (()=>{ let parts = objectPath.split('.'); parts.shift(); return parts.join('.');})();
+            let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
+            me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
         };
 
         me.on('mount', function () {
             me.editor = monaco.editor.create(me.editorElm, {
                 value:    '',
                 language: 'text/html',
+                folding: true,
 
                 lineNumbers:          true,
                 roundedSelection:     true,
@@ -200,6 +240,12 @@ ${childSnippet}{{/with}}`;
 
             me.editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, function () {
                 riot.event.trigger('codeEditor.save');
+            });
+
+            me.editor.addCommand(monaco.KeyCode.F2, function () {
+                // show tree-view-dialog
+
+                me.tags['tree-view-dialog'].show();
             });
 
             window.testEditor = me.editor;
