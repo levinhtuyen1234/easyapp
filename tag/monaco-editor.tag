@@ -140,7 +140,7 @@ ${childSnippet}{{/with}}`;
                                 keybindingContext:  null,
                                 contextMenuGroupId: null,
                                 run:                function (ed) {
-                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: `{{>  ${key}}`}]);
+                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: `{{>  ${key}}}`}]);
                                     return null;
                                 }
                             })
