@@ -16,13 +16,10 @@
     <script>
         var me = this;
         var tree;
-        var dialog;
-        var container;
-        var selectedAccordionItem;
+        var dialog, container, content, selectedAccordionItem;
 
         function buildObjectTree(root, obj, objectPath) {
             objectPath = objectPath || '';
-//            console.log('buildObjectTree', obj);
             for (let prop in obj) {
                 if (!obj.hasOwnProperty(prop)) return;
                 var curObjectPath;
@@ -110,11 +107,9 @@
                 }
 
                 // set
-                let contentElm = $(me.root).find('.content');
-//                console.log('contentElm', contentElm);
-                contentElm.empty();
+                content.empty(); // remove previous tree
                 let accordionRoot = $('<div class="ui styled accordion root-accordion treemenu"></div>');
-                contentElm.append(accordionRoot);
+                content.append(accordionRoot);
 
                 let valueView = {};
 
@@ -122,6 +117,7 @@
                 // remove tag
                 if (valueView.root && valueView.root.tag)
                     delete valueView.root.tag;
+//                console.log('valueView', valueView);
                 buildObjectTree(accordionRoot, valueView);
 //                accordionRoot.accordion();
             } else {
@@ -143,8 +139,7 @@
         //        $.jsPanel.closeOnEscape = true;
         me.show = function () {
             if (dialog == null) {
-//                console.log('Create dialog jsPanel');
-
+//                console.log('Create dialog jsPanel', container.clone().html());
                 dialog = $.jsPanel({
                     headerTitle:    'Add as content field',
 //                    paneltype:      'modal',
@@ -174,7 +169,7 @@
 //                    console.log('SETUP listen change new field name');
                     $newFieldName.on('change keyup paste', onStateChange);
 
-                    $('.root-accordion').accordion({
+                    dialog.find('.root-accordion').accordion({
                         onOpen: function () {
                             var openedItem = $(this);
                             selectedAccordionItem = openedItem.data('path');
@@ -265,6 +260,7 @@
         }
 
         me.on('mount', function () {
+            content = $(me.root).find('.content');
             container = $(me.root).find('.container-fluid');
             $(document).on('keydown', onEscape);
         });

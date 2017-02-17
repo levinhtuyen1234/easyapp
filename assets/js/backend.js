@@ -642,6 +642,14 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     }
 }
 
+function createDefaultConfigFile(siteName, layoutFilePath) {
+    let name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
+    let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
+    let contentConfig = genJsonSchemaContentConfig({}, DefaultFixedFieldNames);
+    Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
+    return contentConfig;
+}
+
 function readFile(site, filePath) {
     return Fs.readFileSync(Path.join(sitesRoot, site, filePath)).toString();
 }
@@ -1384,7 +1392,7 @@ const initNewSiteBuildFolder = Promise.coroutine(function*(repositoryUrl, target
         // push
         // yield spawnGitCmd('git', ['push', 'origin', 'gh-pages'], targetDir);
     } catch (ex) {
-        console.log('AAAAAAAAA', ex);
+        console.log('Init new site failed, error', ex);
     }
 });
 
@@ -1406,6 +1414,7 @@ module.exports = {
     getTagList:               getTagList,
     getMetaFile:              getMetaFile,
     getSiteMetadataFiles:     getSiteMetadataFiles,
+    createDefaultConfigFile:  createDefaultConfigFile,
     getMetaConfigFile:        getMetaConfigFile,
     saveMetaFile:             saveMetaFile,
     saveMetaConfigFile:       saveMetaConfigFile,

@@ -54,7 +54,7 @@
 
         me.refresh = function () {
 //            me.editor.refresh();
-            console.log('monaco editor refresh');
+//            console.log('monaco editor refresh');
             me.editor.layout();
         };
 
@@ -165,15 +165,15 @@ ${childSnippet}{{/with}}`;
                 return me.editor.getValue();
             } else {
                 // reload actions for layout
-                if (layoutName == '' || layoutName != layout) {
-                    me.removeAllActions();
+//                if (layoutName == '' || layoutName != layout) {
+                me.removeAllActions();
 
-                    layoutName = layout;
-                    setupActions();
-                }
+                layoutName = layout;
+                setupActions();
+//                }
                 switch (language) {
                     case 'handlebars':
-                        console.log('set language handlebars');
+//                        console.log('set language handlebars');
                         monaco.editor.setModelLanguage(me.editor.getModel(), 'text/html');
                         break;
                     case 'frontmatter':
@@ -188,10 +188,22 @@ ${childSnippet}{{/with}}`;
                 // set tree-view-dialog value
                 // lookup config in siteContentConfigIndexes of this layout
                 let configFileName = (()=> { let parts = layout.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
-                console.log('configFileName', configFileName);
+//                console.log('configFileName', configFileName);
                 let contentConfig = siteContentConfigIndexes[configFileName];
-                if (contentConfig)
+                if (contentConfig) {
+//                    console.log('FOUND content config');
                     me.tags['tree-view-dialog'].value(contentConfig);
+                } else {
+                    // find 1 content have this layout
+                    contentConfig = BackEnd.createDefaultConfigFile(me.opts.siteName, layout);
+//                    let contentFileName = _.findKey(siteContentIndexes, {layout: layout});
+//                    if (createDefaultConfigFile)
+                    // gen default content config
+//                    contentConfig = BackEnd.getConfigFile(me.opts.siteName, contentFilePath, layout);
+                    me.tags['tree-view-dialog'].value(contentConfig);
+//                    console.log('NOT found content config', contentFileName);
+                }
+
             }
         };
 
@@ -214,12 +226,10 @@ ${childSnippet}{{/with}}`;
             }
 
             // luu schema vao dia
-            console.log('test saveConfigFile', me.opts.siteName, layoutName, updatedSchema);
             BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
 
             // update schema trong index
             let configFileName = (()=> { let parts = layoutName.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
-            console.log('configFileName', configFileName);
             siteContentConfigIndexes[configFileName] = updatedSchema;
 
             // reload actions
