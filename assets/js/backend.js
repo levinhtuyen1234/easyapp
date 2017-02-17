@@ -813,8 +813,16 @@ function SpawnShell(command, args, opts) {
     opts = opts || {};
     return new Promise((resolve, reject) => {
         let out = '';
+        let env = opts.env ? opts.env : {};
+
+        if (User.data && User.data.username) {
+            console.log('set git user env');
+            env.NAME = env.GIT_AUTHOR_NAME = env.GIT_COMMITTER_NAME = User.data.username;
+            env.ENAIL = env.GIT_AUTHOR_EMAIL = env.GIT_COMMITTER_EMAIL = User.data.username + '@email.com';
+        }
+
         let newProcess = ChildProcess.spawn(command, args, {
-            env:   opts.env ? opts.env : {},
+            env:   env,
             cwd:   opts.cwd ? opts.cwd : {},
             shell: true
         });
@@ -874,13 +882,16 @@ function spawnGitCmd(command, args, cwd, onProgress) {
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))
     ].join(';');
     console.log('command', command, 'args', args, 'cwd', cwd, 'privateNodePath', privateNodePath, 'ENV_PATH', ENV_PATH);
+
+    let env = {
+        'NODE_PATH': privateNodePath,
+        'PATH':      ENV_PATH
+    };
+
     return SpawnShell(command, args, {
         cwd:        cwd,
         onProgress: onProgress,
-        env:        {
-            'NODE_PATH': privateNodePath,
-            'PATH':      ENV_PATH
-        }
+        env:        env
     });
 }
 
