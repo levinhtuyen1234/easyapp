@@ -75,7 +75,7 @@
                     let arrayItemKeys = [];
                     if (value.length > 0)
                         arrayItemKeys = Object.keys(value[0]);
-                    let childSnippet = arrayItemKeys.reduce(function(ret, key) {
+                    let childSnippet = arrayItemKeys.reduce(function (ret, key) {
                         return ret + `    <div>{{${key}}}</div>\r\n`
                     }, '');
                     return `{{#each ${key}}}
@@ -83,7 +83,7 @@ ${childSnippet}{{/each}}`;
                 } else {
                     // object
                     let keys = Object.keys(value);
-                    let childSnippet = keys.reduce(function(ret, key) {
+                    let childSnippet = keys.reduce(function (ret, key) {
                         return ret + `    <div>{{${key}}}</div>\r\n`
                     }, '');
                     return `{{#with ${key}}}
@@ -187,7 +187,11 @@ ${childSnippet}{{/with}}`;
 
                 // set tree-view-dialog value
                 // lookup config in siteContentConfigIndexes of this layout
-                let configFileName = (()=> { let parts = layout.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
+                let configFileName = (() => {
+                    let parts = layout.split('.');
+                    parts.pop();
+                    return parts.join('.') + '.schema.json';
+                })();
 //                console.log('configFileName', configFileName);
                 let contentConfig = siteContentConfigIndexes[configFileName];
                 if (contentConfig) {
@@ -207,13 +211,13 @@ ${childSnippet}{{/with}}`;
             }
         };
 
-        me.focus = function() {
+        me.focus = function () {
             if (me.editor) {
                 me.editor.focus();
             }
         };
 
-        me.addContentField = function(fieldName, parentFieldConfig, updatedSchema, objectPath) {
+        me.addContentField = function (fieldName, parentFieldConfig, updatedSchema, objectPath) {
             let curSelection = me.editor.getSelection();
 
             // lay selected text set as default value of fieldConfig
@@ -229,21 +233,49 @@ ${childSnippet}{{/with}}`;
             BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
 
             // update schema trong index
-            let configFileName = (()=> { let parts = layoutName.split('.'); parts.pop(); return parts.join('.') + '.schema.json'; })();
+            let configFileName = (() => {
+                let parts = layoutName.split('.');
+                parts.pop();
+                return parts.join('.') + '.schema.json';
+            })();
+//            console.log('configFileName', configFileName);
+//            console.log('updatedSchema', updatedSchema);
             siteContentConfigIndexes[configFileName] = updatedSchema;
+
+            // replace cur selected text bang snippet
+            // remove 'root' from objectPath
+            objectPath = (() => {
+                let parts = objectPath.split('.');
+                parts.shift();
+                return parts.join('.');
+            })();
+            let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
+            me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
+
+            // insert new field to all content affected
+            // TODO change value based on content type
+            let contents = _.filter(siteContentIndexes, {layout: layoutName});
+            console.log('contents affected', contents, 'replacement', replacement);
+            _.forEach(contents, content => {
+                let props = replacement.split('.');
+                let lastProp = props.pop();
+                let current = content;
+                while (props.length) {
+                    if (typeof current !== 'object') break;
+                    current = current[props.shift()];
+                }
+                if (current && typeof current == 'object') {
+                    console.log('update lastProp success, lastProp', lastProp);
+                    current[lastProp] = ''; // TODO other value type (object ?)
+                }
+            });
 
             // reload actions
             me.removeAllActions();
             setupActions();
-
-            // replace cur selected text bang snippet
-            // remove 'root' from objectPath
-            objectPath = (()=>{ let parts = objectPath.split('.'); parts.shift(); return parts.join('.');})();
-            let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
-            me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
         };
 
-        let onCreateNewPartial = function() {
+        let onCreateNewPartial = function () {
             let curSelection = me.editor.getSelection();
             let curSelectionText = me.editor.getModel().getValueInRange(curSelection);
 
@@ -265,7 +297,7 @@ ${childSnippet}{{/with}}`;
             me.editor = monaco.editor.create(me.editorElm, {
                 value:    '',
                 language: 'text/html',
-                folding: false,
+                folding:  false,
 
                 lineNumbers:          true,
                 roundedSelection:     true,
