@@ -94,6 +94,72 @@ ${childSnippet}{{/with}}`;
             }
         }
 
+        function setupActions() {
+            if (!layoutName) return;
+            // search content that use this layout
+            let contents = _.filter(siteContentIndexes, {layout: layoutName});
+            // flatten all key in content
+            let allContent = {};
+            _.forEach(contents, content => {
+                let flatContent = flatten(content);
+                _.assign(allContent, flatContent);
+            });
+
+            // create data action
+            // TODO lookup config for displayName of global content
+
+            _.forOwn(allContent, (value, key) => {
+                var replacement = getReplacement(key, value);
+                actions.push(me.editor.addAction({
+                        id:                 key,
+                        label:              `:DATA] ${key}`,
+                        keybindings:        null,
+                        keybindingContext:  null,
+                        contextMenuGroupId: null,
+                        run:                function (ed) {
+                            me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
+                            return null;
+                        }
+                    })
+                );
+            });
+
+            // create partial action
+            _.forOwn(sitePartialsIndexes, (value, key) => {
+                actions.push(me.editor.addAction({
+                        id:                 key,
+                        label:              `:PARTIAL] ${key}`,
+                        keybindings:        null,
+                        keybindingContext:  null,
+                        contextMenuGroupId: null,
+                        run:                function (ed) {
+                            me.editor.executeEdits("", [{range: ed.getSelection(), text: `{{> ${key} }}`}]);
+                            return null;
+                        }
+                    })
+                );
+            });
+
+            // create meta global action
+            var flattenMeta = flatten(siteGlobalMetaIndexes);
+            // TODO lookup config for displayName of global meta
+            _.forOwn(flattenMeta, (value, key) => {
+                var replacement = getReplacement(key, value);
+                actions.push(me.editor.addAction({
+                        id:                 key,
+                        label:              `:META] ${key}`,
+                        keybindings:        null,
+                        keybindingContext:  null,
+                        contextMenuGroupId: null,
+                        run:                function (ed) {
+                            me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
+                            return null;
+                        }
+                    })
+                );
+            });
+        }
+
         me.value = function (value, language, layout) {
             if (value === undefined) {
                 return me.editor.getValue();
@@ -103,68 +169,7 @@ ${childSnippet}{{/with}}`;
                     me.removeAllActions();
 
                     layoutName = layout;
-                    // search content that use this layout
-                    let contents = _.filter(siteContentIndexes, {layout: layoutName});
-                    // flatten all key in content
-                    let allContent = {};
-                    _.forEach(contents, content => {
-                        let flatContent = flatten(content);
-                        _.assign(allContent, flatContent);
-                    });
-
-                    // create data action
-                    // TODO lookup config for displayName of global content
-
-                    _.forOwn(allContent, (value, key) => {
-                        var replacement = getReplacement(key, value);
-                        actions.push(me.editor.addAction({
-                                id:                 key,
-                                label:              `:DATA] ${key}`,
-                                keybindings:        null,
-                                keybindingContext:  null,
-                                contextMenuGroupId: null,
-                                run:                function (ed) {
-                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
-                                    return null;
-                                }
-                            })
-                        );
-                    });
-
-                    // create partial action
-                    _.forOwn(sitePartialsIndexes, (value, key) => {
-                        actions.push(me.editor.addAction({
-                                id:                 key,
-                                label:              `:PARTIAL] ${key}`,
-                                keybindings:        null,
-                                keybindingContext:  null,
-                                contextMenuGroupId: null,
-                                run:                function (ed) {
-                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: `{{>  ${key}}}`}]);
-                                    return null;
-                                }
-                            })
-                        );
-                    });
-
-                    // create meta global action
-                    var flattenMeta = flatten(siteGlobalMetaIndexes);
-                    // TODO lookup config for displayName of global meta
-                    _.forOwn(flattenMeta, (value, key) => {
-                        var replacement = getReplacement(key, value);
-                        actions.push(me.editor.addAction({
-                                id:                 key,
-                                label:              `:META] ${key}`,
-                                keybindings:        null,
-                                keybindingContext:  null,
-                                contextMenuGroupId: null,
-                                run:                function (ed) {
-                                    me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
-                                    return null;
-                                }
-                            })
-                        );
-                    });
+                    setupActions();
                 }
                 switch (language) {
                     case 'handlebars':
@@ -217,6 +222,10 @@ ${childSnippet}{{/with}}`;
             console.log('configFileName', configFileName);
             siteContentConfigIndexes[configFileName] = updatedSchema;
 
+            // reload actions
+            me.removeAllActions();
+            setupActions();
+
             // replace cur selected text bang snippet
             // remove 'root' from objectPath
             objectPath = (()=>{ let parts = objectPath.split('.'); parts.shift(); return parts.join('.');})();
@@ -234,6 +243,11 @@ ${childSnippet}{{/with}}`;
                 BackEnd.savePartialFile(me.opts.siteName, newPartialName, curSelectionText);
                 // update cache index
                 sitePartialsIndexes[newPartialName] = true;
+                // add replacement text
+                me.editor.executeEdits("", [{range: curSelection, text: `{{> ${newPartialName} }}`}]);
+                // reload actions
+                me.removeAllActions();
+                setupActions();
             });
         };
 
@@ -241,7 +255,7 @@ ${childSnippet}{{/with}}`;
             me.editor = monaco.editor.create(me.editorElm, {
                 value:    '',
                 language: 'text/html',
-                folding: true,
+                folding: false,
 
                 lineNumbers:          true,
                 roundedSelection:     true,
