@@ -18,7 +18,8 @@
                 if (keySoFar) flattened[keySoFar] = source;
                 for (const key in source) {
                     if (!source.hasOwnProperty(key)) continue;
-                    flatten(source[key], flattened, getNextKey(key))
+                    flatten(source[key], flattened, getNextKey(key));
+                    if (Array.isArray(source)) return;
                 }
             } else {
                 flattened[keySoFar] = source
