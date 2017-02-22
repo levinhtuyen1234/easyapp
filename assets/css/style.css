@@ -622,3 +622,17 @@ display: inline-block;
 .ui.styled.accordion .accordion .content .subtitle.hide {
     display: none;
 }
+
+
+.title.selected-accordion {
+    border: blue 1px solid !important;
+}
+
+.ui.menu > .disabled.item {
+    opacity: 0.45 !important;
+}
+
+.disabled {
+    cursor: not-allowed !important;
+    /*pointer-events: none !important;*/
+}

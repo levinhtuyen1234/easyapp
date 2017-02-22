@@ -119,13 +119,19 @@
                     delete valueView.root.tag;
 //                console.log('valueView', valueView);
                 buildObjectTree(accordionRoot, valueView);
+                _.forEach(siteGlobalConfigIndexes, function (metaConfig, metaFileName) {
+                    var metaName = metaFileName.split('.').shift();
+                    var data = {};
+                    data[metaName] = metaConfig;
+                    buildObjectTree(accordionRoot, data);
+                });
 //                accordionRoot.accordion();
             } else {
                 // get TODO find selected accordion item
             }
         };
 
-        let onStateChange = function(){
+        let onStateChange = function () {
 //            console.log('change event', event);
             let val = $newFieldName.val().trim();
             if (val == '' || !selectedAccordionItem) {
@@ -190,38 +196,53 @@
 //                        console.log('objectPath', objectPath);
 //                        console.log('contentConfig', contentConfig);
 
-                        let config;
-                        try {
-                            let parts = objectPath.split('.');
-                            parts.forEach(function (propName) {
-                                if (propName === 'root') config = contentConfig;
-                                else config = config.properties[propName];
-                            });
-                        } catch (ex) {
-                            config = null;
-                        }
-
-                        if (config) {
-                            if (config.type) {
-                                if (config.type === 'array') {
-                                    if (config.items && config.items.type === 'object') {
-                                        config.items.properties = config.items.properties || {};
-                                        config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
-                                    }
-                                } else if (config.type === 'object') {
-                                    config.properties = config.properties || {};
-                                    config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
-                                }
+                        // check if insert property to global meta or content data
+                        if (objectPath.startsWith('root.')) {
+                            // add field to content file
+                            let config;
+                            try {
+                                let parts = objectPath.split('.');
+                                parts.forEach(function (propName) {
+                                    if (propName === 'root') config = contentConfig;
+                                    else config = config.properties[propName];
+                                });
+                            } catch (ex) {
+                                config = null;
                             }
+
+                            if (config) {
+                                if (config.type) {
+                                    if (config.type === 'array') {
+                                        if (config.items && config.items.type === 'object') {
+                                            config.items.properties = config.items.properties || {};
+                                            config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                        }
+                                    } else if (config.type === 'object') {
+                                        config.properties = config.properties || {};
+                                        config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                    }
+                                }
 //                            console.log('found config', config);
-                            // save file
-                            if (me.parent && me.parent.addContentField) {
-                                me.parent.addContentField(fieldName, config, curContentConfig, objectPath);
-                                me.closeDialog();
+                                // save file
+                                if (me.parent && me.parent.addContentField) {
+                                    me.parent.addContentField(fieldName, config, curContentConfig, objectPath);
+                                    me.closeDialog();
+                                }
+                            } else {
+                                console.log('error', 'config not found');
                             }
                         } else {
-                            console.log('error', 'config not found');
+                            // add field to global meta
+                            let parts = objectPath.split('.');
+                            if (parts.length <= 0) return;
+                            let metaSchemaConfigFileName = parts.shift() + '.meta-schema.json';
+                            console.log('metaSchemaConfigFileName', metaSchemaConfigFileName);
+                            // find global config file name
+                            // open global config file schema file
+                            // insert new field to schema
+                            // save file
                         }
+
                     });
 
                     dialog.find('.close-add-field-dialog').click(function () {

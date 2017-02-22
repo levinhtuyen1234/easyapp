@@ -186,7 +186,6 @@
                 return false;
             }
 
-
             if (nLen === hLen) {
                 return needle === haystack;
             }

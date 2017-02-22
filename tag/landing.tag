@@ -344,7 +344,7 @@
             me.unmount(true);
 
             // TODO cache site content indexes, sync cache
-            BackEnd.createSiteIndex(siteName).then(function (ret) {
+                BackEnd.createSiteIndex(siteName).then(function (ret) {
                 window.siteContentIndexes = ret.contents;
                 window.siteCategoryIndexes = ret.categories;
                 window.siteGlobalMetaIndexes = ret.global;
