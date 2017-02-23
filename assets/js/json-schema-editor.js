@@ -528,7 +528,6 @@ var JsonSchemaEditor = function (schema) {
             disable_config:        true
         });
 
-
         var defaultValue = getDefaultValueFromSchema(editorSchema);
         console.log('defaultValue', defaultValue);
         // defaultValue.name = fieldName;

@@ -122,7 +122,7 @@
                 _.forEach(siteGlobalConfigIndexes, function (metaConfig, metaFileName) {
                     var metaName = metaFileName.split('.').shift();
                     var data = {};
-                    data[metaName] = metaConfig;
+                    getSchemaValueView(metaName, metaConfig, data);
                     buildObjectTree(accordionRoot, data);
                 });
 //                accordionRoot.accordion();
@@ -184,6 +184,7 @@
                         }
                     });
 
+                    // hook add button
                     dialog.find('.add-field-btn').click(function () {
                         let fieldName = $newFieldName.val();
                         fieldName = fieldName || '';
@@ -210,39 +211,68 @@
                                 config = null;
                             }
 
-                            if (config) {
-                                if (config.type) {
-                                    if (config.type === 'array') {
-                                        if (config.items && config.items.type === 'object') {
-                                            config.items.properties = config.items.properties || {};
-                                            config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
-                                        }
-                                    } else if (config.type === 'object') {
-                                        config.properties = config.properties || {};
-                                        config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
-                                    }
-                                }
-//                            console.log('found config', config);
-                                // save file
-                                if (me.parent && me.parent.addContentField) {
-                                    me.parent.addContentField(fieldName, config, curContentConfig, objectPath);
-                                    me.closeDialog();
-                                }
-                            } else {
+                            if (config == null) {
                                 console.log('error', 'config not found');
+                                return;
+                            }
+                            if (!config.type) {
+                                console.log('error', 'invalid config');
+                                return;
+                            }
+                            if (config.type === 'array') {
+                                if (config.items && config.items.type === 'object') {
+                                    config.items.properties = config.items.properties || {};
+                                    config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                }
+                            } else if (config.type === 'object') {
+                                config.properties = config.properties || {};
+                                config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                            }
+
+//                          console.log('found config', config);
+                            // save file
+                            if (me.parent && me.parent.addContentField) {
+                                me.parent.addField('content', null, fieldName, config, curContentConfig, objectPath);
+                                me.closeDialog();
                             }
                         } else {
                             // add field to global meta
                             let parts = objectPath.split('.');
                             if (parts.length <= 0) return;
                             let metaSchemaConfigFileName = parts.shift() + '.meta-schema.json';
-                            console.log('metaSchemaConfigFileName', metaSchemaConfigFileName);
-                            // find global config file name
-                            // open global config file schema file
-                            // insert new field to schema
-                            // save file
-                        }
+                            let globalMetaConfig = siteGlobalConfigIndexes[metaSchemaConfigFileName];
+                            let config = globalMetaConfig;
+                            try {
+                                let parts = objectPath.split('.');
+                                parts.shift(); // remove field name
+                                parts.forEach(function (propName) {
+                                    config = config.properties[propName];
+                                });
+                            } catch (ex) {
+                                config = null;
+                            }
 
+                            if (config == null) {
+                                console.log('error', 'config not found');
+                                return;
+                            }
+                            if (!config.type) {
+                                console.log('error', 'invalid config');
+                                return;
+                            }
+                            if (config.type === 'array') {
+                                if (config.items && config.items.type === 'object') {
+                                    config.items.properties = config.items.properties || {};
+                                    config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                }
+                            } else if (config.type === 'object') {
+                                config.properties = config.properties || {};
+                                config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                            }
+
+                            me.parent.addField('globalMeta', metaSchemaConfigFileName, fieldName, config, globalMetaConfig, objectPath);
+                            me.closeDialog();
+                        }
                     });
 
                     dialog.find('.close-add-field-dialog').click(function () {

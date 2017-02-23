@@ -27,6 +27,41 @@
             return flattened
         }
 
+        var getJsonSchemaValue = function (key, value, ret) {
+            if (!value.type) return;
+            switch (value.type) {
+                case 'object': {
+                    if (!value.properties) return;
+                    let child = {};
+                    if (key === null || key === undefined)
+                        ret = child;
+                    else
+                        ret[key] = child;
+                    // chi add cac key ma` value co type la object hoac array
+                    _.map(value.properties, (childValue, childKey) => {
+                        getJsonSchemaValue(childKey, childValue, child);
+                    });
+                    break;
+                }
+                case 'array': {
+                    if (value.items && value.items.type === 'object' && value.items.properties) {
+                        var child = [];
+                        getJsonSchemaValue(0, value.items, child);
+                        ret[key] = child;
+                        break;
+                    }
+                }
+                case 'number':
+                case 'integer':
+                    ret[key] = 0;
+                    break;
+                default:
+                    ret[key] = '';
+                    break;
+            }
+            return ret;
+        };
+
         function lookupDisplayName(schema, configPath) {
             var parts = configPath.split('.');
             parts.shift(); // remove root
@@ -98,13 +133,23 @@ ${childSnippet}{{/with}}`;
         function setupActions() {
             if (!layoutName) return;
             // search content that use this layout
-            let contents = _.filter(siteContentIndexes, {layout: layoutName});
+            console.log('layoutName', layoutName);
+            // remove .html from layoutName, add .schema.json
+            let parts = layoutName.split('.');
+            if (layoutName.endsWith('.html')) {
+                parts.pop();
+            }
+
+            let contentConfigFileName = parts.join('.') + '.schema.json';
+//            console.log('contentConfigFileName', contentConfigFileName);
+//            let contents = _.filter(siteContentIndexes, {layout: layoutName});
+            let content = siteContentConfigIndexes[contentConfigFileName];
+//            console.log('content', content);
             // flatten all key in content
-            let allContent = {};
-            _.forEach(contents, content => {
-                let flatContent = flatten(content);
-                _.assign(allContent, flatContent);
-            });
+            let contentSchemaValue = {};
+            contentSchemaValue = getJsonSchemaValue(null, content, contentSchemaValue);
+            let allContent = flatten(contentSchemaValue);
+            console.log('flatContent', allContent);
 
             // create data action
             // TODO lookup config for displayName of global content
@@ -142,7 +187,20 @@ ${childSnippet}{{/with}}`;
             });
 
             // create meta global action
-            var flattenMeta = flatten(siteGlobalMetaIndexes);
+            let flattenMeta = {};
+
+            _.forOwn(siteGlobalConfigIndexes, function(schema, configFileName) {
+                let parts = configFileName.split('.');
+                if (configFileName.endsWith('.meta-schema.json')) {
+                    parts.pop();
+                    parts.pop();
+                }
+                configFileName = parts.join('.');
+                let tmp = {};
+                flattenMeta[configFileName] = getJsonSchemaValue(null, schema, tmp);
+            });
+
+            flattenMeta = flatten(flattenMeta);
             // TODO lookup config for displayName of global meta
             _.forOwn(flattenMeta, (value, key) => {
                 var replacement = getReplacement(key, value);
@@ -166,15 +224,12 @@ ${childSnippet}{{/with}}`;
                 return me.editor.getValue();
             } else {
                 // reload actions for layout
-//                if (layoutName == '' || layoutName != layout) {
                 me.removeAllActions();
 
                 layoutName = layout;
                 setupActions();
-//                }
                 switch (language) {
                     case 'handlebars':
-//                        console.log('set language handlebars');
                         monaco.editor.setModelLanguage(me.editor.getModel(), 'text/html');
                         break;
                     case 'frontmatter':
@@ -193,10 +248,8 @@ ${childSnippet}{{/with}}`;
                     parts.pop();
                     return parts.join('.') + '.schema.json';
                 })();
-//                console.log('configFileName', configFileName);
                 let contentConfig = siteContentConfigIndexes[configFileName];
                 if (contentConfig) {
-//                    console.log('FOUND content config');
                     me.tags['tree-view-dialog'].value(contentConfig);
                 } else {
                     // find 1 content have this layout
@@ -218,10 +271,11 @@ ${childSnippet}{{/with}}`;
             }
         };
 
-        me.addContentField = function (fieldName, parentFieldConfig, updatedSchema, objectPath) {
+        // ugly split case code
+        me.addField = function (dstType, fileName, fieldName, parentFieldConfig, updatedSchema, objectPath) {
             let curSelection = me.editor.getSelection();
 
-            // lay selected text set as default value of fieldConfig
+            // lay selected text set as default value of fieldConfig in case of text field
             let selectedValue = me.editor.getModel().getValueInRange(curSelection);
             if (!selectedValue) selectedValue = '';
             if (parentFieldConfig.type === 'array') {
@@ -231,45 +285,54 @@ ${childSnippet}{{/with}}`;
             }
 
             // luu schema vao dia
-            BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
+            if (dstType == 'content') {
+                BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
 
-            // update schema trong index
-            let configFileName = (() => {
-                let parts = layoutName.split('.');
-                parts.pop();
-                return parts.join('.') + '.schema.json';
-            })();
-//            console.log('configFileName', configFileName);
-//            console.log('updatedSchema', updatedSchema);
-            siteContentConfigIndexes[configFileName] = updatedSchema;
+                // replace cur selected text bang snippet
+                // remove 'root' from objectPath
+                objectPath = (() => {
+                    let parts = objectPath.split('.');
+                    parts.shift();
+                    return parts.join('.');
+                })();
+                let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
+                me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
 
-            // replace cur selected text bang snippet
-            // remove 'root' from objectPath
-            objectPath = (() => {
-                let parts = objectPath.split('.');
-                parts.shift();
-                return parts.join('.');
-            })();
-            let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
-            me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
+                // insert new field to all content affected
+                // TODO change value based on content type
+                let contents = _.filter(siteContentIndexes, {layout: layoutName});
+                console.log('contents affected', contents, 'replacement', replacement);
+                _.forEach(contents, content => {
+                    let props = replacement.split('.');
+                    let lastProp = props.pop();
+                    let current = content;
+                    while (props.length) {
+                        if (typeof current !== 'object') break;
+                        current = current[props.shift()];
+                    }
+                    if (current && typeof current == 'object') {
+                        console.log('update lastProp success, lastProp', lastProp);
+                        current[lastProp] = ''; // TODO other value type (object ?)
+                    }
+                });
 
-            // insert new field to all content affected
-            // TODO change value based on content type
-            let contents = _.filter(siteContentIndexes, {layout: layoutName});
-            console.log('contents affected', contents, 'replacement', replacement);
-            _.forEach(contents, content => {
-                let props = replacement.split('.');
-                let lastProp = props.pop();
-                let current = content;
-                while (props.length) {
-                    if (typeof current !== 'object') break;
-                    current = current[props.shift()];
-                }
-                if (current && typeof current == 'object') {
-                    console.log('update lastProp success, lastProp', lastProp);
-                    current[lastProp] = ''; // TODO other value type (object ?)
-                }
-            });
+                // update schema trong index
+                let configFileName = (() => {
+                    let parts = layoutName.split('.');
+                    parts.pop();
+                    return parts.join('.') + '.schema.json';
+                })();
+                siteContentConfigIndexes[configFileName] = updatedSchema;
+            } else if (dstType == 'globalMeta') {
+                BackEnd.saveMetaConfigFile(me.opts.siteName, fileName, JSON.stringify(updatedSchema, null, 4));
+                // add place holder in editor
+                me.editor.executeEdits("", [{range: curSelection, text: `{{${objectPath}.${fieldName}}}`}]);
+                // update schema trong index
+                console.log('update schema trong index', 'fileName', fileName, updatedSchema);
+                siteGlobalConfigIndexes[fileName] = updatedSchema;
+            } else {
+                return;
+            }
 
             // reload actions
             me.removeAllActions();

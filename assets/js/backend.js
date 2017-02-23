@@ -1019,14 +1019,21 @@ function getMetaFile(siteName, filePath) {
 }
 
 /*
- * 'content/metadata/category/document.json' ->  category.document.meta.schema.json
- * 'content/metadata/footer.json' -> footer.meta.schema.json
+ * 'content/metadata/category/document.json' ->  category.document.meta-schema.json
+ * 'content/metadata/footer.json' -> footer.meta-schema.json
  * */
 function genMetaConfigFileName(contentMetaDataPath) {
     let parts = contentMetaDataPath.split('/');
-    parts.shift(); // remove 'content'
-    parts.shift(); // remove 'metadata'
-    return parts.join('.').replace(/\.[^/.]+$/, '') + '.meta-schema.json';
+    if (contentMetaDataPath.startsWith('content/metadata')) {
+        parts.shift(); // remove 'content'
+        parts.shift(); // remove 'metadata'
+    }
+    let ret = parts.join('.').replace(/\.[^/.]+$/, '');
+    if (!ret.endsWith('.meta-schema'))
+        ret += '.meta-schema.json';
+    else
+        ret += '.json';
+    return ret;
 }
 
 function getMetaConfigFile(siteName, metaFilePath) {
