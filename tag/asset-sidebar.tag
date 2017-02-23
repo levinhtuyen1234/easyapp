@@ -1,9 +1,16 @@
 <asset-sidebar>
     <div class="ui icon mini menu">
         <div class="right menu">
-            <a class="item {curType === 'file' ? 'disabled' : ''}" title="Add files or folders" onclick="{addFileOrFolder}">
+            <a class="item {curType === 'file' ? 'disabled' : ''}" title="Add File" onclick="{addFile}">
                 <i class="large icons">
-                    <i class="plus icon"></i>
+                    <i class="file icon"></i>
+                    <i class="inverted corner add icon"></i>
+                </i>
+            </a>
+            <a class="item {curType === 'file' ? 'disabled' : ''}" title="Add Folder" onclick="{addFolder}">
+                <i class="large icons">
+                    <i class="folder icon"></i>
+                    <i class="inverted corner add icon"></i>
                 </i>
             </a>
             <a class="item" title="Remove" onclick="{delete}">
@@ -81,7 +88,7 @@
         function buildObjectTree(root, items) {
             _.forEach(items, function (item) {
                 let title = $(`<div class="title">
-                    ${item.type === 'folder' ? '<i class="folder outline icon"></i>' : '<i class="file icon"></i>'}
+                    ${item.type === 'folder' ? '<i class="folder icon"></i>' : '<i class="file outline icon"></i>'}
                     <i class="dropdown icon"></i>${item.name}
                     </div>`);
                 let content = $(`<div class="content" data-name="${item.name}" data-full-path="${item.fullPath}" data-type="${item.type}"></div>`);
@@ -130,48 +137,53 @@
             });
         };
 
-        me.addFileOrFolder = function (e) {
+        let onAddFileOrFolder = function(filePaths) {
+            if (!filePaths) {return;}
+            _.forEach(filePaths, function (filePath) {
+                // copy file to selected folder
+                try {
+
+                    let fileName = Path.basename(filePath);
+                    console.log('copy', filePath, curFullPath + '/' + fileName);
+                    let dstFilePath = Path.join(curFullPath, fileName);
+                    Fse.copySync(filePath, dstFilePath, {
+                        overwrite: true,
+                        errorOnExist: false
+                    });
+                } catch(ex) {
+                    console.log('copy asset failed', ex);
+                }
+            });
+
+            window.curAccordion = curAccordion;
+            // reload cur accordion folder
+            let curAccordionFolderPath = curAccordion.data('fullPath');
+            console.log('curAccordionFolderPath', curAccordionFolderPath);
+            let curAccordionFileTree = [];
+            curAccordionFileTree = readDirRecursive(curAccordionFolderPath, fileTree);
+            console.log('curAccordionFileTree', curAccordionFileTree);
+
+            let curAccordionContent = curAccordion.find('.accordion');
+            curAccordionContent.empty();
+            buildObjectTree(curAccordionContent, curAccordionFileTree);
+            // TODO cheat to let accordion tree refresh
+            setTimeout(function(){
+                let curAccordionContent = curAccordion.find('.accordion');
+                curAccordionContent.empty();
+                buildObjectTree(curAccordionContent, curAccordionFileTree);
+            }, 200);
+        };
+
+        me.addFile = function (e) {
             if (!curFullPath) return;
             if ($(e.target).hasClass('disabled') || $(e.target).parent().parent().hasClass('disabled')) return;
-            dialog.showOpenDialog({
-                    properties: ['multiSelections'],
-                }, function (filePaths) {
-                    if (!filePaths) {return;}
-                    _.forEach(filePaths, function (filePath) {
-                        // copy file to selected folder
-                        try {
+            dialog.showOpenDialog({properties: ['multiSelections', 'openFile']}, onAddFileOrFolder);
+        };
 
-                            let fileName = Path.basename(filePath);
-                            console.log('copy', filePath, curFullPath + '/' + fileName);
-                            let dstFilePath = Path.join(curFullPath, fileName);
-                            Fse.copySync(filePath, dstFilePath, {
-                                overwrite: true,
-                                errorOnExist: false
-                            });
-                        } catch(ex) {
-                            console.log('copy asset failed', ex);
-                        }
-                    });
-
-                    window.curAccordion = curAccordion;
-                    // reload cur accordion folder
-                    let curAccordionFolderPath = curAccordion.data('fullPath');
-                    console.log('curAccordionFolderPath', curAccordionFolderPath);
-                    let curAccordionFileTree = [];
-                    curAccordionFileTree = readDirRecursive(curAccordionFolderPath, fileTree);
-                    console.log('curAccordionFileTree', curAccordionFileTree);
-
-                    let curAccordionContent = curAccordion.find('.accordion');
-                    curAccordionContent.empty();
-                    buildObjectTree(curAccordionContent, curAccordionFileTree);
-                    // TODO cheat to let accordion tree refresh
-                    setTimeout(function(){
-                        let curAccordionContent = curAccordion.find('.accordion');
-                        curAccordionContent.empty();
-                        buildObjectTree(curAccordionContent, curAccordionFileTree);
-                    }, 200);
-                }
-            );
+        me.addFolder = function (e) {
+            if (!curFullPath) return;
+            if ($(e.target).hasClass('disabled') || $(e.target).parent().parent().hasClass('disabled')) return;
+            dialog.showOpenDialog({properties: ['multiSelections', 'openDirectory']}, onAddFileOrFolder);
         };
 
         me.on('mount', function () {
