@@ -41,6 +41,7 @@
 
         var accordionConfig = {
 //            exclusive: true,
+//            closeNested: true,
             onOpening: function () {
                 var openedItem = $(this);
                 accordionRoot.find('.selected-accordion').removeClass('selected-accordion');
@@ -178,15 +179,15 @@
             curAccordionFileTree = readDirRecursive(curAccordionFolderPath, fileTree);
             console.log('curAccordionFileTree', curAccordionFileTree);
 
-            let curAccordionContent = curAccordion.find('.accordion');
+            let curAccordionContent = curAccordion.first('.accordion');
             curAccordionContent.empty();
             buildObjectTree(curAccordionContent, curAccordionFileTree);
-            // TODO cheat to let accordion tree refresh
-            setTimeout(function () {
-                let curAccordionContent = curAccordion.find('.accordion');
-                curAccordionContent.empty();
-                buildObjectTree(curAccordionContent, curAccordionFileTree);
-            }, 200);
+//             TODO cheat to let accordion tree refresh
+//            setTimeout(function () {
+//                let curAccordionContent = curAccordion.find('.accordion');
+//                curAccordionContent.empty();
+//                buildObjectTree(curAccordionContent, curAccordionFileTree);
+//            }, 200);
         };
 
         me.addFile = function (e) {
@@ -223,14 +224,15 @@
             let title = $(`<div class="title"><i class="folder outline icon"></i>
                     <i class="dropdown icon"></i>asset
                     </div>`);
-            let accordionContent = $(`<div class="content" data-name="asset" data-full-path="${rootPath}" data-type="folder"></div>`);
-            let accordion = $(`<div class="accordion"></div>`);
+            let accordionContent = $(`<div class="content active" data-name="asset" data-full-path="${rootPath}" data-type="folder"></div>`);
+            let accordion = $(`<div class="accordion transition active hidden"></div>`);
             accordionRoot.append(title, accordionContent);
             accordionContent.append(accordion);
             curAccordion = accordion;
 
             content.append(accordionRoot);
             buildObjectTree(accordionContent, fileTree);
+
             accordionRoot.accordion(accordionConfig);
         });
 
