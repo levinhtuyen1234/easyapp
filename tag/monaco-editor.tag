@@ -146,29 +146,31 @@ ${childSnippet}{{/with}}`;
             let content = siteContentConfigIndexes[contentConfigFileName];
 //            console.log('content', content);
             // flatten all key in content
-            let contentSchemaValue = {};
-            contentSchemaValue = getJsonSchemaValue(null, content, contentSchemaValue);
-            let allContent = flatten(contentSchemaValue);
-            console.log('flatContent', allContent);
+            if (content) {
+                let contentSchemaValue = {};
+                contentSchemaValue = getJsonSchemaValue(null, content, contentSchemaValue);
+                let allContent = flatten(contentSchemaValue);
+                console.log('flatContent', allContent);
 
-            // create data action
-            // TODO lookup config for displayName of global content
+                // create data action
+                // TODO lookup config for displayName of global content
 
-            _.forOwn(allContent, (value, key) => {
-                var replacement = getReplacement(key, value);
-                actions.push(me.editor.addAction({
-                        id:                 key,
-                        label:              `:DATA] ${key}`,
-                        keybindings:        null,
-                        keybindingContext:  null,
-                        contextMenuGroupId: null,
-                        run:                function (ed) {
-                            me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
-                            return null;
-                        }
-                    })
-                );
-            });
+                _.forOwn(allContent, (value, key) => {
+                    var replacement = getReplacement(key, value);
+                    actions.push(me.editor.addAction({
+                            id:                 key,
+                            label:              `:DATA] ${key}`,
+                            keybindings:        null,
+                            keybindingContext:  null,
+                            contextMenuGroupId: null,
+                            run:                function (ed) {
+                                me.editor.executeEdits("", [{range: ed.getSelection(), text: replacement}]);
+                                return null;
+                            }
+                        })
+                    );
+                });
+            }
 
             // create partial action
             _.forOwn(sitePartialsIndexes, (value, key) => {
