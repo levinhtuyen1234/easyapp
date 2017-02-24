@@ -33,7 +33,7 @@
                     case 'object': {
                         let title = $(`<div class="title"><i class="dropdown icon"></i>${prop}</div>`);
                         let content = $(`<div class="content" data-path="${curObjectPath}"></div>`);
-                        let accordion = $(`<div class="accordion"></div>`);
+                        let accordion = $(`<div class="accordion transition hidden"></div>`);
                         root.append(title, content);
                         content.append(accordion);
 

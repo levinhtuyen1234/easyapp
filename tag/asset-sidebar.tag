@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div class="content" class="simplebar" style="margin: 10px; overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
+    <div class="content" style="margin: 10px; overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
 
     <script>
         var me = this;
@@ -106,7 +106,7 @@
                     <i class="dropdown icon"></i>${item.name}
                     </div>`);
                 let content = $(`<div class="content" data-name="${item.name}" data-full-path="${item.fullPath}" data-type="${item.type}"></div>`);
-                let accordion = $(`<div class="accordion"></div>`);
+                let accordion = $(`<div class="accordion transition hidden"></div>`);
                 root.append(title, content);
                 content.append(accordion);
 
@@ -221,11 +221,11 @@
             fileTree = readDirRecursive(rootPath, fileTree);
 
             content.empty(); // remove previous tree
-            let title = $(`<div class="title"><i class="folder outline icon"></i>
+            let title = $(`<div class="title"><i class="folder icon"></i>
                     <i class="dropdown icon"></i>asset
                     </div>`);
-            let accordionContent = $(`<div class="content active" data-name="asset" data-full-path="${rootPath}" data-type="folder"></div>`);
-            let accordion = $(`<div class="accordion transition active hidden"></div>`);
+            let accordionContent = $(`<div class="active content" data-name="asset" data-full-path="${rootPath}" data-type="folder"></div>`);
+            let accordion = $(`<div class="active accordion transition visible"></div>`);
             accordionRoot.append(title, accordionContent);
             accordionContent.append(accordion);
             curAccordion = accordion;
@@ -233,7 +233,7 @@
             content.append(accordionRoot);
             buildObjectTree(accordionContent, fileTree);
 
-            accordionRoot.accordion(accordionConfig);
+            window.a = accordionRoot.accordion(accordionConfig);
         });
 
         me.on('unmount', function () {
