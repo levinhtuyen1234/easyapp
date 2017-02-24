@@ -1,5 +1,11 @@
 <asset-sidebar>
     <div class="ui icon mini menu">
+        <div class="item" style="width: calc(100% - 130px); font-size: 15px;">
+            <div class="ui transparent input">
+                <input placeholder="" type="text" class="url-input" readonly>
+            </div>
+        </div>
+
         <div class="right menu">
             <a class="item {curType === 'file' ? 'disabled' : ''}" title="Add File" onclick="{addFile}">
                 <i class="large icons">
@@ -29,7 +35,7 @@
 
         const dialog = require('electron').remote.dialog;
 
-        var rootPath, curFullPath, curAccordion, fileTree;
+        var rootPath, curFullPath, curAccordion, fileTree, urlInput;
         let accordionRoot = $('<div class="ui styled accordion root-accordion treemenu"></div>');
         me.curType;
 
@@ -40,6 +46,12 @@
                 accordionRoot.find('.selected-accordion').removeClass('selected-accordion');
                 openedItem.prev().addClass('selected-accordion');
                 curFullPath = openedItem.data('fullPath');
+
+                let url = curFullPath.split(/[\\\/]/g);
+                url.shift(); // remove 'sites'
+                url.shift(); // remove site name
+                url = url.join('/');
+                urlInput.val('/' + url);
             },
             onOpen:    function () {
                 var openedItem = $(this);
@@ -49,6 +61,7 @@
                 curAccordion = openedItem;
 //                    console.log('curFullPath', curFullPath);
 //                    console.log('curType', curType);
+
                 me.update();
             }
         };
@@ -188,6 +201,7 @@
 
         me.on('mount', function () {
             var content = $(me.root).find('.content');
+            urlInput = $(me.root).find('.url-input');
             fileTree = [];
             rootPath = `sites/${me.opts.siteName}/asset`;
             curFullPath = rootPath;
