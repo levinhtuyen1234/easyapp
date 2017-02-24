@@ -150,8 +150,10 @@
             });
         };
 
-        let onAddFileOrFolder = function(filePaths) {
-            if (!filePaths) {return;}
+        let onAddFileOrFolder = function (filePaths) {
+            if (!filePaths) {
+                return;
+            }
             _.forEach(filePaths, function (filePath) {
                 // copy file to selected folder
                 try {
@@ -160,10 +162,10 @@
                     console.log('copy', filePath, curFullPath + '/' + fileName);
                     let dstFilePath = Path.join(curFullPath, fileName);
                     Fse.copySync(filePath, dstFilePath, {
-                        overwrite: true,
+                        overwrite:    true,
                         errorOnExist: false
                     });
-                } catch(ex) {
+                } catch (ex) {
                     console.log('copy asset failed', ex);
                 }
             });
@@ -180,7 +182,7 @@
             curAccordionContent.empty();
             buildObjectTree(curAccordionContent, curAccordionFileTree);
             // TODO cheat to let accordion tree refresh
-            setTimeout(function(){
+            setTimeout(function () {
                 let curAccordionContent = curAccordion.find('.accordion');
                 curAccordionContent.empty();
                 buildObjectTree(curAccordionContent, curAccordionFileTree);
@@ -202,6 +204,15 @@
         me.on('mount', function () {
             var content = $(me.root).find('.content');
             urlInput = $(me.root).find('.url-input');
+
+            // handle auto select url input first time click only
+            urlInput.on('focus input', function (e) {
+                $(this).one('mouseup', function () {
+                    $(this).select();
+                    return false;
+                }).select();
+            });
+
             fileTree = [];
             rootPath = `sites/${me.opts.siteName}/asset`;
             curFullPath = rootPath;

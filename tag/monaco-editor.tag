@@ -133,7 +133,7 @@ ${childSnippet}{{/with}}`;
         function setupActions() {
             if (!layoutName) return;
             // search content that use this layout
-            console.log('layoutName', layoutName);
+//            console.log('layoutName', layoutName);
             // remove .html from layoutName, add .schema.json
             let parts = layoutName.split('.');
             if (layoutName.endsWith('.html')) {
@@ -150,7 +150,7 @@ ${childSnippet}{{/with}}`;
                 let contentSchemaValue = {};
                 contentSchemaValue = getJsonSchemaValue(null, content, contentSchemaValue);
                 let allContent = flatten(contentSchemaValue);
-                console.log('flatContent', allContent);
+//                console.log('flatContent', allContent);
 
                 // create data action
                 // TODO lookup config for displayName of global content

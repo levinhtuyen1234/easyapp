@@ -385,7 +385,7 @@
         };
 
         me.openLayoutTab = function () {
-            console.log('onopenLayoutTab', me.currentLayout);
+//            console.log('onopenLayoutTab', me.currentLayout);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.update();
 
