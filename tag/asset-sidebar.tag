@@ -1,4 +1,5 @@
 <asset-sidebar>
+    <div data-is="copy-progress-dialog"></div>
     <div class="ui icon mini menu">
         <div class="item" style="width: calc(100% - 130px); font-size: 15px;">
             <div class="ui transparent input">
@@ -25,12 +26,13 @@
         </div>
     </div>
 
-    <div class="content" style="margin: 10px; overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
+    <div class="content sidebar-content" style="margin: 10px; overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
 
     <script>
         var me = this;
+        const Promise = require('bluebird');
         const Fs = require('fs');
-        const Fse = require('fs-extra');
+        const Fse = Promise.promisifyAll(require('fs-extra'));
         const Path = require('path');
 
         const dialog = require('electron').remote.dialog;
@@ -67,14 +69,37 @@
             }
         };
 
+        const readDirFlatRecursive = function (dir, ret) {
+            ret = ret || [];
+            try {
+                var items = Fs.readdirSync(dir);
+                items.forEach(function (name) {
+                    var fullPath = Path.join(dir, name);
+                    var stat = Fs.statSync(fullPath);
+                    if (stat.isFile()) {
+                        ret.push({
+                            name:     name,
+                            type:     'file',
+                            fullPath: fullPath
+                        });
+                    } else if (stat.isDirectory()) {
+                        readDirFlatRecursive(fullPath, ret);
+                    }
+                });
+                return ret;
+            } catch (ex) {
+                console.log(ex);
+                return [];
+            }
+        };
+
         const readDirRecursive = function (dir, ret) {
             ret = ret || [];
             try {
-                let items = Fs.readdirSync(dir);
-                let ret = [];
+                var items = Fs.readdirSync(dir);
                 items.forEach(function (name) {
-                    let fullPath = Path.join(dir, name);
-                    let stat = Fs.statSync(fullPath);
+                    var fullPath = Path.join(dir, name);
+                    var stat = Fs.statSync(fullPath);
                     if (stat.isFile()) {
                         ret.push({
                             name:     name,
@@ -106,7 +131,7 @@
                     <i class="dropdown icon"></i>${item.name}
                     </div>`);
                 let content = $(`<div class="content" data-name="${item.name}" data-full-path="${item.fullPath}" data-type="${item.type}"></div>`);
-                let accordion = $(`<div class="accordion transition hidden"></div>`);
+                let accordion = $(`<div class="accordion transition hidden" data-full-path="${item.fullPath}"></div>`);
                 root.append(title, content);
                 content.append(accordion);
 
@@ -115,12 +140,6 @@
                 }
             });
         }
-
-        // add file, add folder, delete btn
-        // tree view file, folder
-        // tree view expand, collapse node
-        // delete key pressed on node
-        // click open file open raw data, text, image... (optional)
 
         me.delete = function () {
             bootbox.confirm({
@@ -151,44 +170,59 @@
             });
         };
 
-        let onAddFileOrFolder = function (filePaths) {
+        let onAddFileOrFolder = Promise.coroutine(function *(filePaths) {
             if (!filePaths) {
                 return;
             }
-            _.forEach(filePaths, function (filePath) {
-                // copy file to selected folder
-                try {
 
-                    let fileName = Path.basename(filePath);
-                    console.log('copy', filePath, curFullPath + '/' + fileName);
-                    let dstFilePath = Path.join(curFullPath, fileName);
-                    Fse.copySync(filePath, dstFilePath, {
-                        overwrite:    true,
-                        errorOnExist: false
-                    });
+            var progressDialog = me.tags['copy-progress-dialog'];
+            window.progressDialog = progressDialog;
+            progressDialog.show('Copying file');
+            // wait a bit for dialog show up
+
+            // collect to be copied files
+            for(let i = 0; i < filePaths.length; ++i) {
+                let filePath = filePaths[i];
+                try {
+                    let stat = Fs.statSync(filePath);
+                    if (stat.isDirectory()) {
+//                        console.log('copy folder');
+                        let srcFiles = [];
+                        srcFiles = readDirFlatRecursive(filePath, srcFiles);
+//                        console.log('srcFiles', srcFiles);
+                        for(let j = 0; j < srcFiles.length; j++) {
+                            let fileInfo = srcFiles[j];
+                            progressDialog.step(fileInfo.fullPath);
+                            // create dst path
+                            let dstPath = curFullPath + fileInfo.fullPath.replace(filePath, '');
+                            yield Fse.copyAsync(fileInfo.fullPath, dstPath, { overwrite: true, errorOnExist: false});
+//                            console.log('copy done one', fileInfo.fullPath);
+                        }
+                    } else if(stat.isFile()) {
+                        progressDialog.step(filePath);
+                        let fileName = Path.basename(filePath);
+                        let dstFilePath = Path.join(curFullPath, fileName);
+                        yield Fse.copyAsync(filePath, dstFilePath, { overwrite: true, errorOnExist: false});
+                    }
                 } catch (ex) {
                     console.log('copy asset failed', ex);
                 }
-            });
+            }
+            progressDialog.hide();
 
             window.curAccordion = curAccordion;
             // reload cur accordion folder
             let curAccordionFolderPath = curAccordion.data('fullPath');
-            console.log('curAccordionFolderPath', curAccordionFolderPath);
+//            console.log('curAccordionFolderPath', curAccordionFolderPath);
             let curAccordionFileTree = [];
             curAccordionFileTree = readDirRecursive(curAccordionFolderPath, fileTree);
-            console.log('curAccordionFileTree', curAccordionFileTree);
+//            console.log('curAccordionFileTree', curAccordionFileTree);
 
             let curAccordionContent = curAccordion.first('.accordion');
             curAccordionContent.empty();
             buildObjectTree(curAccordionContent, curAccordionFileTree);
-//             TODO cheat to let accordion tree refresh
-//            setTimeout(function () {
-//                let curAccordionContent = curAccordion.find('.accordion');
-//                curAccordionContent.empty();
-//                buildObjectTree(curAccordionContent, curAccordionFileTree);
-//            }, 200);
-        };
+
+        });
 
         me.addFile = function (e) {
             if (!curFullPath) return;
@@ -203,7 +237,7 @@
         };
 
         me.on('mount', function () {
-            var content = $(me.root).find('.content');
+            var content = $(me.root).find('.sidebar-content');
             urlInput = $(me.root).find('.url-input');
 
             // handle auto select url input first time click only
@@ -225,7 +259,7 @@
                     <i class="dropdown icon"></i>asset
                     </div>`);
             let accordionContent = $(`<div class="active content" data-name="asset" data-full-path="${rootPath}" data-type="folder"></div>`);
-            let accordion = $(`<div class="active accordion transition visible"></div>`);
+            let accordion = $(`<div class="active accordion transition visible" data-full-path="${rootPath}"></div>`);
             accordionRoot.append(title, accordionContent);
             accordionContent.append(accordion);
             curAccordion = accordion;
@@ -233,7 +267,7 @@
             content.append(accordionRoot);
             buildObjectTree(accordionContent, fileTree);
 
-            window.a = accordionRoot.accordion(accordionConfig);
+            accordionRoot.accordion(accordionConfig);
         });
 
         me.on('unmount', function () {
