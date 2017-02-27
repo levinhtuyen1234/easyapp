@@ -188,13 +188,16 @@
                     if (stat.isDirectory()) {
 //                        console.log('copy folder');
                         let srcFiles = [];
+                        let dstNewFolder = filePath.split(/[\/\\]/g).pop();
+                        console.log('dstNewFolder', dstNewFolder);
                         srcFiles = readDirFlatRecursive(filePath, srcFiles);
 //                        console.log('srcFiles', srcFiles);
                         for(let j = 0; j < srcFiles.length; j++) {
                             let fileInfo = srcFiles[j];
                             progressDialog.step(fileInfo.fullPath);
                             // create dst path
-                            let dstPath = curFullPath + fileInfo.fullPath.replace(filePath, '');
+                            let dstPath = Path.join(curFullPath, dstNewFolder, fileInfo.fullPath.replace(filePath, ''));
+                            console.log('copy from', fileInfo.fullPath, 'to', dstPath);
                             yield Fse.copyAsync(fileInfo.fullPath, dstPath, { overwrite: true, errorOnExist: false});
 //                            console.log('copy done one', fileInfo.fullPath);
                         }
@@ -215,10 +218,13 @@
             let curAccordionFolderPath = curAccordion.data('fullPath');
 //            console.log('curAccordionFolderPath', curAccordionFolderPath);
             let curAccordionFileTree = [];
-            curAccordionFileTree = readDirRecursive(curAccordionFolderPath, fileTree);
+//            console.log('AAA curAccordionFolderPath', curAccordionFolderPath);
+            readDirRecursive(curAccordionFolderPath, curAccordionFileTree);
 //            console.log('curAccordionFileTree', curAccordionFileTree);
 
             let curAccordionContent = curAccordion.first('.accordion');
+            console.log('curAccordionContent', curAccordionContent);
+            window.curAccordionContent = curAccordionContent;
             curAccordionContent.empty();
             buildObjectTree(curAccordionContent, curAccordionFileTree);
 
@@ -252,7 +258,7 @@
             rootPath = `sites/${me.opts.siteName}/asset`;
             curFullPath = rootPath;
             me.curType = 'folder';
-            fileTree = readDirRecursive(rootPath, fileTree);
+            readDirRecursive(rootPath, fileTree);
 
             content.empty(); // remove previous tree
             let title = $(`<div class="title"><i class="folder icon"></i>
@@ -265,7 +271,7 @@
             curAccordion = accordion;
 
             content.append(accordionRoot);
-            buildObjectTree(accordionContent, fileTree);
+            buildObjectTree(accordion, fileTree);
 
             accordionRoot.accordion(accordionConfig);
         });
