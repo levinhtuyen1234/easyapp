@@ -30,7 +30,6 @@
         };
 
         me.step = function (copyingFile) {
-//            console.log('on step', copyingFile, textLoaderElm);
             window.textLoaderElm = textLoaderElm;
             textLoaderElm.text(`Copying File ${copyingFile}`);
         };

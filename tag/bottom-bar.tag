@@ -13,7 +13,7 @@
         <a class="right item" data-tab="buildLog" style="border-radius: 0 !important;">Build Log</a>
     </div>
     <div class="ui bottom attached active tab segment" data-tab="webView" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
-        <webview id="webview" src="{iframeUrl}" style="display:flex; height: 100%"></webview>
+        <webview id="webview" preload="ipc.js" src="{iframeUrl}" style="display:flex; height: 100%"></webview>
     </div>
     <div class="ui bottom attached tab segment" data-tab="buildLog" style="padding: 0; height: calc(100% - 35px); border-right: none; border-bottom: none;">
         <pre class="accesslog hljs" style="height:100%; overflow: auto; margin: 0;font-family: Consolas, monospace;">
@@ -22,7 +22,8 @@
 
     <script>
         var Path = require('path');
-        var Fs = require('fs');
+        var Promise = require('bluebird');
+        var Fs = Promise.promisifyAll(require('fs'));
         var me = this;
 
         var buildingDataUri = 'data:text/html;charset=utf-8;base64,PCFET0NUWVBFIGh0bWw+PG1ldGEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVURi04Imh0dHAtZXF1aXY9Y29udGVudC10eXBlPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9cm9ib3RzPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9Z29vZ2xlYm90PjxzY3JpcHQgc3JjPS9qcy9saWIvZHVtbXkuanM+PC9zY3JpcHQ+PGxpbmsgaHJlZj0vY3NzL3Jlc3VsdC1saWdodC5jc3MgcmVsPXN0eWxlc2hlZXQ+PHN0eWxlPmJvZHl7bWluLWhlaWdodDoxMDAlO2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwuMDMpfWgxe3Bvc2l0aW9uOmFic29sdXRlO2xlZnQ6NTAlO21hcmdpbi1sZWZ0Oi0xLjllbTtjb2xvcjpyZ2JhKDAsMCwwLC4wMyk7Zm9udDo4MDAgOTAwJSBSb2JvdG8sc2FuLXNlcmlmfWgxOmJlZm9yZXtwb3NpdGlvbjphYnNvbHV0ZTtvdmVyZmxvdzpoaWRkZW47Y29udGVudDphdHRyKGRhdGEtY29udGVudCk7Y29sb3I6I2Q0ZDVkNzttYXgtd2lkdGg6NGVtOy13ZWJraXQtYW5pbWF0aW9uOmxvYWRpbmcgM3MgbGluZWFyIGluZmluaXRlfUAtd2Via2l0LWtleWZyYW1lcyBsb2FkaW5nezAle21heC13aWR0aDowfX08L3N0eWxlPjx0aXRsZT5Mb2FkaW5nIGFuaW1hdGlvbjwvdGl0bGU+PHNjcmlwdD53aW5kb3cub25sb2FkPWZ1bmN0aW9uKCl7fTwvc2NyaXB0PjxoMSBkYXRhLWNvbnRlbnQ9QnVpbGRpbmc+QnVpbGRpbmc8L2gxPg==';
@@ -185,11 +186,143 @@
         //            spawnProcess('gulp.cmd', ['build', '--production']);
         //        };
 
+        var executeJavaScript = Promise.coroutine(function*(script) {
+            return new Promise((resolve, reject) => {
+                if (!me.webview)
+                    reject(new Error('no webview'));
+                me.webview.executeJavaScript(script, false, result => {
+                    if (result === undefined)
+                        resolve();
+                    else
+                        resolve(result);
+                });
+            })
+        });
+
         me.on('mount', function () {
             me.output = me.root.querySelector('pre');
             me.output.innerHTML = '';
             me.webview.src = ewhDataUri;
+
+            me.webview.addEventListener('did-finish-load', Promise.coroutine(function*(event) {
+                try {
+                    console.log('webpage finished load, start injecting');
+                    let isJqueryExists = yield executeJavaScript(`(!!jQuery)`);
+                    console.log('isJqueryExists', isJqueryExists);
+
+                    if (!isJqueryExists) {
+                        console.log('injecting jQuery');
+                        yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery.min.js')).toString());
+                    }
+
+                    console.log('injecting e-editable');
+                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery.poshytip.min.js')).toString());
+                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery-editable-poshytip.min.js')).toString());
+                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/tip-yellowsimple.css')).toString());
+                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/jquery-editable.css')).toString());
+
+                    // script active x-editable of suitable element
+                    // find elm with data-ea-object-path data attribute
+                    // active x-editable with callback to app
+                    setTimeout(function () {
+                        executeJavaScript(`(function() {
+                        $('*[data-ea-object-path]').each(function(index, elm) {
+                            var $elm = $(elm);
+                            $elm.editable({
+                                success: function(response, newValue) {
+                                    sendToHost('contentChanged', {
+                                        objectPath: $elm.data('eaObjectPath'),
+                                        type: $elm.data('eaType'),
+                                        pathName: document.location.pathname,
+                                        layout: $elm.data('eaLayout'),
+                                        dataSrc: $elm.data('eaDataSrc'),
+                                        newValue:   newValue,
+                                    });
+                                }
+                            });
+                        });
+                    })();`);
+                    }, 1000);
+                } catch (ex) {
+                    console.log('handle page load finished failed', ex);
+                }
+            }));
+
+
+            function applyNewValue(objectPath, target, newValue) {
+                let parts = objectPath.split('.');
+                let cur = target;
+                let parent = null;
+                let found = parts.some(function(key, index) {
+                    // if key is number (array index)
+                    if (/^[0-9]+$/g.test(key)) {
+
+                        key = parseInt(key);
+                        parent = cur;
+                        cur = cur[key];
+                        console.log('number', key, cur != undefined && index == parts.length-1);
+                        return cur != undefined && index == parts.length-1;
+                    } else if (typeof(key) === 'string') {
+                        // text
+                        parent = cur;
+                        cur = cur[key];
+                        console.log('text', key, cur != undefined && index == parts.length-1);
+                        return cur != undefined && index == parts.length-1;
+                    } else {
+                        return false; // not proccessable key, break
+                    }
+                });
+                if(!found) return false;
+                let lastKey = parts.pop();
+                parent[lastKey] = newValue;
+                return true;
+            }
+
+            me.webview.addEventListener('ipc-message', event => {
+                console.log('got event', event);
+                if (!event || !event.channel || event.channel !== 'contentChanged' ||
+                    !event.args || !event.args.length || event.args.length == 0) {
+                    return;
+                }
+
+                let info = event.args[0];
+                // TODO find content file from site pathName
+                let contentFile = info.pathName.trim();
+                if (contentFile === '/') {
+                    contentFile = 'index.md';
+                } else {
+                    if (contentFile.endsWith('.html')) {
+                        let parts = contentFile.split('.');
+                        parts.pop();
+                        contentFile += parts.join('.') + '.md';
+                    } else {
+                        contentFile += '.md';
+                    }
+                }
+
+                // get content file data from cache indexes
+                var content = siteContentIndexes[contentFile];
+                if (!content) {
+                    console.log('on contentChanged content not found');
+                    return;
+                }
+                // apply changes from x-editable
+                let success = applyNewValue(info.objectPath, content, info.newValue);
+                if (!success) {
+                    console.log('on contentChanged objectPath not found in content');
+                    return;
+                }
+
+                // save new content file to disk and cache index
+                siteContentIndexes[contentFile] = content;
+                let markdownData = content['__content__'] || '';
+                BackEnd.saveContentFile(me.opts.siteName, 'content/'+contentFile, content, markdownData);
+
+                // TODO check if update ui is necessary
+            });
+
             window.wv = me.webview;
+            window.btmSideBar = me;
         });
 
         me.clearLog = function () {

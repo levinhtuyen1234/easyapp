@@ -1220,6 +1220,7 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
                 if (!file.endsWith('.md')) return;
                 let content = (yield Fs.readFileAsync(filePath)).toString();
                 content = SplitContentFile(content);
+                content.metaData['__content__'] = content.markDownData;
                 contents[dir === '' ? file : `${dir}/${file}`] = content.metaData;
             } else if (stat.isDirectory()) {
                 // support recursive content
