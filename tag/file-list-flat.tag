@@ -265,7 +265,7 @@
 //                console.log('file.name', file.name);
                 var metaData = window.siteContentIndexes[file.name];
                 // TODO when support recursive use file.path as key to lookup metadata
-                if (metaData && metaData.layout && metaData.layout === 'delete.html') {
+                if (metaData && metaData.layout && metaData.layout === '404.html') {
                     return false;
                 }
                 return true;

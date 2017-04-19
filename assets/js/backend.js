@@ -705,13 +705,13 @@ function softDeleteContentFile(siteName, filePath) {
     // read content file
     let content = getContentFile(siteName, contentFilePath);
     // set layout -> delete.html
-    content.metaData['layout'] = 'delete.html';
+    content.metaData['layout'] = '404.html';
     // save file
     saveContentFile(siteName, contentFilePath, content.metaData, content.markDownData);
     // update memory index
     let metaData = siteContentIndexes[filePath];
     if (metaData instanceof Object)
-        metaData['layout'] = 'delete.html';
+        metaData['layout'] = '404.html';
 }
 
 function newLayoutFile(siteName, layoutFileName) {
