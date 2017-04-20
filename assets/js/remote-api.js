@@ -47,10 +47,14 @@ const restAdapter = {
         var ret = [];
         sites.forEach(function (site) {
             ret.push({
-                displayName: site['DisplayName'],
-                name:        site['Name'],
-                url:         site['Url'],
-                id:          site['WebsiteId']
+                displayName:   site['DisplayName'],
+                name:          site['Name'],
+                url:           site['Url'],
+                id:            site['WebsiteId'],
+                webTemplateId: site['WebTemplateId'],
+                source:        site['Source'],
+                webSiteType:   site['WebsiteType'],
+                git:           site['Git']
             })
         });
         // console.log('sitesObjectTransformer after', ret);
@@ -191,6 +195,7 @@ function login(username, password) {
             accountType: resp.AccountType,
             username:    resp.UserName,
             status:      resp.Status,
+            accessLevel: resp.AccessLevels || [],
             info:        {
                 address: resp.Info.Address,
                 age:     resp.Info.Age,
@@ -253,7 +258,7 @@ class AppUser {
         return this.data.accountType;
     }
 
-    addSite(name, displayName) {
+    addSite(name, displayName, templateId) {
         var username = this.data.username;
         var accountId = this.data.id;
         // tao remote git repo
@@ -264,9 +269,10 @@ class AppUser {
 
             // call add site (goi. sau khi goi. gogs vi` khong co API update website)
             var postData = {
-                "Name":        name,
-                "DisplayName": displayName,
-                "Url":         data.url
+                'Name':          name,
+                'DisplayName':   displayName,
+                'Url':           data.url,
+                'WebTemplateId': templateId
             };
 
             return Ajax({

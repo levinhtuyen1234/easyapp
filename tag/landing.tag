@@ -361,6 +361,13 @@
             });
         };
 
+        function getTemplateIdFromRepoUrl(repoUrl) {
+            let parts = repoUrl.split('/');
+            parts.shift(); // remove protocol
+            parts.shift(); // remove empty
+            return parts.join('/');
+        }
+
         me.createSite = function (displayName, repoUrl, branch) {
 //            var localPath = Path.join(__dirname, 'sites', name);
             var name = displayName.toLowerCase()
@@ -381,7 +388,8 @@
                 throw new Error('Site name already exists');
             }
 
-            return User.addSite(name, displayName).then(function (resp) {
+            var templateId = getTemplateIdFromRepoUrl(repoUrl);
+            return User.addSite(name, displayName, templateId).then(function (resp) {
                 return BackEnd.createSiteFolder(name).then(function (sitePath) {
                     // checkout source from template
                     return BackEnd.gitCheckOutSkeleton(repoUrl, branch, sitePath).then(function () {

@@ -8,6 +8,7 @@
         <div class="content" style="text-align: left">
             {isLogin ? 'Login to EasyWeb' : 'Register EasyWeb account'}
             <!--<div class="sub header">Manage your account settings and set e-mail preferences.</div>-->
+            <!--<div class="sub header"></div>-->
         </div>
     </div>
     <div class="content">
@@ -16,6 +17,13 @@
                 <div class="ui left icon input">
                     <i class="user icon"></i>
                     <input name="usernameField" type="text" placeholder="Username" onkeyup="{edit.bind(this, 'username')}">
+                </div>
+            </div>
+
+            <div show="{!isLogin}" class="required field">
+                <div class="ui left icon input" data-tooltip="Please use actual email address, it helps us keep in touch with you later">
+                    <i class="mail icon"></i>
+                    <input name="emailField" type="email" placeholder="Email" onkeyup="{edit.bind(this, 'email')}">
                 </div>
             </div>
             <div class="required field">
@@ -51,6 +59,7 @@
         me.isRequesting = false;
         me.isLogin = true;
         me.errorMsg = '';
+        me.email = '';
         var modal = null;
 
         me.changeMode = function () {
@@ -121,6 +130,7 @@
                     Status:      'verified',
                     Info:        {
                         Name:    '',
+                        Email:   me.email,
                         Sex:     '',
                         Address: '',
                         Age:     ''
@@ -153,6 +163,11 @@
 
         var validateRegisterForm = function () {
             validateLoginForm();
+            var emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            me.email  = me.email.trim();
+            if (me.email && !emailRegex.test(me.email))
+                throw new Error('email is invalid');
+
             if (me.password != me.confirmPassword) {
                 throw new Error('password not match');
             }
