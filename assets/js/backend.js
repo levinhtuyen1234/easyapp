@@ -1238,6 +1238,7 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
                 let filePath = Path.join(searchPath, fileName);
                 let stat = yield Fs.statAsync(filePath);
                 if (!stat.isFile()) return;
+                if (!filePath.endsWith('.json')) return;
                 let content = (yield Fs.readFileAsync(filePath)).toString();
                 let meta = JSON.parse(content);
                 let parts = fileName.split('.');
@@ -1309,7 +1310,7 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
     yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'metadata'), metaGlobal);
 
     let metaTag = {};
-    yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'tag'), metaTag);
+    yield readMetaFile(Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag'), metaTag);
 
     let partials = {};
     yield readPartialFile(Path.join(sitesRoot, siteName, 'layout', 'partial'), partials);
