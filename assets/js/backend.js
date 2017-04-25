@@ -730,15 +730,14 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
     // let slug = contentBaseName;
     if (layoutFileName === '') layoutFileName = 'index.html';
     let defaultMeta = {
-        "title":       contentTitle,
         "slug":        slug,
-        "description": "",
-        "draft":       false,
-        "publishDate": "",
+        "title":       contentTitle,
         "category":    category,
         "tag":         tag,
         "layout":      layoutFileName,
-        "date":        getCurrentISODate()
+        "date":        getCurrentISODate(),
+        "publishDate": getCurrentISODate(),
+        "draft":       false
     };
     let defaultLayoutContent = `---json
 ${JSON.stringify(defaultMeta, null, 4)}
