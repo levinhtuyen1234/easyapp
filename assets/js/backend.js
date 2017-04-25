@@ -1051,6 +1051,8 @@ function getMetaConfigFile(siteName, metaFilePath) {
         return existsConfig;
     } else {
         let metaConfig = genJsonSchemaMetaConfig(metaData);
+        // load to memory cache
+        siteGlobalConfigIndexes[name] = metaConfig;
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
         return metaConfig;
     }
@@ -1087,6 +1089,7 @@ function getListConfig(dir) {
         filePathList.forEach(function (filePath) {
             // console.log('filePath', filePath);
             filePath = Path.join(dir, filePath);
+            if (!filePath.endsWith('.json')) return;
             let stat = Fs.statSync(filePath);
             if (!stat.isFile()) return;
             let fileName = filePath.split(/[\\\/]/g).pop();
@@ -1235,9 +1238,9 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
             let files = yield Fs.readdirAsync(searchPath);
             yield Promise.map(files, Promise.coroutine(function *(fileName) {
                 let filePath = Path.join(searchPath, fileName);
+                if (!filePath.endsWith('.json')) return;
                 let stat = yield Fs.statAsync(filePath);
                 if (!stat.isFile()) return;
-                if (!filePath.endsWith('.json')) return;
                 let content = (yield Fs.readFileAsync(filePath)).toString();
                 let meta = JSON.parse(content);
                 let parts = fileName.split('.');
