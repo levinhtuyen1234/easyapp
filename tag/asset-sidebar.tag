@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    <div class="content sidebar-content" style="margin: 10px; overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
+    <div class="content sidebar-content" style="overflow-x: hidden; padding: 0; margin: 0; height: calc(100% - 80px)"></div>
 
     <script>
         var me = this;
@@ -53,6 +53,7 @@
                 let url = curFullPath.split(/[\\\/]/g);
                 url.shift(); // remove 'sites'
                 url.shift(); // remove site name
+                url.shift(); // remove asset
                 url = url.join('/');
                 urlInput.val('/' + url);
             },
