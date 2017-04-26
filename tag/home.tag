@@ -385,13 +385,11 @@
         };
 
         me.openLayoutTab = function () {
-//            console.log('onopenLayoutTab', me.currentLayout);
             me.currentFileTitle = me.currentFilePath.split(/[/\\]/).pop();
             me.update();
 
             me.tags['breadcrumb'].setPath('layout/' + me.currentLayout);
             var fileContent = BackEnd.getLayoutFile(me.opts.siteName, me.currentLayout);
-//            console.log('fileContent', fileContent);
             me.tags['side-bar'].activeFile('layout', 'layout/' + me.currentLayout);
             me.tags['monaco-editor'].value(fileContent, 'handlebars', me.currentLayout);
             me.tags['monaco-editor'].setOption('readOnly', false);
@@ -787,6 +785,9 @@
             try {
                 var newFile = BackEnd.newCategory(me.siteName, categoryName, categoryFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
+
+                var metaConfig = BackEnd.getMetaConfigFile(me.siteName, newFile.path);
+                window.siteCategoryIndexes[tagName] = newFile.data;
                 riot.event.trigger('closeNewCategoryDialog');
             } catch (ex) {
                 console.log('addCategory failed', ex);
@@ -798,6 +799,10 @@
             try {
                 var newFile = BackEnd.newTag(me.siteName, tagName, tagFileName);
                 BackEnd.gitAdd(me.siteName, newFile.path);
+                // gen meta config add to cache
+                var metaConfig = BackEnd.getMetaConfigFile(me.siteName, newFile.path);
+                window.siteTagIndexes[tagName] = newFile.data;
+
                 riot.event.trigger('closeNewTagDialog');
             } catch (ex) {
                 console.log('addTag failed', ex);

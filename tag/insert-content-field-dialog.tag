@@ -23,7 +23,7 @@
             for (let prop in obj) {
                 if (!obj.hasOwnProperty(prop)) return;
                 var curObjectPath;
-                if (objectPath == '') curObjectPath = prop;
+                if (objectPath === '') curObjectPath = prop;
                 else curObjectPath = objectPath + '.' + prop;
 
                 let value = obj[prop];
@@ -100,7 +100,7 @@
         me.value = function (value) {
             if (value) {
                 curContentConfig = value;
-                if (typeof(value) != 'object') {
+                if (typeof(value) !== 'object') {
                     console.log('typeof(value)', typeof(value), value);
                     console.log('tree-view-dialog value type must be \'object\'');
                     return;
@@ -134,7 +134,7 @@
         let onStateChange = function () {
 //            console.log('change event', event);
             let val = $newFieldName.val().trim();
-            if (val == '' || !selectedAccordionItem) {
+            if (val === '' || !selectedAccordionItem) {
                 dialog.find('.add-field-btn').prop('disabled', true);
             } else {
                 dialog.find('.add-field-btn').removeProp('disabled');
@@ -144,7 +144,7 @@
         var accordionInitialized = false;
         //        $.jsPanel.closeOnEscape = true;
         me.show = function () {
-            if (dialog == null) {
+            if (!dialog) {
 //                console.log('Create dialog jsPanel', container.clone().html());
                 dialog = $.jsPanel({
                     headerTitle:    'Add as content field',
@@ -189,7 +189,7 @@
                         let fieldName = $newFieldName.val();
                         fieldName = fieldName || '';
                         fieldName = fieldName.trim();
-                        if (fieldName == '') return;
+                        if (fieldName === '') return;
 
                         let objectPath = selectedAccordionItem;
                         let contentConfig = curContentConfig;
@@ -198,7 +198,7 @@
 //                        console.log('contentConfig', contentConfig);
 
                         // check if insert property to global meta or content data
-                        if (objectPath.startsWith('root.')) {
+                        if (objectPath === 'root' || objectPath.startsWith('root.')) {
                             // add field to content file
                             let config;
                             try {
@@ -211,7 +211,7 @@
                                 config = null;
                             }
 
-                            if (config == null) {
+                            if (config === null) {
                                 console.log('error', 'config not found');
                                 return;
                             }
@@ -231,7 +231,7 @@
 
 //                          console.log('found config', config);
                             // save file
-                            if (me.parent && me.parent.addContentField) {
+                            if (me.parent && me.parent.addField) {
                                 me.parent.addField('content', null, fieldName, config, curContentConfig, objectPath);
                                 me.closeDialog();
                             }
@@ -252,7 +252,7 @@
                                 config = null;
                             }
 
-                            if (config == null) {
+                            if (config === null) {
                                 console.log('error', 'config not found');
                                 return;
                             }

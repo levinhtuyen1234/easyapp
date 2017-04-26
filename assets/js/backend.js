@@ -616,7 +616,7 @@ function genJsonSchemaContentConfig(metaData, DefaultFixedFieldNames) {
 function getConfigFile(siteName, contentFilePath, layoutFilePath) {
     let name = Path.basename(layoutFilePath, Path.extname(layoutFilePath));
     let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
-
+    //console.log('getConfigFile', contentConfigFullPath);
     // doc file content lay metaData
     let content = getContentFile(siteName, contentFilePath);
     // gen default config file and return
@@ -637,6 +637,9 @@ function getConfigFile(siteName, contentFilePath, layoutFilePath) {
         return existsConfig;
     } else {
         let contentConfig = genJsonSchemaContentConfig(content.metaData, DefaultFixedFieldNames);
+
+        //console.log('getConfigFile contentConfigFullPath', contentConfigFullPath);
+
         Fs.writeFileSync(contentConfigFullPath, JSON.stringify(contentConfig, null, 4));
         return contentConfig;
     }
@@ -1050,10 +1053,21 @@ function getMetaConfigFile(siteName, metaFilePath) {
         // return newConfig;
         return existsConfig;
     } else {
+        // console.log('getMetaConfigFile', name);
         let metaConfig = genJsonSchemaMetaConfig(metaData);
         // load to memory cache
-        siteGlobalConfigIndexes[name] = metaConfig;
+        // siteGlobalConfigIndexes[name] = metaConfig;
         Fs.writeFileSync(configFullPath, JSON.stringify(metaConfig, null, 4));
+        if (name.endsWith('.meta-schema.json')) {
+            if (name.startsWith('category.') || name.startsWith('tag.')) {
+                siteMetaConfigIndexes[name] = metaConfig;
+            } else {
+                siteGlobalConfigIndexes[name] = metaConfig;
+            }
+        } else if (name.endsWith('.schema.json')) {
+            siteContentConfigIndexes[name] = metaConfig;
+        }
+
         return metaConfig;
     }
 }
@@ -1157,8 +1171,8 @@ function newTag(siteName, tagName, tagFileName) {
     }
     let fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'tag', tagFileName);
     Fs.writeFileSync(fullPath, defaultTagConfig, {flag: 'wx+'});
-    let categoryFilePath = Path.join('content', 'metadata', 'category', tagFileName);
-    return {name: tagName, path: categoryFilePath.replace(/\\/g, '/')};
+    let tagFilePath = Path.join('content', 'metadata', 'tag', tagFileName);
+    return {name: tagName, path: tagFilePath.replace(/\\/g, '/'), data: defaultTagConfig};
 }
 
 function newCategory(siteName, categoryName, categoryFileName) {
@@ -1180,7 +1194,7 @@ function newCategory(siteName, categoryName, categoryFileName) {
     let fullPath = Path.join(sitesRoot, siteName, 'content', 'metadata', 'category', categoryFileName);
     Fs.writeFileSync(fullPath, defaultCategoryConfig, {flag: 'wx+'});
     let categoryFilePath = Path.join('content', 'metadata', 'category', categoryFileName);
-    return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/')};
+    return {name: categoryName, path: categoryFilePath.replace(/\\/g, '/'), data: defaultCategoryConfig};
 }
 
 function filterOnlyMetadataFile(name, isDir) {
@@ -1325,7 +1339,6 @@ let createSiteIndex = Promise.coroutine(function*(siteName) {
     let globalConfig = {};
     let metaConfig = {};
     yield readConfigFile(Path.join(sitesRoot, siteName, 'layout'), contentConfig, globalConfig, metaConfig);
-    // debugger;
     return {
         contents:      contents,
         categories:    metaCategory,
