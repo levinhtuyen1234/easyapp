@@ -19,6 +19,7 @@
                         <i class="dropdown icon"></i>
                         <div class="default text">Choose Category</div>
                         <div class="menu">
+                            <div class="item" data-value=""></div>
                             <div class="item" each="{category in categoryList}" data-value="{category.value}">{category.name}</div>
                         </div>
                     </div>
@@ -75,7 +76,11 @@
         };
 
         me.updateCategoryName = function (e) {
-            me.categoryName = e.target ? e.target.value.trim() : e;
+            me.categoryName = me.categoryNameElm.value;
+            if (e && e.target && e.target.value) {
+                me.categoryName = e.target.value.trim();
+            }
+
             me.categoryFilenameElm.value = me.categoryName
                 .toLowerCase()
                 .normalize('NFKD')
@@ -109,7 +114,7 @@
 
             $(me.root).find('.dropdown').dropdown({
                 onChange: function (value, text, $choice) {
-                    me.updateCategoryName(value);
+                    me.updateCategoryName();
                 }
             });
 

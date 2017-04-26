@@ -787,7 +787,7 @@
                 BackEnd.gitAdd(me.siteName, newFile.path);
 
                 var metaConfig = BackEnd.getMetaConfigFile(me.siteName, newFile.path);
-                window.siteCategoryIndexes[tagName] = newFile.data;
+                window.siteCategoryIndexes[categoryName] = newFile.data;
                 riot.event.trigger('closeNewCategoryDialog');
             } catch (ex) {
                 console.log('addCategory failed', ex);
