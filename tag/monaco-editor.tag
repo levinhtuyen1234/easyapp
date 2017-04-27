@@ -234,36 +234,43 @@ ${childSnippet}{{/with}}`;
                     case 'handlebars':
                         monaco.editor.setModelLanguage(me.editor.getModel(), 'text/html');
                         break;
+                    case 'javascript':
+                        monaco.editor.setModelLanguage(me.editor.getModel(), 'javascript');
+                        break;
+                    case 'css':
+                        monaco.editor.setModelLanguage(me.editor.getModel(), 'css');
+                        break;
                     case 'frontmatter':
                         monaco.editor.setModelLanguage(me.editor.getModel(), 'markdown');
-
-                        // set tree-view-dialog value
-                        // lookup config in siteContentConfigIndexes of this layout
-                        let configFileName = (() => {
-                            let parts = layout.split('.');
-                            parts.pop();
-                            return parts.join('.') + '.schema.json';
-                        })();
-                        let contentConfig = siteContentConfigIndexes[configFileName];
-                        if (contentConfig) {
-                            me.tags['tree-view-dialog'].value(contentConfig);
-                        } else {
-                            // find 1 content have this layout
-                            contentConfig = BackEnd.createDefaultConfigFile(me.opts.siteName, layout);
-//                    let contentFileName = _.findKey(siteContentIndexes, {layout: layout});
-//                    if (createDefaultConfigFile)
-                            // gen default content config
-//                    contentConfig = BackEnd.getConfigFile(me.opts.siteName, contentFilePath, layout);
-                            me.tags['tree-view-dialog'].value(contentConfig);
-//                    console.log('NOT found content config', contentFileName);
-                        }
-
                         break;
                 }
+
                 me.editor.setValue(value);
                 setTimeout(function () {
                     me.refresh();
                 }, 10);
+
+                // set tree-view-dialog value
+                // lookup config in siteContentConfigIndexes of this layout
+                let configFileName = (() => {
+                    let parts = layout.split('.');
+                    parts.pop();
+                    return parts.join('.') + '.schema.json';
+                })();
+                let contentConfig = siteContentConfigIndexes[configFileName];
+                if (contentConfig) {
+                    me.tags['tree-view-dialog'].value(contentConfig);
+                } else {
+                    // find 1 content have this layout
+                    contentConfig = BackEnd.createDefaultConfigFile(me.opts.siteName, layout);
+//                    let contentFileName = _.findKey(siteContentIndexes, {layout: layout});
+//                    if (createDefaultConfigFile)
+                    // gen default content config
+//                    contentConfig = BackEnd.getConfigFile(me.opts.siteName, contentFilePath, layout);
+                    me.tags['tree-view-dialog'].value(contentConfig);
+//                    console.log('NOT found content config', contentFileName);
+                }
+
             }
         };
 

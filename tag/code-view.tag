@@ -13,7 +13,7 @@
         });
 
         me.value = function(text) {
-            if (text == undefined) {
+            if (text === undefined) {
                 return me.code;
             } else {
                 me.code = text;

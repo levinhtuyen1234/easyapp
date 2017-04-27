@@ -63,9 +63,12 @@
                 curFullPath = openedItem.data('fullPath');
                 me.curType = openedItem.data('type');
                 curAccordion = openedItem;
-//                    console.log('curFullPath', curFullPath);
-//                    console.log('curType', curType);
 
+                //console.log('onOpen curFullPath', curFullPath);
+                //console.log('onOpen curType', me.curType);
+                if (me.curType === 'file') {
+                    riot.event.trigger('openAssetFile', curFullPath);
+                }
                 me.update();
             }
         };
@@ -182,7 +185,7 @@
             // wait a bit for dialog show up
 
             // collect to be copied files
-            for(let i = 0; i < filePaths.length; ++i) {
+            for (let i = 0; i < filePaths.length; ++i) {
                 let filePath = filePaths[i];
                 try {
                     let stat = Fs.statSync(filePath);
@@ -193,20 +196,20 @@
                         console.log('dstNewFolder', dstNewFolder);
                         srcFiles = readDirFlatRecursive(filePath, srcFiles);
 //                        console.log('srcFiles', srcFiles);
-                        for(let j = 0; j < srcFiles.length; j++) {
+                        for (let j = 0; j < srcFiles.length; j++) {
                             let fileInfo = srcFiles[j];
                             progressDialog.step(fileInfo.fullPath);
                             // create dst path
                             let dstPath = Path.join(curFullPath, dstNewFolder, fileInfo.fullPath.replace(filePath, ''));
                             console.log('copy from', fileInfo.fullPath, 'to', dstPath);
-                            yield Fse.copyAsync(fileInfo.fullPath, dstPath, { overwrite: true, errorOnExist: false});
+                            yield Fse.copyAsync(fileInfo.fullPath, dstPath, {overwrite: true, errorOnExist: false});
 //                            console.log('copy done one', fileInfo.fullPath);
                         }
-                    } else if(stat.isFile()) {
+                    } else if (stat.isFile()) {
                         progressDialog.step(filePath);
                         let fileName = Path.basename(filePath);
                         let dstFilePath = Path.join(curFullPath, fileName);
-                        yield Fse.copyAsync(filePath, dstFilePath, { overwrite: true, errorOnExist: false});
+                        yield Fse.copyAsync(filePath, dstFilePath, {overwrite: true, errorOnExist: false});
                     }
                 } catch (ex) {
                     console.log('copy asset failed', ex);
