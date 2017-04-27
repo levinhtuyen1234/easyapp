@@ -673,6 +673,8 @@ function getSiteList() {
 function saveConfigFile(siteName, layoutPath, contentConfig) {
     let name = Path.basename(layoutPath, Path.extname(layoutPath));
     let contentConfigFullPath = Path.join(sitesRoot, siteName, 'layout', name) + '.schema.json';
+    //console.log('siteContentConfigIndexes frame', name + '.schema.json', contentConfig);
+    siteContentConfigIndexes[name + '.schema.json'] = JSON.parse(contentConfig);
     Fs.writeFileSync(contentConfigFullPath, contentConfig);
 }
 
@@ -1080,6 +1082,8 @@ function saveMetaFile(siteName, contentFilePath, metaData) {
 function saveMetaConfigFile(siteName, metaFilePath, metaConfig) {
     // let name = Path.basename(metaFilePath, Path.extname(metaFilePath));
     let name = genMetaConfigFileName(metaFilePath);
+    //console.log('saveMetaConfigFile frame', name, metaConfig);
+    siteMetaConfigIndexes[name] = JSON.parse(metaConfig);
     let configFullPath = Path.join(sitesRoot, siteName, 'layout', name);
     Fs.writeFileSync(configFullPath, metaConfig);
 }
