@@ -294,7 +294,7 @@ ${childSnippet}{{/with}}`;
             }
 
             // luu schema vao dia
-            if (dstType == 'content') {
+            if (dstType === 'content') {
                 BackEnd.saveConfigFile(me.opts.siteName, layoutName, JSON.stringify(updatedSchema, null, 4));
 
                 // replace cur selected text bang snippet
@@ -304,7 +304,7 @@ ${childSnippet}{{/with}}`;
                     parts.shift();
                     return parts.join('.');
                 })();
-                let replacement = objectPath == '' ? fieldName : `${objectPath}.${fieldName}`;
+                let replacement = objectPath === '' ? fieldName : `${objectPath}.${fieldName}`;
                 me.editor.executeEdits("", [{range: curSelection, text: `{{${replacement}}}`}]);
 
                 // insert new field to all content affected
@@ -319,7 +319,7 @@ ${childSnippet}{{/with}}`;
                         if (typeof current !== 'object') break;
                         current = current[props.shift()];
                     }
-                    if (current && typeof current == 'object') {
+                    if (current && typeof current === 'object') {
                         console.log('update lastProp success, lastProp', lastProp);
                         current[lastProp] = ''; // TODO other value type (object ?)
                     }
@@ -332,7 +332,7 @@ ${childSnippet}{{/with}}`;
                     return parts.join('.') + '.schema.json';
                 })();
                 siteContentConfigIndexes[configFileName] = updatedSchema;
-            } else if (dstType == 'globalMeta') {
+            } else if (dstType === 'globalMeta') {
                 BackEnd.saveMetaConfigFile(me.opts.siteName, fileName, JSON.stringify(updatedSchema, null, 4));
                 // add place holder in editor
                 me.editor.executeEdits("", [{range: curSelection, text: `{{${objectPath}.${fieldName}}}`}]);
@@ -352,9 +352,9 @@ ${childSnippet}{{/with}}`;
             let curSelection = me.editor.getSelection();
             let curSelectionText = me.editor.getModel().getValueInRange(curSelection);
 
-            if (curSelectionText == '') return;
+            if (curSelectionText === '') return;
             bootbox.prompt("New partial name", function (newPartialName) {
-                if (newPartialName == null) return;
+                if (newPartialName === null) return;
                 BackEnd.savePartialFile(me.opts.siteName, newPartialName, curSelectionText);
                 // update cache index
                 sitePartialsIndexes[newPartialName] = true;

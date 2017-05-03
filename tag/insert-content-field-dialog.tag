@@ -2,9 +2,19 @@
     <div class="container-fluid" style="display: none; overflow-y: scroll; height: 100%;">
         <div class="ui fluid input" style="margin: 6px;">
             <input class="new-field-name" placeholder="Field name" type="text">
+            <div class="ui selection compact dropdown" style="margin-left: 6px;">
+                <input name="fieldType" type="hidden" value="String">
+                <i class="dropdown icon"></i>
+                <div class="text">String</div>
+                <div class="menu">
+                    <div class="item" data-value="object">Object</div>
+                    <div class="item" data-value="string">String</div>
+                    <div class="item" data-value="integer">Integer</div>
+                </div>
+            </div>
         </div>
-        <div class="content" style="margin: 10px">
 
+        <div class="content" style="margin: 10px">
         </div>
 
         <div style="position: absolute; bottom: 4px; right: 18px;">
@@ -17,6 +27,7 @@
         var me = this;
         var tree;
         var dialog, container, content, selectedAccordionItem;
+        var fieldTypeDropDown, fieldType;
 
         function buildObjectTree(root, obj, objectPath) {
             objectPath = objectPath || '';
@@ -141,6 +152,20 @@
             }
         };
 
+        function createJsonSchemaField(fieldType) {
+            switch (fieldType) {
+                case 'string':
+                    return {type: 'string', format: "text", propertyOrder: 1000};
+                    break;
+                case 'integer':
+                    return {type: 'integer', propertyOrder: 1000};
+                    break;
+                case 'object':
+                    return {type: 'object', properties: {}, propertyOrder: 1000};
+                    break;
+            }
+        }
+
         var accordionInitialized = false;
         //        $.jsPanel.closeOnEscape = true;
         me.show = function () {
@@ -184,6 +209,12 @@
                         }
                     });
 
+                    fieldTypeDropDown = dialog.find('.ui.dropdown').dropdown({
+                        onChange: function (value, text) {
+                            fieldType = value;
+                        }
+                    });
+
                     // hook add button
                     dialog.find('.add-field-btn').click(function () {
                         let fieldName = $newFieldName.val();
@@ -222,11 +253,11 @@
                             if (config.type === 'array') {
                                 if (config.items && config.items.type === 'object') {
                                     config.items.properties = config.items.properties || {};
-                                    config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                    config.items.properties[fieldName] = createJsonSchemaField(fieldType);
                                 }
                             } else if (config.type === 'object') {
                                 config.properties = config.properties || {};
-                                config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                config.properties[fieldName] = createJsonSchemaField(fieldType);
                             }
 
 //                          console.log('found config', config);
@@ -263,11 +294,11 @@
                             if (config.type === 'array') {
                                 if (config.items && config.items.type === 'object') {
                                     config.items.properties = config.items.properties || {};
-                                    config.items.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                    config.items.properties[fieldName] = createJsonSchemaField(fieldType);
                                 }
                             } else if (config.type === 'object') {
                                 config.properties = config.properties || {};
-                                config.properties[fieldName] = {type: 'string', propertyOrder: 1000};
+                                config.properties[fieldName] = createJsonSchemaField(fieldType);
                             }
 
                             me.parent.addField('globalMeta', metaSchemaConfigFileName, fieldName, config, globalMetaConfig, objectPath);
@@ -297,9 +328,9 @@
             evt = evt || window.event;
             var isEscape = false;
             if ('key' in evt) {
-                isEscape = (evt.key == 'Escape' || evt.key == 'Esc');
+                isEscape = (evt.key === 'Escape' || evt.key === 'Esc');
             } else {
-                isEscape = (evt.keyCode == 27);
+                isEscape = (evt.keyCode === 27);
             }
             if (isEscape) {
                 if (dialog) {
