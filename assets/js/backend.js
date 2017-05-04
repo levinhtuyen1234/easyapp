@@ -741,7 +741,7 @@ function newContentFile(siteName, layoutFileName, contentTitle, contentFileName,
         "tag":         tag,
         "layout":      layoutFileName,
         "date":        getCurrentISODate(),
-        "publishDate": getCurrentISODate(),
+        "publishDate": "",
         "draft":       false
     };
     let defaultLayoutContent = `---json
