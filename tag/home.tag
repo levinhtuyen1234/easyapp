@@ -168,52 +168,52 @@
         me.isShowContentTab = function () {
 //            console.log('isShowContentTab me.curTab', me.curTab);
             return me.curTab == 'content-view' ||
-                    ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
+                ((me.curTab == 'code-view' || me.curTab == 'config-view') && me.currentFilePath.endsWith('.md'));
 
         };
 
         me.isShowMetaTab = function () {
             return me.curTab == 'meta-view' ||
-                    ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.json')) ||
-                    (
-                            me.curTab == 'code-view' &&
-                            me.currentFilePath.endsWith('.json') && !me.currentFilePath.startsWith('content/metadata/category') && !me.currentFilePath.startsWith('content/metadata/tag')
-                    );
+                ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.json')) ||
+                (
+                    me.curTab == 'code-view' &&
+                    me.currentFilePath.endsWith('.json') && !me.currentFilePath.startsWith('content/metadata/category') && !me.currentFilePath.startsWith('content/metadata/tag')
+                );
 
         };
 
         me.isShowRawTab = function () {
 //            console.log('isShowLayoutTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
-                    (
-                            me.curTab == 'code-view' ||
-                            me.curTab == 'config-view' ||
-                            me.curTab == 'content-view' ||
-                            me.curTab == 'meta-view'
-                    )
+                (
+                    me.curTab == 'code-view' ||
+                    me.curTab == 'config-view' ||
+                    me.curTab == 'content-view' ||
+                    me.curTab == 'meta-view'
+                )
         };
 
         me.isShowLayoutTab = function () {
 //            console.log('isShowLayoutTab me.curTab', me.curTab);
             return User.accountType == 'dev' &&
-                    (
-                            me.curTab == 'content-view' ||
-                            me.curTab == 'layout-view' ||
-                            ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
-                            ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.md') )
-                    )
+                (
+                    me.curTab == 'content-view' ||
+                    me.curTab == 'layout-view' ||
+                    ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
+                    ( me.curTab == 'config-view' && me.currentFilePath.endsWith('.md') )
+                )
         };
 
         me.isShowConfigTab = function () {
 //            console.log('isShowConfigTab me.curTab', me.curTab);
-            return User.accountType == 'dev' &&
-                    (
-                            me.curTab == 'meta-view' ||
-                            me.curTab == 'config-view' ||
-                            me.curTab == 'content-view' ||
-                            ( me.curTab == 'code-view' && me.currentFilePath.endsWith('.md') ) ||
-                            ( me.curTab == 'code-view' && !me.currentFilePath.startsWith('content/metadata/category/') && !me.currentFilePath.startsWith('content/metadata/tag/') && me.currentFilePath.endsWith('.json'))
-                    )
+            return User.accountType === 'dev' &&
+                (
+                    me.curTab === 'meta-view' ||
+                    me.curTab === 'config-view' ||
+                    me.curTab === 'content-view' ||
+                    ( me.curTab === 'code-view' && me.currentFilePath.endsWith('.md') ) ||
+                    ( me.curTab === 'code-view' && !me.currentFilePath.startsWith('content/metadata/category/') && !me.currentFilePath.startsWith('content/metadata/tag/') && me.currentFilePath.endsWith('.json'))
+                )
         };
 
         me.checkGhPageStatus = function () {
@@ -222,7 +222,7 @@
                 me.gitHubInited = initialized;
                 me.update();
             }).catch(function (ex) {
-                if (ex.message.indexOf('ENOENT') != -1) {
+                if (ex.message.indexOf('ENOENT') !== -1) {
                     // build folder not exists
                     me.gitHubInited = false;
                     me.update();
@@ -235,6 +235,14 @@
             me.save();
         };
 
+        let onOpenAssetFile = function (assetFilePath) {
+            let parts = assetFilePath.split(/[\\\/]/g);
+            parts.shift(); // remove siteName
+            parts.shift(); // remove conte
+            let relativeAssetFilePath = parts.join('/');
+            me.openAssetFile(relativeAssetFilePath);
+        };
+
         me.on('unmount', function () {
             console.trace('unmount home tag');
             riot.event.off('chooseMediaFile', onChooseMediaFile);
@@ -242,6 +250,7 @@
             riot.event.off('addContent', onAddContent);
             riot.event.off('addCategory', onAddCategory);
             riot.event.off('addTag', onAddTag);
+            riot.event.off('openAssetFile', onOpenAssetFile);
 
             riot.event.off('codeEditor.save', me.saveByKeyboard);
             riot.event.off('watchFailed', me.deactiveWatchBtn);
@@ -262,7 +271,7 @@
 
             $(me.root.querySelectorAll('.ui.dropdown')).dropdown({
                 onChange: function (value, text) {
-                    if (value == '') return;
+                    if (value === '') return;
                     $(this).dropdown('clear');
                 }
             }); // init dropdown
@@ -288,7 +297,6 @@
                 center: {}
             });
 
-
             // create 1px resizer + large click area
             var resizer = $(me.root.querySelectorAll('.ui-layout-resizer-west')).css({overflow: "visible"});
             $("<div></div>").css({
@@ -312,10 +320,11 @@
 
             riot.event.on('codeEditor.save', me.saveByKeyboard);
             riot.event.on('watchFailed', me.deactiveWatchBtn);
+            riot.event.on('openAssetFile', onOpenAssetFile);
 
             setTimeout(function () {
                 var indexFilePath = 'sites/' + me.siteName + '/content/index.md';
-                if (BackEnd.fileExists(indexFilePath) == true) {
+                if (BackEnd.fileExists(indexFilePath) === true) {
                     me.openFile('content/index.md');
                 }
             }, 1);
@@ -582,7 +591,7 @@
 //            $(me.root.querySelector('#editor-view')).show();
             me.tabBar.tab('change tab', 'editor-view', 'home openFile', filePath);
             //$(me.root.querySelector('#watch-view')).hide();
-            if (me.tags['breadcrumb'] == null) {
+            if (!me.tags['breadcrumb']) {
                 console.log('breadcrumb', me.tags);
                 console.trace('bug');
             } else {
@@ -630,7 +639,8 @@
                     filePath = me.currentFilePath;
                     BackEnd.saveContentFile(me.opts.siteName, me.currentFilePath, content.metaData, content.markdownData);
 
-                    let parts = me.currentFilePath.split(/\//g); parts.shift(); // remove /content
+                    let parts = me.currentFilePath.split(/\//g);
+                    parts.shift(); // remove /content
                     let key = parts.join('/');
                     window.siteContentIndexes[key] = content.metaData;
                     riot.event.trigger('contentMetaDataUpdated', key, content.metaData);
@@ -643,7 +653,8 @@
                     if (me.currentFilePath.startsWith('content/metadata/category/')) {
                         // category udpated
                         let fileName = me.currentFilePath.split(/\//g).pop();
-                        let parts = fileName.split('.'); parts.pop();
+                        let parts = fileName.split('.');
+                        parts.pop();
                         let key = parts.join('.');
                         window.siteCategoryIndexes[key] = meta;
                     }
@@ -818,7 +829,7 @@
                 ]
             }, function (filePaths) {
                 console.log('onChooseMediaFile callback');
-                if (!filePaths || filePaths.length != 1) return;
+                if (!filePaths || filePaths.length !== 1) return;
                 var filePath = filePaths[0];
                 BackEnd.addMediaFile(me.siteName, filePath, function (error, relativePath) {
                     if (error) {

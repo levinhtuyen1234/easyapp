@@ -446,6 +446,14 @@ function getContentFile(siteName, contentFilePath) {
     return SplitContentFile(contentStr);
 }
 
+function getAssetFile(siteName, assetFilePath) {
+    try {
+        return readFile(siteName, assetFilePath);
+    } catch (ex) {
+        return '';
+    }
+}
+
 function getRawContentFile(siteName, contentFilePath) {
     return readFile(siteName, contentFilePath).trim();
 }
@@ -1452,6 +1460,7 @@ module.exports = {
     newTag:                   newTag,
     getTagList:               getTagList,
     getMetaFile:              getMetaFile,
+    getAssetFile:             getAssetFile,
     getSiteMetadataFiles:     getSiteMetadataFiles,
     createDefaultConfigFile:  createDefaultConfigFile,
     getMetaConfigFile:        getMetaConfigFile,

@@ -64,8 +64,6 @@
                 me.curType = openedItem.data('type');
                 curAccordion = openedItem;
 
-                //console.log('onOpen curFullPath', curFullPath);
-                //console.log('onOpen curType', me.curType);
                 if (me.curType === 'file') {
                     riot.event.trigger('openAssetFile', curFullPath);
                 }
