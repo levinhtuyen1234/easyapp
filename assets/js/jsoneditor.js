@@ -1971,6 +1971,13 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         if (this.options.disable_config || (this.options.disable_config !== false && this.jsoneditor.options.disable_config))
             return;
     },
+    getValue:             function () {
+        var self = this;
+        if (this.ckeditor_instance !== undefined) {
+            return this.ckeditor_instance.val();
+        }
+        return this.value;
+    },
     setValue:             function (value, initial, from_template) {
         var self = this;
 
@@ -1994,8 +2001,8 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         this.input.value = sanitized;
 
         // If using SCEditor, update the WYSIWYG
-        if (this.sceditor_instance) {
-            this.sceditor_instance.val(sanitized);
+        if (this.ckeditor_instance) {
+            this.ckeditor_instance.val(sanitized);
         }
         else if (this.epiceditor) {
             this.epiceditor.importFile(null, sanitized);
@@ -2063,6 +2070,7 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
 
                 this.input = this.theme.getRangeInput(min, max, step);
             }
+
             // Source Code
             else if ([
                     'actionscript',
@@ -2273,8 +2281,8 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
             }
             this.input_type = 'text';
             $(self.input).flatpickr({
-                format: 'DD-MM-YYYY HH:mm:ss',
-                enableTime: true,
+                format:        'DD-MM-YYYY HH:mm:ss',
+                enableTime:    true,
                 onValueUpdate: onDateChange
             });
         } else if (this.format === 'time') {
@@ -2283,8 +2291,8 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
             }
             this.input_type = 'text';
             $(self.input).flatpickr({
-                format: 'HH:mm:ss',
-                noCalendar: true,
+                format:        'HH:mm:ss',
+                noCalendar:    true,
                 onValueUpdate: onDateChange
             }).on('dp.change', onDateChange);
         } else if (this.format === 'date') {
@@ -2293,7 +2301,7 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
             }
             this.input_type = 'text';
             $(self.input).flatpickr({
-                format: 'DD-MM-YYYY',
+                format:     'DD-MM-YYYY',
                 enableTime: false,
                 // calendarType: 'date'
             }).on('dp.change', onDateChange);
@@ -2302,32 +2310,51 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         // Code editor
         if (this.source_code) {
             // WYSIWYG html and bbcode editor
-            if (this.options.wysiwyg &&
-                ['html', 'bbcode'].indexOf(this.input_type) >= 0 &&
-                window.jQuery && window.jQuery.fn && window.jQuery.fn.sceditor
+            // if (this.options.wysiwyg &&
+            if (['html', 'bbcode'].indexOf(this.input_type) >= 0 &&
+                // window.jQuery && window.jQuery.fn && window.jQuery.fn.sceditor
+                window.jQuery && window.jQuery.fn && window.jQuery.fn.ckeditor
             ) {
-                options = $extend({}, {
-                    plugins:          self.input_type === 'html' ? 'xhtml' : 'bbcode',
-                    emoticonsEnabled: false,
-                    width:            '100%',
-                    height:           300
-                }, JSONEditor.plugins.sceditor, self.options.sceditor_options || {});
+                // console.log('3333333');
+                // window.ii = self.input;
+                // options = $extend({}, {
+                //     plugins:          self.input_type === 'html' ? 'xhtml' : 'bbcode',
+                //     emoticonsEnabled: false,
+                //     width:            '100%',
+                //     height:           300
+                // }, JSONEditor.plugins.sceditor, self.options.ckeditor_options || {});
+                // console.log('**)** create ckeditor instance', self);
+                // hide ckeditor when in edit mode
+                var upBtn = $(self.input.parentNode).find('.json-editor-btn-moveup');
+                if (upBtn.length === 0) {
+                    self.ckeditor_instance = window.jQuery(self.input).ckeditor({});
+                    // window.selfCkeditor = self.ckeditor_instance;
 
-                window.jQuery(self.input).sceditor(options);
+                    setTimeout(function () {
+                        $(self.input.parentNode).find('.cke').css('width', '100%');
+                        CKEDITOR.instances[self.ckeditor_instance[0].name].on('change', function () {
+                            self.is_dirty = true;
+                            self.onChange(true);
+                        });
+                    }, 500);
+                }
 
-                self.sceditor_instance = window.jQuery(self.input).sceditor('instance');
 
-                self.sceditor_instance.blur(function () {
-                    // Get editor's value
-                    var val = window.jQuery("<div>" + self.sceditor_instance.val() + "</div>");
-                    // Remove sceditor spans/divs
-                    window.jQuery('#sceditor-start-marker,#sceditor-end-marker,.sceditor-nlf', val).remove();
-                    // Set the value and update
-                    self.input.value = val.html();
-                    self.value = self.input.value;
-                    self.is_dirty = true;
-                    self.onChange(true);
-                });
+
+
+                // self.sceditor_instance = window.jQuery(self.input).sceditor('instance');
+                //
+                // self.sceditor_instance.blur(function () {
+                //     // Get editor's value
+                //     var val = window.jQuery("<div>" + self.sceditor_instance.val() + "</div>");
+                //     // Remove sceditor spans/divs
+                //     window.jQuery('#sceditor-start-marker,#sceditor-end-marker,.sceditor-nlf', val).remove();
+                //     // Set the value and update
+                //     self.input.value = val.html();
+                //     self.value = self.input.value;
+                //     self.is_dirty = true;
+                //     self.onChange(true);
+                // });
             }
             // EpicEditor for markdown (if it's loaded)
             else if (this.input_type === 'markdown' && window.EpicEditor) {

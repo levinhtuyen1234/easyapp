@@ -97,7 +97,7 @@ var schemas = {
             "format":        {
                 "type":    "string",
                 "enum":    [
-                    "upload", "color", "date", "datetime", "datetime-local", "email", "month", "number", "range", "tel", "text", "textarea", "time", "url", "week"
+                    "upload", "color", "date", "datetime", "datetime-local", "email", "month", "number", "range", "tel", "text", "textarea", "time", "url", "html", "week"
                 ],
                 "default": "text"
             },
