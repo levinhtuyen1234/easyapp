@@ -318,21 +318,33 @@
 
         me.openSite = function (site, e) {
             console.log('register openSite', site);
-            if (site.local == false && site.remote) {
-                if (!site.url) {
+            if (site.local === false && site.remote) {
+                if (!site.source) {
                     alert('Remote repository not exists in site data');
                     return;
                 } else {
                     // delete site local folder
-                    // git clone
-                    var repoUrl = site.url;
-                    console.log('repoUrl', site.url);
+                    // git clone  n
+                    var repoUrl = site.source;
+                    console.log('repoUrl', site.source);
                     me.tags['progress-dialog'].show('Import Project');
-                    BackEnd.gitImportGitHub(site.name, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
+                    // old code init all on client side
+//                    BackEnd.gitImportGitHub(site.name, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
+//                        me.tags['progress-dialog'].enableClose();
+//                        me.tags['progress-dialog'].hide();
+//                        site.local = true;
+//                        me.openSite(site);
+//                    }).catch(function (err) {
+//                        console.log(err);
+//                        me.tags['progress-dialog'].enableClose();
+//                    });
+                    console.log('BackEnd.initMigrationSite with progress');
+                    BackEnd.initMigrationSite(repoUrl, 'sites/' + site.name, me.tags['progress-dialog'].appendText).then(function () {
+                        console.log('migration exists site done');
                         me.tags['progress-dialog'].enableClose();
                         me.tags['progress-dialog'].hide();
                         site.local = true;
-                        me.openSite(site)();
+                        me.openSite(site);
                     }).catch(function (err) {
                         console.log(err);
                         me.tags['progress-dialog'].enableClose();
@@ -391,22 +403,25 @@
             var templateId = getTemplateIdFromRepoUrl(repoUrl);
             return User.addSite(name, displayName, templateId).then(function (resp) {
                 return BackEnd.createSiteFolder(name).then(function (sitePath) {
+                    return BackEnd.initMigrationSite(resp.url, sitePath).then(function () {
+                        return name;
+                    });
+                    // old code setup repos at client side
                     // checkout source from template
-                    return BackEnd.gitCheckOutSkeleton(repoUrl, branch, sitePath).then(function () {
-                        console.log('git checkout done', name, 'start init remote repository url', resp.url, 'sitePath', sitePath);
-                        return BackEnd.initNewSiteRootFolder(resp.url, sitePath).then(function () {
-                            return BackEnd.initNewSiteBuildFolder(resp.url, sitePath).then(function () {
-                                return name;
-                            });
-                        });
-                    })
+//                    return BackEnd.gitCheckOutSkeleton(repoUrl, branch, sitePath).then(function () {
+//                        console.log('git checkout done', name, 'start init remote repository url', resp.url, 'sitePath', sitePath);
+//                        return BackEnd.initNewSiteRootFolder(resp.url, sitePath).then(function () {
+//                            return BackEnd.initNewSiteBuildFolder(resp.url, sitePath).then(function () {
+//                                return name;
+//                            });
+//                        });
+//                    })
                 });
             });
         };
 
         me.showCreateSite = function (template, e) {
 //                console.log('show binding showCreateSite', template);
-//                console.log('e', e);
 //                return function (e) {
 //                    console.log('showCreateSite', me.tags['dialog-new-site-local']);
             me.tags['dialog-new-site-local'].show(template);
@@ -436,7 +451,6 @@
             win.loadURL('http://blog.easywebhub.com/');
             win.show()
         };
-
 
         me.showImportGithub = function () {
             me.tags['dialog-new-site-import'].show();

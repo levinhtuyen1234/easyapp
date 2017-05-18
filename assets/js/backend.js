@@ -1383,6 +1383,20 @@ function gitCheckOutSkeleton(repositoryUrl, branch, targetDir, onProgress) {
     });
 }
 
+const initMigrationSite = Promise.coroutine(function*(repositoryUrl, targetDir, onProgress) {
+    let buildFolderPath = Path.join(targetDir, 'build');
+    // TODO optimize using --single-branch ?
+    if (onProgress) {
+        yield spawnGitCmd('git', ['clone', repositoryUrl, targetDir], '', onProgress);
+        return spawnGitCmd('git', ['clone', '-b', 'gh-pages', repositoryUrl, buildFolderPath], '', onProgress);
+    } else {
+        // clone root folder
+        yield spawnGitCmd('git', ['clone', '-b', 'master', repositoryUrl, targetDir], '');
+        // clone build folder
+        yield spawnGitCmd('git', ['clone', '-b', 'gh-pages', repositoryUrl, buildFolderPath]);
+    }
+});
+
 const initNewSiteRootFolder = Promise.coroutine(function*(repositoryUrl, targetDir) {
     // init repos
     yield spawnGitCmd('git', ['init', '.'], targetDir);
@@ -1446,6 +1460,7 @@ const initNewSiteBuildFolder = Promise.coroutine(function*(repositoryUrl, target
 
 module.exports = {
     gitCheckOutSkeleton:      gitCheckOutSkeleton,
+    initMigrationSite:        initMigrationSite,
     initNewSiteRootFolder:    initNewSiteRootFolder,
     initNewSiteBuildFolder:   initNewSiteBuildFolder,
     createSiteIndex:          createSiteIndex,

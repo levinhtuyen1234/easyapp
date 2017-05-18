@@ -1,0 +1,87 @@
+{
+    "version"  : 10,
+    "templates": [
+        {
+            "name"    : "Easy Skeleton",
+            "url"     : "https://github.com/easywebhub/easymarket.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["skeleton", "website"],
+            "themeUrl": "",
+            "price"   : "Free"
+        },
+        {
+            "name"    : "Creative",
+            "url"     : "https://github.com/easywebhub/easymarket.git",
+            "branch"  : "create-startbootstrap",
+			"type"    : "code base",
+			"tags"    : ["skeleton", "startbootstrap", "website"],
+            "themeUrl": "https://blackrockdigital.github.io/startbootstrap-creative/",
+            "price"   : "Free"
+        },
+	    {
+            "name"    : "category",
+            "url"     : "https://github.com/easywebhub/easy-websites.git",
+            "branch"  : "easywebhub-category",
+			"type"    : "code base",
+			"tags"    : ["Bootstrap 3.x", "website"],
+            "themeUrl": "",
+            "price"   : "Free"
+        },
+        {
+            "name"    : "pillar",
+            "url"     : "https://github.com/easywebhub/thinh.pillar.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["Bootstrap 3.x", "multi-purpose"],
+            "themeUrl": "http://pillar.mediumra.re/",
+            "price"   : "19$"
+        },
+        {
+            "name"    : "sumoLanding",
+            "url"     : "https://github.com/easywebhub/sumolanding.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["blog"],
+            "themeUrl": "",
+            "price"   : "Free"
+        },
+	{
+            "name"    : "draco",
+            "url"     : "https://github.com/easywebhub/draco.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["blog"],
+            "themeUrl": "http://draco.easywebhub.com",
+            "price"   : "Free"
+        },
+	{
+            "name"    : "Global Portfolio",
+            "url"     : "https://github.com/easywebhub/Global-Portfolio.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["Personal Blog"],
+            "themeUrl": "http://globalportfolio.easywebhub.com",
+            "price"   : "Free"
+        },
+	{
+            "name"    : "New Providence",
+            "url"     : "https://github.com/easywebhub/NewProvidence.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["Personal Blog"],
+            "themeUrl": "http://newprovidence.easywebhub.com",
+            "price"   : "Free"
+        },
+	{
+            "name"    : "Bootstrap Agency",
+            "url"     : "https://github.com/easywebhub/StartBootstrapAgency.git",
+            "branch"  : "master",
+            "type"    : "website",
+			"tags"    : ["blog"],
+            "themeUrl": "http://startbootstrapagency.easywebhub.com",
+            "price"   : "Free"
+        }
+	    
+    ]
+}

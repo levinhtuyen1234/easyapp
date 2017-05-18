@@ -3,7 +3,8 @@
 let Promise = require('bluebird');
 let _ = require('lodash');
 
-const GOGS_SERVER_URL = 'http://212.47.253.180:7000'; // TODO TEMP SERVER
+// const GOGS_SERVER_URL = 'http://212.47.253.180:7000'; // GOGS SERVER
+const GOGS_SERVER_URL = 'http://212.47.253.180:7002'; // GITEA SERVER
 
 const ERROR_MSG = {
     '444':           'user not exists',
@@ -238,6 +239,20 @@ function CreateGogsRepo(username, repositoryName) {
     });
 }
 
+function CreateGogsRepoByMigration(username, repositoryName, templateName) {
+    return Ajax({
+        method:      'POST',
+        dataType:    'json',
+        contentType: 'application/json',
+        url:         `${GOGS_SERVER_URL}/migration`,
+        data:        JSON.stringify({
+            username:       username,
+            repositoryName: repositoryName,
+            templateName:   templateName
+        })
+    });
+}
+
 function getSites(userId, token) {
     return Ajax({
         method:      'GET',
@@ -248,6 +263,8 @@ function getSites(userId, token) {
         return resp;
     });
 }
+
+var Url = require('url');
 
 class AppUser {
     constructor(data) {
@@ -261,17 +278,30 @@ class AppUser {
     addSite(name, displayName, templateId) {
         var username = this.data.username;
         var accountId = this.data.id;
+        // templateId example github.com/easywebhub/easymarket.git
         // tao remote git repo
+
+        // return CreateGogsRepo(username, name).then(function (data) {
+        console.log('templateId before trim', templateId);
+        let matches = templateId.match(/\/([\w\d-]+)\.git/);
+        if (!matches || !matches.length || matches.length !== 2) {
+            throw new Error('invalid template name');
+        }
+        let templateName = matches[1];
         // TODO THIS IS TEMP CODE tạo repo phai o tren server
-        return CreateGogsRepo(username, name).then(function (data) {
-            console.log('CreateGogsRepo resp', data);
+        console.log('start call CreateGogsRepoByMigration');
+        return CreateGogsRepoByMigration(username, name, templateName).then(function (data) {
+            console.log('CreateGogsRepoByMigration resp', data);
             localStorage.setItem(`${username}-${name}`, data.url);
+            let uri = Url.parse(data.url);
+            uri.auth = `${data.username}:${data.password}`;
+            let tmpRepoUrl = Url.format(uri);
 
             // call add site (goi. sau khi goi. gogs vi` khong co API update website)
             var postData = {
                 'Name':          name,
                 'DisplayName':   displayName,
-                'Url':           data.url,
+                'Source':        data.url,
                 'WebTemplateId': templateId
             };
 
@@ -283,11 +313,12 @@ class AppUser {
                 data:        JSON.stringify(postData)
             }).then(function (resp) {
                 console.log('addSite resp', resp);
-                resp = adapter.addSiteResponse(resp);
+                // resp = adapter.addSiteResponse(resp);
 
                 // console.log('username', username);
                 return {
-                    url: data.url
+                    // url: data.Source // use this when server ready
+                    url: tmpRepoUrl
                 };
             });
         }).catch(function (error) {
