@@ -893,7 +893,7 @@ function spawnGitCmd(command, args, cwd, onProgress) {
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules', '.bin')),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs')),
         process.env['PATH']
-    ].join(';');
+    ].join(process.platform === 'linux' ? ':' : ';');
     console.log('command', command, 'args', args, 'cwd', cwd, 'privateNodePath', privateNodePath, 'ENV_PATH', ENV_PATH);
 
     let env = {

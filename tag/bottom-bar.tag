@@ -41,11 +41,12 @@
 
         var nodePath = Path.resolve(Path.join('tools', 'nodejs', 'node_modules'));
         var PATH = [
-            Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')),
-            Path.resolve(Path.join('tools', 'nodejs')),
-            Path.resolve(Path.join('tools', 'git', 'bin')),
+            Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')) + '/',
+            Path.resolve(Path.join('tools', 'nodejs')) + '/',
+            Path.resolve(Path.join('tools', 'git', 'bin')) + '/',
             process.env['PATH']
-        ].join(';');
+        ].join(process.platform === 'linux' ? ':' : ';');
+        console.log('bottom-bar PATH', PATH);
 
         me.on('mount', function () {
             tab = $(me.root.querySelector('.ui.tabular.menu')).tab();
@@ -159,7 +160,7 @@
 
             me.append('build starting...\r\n');
             lastWatchMode = 'user';
-            watchProcess = spawnProcess('gulp', ['--continue', 'app-watch']);
+            watchProcess = spawnProcess(process.platform === 'linux' ? 'gulp' : 'gulp.cmd', ['--continue', 'app-watch']);
         };
 
         me.watchDev = function () {
@@ -170,7 +171,7 @@
 
             me.append('build dev starting...\r\n');
             lastWatchMode = 'dev';
-            watchProcess = spawnProcess('gulp', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+            watchProcess = spawnProcess(process.platform === 'linux' ? 'gulp' : 'gulp.cmd', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
         // TODO on unmount close watch process
