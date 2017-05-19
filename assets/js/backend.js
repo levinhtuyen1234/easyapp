@@ -891,7 +891,8 @@ function spawnGitCmd(command, args, cwd, onProgress) {
     const ENV_PATH = [
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules', '.bin')),
-        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs'))
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs')),
+        process.env['PATH']
     ].join(';');
     console.log('command', command, 'args', args, 'cwd', cwd, 'privateNodePath', privateNodePath, 'ENV_PATH', ENV_PATH);
 
