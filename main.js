@@ -27,7 +27,7 @@ let console = {
 
 
 app.on('window-all-closed', () => {
-    if (process.platform != 'darwin')
+    if (process.platform !== 'darwin')
         app.quit();
 });
 
@@ -46,7 +46,7 @@ app.on('ready', () => {
         mainWindow = null
     });
 
-    mainWindow.loadURL('file:/' + __dirname + '/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
     mainWindow.setMenu(null);
 
     if (debug) {

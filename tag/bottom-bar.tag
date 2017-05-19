@@ -158,7 +158,7 @@
 
             me.append('build starting...\r\n');
             lastWatchMode = 'user';
-            watchProcess = spawnProcess('gulp.cmd', ['--continue', 'app-watch']);
+            watchProcess = spawnProcess('gulp', ['--continue', 'app-watch']);
         };
 
         me.watchDev = function () {
@@ -169,7 +169,7 @@
 
             me.append('build dev starting...\r\n');
             lastWatchMode = 'dev';
-            watchProcess = spawnProcess('gulp.cmd', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+            watchProcess = spawnProcess('gulp', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
         // TODO on unmount close watch process
