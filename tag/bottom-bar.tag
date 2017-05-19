@@ -43,7 +43,8 @@
         var PATH = [
             Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')),
             Path.resolve(Path.join('tools', 'nodejs')),
-            Path.resolve(Path.join('tools', 'git', 'bin'))
+            Path.resolve(Path.join('tools', 'git', 'bin')),
+            process.env['PATH']
         ].join(';');
 
         me.on('mount', function () {
