@@ -1,14 +1,32 @@
 {
     "version"  : 10,
     "templates": [
+	{
+            "name"    : "Skeleton",
+            "url"     : "https://sourcecode.easywebhub.com/templates/easyweb-skeleton.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["skeleton", "website"],
+            "themeUrl": "https://blackrockdigital.github.io/startbootstrap-creative/",
+            "price"   : "Free"
+        },
+	{
+            "name"    : "Creative",
+            "url"     : "https://sourcecode.easywebhub.com/templates/easyweb-creative.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["bootstrap", "website"],
+            "themeUrl": "https://blackrockdigital.github.io/startbootstrap-creative/",
+            "price"   : "Free"
+        },
         {
             "name"    : "Pillar",
             "url"     : "https://sourcecode.easywebhub.com/templates/pillar.git",
             "branch"  : "master",
 			"type"    : "code base",
-			"tags"    : ["skeleton", "website"],
-            "themeUrl": "",
-            "price"   : "Free"
+			"tags"    : ["themeforest", "website"],
+            "themeUrl": "http://pillar.mediumra.re",
+            "price"   : "Paid"
         }
     ]
 }
