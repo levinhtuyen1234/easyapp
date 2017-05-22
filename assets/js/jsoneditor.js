@@ -2438,12 +2438,14 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         // If using SCEditor, destroy the editor instance
         if (this.sceditor_instance) {
             this.sceditor_instance.destroy();
-        }
-        else if (this.epiceditor) {
+        } else if (this.epiceditor) {
             this.epiceditor.unload();
-        }
-        else if (this.ace_editor) {
+        } else if (this.ace_editor) {
             this.ace_editor.destroy();
+        } else if (this.ckeditor_instance) {
+            try {
+                CKEDITOR.instances[this.ckeditor_instance[0].name].destroy();
+            } catch(_) {}
         }
 
 

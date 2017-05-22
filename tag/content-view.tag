@@ -64,8 +64,8 @@
 //            let contentMarkdownData = me.tags['markdown-editor'].getValue();
             let contentMarkdownData = me.tags['ckeditor'].getValue();
             let metaData = me.tags['json-schema-form-editor'].getForm();
-            metaData['__content__'] = contentMarkdownData;
-//            metaData['__content__'] = '';
+//            metaData['__content__'] = contentMarkdownData;
+            metaData['__content__'] = '';
             return {
 //                metaData:     me.tags['form-editor'].getForm(),
                 metaData:     metaData,
