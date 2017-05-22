@@ -46,7 +46,6 @@
             Path.resolve(Path.join('tools', 'git', 'bin')) + '/',
             process.env['PATH']
         ].join(process.platform === 'linux' ? ':' : ';');
-        console.log('bottom-bar PATH', PATH);
 
         me.on('mount', function () {
             tab = $(me.root.querySelector('.ui.tabular.menu')).tab();

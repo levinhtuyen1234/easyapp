@@ -2327,7 +2327,20 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
                 // hide ckeditor when in edit mode
                 var upBtn = $(self.input.parentNode).find('.json-editor-btn-moveup');
                 if (upBtn.length === 0) {
-                    self.ckeditor_instance = window.jQuery(self.input).ckeditor({});
+                    // TODO CONFIG CKEDITOR HERE
+                    self.ckeditor_instance = window.jQuery(self.input).ckeditor({
+                        toolbarGroups: [
+                            { name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
+                            { name: 'links' },
+                            { name: 'insert' },
+                            { name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
+                            '/',
+                            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+                            { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+                            { name: 'styles' },
+                            { name: 'colors' }
+                        ]
+                    });
                     // window.selfCkeditor = self.ckeditor_instance;
 
                     setTimeout(function () {

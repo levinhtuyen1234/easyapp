@@ -5,7 +5,8 @@
     <div class="ui form" style="padding-top: 10px;">
         <div class="field" id="contentMarkDownEditorField">
             <label class="" style="text-align: left; font-weight: 700">Content</label>
-            <markdown-editor site-name="{siteName}"></markdown-editor>
+            <!--<markdown-editor site-name="{siteName}"></markdown-editor>-->
+            <ckeditor site-name="{siteName}"></ckeditor>
         </div>
     </div>
 
@@ -27,8 +28,8 @@
         me.on('mount', function () {
             $(me.root).simplebar();
             $(me.root.querySelector('.simplebar-scroll-content'))
-                    .css('padding-left', '10px')
-                    .css('padding-right', '18px');
+                .css('padding-left', '10px')
+                .css('padding-right', '18px');
         });
 
         me.setContent = function (content, contentConfig) {
@@ -49,18 +50,22 @@
                 $(contentMarkDownEditorField).show();
             }
 
-            me.tags['markdown-editor'].setValue(content.markDownData);
+//            me.tags['markdown-editor'].setValue(content.markDownData);
+            me.tags['ckeditor'].setValue(content.markDownData);
         };
 
         me.reset = function () {
             me.tags['json-schema-form-editor'].clear();
-            me.tags['markdown-editor'].setValue('');
+//            me.tags['markdown-editor'].setValue('');
+            me.tags['ckeditor'].setValue('');
         };
 
         me.getContent = function () {
-            let contentMarkdownData = me.tags['markdown-editor'].getValue();
+//            let contentMarkdownData = me.tags['markdown-editor'].getValue();
+            let contentMarkdownData = me.tags['ckeditor'].getValue();
             let metaData = me.tags['json-schema-form-editor'].getForm();
             metaData['__content__'] = contentMarkdownData;
+//            metaData['__content__'] = '';
             return {
 //                metaData:     me.tags['form-editor'].getForm(),
                 metaData:     metaData,
