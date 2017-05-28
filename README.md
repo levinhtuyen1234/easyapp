@@ -27,7 +27,8 @@
 #### Install 
  - Clone source code,
     - dùng lệnh `git clone https://github.com/easywebhub/easyapp.git` hoặc git client
-
+ 
+ - vào thư mục, click vào `Install.cmd` để cài đặt thư viện
 
 #### RUN
  - click vao ```RUN.cmd```
