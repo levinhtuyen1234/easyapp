@@ -19,11 +19,16 @@
      + tạo vấn đề trong phần issue tại [đây](https://github.com/easywebhub/easyapp/issues/new), yêu cầu có account Github
      + gửi email về cho chúng tôi admin@easywebhub.com
 
-### Tham gia lập trình phát triển EasyWebBuilder, hãy theo hướng dẫn bên dưới
+### Tham gia phát triển EasyWebBuilder
+
+### Các phần mềm cần chuẩn bị
+- NodeJS , [download](https://nodejs.org/en/)
+- Git client,vi dụ [GitExtenstion](https://github.com/gitextensions/gitextensions/releases/latest), và [SourceTree](https://www.sourcetreeapp.com)
 #### Install 
- - Cài đặt [nodejs](https://nodejs.org/en/)
- - Download zip folder of this repository
- - click vào ```INSTALL.cmd``` 
+ - Clone source code,
+    - dùng lệnh `git clone https://github.com/easywebhub/easyapp.git` hoặc git client
+ 
+ - vào thư mục, click vào `Install.cmd` để cài đặt thư viện
 
 #### RUN
  - click vao ```RUN.cmd```
