@@ -79,7 +79,7 @@
 //                        riot.event.trigger('watchFailed', str);
 //                        $(me.consoleLog).show();
                     } else {
-                        var reviewUrl = (/Local: (http:\/\/.+)/gm).exec(str);
+                        var reviewUrl = (/Local: (https?:\/\/.+)/gm).exec(str);
                         if (reviewUrl != null) {
                             console.log('found review url', reviewUrl[1]);
 //                            riot.event.trigger('watchSuccess', reviewUrl[1]);
