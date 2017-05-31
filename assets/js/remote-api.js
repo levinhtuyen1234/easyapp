@@ -45,7 +45,7 @@ const restAdapter = {
 
     sitesObjectTransformer: function (sites) {
         // console.log('sitesObjectTransformer', sites);
-        var ret = [];
+        let ret = [];
         sites.forEach(function (site) {
             ret.push({
                 displayName:   site['DisplayName'],
@@ -266,6 +266,14 @@ function getSites(userId, token) {
 
 var Url = require('url');
 
+function getTemplateNameFromUrl(url) {
+    let parts = url.split('/');
+    let name = parts.pop();
+    parts = name.split('.');
+    parts.pop();
+    return parts.join('.');
+}
+
 class AppUser {
     constructor(data) {
         this.data = data;
@@ -283,57 +291,65 @@ class AppUser {
 
         // return CreateGogsRepo(username, name).then(function (data) {
         console.log('templateId before trim', templateId);
-        let matches = templateId.match(/\/([\w\d-]+)\.git/);
-        if (!matches || !matches.length || matches.length !== 2) {
-            throw new Error('invalid template name');
-        }
-        let templateName = matches[1];
-        // TODO THIS IS TEMP CODE tạo repo phai o tren server
-        console.log('start call CreateGogsRepoByMigration');
-        return CreateGogsRepoByMigration(username, name, templateName).then(function (data) {
-            console.log('CreateGogsRepoByMigration resp', data);
-            localStorage.setItem(`${username}-${name}`, data.url);
-            let uri = Url.parse(data.url);
-            uri.auth = `${data.username}:${data.password}`;
-            let tmpRepoUrl = Url.format(uri);
+        // let matches = templateId.match(/\/([\w\d-]+)\.git/);
+        // if (!matches || !matches.length || matches.length !== 2) {
+        //     throw new Error('invalid template name');
+        // }
+        let templateName = getTemplateNameFromUrl(templateId);
+        // console.log('CreateGogsRepoByMigration resp', data);
+        // let uri = Url.parse(data.url);
+        // uri.auth = `${data.username}:${data.password}`;
+        // let tmpRepoUrl = Url.format(uri);
 
-            // call add site (goi. sau khi goi. gogs vi` khong co API update website)
-            var postData = {
-                'Name':          name,
-                'DisplayName':   displayName,
-                'Source':        data.url,
-                'WebTemplateId': templateId
+        // call add site (goi. sau khi goi. gogs vi` khong co API update website)
+        var postData = {
+            'Name':              name,
+            'DisplayName':       displayName,
+            'Source':            '',
+            'WebTemplateId':     templateName,
+            'EnableAutoConfirm': true,
+            "Accounts":          [
+                {
+                    "AccountId":    accountId,
+                    "AccessLevels": ['Owner']
+                }
+            ],
+        };
+
+        console.log('postData', JSON.stringify(postData));
+
+        return Ajax({
+            method:      'POST',
+            dataType:    'json',
+            contentType: 'application/json',
+            url:         `https://api.easywebhub.com/websites`,
+            data:        JSON.stringify(postData)
+        }).then(function (resp) {
+            console.log('addSite resp', resp);
+
+            localStorage.setItem(`${username}-${name}`, resp.Source);
+            localStorage.setItem(`${username}-${name}-git`, resp.Git);
+            localStorage.setItem(`${username}-${name}-cname`, resp.Url);
+            // resp = adapter.addSiteResponse(resp);
+
+            // console.log('username', username);
+            return {
+                url: resp.Source
             };
-
-            return Ajax({
-                method:      'POST',
-                dataType:    'json',
-                contentType: 'application/json',
-                url:         `https://api.easywebhub.com/users/${accountId}/websites`,
-                data:        JSON.stringify(postData)
-            }).then(function (resp) {
-                console.log('addSite resp', resp);
-                // resp = adapter.addSiteResponse(resp);
-
-                // console.log('username', username);
-                return {
-                    // url: data.Source // use this when server ready
-                    url: tmpRepoUrl
-                };
-            });
-        }).catch(function (error) {
-            console.log('CALL REMOTE GOT ERROR', error.message);
-            if (error.message.startsWith('repository already exists')) {
-                var repoUrl = localStorage.getItem(`${username}-${name}`);
-                if (!repoUrl)
-                    throw new Error('Failed to get repository url');
-                return {
-                    url: repoUrl
-                };
-            } else {
-                throw new Error('create gogs reposiory failed, ' + error.message);
-            }
         });
+        // }).catch(function (error) {
+        //     console.log('CALL REMOTE GOT ERROR', error.message);
+        //     if (error.message.startsWith('repository already exists')) {
+        //         var repoUrl = localStorage.getItem(`${username}-${name}`);
+        //         if (!repoUrl)
+        //             throw new Error('Failed to get repository url');
+        //         return {
+        //             url: repoUrl
+        //         };
+        //     } else {
+        //         throw new Error('create gogs reposiory failed, ' + error.message);
+        //     }
+        // });
     }
 
     getSites() {
