@@ -270,7 +270,9 @@
 
                 remoteSites.some(remoteSite => {
                     if (site.name === remoteSite.name) {
+                        //console.log('remoteSite', remoteSite);
                         site.remote = true;
+                        site.url = remoteSite.url;
                         return true;
                     }
                     return false;
@@ -354,6 +356,15 @@
             }
             var siteName = site.name;
             me.unmount(true);
+
+            if (site.url) {
+                try {
+                    let siteRoot = require('path').resolve('sites');
+                    require('fs').writeFileSync(`${siteRoot}/${siteName}/build/CNAME`, `http:\/\/${site.url}`);
+                } catch(err) {
+                    console.error('write CNAME failed', err);
+                }
+            }
 
             // TODO cache site content indexes, sync cache
                 BackEnd.createSiteIndex(siteName).then(function (ret) {
