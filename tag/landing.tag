@@ -357,17 +357,20 @@
             var siteName = site.name;
             me.unmount(true);
 
+            // WRITE CNAME
+            let siteReviewUrl = '';
             if (site.url) {
                 try {
                     let siteRoot = require('path').resolve('sites');
-                    require('fs').writeFileSync(`${siteRoot}/${siteName}/build/CNAME`, `http:\/\/${site.url}`);
-                } catch(err) {
+                    siteReviewUrl = `${site.url}`;
+                    require('fs').writeFileSync(`${siteRoot}/${siteName}/build/CNAME`, siteReviewUrl);
+                } catch (err) {
                     console.error('write CNAME failed', err);
                 }
             }
 
             // TODO cache site content indexes, sync cache
-                BackEnd.createSiteIndex(siteName).then(function (ret) {
+            BackEnd.createSiteIndex(siteName).then(function (ret) {
                 window.siteContentIndexes = ret.contents;
                 window.siteCategoryIndexes = ret.categories;
                 window.siteGlobalMetaIndexes = ret.global;
@@ -377,7 +380,7 @@
                 window.siteGlobalConfigIndexes = ret.globalConfig;
                 window.siteMetaConfigIndexes = ret.metaConfig;
 //                console.log('siteContentIndexes', siteContentIndexes);
-                window.curPage = riot.mount('home', {siteName: siteName})[0];
+                window.curPage = riot.mount('home', {siteName: siteName, siteReviewUrl: siteReviewUrl})[0];
             }).catch(function (ex) {
                 console.log(ex);
                 alert('create site content index failed, ' + ex.message);

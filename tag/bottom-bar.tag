@@ -74,22 +74,28 @@
                     // find browserSync port in stdout
                     var str = dataBuf.join('');
 //                    console.log(str);
-                    if (str.indexOf('[Error:') != -1) {
+                    if (str.indexOf('[Error:') !== -1) {
                         me.appendError(str);
 //                        riot.event.trigger('watchFailed', str);
 //                        $(me.consoleLog).show();
                     } else {
-                        var reviewUrl = (/Local: (https?:\/\/.+)/gm).exec(str);
-                        if (reviewUrl != null) {
-                            console.log('found review url', reviewUrl[1]);
-//                            riot.event.trigger('watchSuccess', reviewUrl[1]);
-                            me.iframeUrl = reviewUrl[1];
+//                      console.log('found review url', reviewUrl[1]);
+                        // use cname instead of url found in git output
+//                        if (me.opts.siteReviewUrl) {
+//                            me.iframeUrl = me.opts.siteReviewUrl;
+//                        } else {
+                            var reviewUrl = (/Local: (https?:\/\/.+)/gm).exec(str);
+                            if (reviewUrl !== null) {
+                                me.iframeUrl = reviewUrl[1];
+                            }
+//                        }
+
+                        if (me.iframeUrl) {
                             me.webview.src = me.iframeUrl;
                             $(me.openExternalBrowserBtn).removeClass('disabled');
-                            // TODO inject js detect is resizer already running
-//                            me.webview.executeJavaScript(resizerScript, false);
                             me.update();
                         }
+
                         me.append(str);
                     }
                     dataBuf = [];
@@ -134,9 +140,9 @@
             me.append('refresh watch');
             me.closeWatchProcess();
             me.clear();
-            if (lastWatchMode == 'user')
+            if (lastWatchMode === 'user')
                 me.watch();
-            else if (lastWatchMode == 'dev')
+            else if (lastWatchMode === 'dev')
                 me.watchDev();
         });
 
@@ -254,26 +260,26 @@
                 let parts = objectPath.split('.');
                 let cur = target;
                 let parent = null;
-                let found = parts.some(function(key, index) {
+                let found = parts.some(function (key, index) {
                     // if key is number (array index)
                     if (/^[0-9]+$/g.test(key)) {
 
                         key = parseInt(key);
                         parent = cur;
                         cur = cur[key];
-                        console.log('number', key, cur != undefined && index == parts.length-1);
-                        return cur != undefined && index == parts.length-1;
+                        console.log('number', key, cur != undefined && index == parts.length - 1);
+                        return cur != undefined && index == parts.length - 1;
                     } else if (typeof(key) === 'string') {
                         // text
                         parent = cur;
                         cur = cur[key];
-                        console.log('text', key, cur != undefined && index == parts.length-1);
-                        return cur != undefined && index == parts.length-1;
+                        console.log('text', key, cur != undefined && index == parts.length - 1);
+                        return cur != undefined && index == parts.length - 1;
                     } else {
                         return false; // not proccessable key, break
                     }
                 });
-                if(!found) return false;
+                if (!found) return false;
                 let lastKey = parts.pop();
                 parent[lastKey] = newValue;
                 return true;
@@ -317,7 +323,7 @@
                 // save new content file to disk and cache index
                 siteContentIndexes[contentFile] = content;
                 let markdownData = content['__content__'] || '';
-                BackEnd.saveContentFile(me.opts.siteName, 'content/'+contentFile, content, markdownData);
+                BackEnd.saveContentFile(me.opts.siteName, 'content/' + contentFile, content, markdownData);
 
                 // TODO check if update ui is necessary
             });

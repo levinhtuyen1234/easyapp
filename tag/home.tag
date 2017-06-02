@@ -127,7 +127,7 @@
                 </div>
 
                 <div class="ui-layout-north">
-                    <bottom-bar site-name={opts.siteName}></bottom-bar>
+                    <bottom-bar site-name={opts.siteName} site-review-url="{opts.siteReviewUrl}"></bottom-bar>
                 </div>
             </div>
         </div>
@@ -851,13 +851,15 @@
             me.tags['progress-dialog'].show('Deploy to EasyWeb hosting');
             BackEnd.gitPushGhPages(me.siteName, me.tags['progress-dialog'].appendText).then(function () {
                 me.tags['progress-dialog'].enableClose();
-                var text = me.tags['progress-dialog'].getText();
-                var matches = text.split(/https:\/\/github\.com\/([^\/]+)\/(.+)/);
-                if (matches.length > 1) {
-                    var ghPageUrl = 'https://' + matches[1] + '.github.io/' + matches[2] + '/';
-                    var msg = 'Deployed Url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
-                    me.tags['progress-dialog'].showMessage(msg);
-                }
+//                var text = me.tags['progress-dialog'].getText();
+//                var matches = text.split(/https?:\/\/github\.com\/([^\/]+)\/(.+)/);
+//                if (matches.length > 1) {
+//                    var ghPageUrl = 'https://' + matches[1] + '.github.io/' + matches[2] + '/';
+//                    var msg = 'Deployed Url <a href="' + ghPageUrl + '" target="_blank">' + ghPageUrl + '</a>';
+//                    me.tags['progress-dialog'].showMessage(msg);
+//                }
+                var msg = 'Deployed Url <a href="http://' + me.opts.siteReviewUrl + '" target="_blank">' + me.opts.siteReviewUrl + '</a>';
+                me.tags['progress-dialog'].showMessage(msg);
             }).catch(function (err) {
                 console.log(err);
                 me.tags['progress-dialog'].enableClose();
