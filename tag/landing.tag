@@ -239,6 +239,15 @@
             console.log(ex);
         }
 
+        function writeCname(name, url) {
+            try {
+                let siteRoot = require('path').resolve('sites');
+                require('fs').writeFileSync(`${siteRoot}/${name}/build/CNAME`, url);
+            } catch (err) {
+                console.error('write CNAME failed', err);
+            }
+        }
+
         var newSite;
         me.sites = [];
 
@@ -360,13 +369,7 @@
             // WRITE CNAME
             let siteReviewUrl = '';
             if (site.url) {
-                try {
-                    let siteRoot = require('path').resolve('sites');
-                    siteReviewUrl = `${site.url}`;
-                    require('fs').writeFileSync(`${siteRoot}/${siteName}/build/CNAME`, siteReviewUrl);
-                } catch (err) {
-                    console.error('write CNAME failed', err);
-                }
+                writeCname(site.name, site.url);
             }
 
             // TODO cache site content indexes, sync cache
@@ -416,8 +419,12 @@
 
             var templateId = getTemplateIdFromRepoUrl(repoUrl);
             return User.addSite(name, displayName, templateId).then(function (resp) {
+                // mkdir
                 return BackEnd.createSiteFolder(name).then(function (sitePath) {
+                    // init clone root and build folder from Source
                     return BackEnd.initMigrationSite(resp.url, sitePath).then(function () {
+                        // write cname for first time create site
+                        writeCname(name, resp.cname);
                         return name;
                     });
                     // old code setup repos at client side
