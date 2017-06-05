@@ -367,7 +367,6 @@
             me.unmount(true);
 
             // WRITE CNAME
-            let siteReviewUrl = '';
             if (site.url) {
                 writeCname(site.name, site.url);
             }
@@ -383,7 +382,7 @@
                 window.siteGlobalConfigIndexes = ret.globalConfig;
                 window.siteMetaConfigIndexes = ret.metaConfig;
 //                console.log('siteContentIndexes', siteContentIndexes);
-                window.curPage = riot.mount('home', {siteName: siteName, siteReviewUrl: siteReviewUrl})[0];
+                window.curPage = riot.mount('home', {siteName: siteName, siteReviewUrl: site.url})[0];
             }).catch(function (ex) {
                 console.log(ex);
                 alert('create site content index failed, ' + ex.message);
@@ -422,10 +421,14 @@
                 // mkdir
                 return BackEnd.createSiteFolder(name).then(function (sitePath) {
                     // init clone root and build folder from Source
-                    return BackEnd.initMigrationSite(resp.url, sitePath).then(function () {
+                    return BackEnd.initMigrationSite(resp.source, sitePath).then(function () {
                         // write cname for first time create site
-                        writeCname(name, resp.cname);
-                        return name;
+                        writeCname(name, resp.url);
+                        return {
+                            name:   name,
+                            source: resp.source,
+                            url:    resp.url
+                        };
                     });
                     // old code setup repos at client side
                     // checkout source from template
@@ -480,10 +483,15 @@
                 var repoUrl = 'https://' + encodeURIComponent(info.username) + ':' + encodeURIComponent(info.password) + '@' + (info.url.split('https://')[1]);
                 console.log('repoUrl', repoUrl);
                 me.tags['progress-dialog'].show('Import GitHub Project');
+                console.log('show import', info);
                 BackEnd.gitImportGitHub(info.siteName, repoUrl, me.tags['progress-dialog'].appendText).then(function () {
                     me.tags['progress-dialog'].enableClose();
                     me.tags['progress-dialog'].hide();
-                    me.openSite(info.siteName)();
+                    me.openSite({
+                        name:   info.siteName,
+                        url:    info.url,
+                        source: info.source
+                    })();
                 }).catch(function (err) {
                     console.log(err);
                     me.tags['progress-dialog'].enableClose();

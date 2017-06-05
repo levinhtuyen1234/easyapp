@@ -334,9 +334,9 @@ class AppUser {
 
             // console.log('username', username);
             return {
-                url: resp.Source,
-                git: resp.Git,
-                cname: resp.Url
+                source: resp.Source,
+                git:    resp.Git,
+                url:    resp.Url
             };
         });
         // }).catch(function (error) {
