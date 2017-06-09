@@ -25,6 +25,7 @@
         var Promise = require('bluebird');
         var Fs = Promise.promisifyAll(require('fs'));
         var me = this;
+        me.change = null; // for inline editor
 
         var buildingDataUri = 'data:text/html;charset=utf-8;base64,PCFET0NUWVBFIGh0bWw+PG1ldGEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVURi04Imh0dHAtZXF1aXY9Y29udGVudC10eXBlPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9cm9ib3RzPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9Z29vZ2xlYm90PjxzY3JpcHQgc3JjPS9qcy9saWIvZHVtbXkuanM+PC9zY3JpcHQ+PGxpbmsgaHJlZj0vY3NzL3Jlc3VsdC1saWdodC5jc3MgcmVsPXN0eWxlc2hlZXQ+PHN0eWxlPmJvZHl7bWluLWhlaWdodDoxMDAlO2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwuMDMpfWgxe3Bvc2l0aW9uOmFic29sdXRlO2xlZnQ6NTAlO21hcmdpbi1sZWZ0Oi0xLjllbTtjb2xvcjpyZ2JhKDAsMCwwLC4wMyk7Zm9udDo4MDAgOTAwJSBSb2JvdG8sc2FuLXNlcmlmfWgxOmJlZm9yZXtwb3NpdGlvbjphYnNvbHV0ZTtvdmVyZmxvdzpoaWRkZW47Y29udGVudDphdHRyKGRhdGEtY29udGVudCk7Y29sb3I6I2Q0ZDVkNzttYXgtd2lkdGg6NGVtOy13ZWJraXQtYW5pbWF0aW9uOmxvYWRpbmcgM3MgbGluZWFyIGluZmluaXRlfUAtd2Via2l0LWtleWZyYW1lcyBsb2FkaW5nezAle21heC13aWR0aDowfX08L3N0eWxlPjx0aXRsZT5Mb2FkaW5nIGFuaW1hdGlvbjwvdGl0bGU+PHNjcmlwdD53aW5kb3cub25sb2FkPWZ1bmN0aW9uKCl7fTwvc2NyaXB0PjxoMSBkYXRhLWNvbnRlbnQ9QnVpbGRpbmc+QnVpbGRpbmc8L2gxPg==';
         var ewhDataUri = 'data:text/html;charset=utf-8;base64,PCFET0NUWVBFIGh0bWw+PG1ldGEgY29udGVudD0idGV4dC9odG1sOyBjaGFyc2V0PVVURi04Imh0dHAtZXF1aXY9Y29udGVudC10eXBlPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9cm9ib3RzPjxtZXRhIGNvbnRlbnQ9Im5vaW5kZXgsIG5vZm9sbG93Im5hbWU9Z29vZ2xlYm90PjxzY3JpcHQgc3JjPS9qcy9saWIvZHVtbXkuanM+PC9zY3JpcHQ+PGxpbmsgaHJlZj0vY3NzL3Jlc3VsdC1saWdodC5jc3MgcmVsPXN0eWxlc2hlZXQ+PHN0eWxlPmJvZHl7bWluLWhlaWdodDoxMDAlO2JhY2tncm91bmQtY29sb3I6cmdiYSgwLDAsMCwuMDMpfWgxe3Bvc2l0aW9uOmFic29sdXRlO2xlZnQ6NTAlO21hcmdpbi1sZWZ0Oi0xLjllbTttYXgtd2lkdGg6NGVtO2NvbG9yOnJnYmEoMCwwLDAsLjAzKTtmb250OjgwMCA5MDAlIFJvYm90byxzYW4tc2VyaWZ9aDE6YmVmb3Jle3Bvc2l0aW9uOmFic29sdXRlO292ZXJmbG93OmhpZGRlbjtjb250ZW50OmF0dHIoZGF0YS1jb250ZW50KTtjb2xvcjojZDRkNWQ3O21heC13aWR0aDo2ZW07LXdlYmtpdC1hbmltYXRpb246bG9hZGluZyA1cyBsaW5lYXIgaW5maW5pdGV9QC13ZWJraXQta2V5ZnJhbWVzIGxvYWRpbmd7MCV7bWF4LXdpZHRoOjB9fTwvc3R5bGU+PHRpdGxlPkxvYWRpbmcgYW5pbWF0aW9uPC90aXRsZT48c2NyaXB0PndpbmRvdy5vbmxvYWQ9ZnVuY3Rpb24oKXt9PC9zY3JpcHQ+PGgxIGRhdGEtY29udGVudD1FYXN5V2ViPkVhc3lXZWI8L2gxPg==';
@@ -84,10 +85,10 @@
 //                        if (me.opts.siteReviewUrl) {
 //                            me.iframeUrl = me.opts.siteReviewUrl;
 //                        } else {
-                            var reviewUrl = (/Local: (https?:\/\/.+)/gm).exec(str);
-                            if (reviewUrl !== null) {
-                                me.iframeUrl = reviewUrl[1];
-                            }
+                        var reviewUrl = (/Local: (https?:\/\/.+)/gm).exec(str);
+                        if (reviewUrl !== null) {
+                            me.iframeUrl = reviewUrl[1];
+                        }
 //                        }
 
                         if (me.iframeUrl) {
@@ -222,33 +223,47 @@
                         yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery.min.js')).toString());
                     }
 
-                    console.log('injecting e-editable');
-                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery.poshytip.min.js')).toString());
-                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery-editable-poshytip.min.js')).toString());
-                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/tip-yellowsimple.css')).toString());
-                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/jquery-editable.css')).toString());
+                    // inject medium inline editor
+                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor.min.css')).toString());
+                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor-default.min.css')).toString());
+                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/medium-editor.min.js')).toString());
 
-                    // script active x-editable of suitable element
-                    // find elm with data-ea-object-path data attribute
-                    // active x-editable with callback to app
                     setTimeout(function () {
-                        executeJavaScript(`(function() {
-                        $('*[data-ea-object-path]').each(function(index, elm) {
-                            var $elm = $(elm);
-                            $elm.editable({
-                                success: function(response, newValue) {
-                                    sendToHost('contentChanged', {
-                                        objectPath: $elm.data('eaObjectPath'),
-                                        type: $elm.data('eaType'),
-                                        pathName: document.location.pathname,
-                                        layout: $elm.data('eaLayout'),
-                                        dataSrc: $elm.data('eaDataSrc'),
-                                        newValue:   newValue,
+                        executeJavaScript(`(function defer() { if (!window.MediumEditor) {
+                            setTimeout(function () {defer()}, 50); return;}
+
+//                            $('a').off('click').click(function (e) {
+//                                e.preventDefault();
+//                                e.stopPropagation();
+//                                return false;
+//                            });
+
+                            console.log('document.location.pathname', document.location.pathname);
+                            $('*[data-ea-object-path]').each(function(index, elm) {
+                                var $elm = $(elm);
+                                $elm.attr('data-ea-slug', document.location.pathname);
+                                $elm.attr('data-ea-full-path', document.location.pathname);
+                                var editor = new MediumEditor(elm, {
+                                    disableExtraSpaces: true,
+                                    disableReturn : true,
+                                    disableDoubleReturn  : true,
+                                });
+
+                                editor.subscribe('editableInput', function(data, editable) {
+                                    sendToHost('onEditorEdit', {
+                                        data: $(editable).data(),
+                                        value: elm.innerHTML
                                     });
-                                }
+                                });
+
+                                editor.subscribe('blur', function(data, editable) {
+                                    sendToHost('onEditorBlur', {
+                                        data: $(editable).data(),
+                                        value: elm.innerHTML
+                                    });
+                                });
                             });
-                        });
-                    })();`);
+                        })();`);
                     }, 1000);
                 } catch (ex) {
                     console.log('handle page load finished failed', ex);
@@ -267,14 +282,14 @@
                         key = parseInt(key);
                         parent = cur;
                         cur = cur[key];
-                        console.log('number', key, cur != undefined && index == parts.length - 1);
-                        return cur != undefined && index == parts.length - 1;
+                        console.log('number', key, cur !== undefined && index === parts.length - 1);
+                        return cur !== undefined && index === parts.length - 1;
                     } else if (typeof(key) === 'string') {
                         // text
                         parent = cur;
                         cur = cur[key];
-                        console.log('text', key, cur != undefined && index == parts.length - 1);
-                        return cur != undefined && index == parts.length - 1;
+                        console.log('text', key, cur !== undefined && index === parts.length - 1);
+                        return cur !== undefined && index === parts.length - 1;
                     } else {
                         return false; // not proccessable key, break
                     }
@@ -285,12 +300,73 @@
                 return true;
             }
 
+
+            me.onEditorEdit = function (data, value) {
+//                console.log('onEditorEdit', data, 'value', value);
+                // lay cac data co prefix ea tu element
+                for (var key in data) {
+                    if (!data.hasOwnProperty(key)) continue;
+                    if (!key.startsWith('ea')) delete data[key];
+                }
+
+                // tim slug cua trang
+                if (data.eaSlug.indexOf('/build/') !== -1) {
+                    var parts = data.eaSlug.split('/');
+                    while (parts.length > 0) {
+                        var node = parts.shift();
+                        if (node === 'build') break;
+                    }
+                    data.eaSlug = parts.join('/');
+                }
+
+                // trim <p></p> trong value
+                if (value.startsWith('<p>'))
+                    value = value.slice(3, value.length - 4);
+
+                data.eaValue = value;
+                me.change = data;
+            };
+
+            me.onEditorBlur = function (data, value) {
+                if (!me.change) return;
+//                console.log('onIframeElementBlur', me.change);
+                // read content file
+                //      find content file name
+                let contentPath = me.change.eaSlug;
+                if (contentPath === '/') contentPath = 'index';
+                let parts = contentPath.split('.');
+                if (contentPath.endsWith('.html')) {
+                    parts.pop(); // remove extension
+                }
+
+                contentPath = '/content/' + parts.join('.') + '.md';
+//                console.log('onIframeElementBlur contentPath', contentPath);
+
+                // apply change
+                let content = BackEnd.getContentFile(me.opts.siteName, contentPath);
+                console.log('content', content);
+                applyNewValue(me.change.eaObjectPath, content.metaData, me.change.eaValue);
+                BackEnd.saveContentFile(me.opts.siteName, contentPath, content.metaData, content.markdownData);
+                // TODO to stop browserSync auto refresh need send signal to metalsmithProcess to pause browserSync then call pause and resume
+                // clear change
+                me.change = null;
+            };
+
             me.webview.addEventListener('ipc-message', event => {
-                console.log('got event', event);
-                if (!event || !event.channel || event.channel !== 'contentChanged' ||
-                    !event.args || !event.args.length || event.args.length == 0) {
+//                console.log('got event', event);
+                if (!event || !event.channel) {
                     return;
                 }
+
+                if (event.channel === 'onEditorEdit') {
+                    return me.onEditorEdit(event.args[0].data, event.args[0].value);
+                }
+
+                if (event.channel === 'onEditorBlur') {
+                    return me.onEditorBlur(event.args[0].data, event.args[0].value);
+                }
+
+                if (event.channel !== 'contentChanged') return;
 
                 let info = event.args[0];
                 // TODO find content file from site pathName
@@ -350,7 +426,7 @@
 
         me.openExternalBrowser = function () {
             console.log('openExternalBrowser', me.webview.src);
-            if (me.webview.src != 'about:blank') {
+            if (me.webview.src !== 'about:blank') {
                 const {shell} = require('electron');
                 shell.openExternal(me.webview.src);
             }
