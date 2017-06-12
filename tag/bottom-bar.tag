@@ -41,12 +41,16 @@
         me.iframeUrl = me.opts.iframeUrl ? me.opts.iframeUrl : ewhDataUri;
 
         var nodePath = Path.resolve(Path.join('tools', 'nodejs', 'node_modules'));
+        let nodeExecutablePath = process.platform === 'win32' ?
+            Path.resolve(Path.join('tools', 'nodejs', `node-${process.platform}-ia32`, Path.sep)) :
+            Path.resolve(Path.join('tools', 'nodejs', `node-${process.platform}-${process.arch}`, Path.sep));
         var PATH = [
+            nodeExecutablePath,
             Path.resolve(Path.join('tools', 'nodejs', 'node_modules', '.bin')) + '/',
             Path.resolve(Path.join('tools', 'nodejs')) + '/',
             Path.resolve(Path.join('tools', 'git', 'bin')) + '/',
             process.env['PATH']
-        ].join(process.platform === 'linux' ? ':' : ';');
+        ].join(process.platform === 'win32' ? ';' : ':');
 
         me.on('mount', function () {
             tab = $(me.root.querySelector('.ui.tabular.menu')).tab();
@@ -119,7 +123,7 @@
         function closeProcess(proc) {
             proc.stdin.pause();
 
-            if (process.platform === 'linux') {
+            if (process.platform === 'linux' || process.platform === 'darwin') {
                 process.kill('SIGKILL');
             } else if (process.platform === 'win32') {
                 ChildProcess.execSync('taskkill /pid ' + proc.pid + ' /F /T');
@@ -166,7 +170,7 @@
 
             me.append('build starting...\r\n');
             lastWatchMode = 'user';
-            watchProcess = spawnProcess(process.platform === 'linux' ? 'gulp' : 'gulp.cmd', ['--continue', 'app-watch']);
+            watchProcess = spawnProcess(process.platform === 'win32' ? 'gulp.cmd' : 'gulp', ['--continue', 'app-watch']);
         };
 
         me.watchDev = function () {
@@ -177,7 +181,7 @@
 
             me.append('build dev starting...\r\n');
             lastWatchMode = 'dev';
-            watchProcess = spawnProcess(process.platform === 'linux' ? 'gulp' : 'gulp.cmd', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
+            watchProcess = spawnProcess(process.platform === 'win32' ? 'gulp.cmd' : 'gulp', ['--continue', '--gulpfile', 'gulpfile.dev.js', 'app-watch']);
         };
 
         // TODO on unmount close watch process

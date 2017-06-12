@@ -887,13 +887,16 @@ function SpawnShell(command, args, opts) {
 
 function spawnGitCmd(command, args, cwd, onProgress) {
     const privateNodePath = Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules'));
-
+    let nodeExecutablePath = process.platform === 'win32' ?
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', `node-${process.platform}-ia32`, Path.sep)) :
+        Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', `node-${process.platform}-${process.arch}`, Path.sep));
     const ENV_PATH = [
+        nodeExecutablePath,
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'git', 'bin', Path.sep)),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs', 'node_modules', '.bin')),
         Path.resolve(Path.join(sitesRoot, '..', 'tools', 'nodejs')),
         process.env['PATH']
-    ].join(process.platform === 'linux' ? ':' : ';');
+    ].join(process.platform === 'win32' ? ';' : ':');
     console.log('command', command, 'args', args);
 
     let env = {
