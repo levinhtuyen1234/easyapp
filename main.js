@@ -32,10 +32,12 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
+    let forceQuit = false;
+
     mainWindow = new browserWindow({
-        minWidth: 1020,
+        minWidth:  1020,
         minHeight: 740,
-        icon:      __dirname + path.sep +  '/favicon.png'
+        icon:      __dirname + path.sep + '/favicon.png'
     });
     mainWindow.maximize();
     // if (process.platform === 'linux') {
@@ -43,7 +45,26 @@ app.on('ready', () => {
     // }
 
     mainWindow.on('closed', function () {
-        mainWindow = null
+        mainWindow = null;
+    });
+
+    mainWindow.on('close', function (e) {
+        if (!forceQuit) {
+            e.preventDefault();
+            mainWindow.hide();
+        }
+    });
+
+    app.on('before-quit', function (e) {
+        forceQuit = true;
+    });
+
+    app.on('activate-with-no-open-windows', function () {
+        mainWindow.show();
+    });
+
+    app.on('will-quit', function () {
+        mainWindow = null;
     });
 
     mainWindow.loadURL('file://' + __dirname + '/index.html');
@@ -65,13 +86,13 @@ app.on('ready', () => {
         }
     }
 
-    ipcMain.on('toggleDevTools', ()=> {
+    ipcMain.on('toggleDevTools', () => {
         mainWindow.toggleDevTools();
     });
 
     app.on('window-all-closed', function () {
         if (process.platform !== 'darwin') {
-            app.quit()
+            app.quit();
         }
     });
 
