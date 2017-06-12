@@ -45,32 +45,23 @@ app.on('ready', () => {
     // }
 
     mainWindow.on('closed', function () {
-        console.log('closed');
         mainWindow = null;
     });
 
     mainWindow.on('close', function (e) {
-        console.log('close', 'forceQuit', forceQuit);
-        if (!forceQuit) {
+        if (process.platform === 'darwin') {
+            if (forceQuit) return;
             e.preventDefault();
             mainWindow.hide();
         }
     });
 
     app.on('before-quit', function (e) {
-        console.log('before-quit');
         forceQuit = true;
     });
 
-    app.on('activate-with-no-open-windows', function () {
-        console.log('activate-with-no-open-windows');
-        mainWindow.show();
-    });
-
-    app.on('will-quit', function () {
-        console.log('will-quit');
-        mainWindow = null;
-    });
+    app.on('activate-with-no-open-windows', () => mainWindow.show());
+    app.on('activate', () => mainWindow.show());
 
     mainWindow.loadURL('file://' + __dirname + '/index.html');
     mainWindow.setMenu(null);
@@ -96,12 +87,10 @@ app.on('ready', () => {
     });
 
     app.on('window-all-closed', function () {
-        console.log('window-all-closed');
         if (process.platform !== 'darwin') {
             app.quit();
         }
     });
-
 
     webContents = mainWindow.webContents;
 });
