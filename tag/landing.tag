@@ -55,12 +55,12 @@
                         <div class="content">
                             <div class="header">{template.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                <p>{template.description}</p>
                             </div>
                         </div>
 
                         <div class="extra content">
-                            <i>by</i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
+                            <i>by </i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
                         </div>
                     </a>
                 </div>
@@ -83,12 +83,12 @@
                         <div class="content">
                             <div class="header">{site.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                <p></p>
                             </div>
                         </div>
                         <div class="extra content">
                             <i class="edit icon"></i>
-                            {moment("2016-10-20T08:54:54.924Z").fromNow()}
+                            {moment("2017-06-10T08:54:54.924Z").fromNow()} by <b style="color:black">{username}</b>
                         </div>
                     </a>
 
