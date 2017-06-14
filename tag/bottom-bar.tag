@@ -230,40 +230,49 @@
                     // inject medium inline editor
                     me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor.min.css')).toString());
                     me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor-default.min.css')).toString());
-                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/medium-editor.min.js')).toString());
+                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/medium-editor.js')).toString());
 
                     setTimeout(function () {
                         executeJavaScript(`(function defer() { if (!window.MediumEditor) {
                             setTimeout(function () {defer()}, 50); return;}
 
-//                            $('a').off('click').click(function (e) {
-//                                e.preventDefault();
-//                                e.stopPropagation();
-//                                return false;
-//                            });
-
                             console.log('document.location.pathname', document.location.pathname);
                             $('*[data-ea-object-path]').each(function(index, elm) {
                                 var $elm = $(elm);
-                                $elm.attr('data-ea-slug', document.location.pathname);
-                                $elm.attr('data-ea-full-path', document.location.pathname);
-                                var editor = new MediumEditor(elm, {
-                                    disableExtraSpaces: true,
-                                    disableReturn : true,
-                                    disableDoubleReturn  : true,
-                                });
 
-                                editor.subscribe('editableInput', function(data, editable) {
-                                    sendToHost('onEditorEdit', {
-                                        data: $(editable).data(),
-                                        value: elm.innerHTML
+                                $elm.on('contextmenu', function(){
+                                    console.log('contextmenu');
+
+                                    $elm.attr('data-ea-slug', document.location.pathname);
+                                    $elm.attr('data-ea-full-path', document.location.pathname);
+                                    var editor = new MediumEditor(elm, {
+                                        disableExtraSpaces: true,
+                                        disableReturn : true,
+                                        disableDoubleReturn  : true
                                     });
-                                });
 
-                                editor.subscribe('blur', function(data, editable) {
-                                    sendToHost('onEditorBlur', {
-                                        data: $(editable).data(),
-                                        value: elm.innerHTML
+                                    $elm.off('click').click(function (e) {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        return false;
+                                    });
+
+
+                                    editor.subscribe('editableInput', function(data, editable) {
+//                                        console.log('editableInput', data);
+                                        sendToHost('onEditorEdit', {
+                                            data: $(editable).data(),
+                                            value: elm.innerHTML
+                                        });
+                                    });
+
+                                    editor.subscribe('blur', function(data, editable) {
+//                                        console.log('blur', data);
+                                        sendToHost('onEditorBlur', {
+                                            data: $(editable).data(),
+                                            value: elm.innerHTML
+                                        });
+                                        editor.destroy();
                                     });
                                 });
                             });
