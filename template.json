@@ -3,6 +3,7 @@
     "templates": [
 	{
             "name"    : "Skeleton",
+            "description" : "Basic template to create own websites from craft",
             "url"     : "https://sourcecode.easywebhub.com/templates/easyweb-skeleton.git",
             "branch"  : "master",
 			"type"    : "code base",
@@ -12,6 +13,7 @@
         },
 	{
             "name"    : "Creative",
+            "description" : "Created from startbootstrap Creative theme",
             "url"     : "https://sourcecode.easywebhub.com/templates/easyweb-creative.git",
             "branch"  : "master",
 			"type"    : "code base",
@@ -21,6 +23,7 @@
         },
         {
             "name"    : "Pillar",
+            "description" : "Created from premium Pillar theme",
             "url"     : "https://sourcecode.easywebhub.com/templates/pillar.git",
             "branch"  : "master",
 			"type"    : "code base",

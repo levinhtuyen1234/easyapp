@@ -55,25 +55,24 @@
                         <div class="content">
                             <div class="header">{template.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                <p>{template.description}</p>
+                                
                             </div>
+                            
                         </div>
 
                         <div class="extra content">
-                            <i>by</i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
+                            <i>created by </i> <b style="color:black">{ template.author || 'EasyWeb' }</b>
                         </div>
                     </a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="user-project">
+    <div class="user-project" style="text-align:center">
         <div class="ui grid container ">
             <div class="sixteen wide column">
-                <h2 class="ui header blue weight-300">
-                    Your websites:
-                    <!--<div class="sub header">Choose a website to continue your work</div>-->
-                </h2>
+                <h1 class="ui header blue weight-300">Your websites</h1>
 
                 <div class="ui four stackable doubling cards">
                     <a each="{site, index in sites}" class="ui card" href="" onclick="{openSite.bind(this, site)}">
@@ -83,12 +82,12 @@
                         <div class="content">
                             <div class="header">{site.name}</div>
                             <div class="description">
-                                <p>Landing page for your company</p>
+                                <p></p>
                             </div>
                         </div>
                         <div class="extra content">
                             <i class="edit icon"></i>
-                            {moment("2016-10-20T08:54:54.924Z").fromNow()}
+                            {moment("2017-06-10T08:54:54.924Z").fromNow()} by <b style="color:black">{username}</b>
                         </div>
                     </a>
 

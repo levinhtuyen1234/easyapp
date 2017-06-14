@@ -1,23 +1,13 @@
 <dialog-new-site-local class="ui modal" tabindex="-1">
     <i class="close icon" show="{!cloning}"></i>
-    <div class="header">Create new website</div>
+    <div class="header">Use the <i>{template.name}</i> templates</div>
     <div class="content">
-        <!--<h3>List of EasyWebHub website template:</h3>-->
-        <!--<div class="ui grid">-->
-        <!--<div class="three wide column" each="{template in templateList}">-->
-        <!--<div class="ui card site" style="text-align: center;" onclick="{selectSkeleton(template)}">-->
-        <!--<div class="content">-->
-        <!--<i class="add big link icon"></i>-->
-        <!--<h4 class="header">{template.name}</h4>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--<br>-->
+       
         <div class="ui form error">
             <div class="field">
                 <label>Choose name for your website</label>
-                <input type="text" class="form-control" name="siteName" placeholder="" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
+                <input type="text" class="form-control" name="siteName" placeholder="enter a name" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
+              
             </div>
             <div show="{errorMsg != ''}" class="ui error message">
                 <p>{errorMsg}</p>
