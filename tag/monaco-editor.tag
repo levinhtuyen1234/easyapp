@@ -27,6 +27,31 @@
             return flattened
         }
 
+        const getConfig = function (schema, configPath) {
+            var parts = configPath.split('.');
+            if (parts.length > 1 && parts[0] === 'root')
+                parts.shift(); // remove root
+            var ret = schema;
+
+            if (parts.some(function (key) {
+                    if (!ret.properties && !ret.items) {
+                        return true;
+                    }
+                    if (key === '0') {
+                        ret = ret.items;
+                        return false;
+                    } else if (ret.properties[key]) {
+                        ret = ret.properties[key];
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }) == false) {
+                return ret;
+            }
+            return null;
+        };
+
         var getJsonSchemaValue = function (key, value, ret) {
             if (!value.type) return;
             switch (value.type) {
@@ -48,8 +73,8 @@
                         var child = [];
                         getJsonSchemaValue(0, value.items, child);
                         ret[key] = child;
-                        break;
                     }
+                    break;
                 }
                 case 'number':
                 case 'integer':
@@ -154,9 +179,12 @@ ${childSnippet}{{/with}}`;
 
                 // create data action
                 // TODO lookup config for displayName of global content
-
                 _.forOwn(allContent, (value, key) => {
-                    var replacement = getReplacement(key, value);
+                    var placeHolder = getReplacement(key, value);
+                    var config = getConfig(content, key);
+                    var configType = config.type !== undefined ? config.type : 'string';
+                    var replacement = `<div data-ea-type="${configType}" data-ea-object-path="${key}" data-ea-layout="${layoutName}" data-ea-data-src="content">\r\n${placeHolder}\r\n</div>`;
+
                     actions.push(me.editor.addAction({
                             id:                 key,
                             label:              `:DATA] ${key}`,
@@ -191,7 +219,7 @@ ${childSnippet}{{/with}}`;
             // create meta global action
             let flattenMeta = {};
 
-            _.forOwn(siteGlobalConfigIndexes, function(schema, configFileName) {
+            _.forOwn(siteGlobalConfigIndexes, function (schema, configFileName) {
                 let parts = configFileName.split('.');
                 if (configFileName.endsWith('.meta-schema.json')) {
                     parts.pop();
