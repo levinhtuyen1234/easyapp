@@ -1172,7 +1172,7 @@ function getCategoryLayoutList(siteName) {
 function newTag(siteName, tagName, tagFileName) {
     let defaultTagConfig = JSON.stringify({
         "sortBy":      "date",
-        "reverse":     false,
+        "reverse":     true,
         "metadata":    {},
         "displayName": tagName,
         "perPage":     10,
@@ -1194,7 +1194,7 @@ function newTag(siteName, tagName, tagFileName) {
 function newCategory(siteName, categoryName, categoryFileName) {
     let defaultCategoryConfig = JSON.stringify({
         "sortBy":      "date",
-        "reverse":     false,
+        "reverse":     true,
         "metadata":    {},
         "displayName": categoryName,
         "perPage":     10,
