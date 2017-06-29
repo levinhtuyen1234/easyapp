@@ -1023,7 +1023,7 @@ function addMediaFile(siteName, filePath, cb) {
         let wr = Fs.createWriteStream(target);
         wr.on('error', done);
         wr.on('close', function (ex) {
-            relativePath = Path.join('img', fileName);
+            relativePath = Path.join('/img', fileName);
             done(null, relativePath.replace(/\\/g, '/'));
         });
         rd.pipe(wr);
