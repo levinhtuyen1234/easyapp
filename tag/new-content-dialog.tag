@@ -143,6 +143,7 @@
             var combining = /[\u0300-\u036F]/g;
             title = title
                     .toLowerCase()
+                    .trim() 
                     .normalize('NFKD')
                     .replace(combining, '')
                     .replace(/đ/g, 'd')
