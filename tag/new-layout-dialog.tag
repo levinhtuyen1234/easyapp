@@ -1,4 +1,4 @@
-<new-layout-dialog class="ui modal" tabindex="-1">
+<new-layout-dialog class="ui small modal" tabindex="-1">
     <i class="close icon"></i>
     <div class="header">Create new Layout</div>
     <div class="content">

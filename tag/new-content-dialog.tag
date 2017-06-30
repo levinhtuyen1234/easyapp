@@ -1,4 +1,4 @@
-<new-content-dialog class="ui modal" tabindex="-1">
+<new-content-dialog class="ui small modal" tabindex="-1">
     <i class="close icon"></i>
     <div class="header">Create new page</div>
     <div class="content">
@@ -51,7 +51,7 @@
             </div>
 
             <div class="inline fields">
-                <label class="two wide field">Filename</label>
+                <label class="two wide field">Page Slug</label>
                 <div class="fourteen wide field">
                     <div class="ui fluid right labeled icon input">
                         <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">

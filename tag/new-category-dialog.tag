@@ -1,4 +1,4 @@
-<new-category-dialog class="ui modal" tabindex="-1">
+<new-category-dialog class="ui small modal" tabindex="-1">
     <i class="close icon"></i>
     <div class="header">Create new Category</div>
     <div class="content">

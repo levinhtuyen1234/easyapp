@@ -1,4 +1,4 @@
-<new-tag-dialog class="ui modal" tabindex="-1">
+<new-tag-dialog class="ui small modal" tabindex="-1">
     <i class="close icon"></i>
     <div class="header">Create new Tag</div>
     <div class="content">
