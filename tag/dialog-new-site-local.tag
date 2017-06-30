@@ -1,13 +1,16 @@
-<dialog-new-site-local class="ui modal" tabindex="-1">
+<dialog-new-site-local class="ui small modal " tabindex="-1">
     <i class="close icon" show="{!cloning}"></i>
     <div class="header">Use the <i>{template.name}</i> templates</div>
     <div class="content">
-       
         <div class="ui form error">
             <div class="field">
-                <label>Choose name for your website</label>
-                <input type="text" class="form-control" name="siteName" placeholder="enter a name" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
-              
+                <label>Choose a name</label>
+                <div class="ui fluid right labeled icon input">
+                    
+                    <input type="text" name="siteName" placeholder="name of your site" value={siteName} onkeyup="{siteNameChange}" disabled="{cloning}">
+                    <div class="ui label">.{User.data.username}.easywebhub.me</div>
+                </div>
+                <div class="ui pointing label">You can change to own domain later!</div>
             </div>
             <div show="{errorMsg != ''}" class="ui error message">
                 <p>{errorMsg}</p>
