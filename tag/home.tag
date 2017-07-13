@@ -383,6 +383,15 @@
                 User.changeDomain(me.opts.siteId,domain).then(function (resp) {
                     if(resp){
                         BackEnd.setDomain(me.opts.siteName, domain);
+                        bootbox.alert({
+                            title:   'Alert',
+                            message: 'Update successfully!'
+                        });
+                    }else{
+                        bootbox.alert({
+                            title:   'Alert',
+                            message: 'Update fail!'
+                        });
                     }
                 });
 
