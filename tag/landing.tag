@@ -281,6 +281,7 @@
                         //console.log('remoteSite', remoteSite);
                         site.remote = true;
                         site.url = remoteSite.url;
+                        site.id = remoteSite.id;
                         return true;
                     }
                     return false;
@@ -381,7 +382,7 @@
                 window.siteGlobalConfigIndexes = ret.globalConfig;
                 window.siteMetaConfigIndexes = ret.metaConfig;
 //                console.log('siteContentIndexes', siteContentIndexes);
-                window.curPage = riot.mount('home', {siteName: siteName, siteReviewUrl: site.url})[0];
+                window.curPage = riot.mount('home', {siteName: siteName, siteReviewUrl: site.url, siteId: site.id})[0];
             }).catch(function (ex) {
                 console.log(ex);
                 alert('create site content index failed, ' + ex.message);
