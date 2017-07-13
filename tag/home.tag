@@ -380,7 +380,12 @@
                     });
                     return false;
                 }
-                BackEnd.setDomain(me.opts.siteName, domain);
+                User.changeDomain(me.opts.siteId,domain).then(function (resp) {
+                    if(resp){
+                        BackEnd.setDomain(me.opts.siteName, domain);
+                    }
+                });
+
             });
         };
 

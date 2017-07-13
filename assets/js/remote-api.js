@@ -362,11 +362,31 @@ class AppUser {
             return adapter.sitesObjectTransformer(sites);
         });
     }
+
+    changeDomain(siteId, domainName){
+        var params = {};
+        params.Domain = domainName;
+        var result;
+        return Ajax({
+            method:      'PATCH',
+            contentType: 'application/json',
+            url:         "https://api.easywebhub.com/websites/"+siteId+"/domain",
+            data:        JSON.stringify(params),
+            success: function(data, textStatus){
+                result = true;
+            },
+            error: function(xhr, textStatus, errorThrown){
+                result = false;
+            }
+        }).then(function (resp) {
+            return result;
+        });
+    }
 }
 
 window.AppUser = AppUser;
 
 module.exports = {
     login:    login,
-    register: register
+    register: register,
 };
