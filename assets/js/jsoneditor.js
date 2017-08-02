@@ -1976,11 +1976,14 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
         if (this.ckeditor_instance !== undefined) {
             return this.ckeditor_instance.val();
         }
+        if (this.format === 'date' || this.format === 'time' || this.format === 'datetime') {
+			return this.dateValue;
+		}
         return this.value;
     },
     setValue:             function (value, initial, from_template) {
         var self = this;
-
+	
         if (this.template && !from_template) {
             return;
         }
@@ -1993,9 +1996,13 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
 
         // Sanitize value before setting it
         var sanitized = this.sanitize(value);
-
+		
         if (this.input.value === sanitized) {
             return;
+        }
+        
+        if (this.format === 'date' || this.format === 'time' || this.format === 'datetime') {
+			self.dateInputISOStr = value;
         }
 
         this.input.value = sanitized;
@@ -2263,14 +2270,13 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
 
         // console.log('STRING this.options', this.options);
         // datetime
-        var onDateChange = function (value) {
-            console.log('value', value);
-            if (Array.isArray(value) && value.length >= 1)
-                value = value[0];
+        var onDateChange = function (selectedDate, dateStr) {
+            if (Array.isArray(selectedDate) && selectedDate.length >= 1)
+                selectedDate = selectedDate[0];
             // van hien thi value theo format tren form
-            // self.input.value = value.date.toISOString();
-            // value luu file la iso format string
-            self.value = moment(value).toISOString();
+            self.dateValue = selectedDate.toISOString();
+            self.input.value = dateStr;
+            
             self.is_dirty = true;
             self.onChange(true);
         };
@@ -2280,10 +2286,14 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
                 this.value = this.input.value = (new Date()).toISOString();
             }
             this.input_type = 'text';
+            
             $(self.input).flatpickr({
-                format:        'DD-MM-YYYY HH:mm:ss',
-                enableTime:    true,
-                onValueUpdate: onDateChange
+				altInput:   true,
+				altFormat:  'd-m-Y H:i:S',
+                dateformat: 'Z',
+                enableTime: true,
+                onChange:   onDateChange,
+                defaultDate: this.dateInputISOStr
             });
         } else if (this.format === 'time') {
             if (this.schema.default === '$now' && this.value == '') {
@@ -2291,20 +2301,26 @@ JSONEditor.defaults.editors.string = JSONEditor.AbstractEditor.extend({
             }
             this.input_type = 'text';
             $(self.input).flatpickr({
-                format:        'HH:mm:ss',
-                noCalendar:    true,
-                onValueUpdate: onDateChange
-            }).on('dp.change', onDateChange);
+				altInput:   true,
+				altFormat:  'H:i:S',
+                dateFormat: 'Z',
+                noCalendar: true,
+                onChange:   onDateChange,
+                defaultDate: this.dateInputISOStr
+            });
         } else if (this.format === 'date') {
             if (this.schema.default === '$now' && this.value == '') {
                 this.value = this.input.value = (new Date()).toISOString();
             }
             this.input_type = 'text';
             $(self.input).flatpickr({
-                format:     'DD-MM-YYYY',
+				altInput:   true,
+				altFormat:  'd-m-Y',
+                dateFormat: 'Z',
                 enableTime: false,
-                // calendarType: 'date'
-            }).on('dp.change', onDateChange);
+                onChange: onDateChange,
+                defaultDate: this.dateInputISOStr
+            });
         }
 
         // Code editor
