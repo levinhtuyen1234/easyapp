@@ -215,7 +215,9 @@
             me.output = me.root.querySelector('pre');
             me.output.innerHTML = '';
             me.webview.src = ewhDataUri;
-
+            
+            let isAsarMode = process.mainModule.filename.indexOf('app.asar') !== -1;
+            let prefixPath = isAsarMode ? process.resourcesPath + '\\app.asar\\' : '';
             me.webview.addEventListener('did-finish-load', Promise.coroutine(function*(event) {
                 try {
                     console.log('webpage finished load, start injecting');
@@ -224,13 +226,13 @@
 
                     if (!isJqueryExists) {
                         console.log('injecting jQuery');
-                        yield executeJavaScript((yield Fs.readFileAsync('assets/js/jquery.min.js')).toString());
+                        yield executeJavaScript((yield Fs.readFileAsync(prefixPath + 'assets/js/jquery.min.js')).toString());
                     }
 
                     // inject medium inline editor
-                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor.min.css')).toString());
-                    me.webview.insertCSS((yield Fs.readFileAsync('assets/css/medium-editor-default.min.css')).toString());
-                    yield executeJavaScript((yield Fs.readFileAsync('assets/js/medium-editor.js')).toString());
+                    me.webview.insertCSS((yield Fs.readFileAsync(prefixPath + 'assets/css/medium-editor.min.css')).toString());
+                    me.webview.insertCSS((yield Fs.readFileAsync(prefixPath + 'assets/css/medium-editor-default.min.css')).toString());
+                    yield executeJavaScript((yield Fs.readFileAsync(prefixPath + 'assets/js/medium-editor.js')).toString());
 
                     setTimeout(function () {
                         executeJavaScript(`(function defer() { if (!window.MediumEditor) {
