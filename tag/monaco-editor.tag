@@ -183,7 +183,7 @@ ${childSnippet}{{/with}}`;
                     var placeHolder = getReplacement(key, value);
                     var config = getConfig(content, key);
                     var configType = config.type !== undefined ? config.type : 'string';
-                    var replacement = `<div data-ea-type="${configType}" data-ea-object-path="${key}" data-ea-layout="${layoutName}" data-ea-data-src="content">\r\n${placeHolder}\r\n</div>`;
+                    var replacement = ` data-ea-type="${configType}" data-ea-object-path="${key}" data-ea-layout="${layoutName}" data-ea-data-src="content">\r\n${placeHolder}`;
 
                     actions.push(me.editor.addAction({
                             id:                 key,
