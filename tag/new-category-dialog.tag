@@ -27,6 +27,16 @@
 
             </div>
             <div class="inline fields">
+                <label class="three wide field">Layout</label>
+                <div class="ui thirteen wide field">
+                    <div class="ui selection dropdown" id="layoutDropDown" style="width: 100%">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">[category] default</div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline fields">
                 <label class="three wide field">Filename</label>
                 <div class="thirteen wide field">
                     <div class="ui icon right labeled input">

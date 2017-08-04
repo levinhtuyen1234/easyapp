@@ -4,16 +4,26 @@
     <div class="content">
         <div class="ui form">
             <div class="inline fields">
-                <label class="two wide field">Tag Name</label>
-                <div class="ui fourteen wide field">
+                <label class="three wide field">Tag Name</label>
+                <div class="ui thirteen wide field">
                     <div class="ui icon input">
                         <input type="text" id="tagNameElm" placeholder="Name" oninput="{updateTagName}">
                     </div>
                 </div>
             </div>
             <div class="inline fields">
-                <label class="two wide field">Filename</label>
-                <div class="fourteen wide field">
+                <label class="three wide field">Layout</label>
+                <div class="ui thirteen wide field">
+                    <div class="ui selection dropdown" id="layoutDropDown" style="width: 100%">
+                        <input name="gender" type="hidden">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">[Tag] default</div>
+                    </div>
+                </div>
+            </div>
+            <div class="inline fields">
+                <label class="three wide field">Filename</label>
+                <div class="thirteen wide field">
                     <div class="ui icon right labeled input">
                         <input type="text" id="tagFilenameElm" readonly="{ User.accountType !== 'dev'}" placeholder="Filename">
                         <div class="ui label">.json</div>

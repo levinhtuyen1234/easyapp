@@ -51,11 +51,11 @@
             </div>
 
             <div class="inline fields">
-                <label class="two wide field">Page Slug</label>
+                <label class="two wide field">Url</label>
                 <div class="fourteen wide field">
-                    <div class="ui fluid right labeled icon input">
-                        <input type="text" id="contentFilenameElm" placeholder="Title" oninput="{updateFileName}" readonly value="{contentFileName}">
-                        <div class="ui label">.md</div>
+                    <div class="ui fluid left labeled icon input">
+                        <div class="ui label">xxx.easywebhub.me/</div>
+                        <input type="text" id="contentFilenameElm" placeholder="slug of page" oninput="{updateFileName}" readonly value="{contentFileName}">
                     </div>
                 </div>
             </div>
