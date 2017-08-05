@@ -221,7 +221,7 @@
             me.webview.addEventListener('did-finish-load', Promise.coroutine(function*(event) {
                 try {
                     console.log('webpage finished load, start injecting');
-                    let isJqueryExists = yield executeJavaScript(`(!!jQuery)`);
+                    let isJqueryExists = yield executeJavaScript(`(!!$)`);
                     console.log('isJqueryExists', isJqueryExists);
 
                     if (!isJqueryExists) {
@@ -347,7 +347,7 @@
 //                console.log('onIframeElementBlur', me.change);
                 // read content file
                 //      find content file name
-                let contentPath = me.change.eaSlug;
+                let contentPath = me.change.eaSlug.replace(/\/$/, "");
                 if (contentPath === '/') contentPath = 'index';
                 let parts = contentPath.split('.');
                 if (contentPath.endsWith('.html')) {
