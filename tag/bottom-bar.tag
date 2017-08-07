@@ -348,7 +348,7 @@
                 // read content file
                 //      find content file name
                 let contentPath = me.change.eaSlug.replace(/\/$/, "");
-                if (contentPath === '/') contentPath = 'index';
+                if (contentPath === '' || contentPath === '/') contentPath = 'index';
                 let parts = contentPath.split('.');
                 if (contentPath.endsWith('.html')) {
                     parts.pop(); // remove extension
@@ -359,9 +359,9 @@
 
                 // apply change
                 let content = BackEnd.getContentFile(me.opts.siteName, contentPath);
-                console.log('content', content);
+                //console.log('content', content);
                 applyNewValue(me.change.eaObjectPath, content.metaData, me.change.eaValue);
-                BackEnd.saveContentFile(me.opts.siteName, contentPath, content.metaData, content.markdownData);
+                BackEnd.saveContentFile(me.opts.siteName, contentPath, content.metaData, content.markDownData);
                 // TODO to stop browserSync auto refresh need send signal to metalsmithProcess to pause browserSync then call pause and resume
                 // clear change
                 me.change = null;
