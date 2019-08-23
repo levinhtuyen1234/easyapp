@@ -30,6 +30,46 @@
 			"tags"    : ["themeforest", "website"],
             "themeUrl": "http://pillar.mediumra.re",
             "price"   : "Paid"
+        },
+	{
+            "name"    : "Eventband",
+            "description" : "Created from premium Eventband theme",
+            "url"     : "https://sourcecode.easywebhub.com/templates/eventband.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["themeforest", "website"],
+            "themeUrl": "https://themes.muffingroup.com/be/band/",
+            "price"   : "Free"
+        },
+		{
+            "name"    : "Eventfestival",
+            "description" : "Created from premium Festival theme",
+            "url"     : "https://sourcecode.easywebhub.com/templates/festival.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["themeforest", "website"],
+            "themeUrl": "https://themes.muffingroup.com/be/festival/",
+            "price"   : "Free"
+        },
+		{
+            "name"    : "Eventporto",
+            "description" : "Created from premium Porto theme",
+            "url"     : "https://sourcecode.easywebhub.com/templates/porto.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["themeforest", "website"],
+            "themeUrl": "https://portotheme.com/html/porto/7.5.0/demo-event.html",
+            "price"   : "Free"
+        },
+		{
+            "name"    : "Eventparty",
+            "description" : "Created from premium Eventparty theme",
+            "url"     : "https://sourcecode.easywebhub.com/templates/eventparty.git",
+            "branch"  : "master",
+			"type"    : "code base",
+			"tags"    : ["themeforest", "website"],
+            "themeUrl": "https://themes.muffingroup.com/be/party/",
+            "price"   : "Free"
         }
     ]
 }
